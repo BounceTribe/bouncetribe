@@ -72,8 +72,8 @@
     "relay": "^0.8.0-1"
   },
   "scripts": {
-    "start": "NODE_PATH=src/ REACT_APP_GRAPHQL_URL='https://salty-brook-36932.herokuapp.com/' node scripts/start.js",
-    "build": "NODE_ENV=production NODE_PATH=src/ node scripts/build.js",
+    "start": "NODE_PATH=src/ API_URL='https://bt-carl-api.herokuapp.com/' node scripts/start.js",
+    "build": "NODE_ENV=production NODE_PATH=src/ API_URL='https://bt-carl-api.herokuapp.com/' node scripts/build.js",
     "test": "NODE_PATH=src/ node scripts/test.js --env=jsdom"
   },
   "jest": {
