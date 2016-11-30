@@ -1,4 +1,4 @@
-export const auth0id = process.env.AUTH0_CLIENTID
+export const auth0id = process.env.AUTH0_CLIENT_ID
 export const auth0domain = 'carlpeaslee.auth0.com'
 
 const baseRoute = 'https://'+ auth0domain

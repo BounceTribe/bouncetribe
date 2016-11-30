@@ -5,6 +5,8 @@ import useRelay from 'react-router-relay'
 
 import Routes from './Routes'
 import store from 'store'
+import {API_URL} from 'config/api'
+
 
 let localToken = store.getState().auth.user['id_token']
 
@@ -13,7 +15,7 @@ const authorization = {
 }
 
 Relay.injectNetworkLayer(
-  new Relay.DefaultNetworkLayer(process.env.REACT_APP_GRAPHQL_URL, {
+  new Relay.DefaultNetworkLayer(API_URL, {
     headers: (localToken) ? {...authorization} : {}
   })
 );
