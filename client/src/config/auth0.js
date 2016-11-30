@@ -1,4 +1,4 @@
-export const auth0id = process.env.AUTH0_CLIENT_ID
+export const auth0id = 'wMoUQb2Kb9XViLB6Wek2fLYPlMxJV5hg'
 export const auth0domain = 'carlpeaslee.auth0.com'
 
 const baseRoute = 'https://'+ auth0domain
@@ -10,6 +10,7 @@ export const profileRoute = baseRoute + '/tokeninfo'
 
 
 export const loginOptions = (email, password) => {
+  console.log(auth0id)
   return {
     method: 'POST',
     headers: {

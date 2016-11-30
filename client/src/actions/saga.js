@@ -5,7 +5,7 @@ import {loginErrorMessage, signupErrorMessage} from './ui'
 import { put, call } from 'redux-saga/effects'
 import {reset} from 'redux-form'
 
-import {signupRoute, signupOptions, loginRoute, loginOptions, logoutRoute, logoutOptions, profileRoute, profileOptions} from '../config/auth0'
+import {signupRoute, signupOptions, loginRoute, loginOptions, logoutRoute, logoutOptions, profileRoute, profileOptions} from 'config/auth0'
 
 
 export function profileFetch() {

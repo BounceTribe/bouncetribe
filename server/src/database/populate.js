@@ -1,6 +1,8 @@
 import Person from './models/Person'
 import fetch from 'isomorphic-fetch'
 import uuid from 'uuid'
+import {auth0Admin} from '../config/auth0'
+
 
 const allUsersUrl = 'https://carlpeaslee.auth0.com/api/v2/users?per_page=100&page=0&include_totals=true&sort=created_at%3A1&search_engine=v2'
 
@@ -8,7 +10,7 @@ const options = () => {
   return {
     method: 'GET',
     headers: {
-      'Authorization': 'Bearer ' + process.env.AUTH_ADMIN
+      'Authorization': 'Bearer ' + secret
     },
   }
 }
@@ -16,9 +18,11 @@ const options = () => {
 const auth0users = async () => {
   try {
     console.log('fetching users from auth0')
+    console.log(options())
     const result = await fetch(allUsersUrl, options())
+    console.log(result)
     const data = await result.json()
-    console.log('sync data')
+    console.log('sync data', data)
     const users = []
     data.users.forEach((user)=>{
       let email = user.email

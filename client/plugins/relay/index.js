@@ -22,15 +22,15 @@ var requireGraphQlConfig = function() {
     return new Promise((resolve, reject) => {
         //TODO we could use graphql-config package here instead
 
-        // check that required env var API_URL is setup
-        if (!process.env.API_URL) {
+        // check that required env var REACT_APP_GRAPHQL_URL is setup
+        if (!process.env.REACT_APP_GRAPHQL_URL) {
             // console.log(chalk.red('Relay requires a url to your graphql server'));
-            // console.log('Specifiy this in a ' + chalk.cyan('API_URL') + ' environment variable.');
+            // console.log('Specifiy this in a ' + chalk.cyan('REACT_APP_GRAPHQL_URL') + ' environment variable.');
             // console.log();
             // process.exit(1);
 
             var errorMessage = chalk.red('Relay requires a url to your graphql server\n') +
-                                'Specifiy this in a ' + chalk.cyan('API_URL') + ' environment variable.';
+                                'Specifiy this in a ' + chalk.cyan('REACT_APP_GRAPHQL_URL') + ' environment variable.';
             reject(new Error(errorMessage));
         }
 
@@ -46,13 +46,13 @@ var validateSchemaJson = function() {
             var schemaFileContents = fs.readFileSync(paths.relaySchema);
         } catch (err) {
             // console.log(chalk.red('babel-relay-plugin requires a local copy of your graphql schema'));
-            // console.log('Run ' + chalk.cyan('npm run fetchRelaySchema') + ' to fetch it from the ' + chalk.cyan('API_URL') + ' environment variable.');
+            // console.log('Run ' + chalk.cyan('npm run fetchRelaySchema') + ' to fetch it from the ' + chalk.cyan('REACT_APP_GRAPHQL_URL') + ' environment variable.');
             // console.log();
             // console.error(err);
             // console.log();
             // process.exit(1)
             var errorMessage = chalk.red('babel-relay-plugin requires a local copy of your graphql schema\n') +
-                                'Run ' + chalk.cyan('npm run fetchRelaySchema') + ' to fetch it from the ' + chalk.cyan('API_URL') + ' environment variable.';
+                                'Run ' + chalk.cyan('npm run fetchRelaySchema') + ' to fetch it from the ' + chalk.cyan('REACT_APP_GRAPHQL_URL') + ' environment variable.';
             reject(new Error(errorMessage));
         }
 
@@ -62,14 +62,14 @@ var validateSchemaJson = function() {
         } catch (err) {
             // console.log(chalk.red('JSON parsing of the contents of ' + chalk.cyan(paths.relaySchema) + ' failed.'));
             // console.log('Check the contents of ' + chalk.cyan(paths.relaySchema) + '. It does not appear to be valid json');
-            // console.log('Also try running ' + chalk.cyan('npm run fetchRelaySchema') + ' to re-fetch the schema.json from the ' + chalk.cyan('API_URL') + ' environment variable.');
+            // console.log('Also try running ' + chalk.cyan('npm run fetchRelaySchema') + ' to re-fetch the schema.json from the ' + chalk.cyan('REACT_APP_GRAPHQL_URL') + ' environment variable.');
             // console.log();
             // console.error(err);
             // console.log();
             // process.exit(1)
             var errorMessage = chalk.red('JSON parsing of the contents of ' + chalk.cyan(paths.relaySchema) + ' failed.\n') +
                                 'Check the contents of ' + chalk.cyan(paths.relaySchema) + '. It does not appear to be valid json\n' +
-                                'Also try running ' + chalk.cyan('npm run fetchRelaySchema') + ' to re-fetch the schema.json from the ' + chalk.cyan('API_URL') + ' environment variable.';
+                                'Also try running ' + chalk.cyan('npm run fetchRelaySchema') + ' to re-fetch the schema.json from the ' + chalk.cyan('REACT_APP_GRAPHQL_URL') + ' environment variable.';
             reject(new Error(errorMessage));
         }
 
@@ -95,7 +95,7 @@ var validateSchemaJson = function() {
 
 // retreive JSON of graaphql schema via introspection for Babel Relay Plugin to use
 var fetchRelaySchema = function() {
-    return fetch(process.env.API_URL, {
+    return fetch(process.env.REACT_APP_GRAPHQL_URL, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -112,7 +112,7 @@ var fetchRelaySchema = function() {
         // Save user readable schema.graphql
         fs.writeFileSync(paths.relaySchema.replace('.json','.graphql'), graphQlutilities.printSchema(graphQLSchema));
 
-        console.log('Relay support - fetch schema.json from ' + chalk.cyan(process.env.API_URL));
+        console.log('Relay support - fetch schema.json from ' + chalk.cyan(process.env.REACT_APP_GRAPHQL_URL));
     });
 }
 
