@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "update": "babel-node updateSchema.js",
-    "start": "npm run update && babel-node src/index.js",
+    "start": "npm run update && AUTH0_SECRET=OPbYWGu2smrPs3cB0MqheUJn82F65b9ShZMs26a8UivxTp62tcHGuKqknr7KJ3Hl  AUTH0_ADMIN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJkajdDOVFCZkV3cG45bVBTSE1FUU04YnduNU9lNHZ0bSIsInNjb3BlcyI6eyJ1c2VycyI6eyJhY3Rpb25zIjpbInJlYWQiXX19LCJpYXQiOjE0ODAyNDQ2MDQsImp0aSI6IjVhMjZmMjlmZDQ2MzAzY2ZiMmQyOGYxMjBjNjRkOGE0In0.mi96x-Q-1-2Vam4wTNWxAruTtqqA_G6TkSbbp3q__TQ babel-node src/index.js",
     "build": "npm run clean && cross-env NODE_ENV=production ./node_modules/.bin/babel ./src --out-dir ./build",
     "serve": "cross-env NODE_ENV=production node ./build/index.js",
     "clean": "rm -rf build && mkdir build"

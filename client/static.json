@@ -3,5 +3,11 @@
   "clean_urls": false,
   "routes": {
     "/**": "index.html"
-  }
+  },
+  "proxies": {
+    "/graphql/": {
+      "origin": "https://www.bt-carl.com/graphql"
+    }
+  },
+  "https_only": true
 }

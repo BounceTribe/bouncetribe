@@ -1,7 +1,7 @@
-export const auth0Admin = process.env.AUTH0_ADMIN || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJkajdDOVFCZkV3cG45bVBTSE1FUU04YnduNU9lNHZ0bSIsInNjb3BlcyI6eyJ1c2VycyI6eyJhY3Rpb25zIjpbInJlYWQiXX19LCJpYXQiOjE0ODAyNDQ2MDQsImp0aSI6IjVhMjZmMjlmZDQ2MzAzY2ZiMmQyOGYxMjBjNjRkOGE0In0.mi96x-Q-1-2Vam4wTNWxAruTtqqA_G6TkSbbp3q__TQ'
+export const auth0Admin = process.env.AUTH0_ADMIN
 
 
-export const secret = process.env.SECRET || 'OPbYWGu2smrPs3cB0MqheUJn82F65b9ShZMs26a8UivxTp62tcHGuKqknr7KJ3Hl'
+export const secret = process.env.AUTH0_SECRET
 
 export const clientID = process.env.AUTH0_CLIENT_ID || 'wMoUQb2Kb9XViLB6Wek2fLYPlMxJV5hg'
 //aka audience

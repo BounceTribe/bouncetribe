@@ -1,12 +1,19 @@
 import jwt from 'express-jwt'
 import Person from '../database/models/Person'
 import {secret, clientID} from '../config/auth0'
-import cors from 'cors'
+// import cors from 'cors'
+//
+// const corsOptions = {
+//   origin: [
+//     'https://www.bt-carl.com',
+//     'http://localhost:3000'
+//   ]
+// }
+//
 
-
-const corsOptions = {
-  origin: true,
-  //credentials: true
+function logger(req, res, next) {
+  console.log('new req: \n',req.headers)
+  next()
 }
 
 const jwtCheck = jwt({
@@ -48,6 +55,6 @@ async function permissionsChecker(req, res, next) {
   }
 }
 
-const permissionsMiddleware = [cors(corsOptions), jwtCheck, permissionsChecker]
+const permissionsMiddleware = [ logger, jwtCheck, permissionsChecker]
 
 export default permissionsMiddleware

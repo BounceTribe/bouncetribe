@@ -10,6 +10,7 @@ import chalk from 'chalk'
 import config from './config/environment'
 import schema from './graphql/schema'
 import db, {initializeDB} from './database'
+import cors from 'cors'
 
 
 //initialize the database
@@ -17,7 +18,19 @@ initializeDB()
 
 const server = express()
 
-server.use('/', permissionsMiddleware, graphQLHTTP((req)=>{
+const corsOptions = {
+  origin: [
+    'https://www.bt-carl.com',
+    'http://localhost:3000'
+  ]
+}
+
+
+server.options('*', cors())
+
+server.use(cors())
+
+server.use('/graphql', permissionsMiddleware, graphQLHTTP((req)=>{
     return {
       graphiql: true,
       pretty: true,

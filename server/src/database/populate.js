@@ -10,7 +10,7 @@ const options = () => {
   return {
     method: 'GET',
     headers: {
-      'Authorization': 'Bearer ' + secret
+      'Authorization': 'Bearer ' + auth0Admin
     },
   }
 }

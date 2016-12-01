@@ -34,7 +34,7 @@ export const initializeDB = () => {
     .then(function(err) {
       console.log(chalk.magenta('Table sync succesful!'))
 
-      // console.log(chalk.yellow('Beginnig to populate db'))
+      console.log(chalk.yellow('Beginnig to populate db'))
       // populate()
 
     }, function (err) {
