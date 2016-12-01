@@ -12,7 +12,7 @@ import {attemptSignup, logout, attemptLogin, showLoginCard, showSignupCard} from
 class AuthContainer extends Component {
 
   showProfile = () => {
-    if (this.props.user['id_token']) {
+    if (this.props.user) {
       return (
         <ProfileCard
           logout={this.props.logout}
@@ -20,7 +20,7 @@ class AuthContainer extends Component {
         />
       )
     }
-    if (!this.props.user['id_token'] && this.props.loginCardShowing){
+    if (!this.props.isLoggedIn && this.props.loginCardShowing){
       return (
         <LoginCard
           attemptLogin={this.props.attemptLogin}
@@ -29,7 +29,7 @@ class AuthContainer extends Component {
         />
       )
     }
-    if (!this.props.user['id_token'] && this.props.signupCardShowing) {
+    if (!this.props.isLoggedIn && this.props.signupCardShowing) {
       return (
         <SignUpCard
           attemptSignup={this.props.attemptSignup}
@@ -42,7 +42,7 @@ class AuthContainer extends Component {
   }
 
   showTabs = () => {
-    if (!this.props.user['id_token']) {
+    if (!this.props.isLoggedIn) {
       return (
         <LoginSignupTabs
           showSignupCard={this.props.showSignupCard}
@@ -80,6 +80,7 @@ const mapStateToProps = (state) => {
     awaitingLoginResponse: state.auth.awaitingLoginResponse,
     awaitingSignupResponse: state.auth.awaitingSignupResponse,
     user: state.auth.user,
+    isLoggedIn: state.auth['id_token'],
     loginCardShowing: state.ui.loginCardShowing,
     signupCardShowing:state.ui.signupCardShowing,
     loginError: state.ui.loginError,

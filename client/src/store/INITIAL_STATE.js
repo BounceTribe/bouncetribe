@@ -4,9 +4,8 @@ const INITIAL_STATE = {
     signupCardShowing: false
   },
   auth: {
-    user: {
-      'id_token': false
-    }
+    user: false,
+    'id_token': false
   }
 }
 

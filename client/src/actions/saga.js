@@ -9,13 +9,10 @@ import {signupRoute, signupOptions, loginRoute, loginOptions, logoutRoute, logou
 
 
 export function profileFetch() {
-  const userData = localStorage.getItem('user')
-
-  const user = JSON.parse(userData)
-
+  const userToken = localStorage.getItem('id_token')
 
   const route = profileRoute
-  const options = profileOptions(user['id_token'])
+  const options = profileOptions(userToken)
 
   return fetch(route, options).then(
     (response) => {
@@ -31,12 +28,11 @@ export function profileFetch() {
 }
 
 export function checkLocal() {
-  const userData = localStorage.getItem('user')
-  const user = userData ? JSON.parse(userData) : null
-  if (user) {
-    return user
+  const userToken = localStorage.getItem('id_token')
+  if (userToken) {
+    return userToken
   } else {
-    return null
+    return false
   }
 }
 
@@ -118,7 +114,8 @@ export function* loginCalls() {
     const loginSuccessResult = yield call(loginFetch)
 
     if (loginSuccessResult) {
-      yield put(loginSuccess(loginSuccessResult))
+      console.log(loginSuccessResult)
+      yield put(loginSuccess(loginSuccessResult['id_token']))
       yield put(reset('signup'))
     }
 
@@ -162,10 +159,9 @@ export function* getProfileInformation() {
 
 export function* startup() {
   yield put(loadUserFromLocalStorage())
-  const userData = localStorage.getItem('user')
-  const user = JSON.parse(userData)
-  if (user) {
-    yield put(loginSuccess(user))
+  const userToken = localStorage.getItem('id_token')
+  if (userToken) {
+    yield put(loginSuccess(userToken))
   }
 }
 

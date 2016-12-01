@@ -30,10 +30,7 @@ function auth (state = {}, action) {
       return {
         ...state,
         awaitingLoginResponse: false,
-        user: {
-          'access_token': action['access_token'],
-          'id_token': action['id_token']
-        }
+        'id_token': action['id_token']
       }
     }
     case PROFILE_SUCCESS: {
@@ -55,13 +52,14 @@ function auth (state = {}, action) {
     case LOAD_USER_FROM_LOCAL_STORAGE: {
       return {
         ...state,
-        user: action.user
+        'id_token': action.idToken
       }
     }
     case LOGOUT: {
       return {
         ...state,
-        user: action.user
+        user: action.user,
+        'id_token': false
       }
     }
     default: {

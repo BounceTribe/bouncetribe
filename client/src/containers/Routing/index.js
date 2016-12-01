@@ -6,7 +6,7 @@ import useRelay from 'react-router-relay'
 import Routes from './Routes'
 import store from 'store'
 
-let localToken = store.getState().auth.user['id_token']
+let localToken = store.getState().auth['id_token']
 
 const authorization = {
   Authorization: 'Bearer ' + localToken

@@ -35,12 +35,11 @@ export function attemptLogin() {
 
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
-export function loginSuccess(loginResult) {
-  localStorage.setItem('user', JSON.stringify(loginResult))
+export function loginSuccess(idToken) {
+  localStorage.setItem('id_token', idToken)
   return {
     type: LOGIN_SUCCESS,
-    'access_token': loginResult['access_token'],
-    'id_token': loginResult['id_token']
+    'id_token': idToken
   }
 }
 
@@ -55,11 +54,10 @@ export function profileSuccess(profileResult) {
 
 export const LOAD_USER_FROM_LOCAL_STORAGE = 'LOAD_USER_FROM_LOCAL_STORAGE'
 export function loadUserFromLocalStorage() {
-  const userData = localStorage.getItem('user')
-  const user = userData ? JSON.parse(userData) : {'id_token': false}
+  const userToken = localStorage.getItem('id_token')
   return {
     type: LOAD_USER_FROM_LOCAL_STORAGE,
-    user
+    'id_token': userToken
   }
 }
 
@@ -72,13 +70,11 @@ export function requestProfile() {
 
 export const LOGOUT = 'LOGOUT'
 export function logout() {
-  localStorage.removeItem('user')
-  const wipeUser = {
-    personID: false
-  }
+  localStorage.removeItem('id_token')
   return {
     type: LOGOUT,
-    user: wipeUser
+    idToken: false,
+    user: false
   }
 }
 
