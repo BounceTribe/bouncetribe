@@ -1,11 +1,49 @@
-import React from 'react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import Feed from './Feed'
+import Landing from './Landing'
 
-const Home = () => {
-  return (
-    <section>
-      <h1>Home</h1>
-    </section>
-  )
+class Home extends Component {
+
+  get showFeedOrLanding() {
+    if (this.props.user && this.props.isLoggedIn) {
+      return (
+        <Feed />
+      )
+    } else {
+      return (
+        <Landing />
+      )
+    }
+  }
+
+  render() {
+    return (
+      <section>
+        <h1>Home</h1>
+        {this.showFeedOrLanding}
+      </section>
+    )
+  }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user,
+    isLoggedIn: state.auth['id_token'],
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+
+  }
+}
+
+Home = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home)
 
 export default Home

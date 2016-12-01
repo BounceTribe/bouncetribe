@@ -21,7 +21,7 @@ const topBarS = new S({
   base: topBarBase
 })
 
-const TopBar = () => {
+const TopBar = (props) => {
   return (
     <header
       style={{
@@ -29,7 +29,9 @@ const TopBar = () => {
       }}
     >
       <h1>BounceTribe</h1>
-      <TopBarMenu/>
+      <TopBarMenu
+        user={props.user}
+      />
     </header>
   )
 }
