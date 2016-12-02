@@ -9,9 +9,8 @@ import permissionsMiddleware from './utils/permissionsMiddleware'
 import chalk from 'chalk'
 import config from './config/environment'
 import schema from './graphql/schema'
-import db, {initializeDB} from './database'
+import initializeDB from './database'
 import cors from 'cors'
-
 
 //initialize the database
 initializeDB()
@@ -24,7 +23,6 @@ const corsOptions = {
     'http://localhost:3000'
   ]
 }
-
 
 server.options('*', cors())
 

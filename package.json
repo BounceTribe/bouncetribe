@@ -4,8 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": " concurrently -n server,client -p \"[{name}]\" -c \"green.bold,cyan.bold\" \"cd server && npm start\"  \"sleep 5 && cd client && npm start\"",
+    "deploy": "concurrently -n server,client -p \"[{name}]\" -c \"green.bold,cyan.bold\" \"npm run deploy-server\" \"npm run deploy-client\"",
+    "deploy-client": "cd client && git add . && git commit -m 'automatic' && git push heroku master",
+    "deploy-server": "cd server && npm run build && git add . && git commit -m 'automatic' && git push heroku master"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^3.1.0"
+  }
 }

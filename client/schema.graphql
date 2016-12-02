@@ -50,6 +50,8 @@ type Person implements Node {
   personID: ID
   email: String
   name: String
+  handle: String
+  traits(after: String, first: Int, before: String, last: Int): PersonTraitConnection
 }
 
 # A connection to a list of items.
@@ -65,6 +67,34 @@ type PersonConnection {
 type PersonEdge {
   # The item at the end of the edge
   node: Person
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+type PersonTrait implements Node {
+  # The ID of an object
+  id: ID!
+  personID: ID
+  traitKeyID: ID
+  traitValueID: ID
+  key: String
+  value: String
+}
+
+# A connection to a list of items.
+type PersonTraitConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [PersonTraitEdge]
+}
+
+# An edge in a connection.
+type PersonTraitEdge {
+  # The item at the end of the edge
+  node: PersonTrait
 
   # A cursor for use in pagination
   cursor: String!
@@ -87,6 +117,9 @@ type Viewer implements Node {
   personID: ID
   email: String
   name: String
+
+  # The person who is currently using the site.
+  self(after: String, first: Int, before: String, last: Int): PersonConnection
 
   # A person who has an account with the site.
   persons(after: String, first: Int, before: String, last: Int): PersonConnection

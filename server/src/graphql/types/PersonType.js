@@ -19,7 +19,8 @@ import {
 } from 'graphql-relay';
 
 import {nodeInterface, nodeField} from '../connections/nodeDefinitions'
-import Person from '../../database/models/Person'
+import {Person, PersonTrait} from '../../database/models'
+import {connectionType, personTraitConnection} from '../connections/personTraitConnection'
 
 
 const PersonType = new GraphQLObjectType({
@@ -35,6 +36,24 @@ const PersonType = new GraphQLObjectType({
     name: {
       type: GraphQLString
     },
+    handle: {
+      type: GraphQLString
+    },
+    traits: {
+      type: personTraitConnection,
+      args: connectionArgs,
+      resolve: async (person, args, context) => {
+        person.traits = await PersonTrait.findAll({
+          where: {
+            personID: person.personID
+          }
+        })
+        return connectionFromArray(
+          person.traits,
+          args
+        )
+      }
+    }
   }),
   interfaces: [nodeInterface]
 })

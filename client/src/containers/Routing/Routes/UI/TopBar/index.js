@@ -3,6 +3,7 @@ import S from 'styling/S'
 import {btBlack} from 'styling/T'
 
 import TopBarMenu from './TopBarMenu'
+import TopBarMenuItem from './TopBarMenu/TopBarMenuItem'
 
 const topBarBase = {
   maxWidth: '100%',
@@ -28,7 +29,10 @@ const TopBar = (props) => {
         ...topBarS.all
       }}
     >
-      <h1>BounceTribe</h1>
+      <TopBarMenuItem
+        text={'BounceTribe'}
+        to={'/'}
+      />
       <TopBarMenu
         user={props.user}
       />

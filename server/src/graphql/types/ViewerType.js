@@ -16,10 +16,10 @@ import {
   nodeDefinitions,
   cursorForObjectInConnection,
   connectionFromPromisedArray
-} from 'graphql-relay';
+} from 'graphql-relay'
 
 import {nodeInterface, nodeField} from '../connections/nodeDefinitions'
-import Person from '../../database/models/Person'
+import {Person} from '../../database/models'
 import PersonType from '../types/PersonType'
 import {connectionType, personConnection} from '../connections/personConnection'
 
@@ -36,6 +36,20 @@ const ViewerType = new GraphQLObjectType({
     },
     name: {
       type: GraphQLString
+    },
+    self: {
+      description: 'The person who is currently using the site.',
+      type: personConnection,
+      args: connectionArgs,
+      resolve: async (viewer, args, context) => {
+        viewer.self =[]
+        const self = await Person.findById(context.user.personID)
+        viewer.self.push(self)
+        return connectionFromArray(
+          viewer.self,
+          args
+        )
+      }
     },
     persons: {
       description: 'A person who has an account with the site.',
@@ -61,10 +75,5 @@ const ViewerType = new GraphQLObjectType({
   }),
   interfaces: ()=> [nodeInterface]
 })
-
-// const {
-//   connectionType: personConnection,
-//   edgeType: personEdge,
-// } = connectionDefinitions({name: 'Person', nodeType: PersonType});
 
 export default ViewerType

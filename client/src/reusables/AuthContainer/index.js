@@ -7,11 +7,33 @@ import LoginSignupTabs from './LoginSignupTabs'
 
 
 
-import {attemptSignup, logout, attemptLogin, showLoginCard, showSignupCard} from 'actions/auth'
+import {attemptSignup, logout, attemptLogin} from 'actions/auth'
 
 class AuthContainer extends Component {
+  constructor () {
+    super()
+    this.state = {
+      loginCardShowing: true,
+      signupCardShowing: false,
+    }
+  }
 
-  showProfile = () => {
+  showLoginCard = () => {
+    this.setState({
+      loginCardShowing: true,
+      signupCardShowing: false
+    })
+  }
+
+  showSignupCard = () => {
+    this.setState({
+      loginCardShowing: false,
+      signupCardShowing: true
+    })
+  }
+
+
+  get showProfile() {
     if (this.props.user) {
       return (
         <ProfileCard
@@ -20,7 +42,7 @@ class AuthContainer extends Component {
         />
       )
     }
-    if (!this.props.isLoggedIn && this.props.loginCardShowing){
+    if (!this.props.isLoggedIn && this.state.loginCardShowing){
       return (
         <LoginCard
           attemptLogin={this.props.attemptLogin}
@@ -29,7 +51,7 @@ class AuthContainer extends Component {
         />
       )
     }
-    if (!this.props.isLoggedIn && this.props.signupCardShowing) {
+    if (!this.props.isLoggedIn && this.state.signupCardShowing) {
       return (
         <SignUpCard
           attemptSignup={this.props.attemptSignup}
@@ -41,14 +63,14 @@ class AuthContainer extends Component {
     }
   }
 
-  showTabs = () => {
+  get showTabs() {
     if (!this.props.isLoggedIn) {
       return (
         <LoginSignupTabs
-          showSignupCard={this.props.showSignupCard}
-          showLoginCard={this.props.showLoginCard}
-          loginCardShowing={this.props.loginCardShowing}
-          signupCardShowing={this.props.signupCardShowing}
+          showSignupCard={this.showSignupCard}
+          showLoginCard={this.showLoginCard}
+          loginCardShowing={this.state.loginCardShowing}
+          signupCardShowing={this.state.signupCardShowing}
         />
       )
     }
@@ -62,13 +84,13 @@ class AuthContainer extends Component {
           border: 'solid 1px black'
         }}
       >
-        {this.showTabs()}
+        {this.showTabs}
         <div
           style={{
             margin: '5px'
           }}
         >
-          {this.showProfile()}
+          {this.showProfile}
         </div>
       </div>
     )
@@ -81,10 +103,8 @@ const mapStateToProps = (state) => {
     awaitingSignupResponse: state.auth.awaitingSignupResponse,
     user: state.auth.user,
     isLoggedIn: state.auth['id_token'],
-    loginCardShowing: state.ui.loginCardShowing,
-    signupCardShowing:state.ui.signupCardShowing,
-    loginError: state.ui.loginError,
-    signupError: state.ui.signupError,
+    loginError: state.auth.loginError,
+    signupError: state.auth.signupError,
   }
 }
 
@@ -95,12 +115,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     attemptLogin: () => {
       dispatch(attemptLogin())
-    },
-    showSignupCard: () => {
-      dispatch(showSignupCard())
-    },
-    showLoginCard: () => {
-      dispatch(showLoginCard())
     },
     logout: () => {
       dispatch(logout())

@@ -60,7 +60,12 @@ class TopBarMenuItem extends Component {
           }}
           onTouchTap={this.handleTouchTap}
         >
-          <Link>{this.props.text}</Link>
+          <Link
+            to={this.props.to}
+          >
+            {this.props.text}
+          </Link>
+
           {this.hasDropDown}
         </div>
     )

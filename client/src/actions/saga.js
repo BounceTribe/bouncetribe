@@ -1,7 +1,6 @@
-import store from '../store'
+import store from 'store'
 import { takeEvery } from 'redux-saga'
-import {signupSuccess, loginSuccess, attemptLogin, loadUserFromLocalStorage, receivedSignupError, receivedLoginError, profileSuccess} from './auth'
-import {loginErrorMessage, signupErrorMessage} from './ui'
+import {signupSuccess, loginSuccess, attemptLogin, loadUserFromLocalStorage, receivedSignupError, receivedLoginError, profileSuccess, loginErrorMessage, signupErrorMessage} from './auth'
 import { put, call } from 'redux-saga/effects'
 import {reset} from 'redux-form'
 
@@ -114,7 +113,6 @@ export function* loginCalls() {
     const loginSuccessResult = yield call(loginFetch)
 
     if (loginSuccessResult) {
-      console.log(loginSuccessResult)
       yield put(loginSuccess(loginSuccessResult['id_token']))
       yield put(reset('signup'))
     }

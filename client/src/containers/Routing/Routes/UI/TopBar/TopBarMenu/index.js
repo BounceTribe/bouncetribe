@@ -20,6 +20,7 @@ class TopBarMenu extends Component {
         <TopBarMenuItem
           text={'Projects'}
           key='projects'
+          to={'/projects'}
         />,
         <TopBarMenuItem
           text={'Notifications'}
@@ -34,11 +35,13 @@ class TopBarMenu extends Component {
       return ([
         <TopBarMenuItem
           text={'Profile'}
-          key='myTribe'
+          key='profile'
+          to='/profile'
         />,
         <TopBarMenuItem
           text={'My Tribe'}
-          key='notifications'
+          key='myTribe'
+          to='/tribe'
         />
       ])
     }

@@ -1,7 +1,5 @@
 import sequelize from 'sequelize'
-import db from '../index'
-
-import PersonDemo from './PersonDemo'
+import db from '../db'
 
 const Person = db.define('person', {
 
@@ -33,6 +31,11 @@ const Person = db.define('person', {
 
   name: {
     type: sequelize.STRING,
+  },
+
+  handle: {
+    type: sequelize.STRING,
+    unique: true,
   },
 
 })

@@ -10,7 +10,6 @@ export const profileRoute = baseRoute + '/tokeninfo'
 
 
 export const loginOptions = (email, password) => {
-  console.log(auth0id)
   return {
     method: 'POST',
     headers: {

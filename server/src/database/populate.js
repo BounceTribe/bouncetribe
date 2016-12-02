@@ -1,4 +1,5 @@
-import Person from './models/Person'
+import {Person, TraitKey, TraitValue, PersonTrait} from './models'
+import {traitKeys, traitValues, personTraits} from './initialValues'
 import fetch from 'isomorphic-fetch'
 import uuid from 'uuid'
 import {auth0Admin} from '../config/auth0'
@@ -18,11 +19,8 @@ const options = () => {
 const auth0users = async () => {
   try {
     console.log('fetching users from auth0')
-    console.log(options())
     const result = await fetch(allUsersUrl, options())
-    console.log(result)
     const data = await result.json()
-    console.log('sync data', data)
     const users = []
     data.users.forEach((user)=>{
       let email = user.email
@@ -35,7 +33,8 @@ const auth0users = async () => {
         name,
         auth0id,
         profilePicUrl,
-        personID
+        personID,
+        handle: Math.random().toString().split('.')[1]
       })
     })
     return users
@@ -44,11 +43,8 @@ const auth0users = async () => {
   }
 }
 
-const populate = async () => {
+const makeUsers = async () => {
   try {
-
-    console.log('beginning db sync')
-
     const users = await auth0users()
 
     users.forEach( (user, index) => {
@@ -63,8 +59,81 @@ const populate = async () => {
         console.log(index)
       })
     })
+  } catch (error) {
+    console.log('makeUsers error', error)
+  }
+}
 
-    console.log('sync complete!')
+const makeTraitKeys = async () => {
+
+  traitKeys.forEach( (traitKey) => {
+    TraitKey.findOrCreate({
+      where: {
+        key: traitKey.key
+      },
+      defaults: {
+        ...traitKey
+      }
+    })
+  })
+}
+
+const makeTraitValues = async () => {
+  traitValues.forEach( (traitValue) => {
+    TraitValue.findOrCreate({
+      where: {
+        value: traitValue.value
+      },
+      defaults: {
+        ...traitValue
+      }
+    })
+  })
+}
+
+const makePersonTraits = async () => {
+  try {
+    let carl = await Person.find({
+      where: {
+        email: 'cpeaslee@gmail.com'
+      }
+    })
+    carl = carl.dataValues
+
+    personTraits.forEach( (pt) => {
+      PersonTrait.findOrCreate({
+        where: {
+          personID: carl.personID
+        },
+        defaults: {
+          personTraitID: uuid.v4(),
+          personID: carl.personID,
+          traitKeyID: pt.traitKeyID,
+          traitValueID: pt.traitValueID
+        }
+      })
+    })
+
+  } catch (error) {
+    console.log('makePersonTraits error', error)
+  }
+
+}
+
+
+const populate = async () => {
+  try {
+
+    console.log('beginning populate')
+
+    await makeUsers()
+
+    await makeTraitValues()
+    await makeTraitKeys()
+
+    await makePersonTraits()
+
+    console.log('populate complete!')
 
   } catch (error) {
     console.log('syncing error', error)

@@ -6,7 +6,10 @@ import ReduxProvider from './ReduxProvider'
 
 import Home from './Home'
 import Profile from './Profile'
-import Users from './Users'
+import Admin from './Admin'
+import Projects from './Projects'
+import Tribe from './Tribe'
+
 
 const ViewerQueries = {
   viewer: () => Relay.QL`
@@ -23,10 +26,19 @@ const createRoutes = () => {
       <Route
         path="/profile"
         component={Profile}
+        queries={ViewerQueries}
       />
       <Route
-        path="/users"
-        component={Users}
+        path="/projects"
+        component={Projects}
+      />
+      <Route
+        path="/tribe"
+        component={Tribe}
+      />
+      <Route
+        path="/admin"
+        component={Admin}
         queries={ViewerQueries}
       />
     </Route>
