@@ -23,6 +23,8 @@ import {nodeInterface, nodeField} from './connections/nodeDefinitions'
 import personMutation from './mutations/personMutation'
 import editPerson from './mutations/editPerson'
 
+import chalk from 'chalk'
+
 const RootQuery = new GraphQLObjectType({
   name: 'RootQuery',
   description: 'The root query',
@@ -30,17 +32,14 @@ const RootQuery = new GraphQLObjectType({
     viewer: {
       description: 'The person who is currently using the site.',
       type: ViewerType,
-      args: {
-        personID: {
-          type: GraphQLID
-        },
-      },
       resolve: async (source, args, context) => {
-        const viewer = await Person.findById(context.personID)
+        console.log(chalk.cyan('viewerRoot is resolving'))
+        const instance = await Person.findById(context.personID)
+        const viewer = instance.dataValues
         return viewer
       },
-      node: nodeField,
     },
+    node: nodeField,
   })
 })
 

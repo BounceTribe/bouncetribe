@@ -21,6 +21,8 @@ import chalk from 'chalk'
 
 import {Person} from '../../database/models'
 import PersonType from '../types/PersonType'
+import ViewerType from '../types/ViewerType'
+
 import {connectionType, personConnection} from '../connections/personConnection'
 
 const editPerson = mutationWithClientMutationId({
@@ -39,6 +41,7 @@ const editPerson = mutationWithClientMutationId({
       resolve: async (payload) => {
         try {
           console.log(chalk.green('payload'), payload.modifiedPerson)
+
           return payload.modifiedPerson
         } catch (error) {
           console.log(chalk.red('error'))
@@ -47,18 +50,24 @@ const editPerson = mutationWithClientMutationId({
 
       },
     },
-    self: {
-      type: personConnection,
+    viewer: {
+      type: ViewerType,
       resolve: async (payload) => {
-        return payload.modifiedPerson
-      }
+        try {
+          console.log(chalk.green('payload'), payload)
+          return payload
+        } catch (error) {
+          console.log(chalk.red('error'))
+          console.log(error)
+        }
+
+      },
     }
   },
   mutateAndGetPayload: async ({personID, handle}) => {
     try {
       console.log(chalk.cyan('mutateAndGetPayload'))
       const person = await Person.findById(personID)
-      console.log(person.dataValues)
       const modifiedPerson = await person.update({
         handle
       })

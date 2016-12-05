@@ -7,7 +7,7 @@ import Relay from 'react-relay'
 import ReduxProvider from './ReduxProvider'
 
 import Home from './Home'
-import Profile from './Profile'
+import ProfileContainer from 'reusables/ProfileContainer'
 import Admin from './Admin'
 import Projects from './Projects'
 import Tribe from './Tribe'
@@ -37,7 +37,7 @@ const createRoutes = () => {
       <IndexRoute component={Home} />
       <Route
         path="/profile"
-        component={Profile}
+        component={ProfileContainer}
         queries={ViewerQueries}
       />
       <Route

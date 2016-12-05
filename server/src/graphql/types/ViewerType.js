@@ -22,54 +22,19 @@ import {nodeInterface, nodeField} from '../connections/nodeDefinitions'
 import {Person} from '../../database/models'
 import PersonType from '../types/PersonType'
 import {connectionType, personConnection} from '../connections/personConnection'
-
+import chalk from 'chalk'
 
 const ViewerType = new GraphQLObjectType({
   name: 'Viewer',
   fields: ()=>({
     id: globalIdField('Viewer'),
-    personID: {
-      type: GraphQLID
-    },
-    email: {
-      type: GraphQLString
-    },
-    name: {
-      type: GraphQLString
-    },
     self: {
       description: 'The person who is currently using the site.',
-      type: personConnection,
-      args: connectionArgs,
+      type: PersonType,
       resolve: async (viewer, args, context) => {
-        viewer.self =[]
-        const self = await Person.findById(viewer.personID)
-        viewer.self.push(self)
-        return connectionFromArray(
-          viewer.self,
-          args
-        )
-      }
-    },
-    persons: {
-      description: 'A person who has an account with the site.',
-      type: personConnection,
-      args: connectionArgs,
-      resolve: async (viewer, args, context) => {
-        const personResult =  await Person.findAll()
-        viewer.persons = []
-        personResult.forEach(
-          (instance) => {
-            viewer.persons.push({
-              ...instance.dataValues,
-              id: instance.dataValues.personID
-            })
-          }
-        )
-        return connectionFromArray(
-          viewer.persons,
-          args
-        )
+        console.log(chalk.cyan('viewerType is resolving'), viewer)
+        const self = viewer
+        return self
       }
     },
   }),

@@ -11,28 +11,33 @@ class ProfileContainer extends Component {
 
   handleEditField = (fields = {}) => {
     console.log(fields)
-    this.props.relay.commitUpdate(
+    Relay.Store.commitUpdate(
       new EditPersonMutation({
-        person: this.props.person,
-        personID: this.props.person.personID,
-        handle: fields.handle
-      })
+        personID: this.props.viewer.self.personID,
+        handle: fields.handle,
+        viewer: this.props.viewer
+      }),
+      {
+        onSuccess: (success) => console.log(success),
+        onFailure: (transaction) => console.log(transaction),
+      },
     )
   }
 
   render() {
+    console.log(this.props.viewer)
     return (
       <div>
-        <img
-          src={this.props.person.profilePicUrl}
+        {/* <img
+          src={this.props.self.profilePicUrl}
           alt="Profile"
-        />
-        <h3>{this.props.person.email}</h3>
-        <h4>{this.props.person.handle}</h4>
+        /> */}
+        <h3>{this.props.viewer.self.email}</h3>
+        <h4>{this.props.viewer.self.handle}</h4>
         <ProfileField
           field={'handle'}
-          text={this.props.person.handle}
-          person={this.props.person}
+          text={this.props.viewer.self.handle}
+          person={this.props.viewer.self}
           submitField={this.handleEditField}
         />
       </div>
@@ -45,15 +50,16 @@ export default Relay.createContainer(
   ProfileContainer,
   {
     fragments: {
-      person: () => Relay.QL`
-        fragment on Person {
-          ${EditPersonMutation.getFragment('person')}
-          id
-          personID
-          name
-          email
-          handle
-          profilePicUrl
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          self {
+            personID
+            email
+            name
+            handle
+            profilePicUrl
+            influences
+          }
         }
       `,
     },

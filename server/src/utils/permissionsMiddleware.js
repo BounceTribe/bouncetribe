@@ -18,7 +18,7 @@ const jwtCheck = jwt({
 
 
 async function permissionsChecker(req, res, next) {
-  console.log(req.user)
+  //console.log(req.user)
   if (!req.user) {
     try {
       console.log('permissionsChecker: you need to login', req.user)
