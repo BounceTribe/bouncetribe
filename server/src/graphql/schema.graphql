@@ -23,6 +23,18 @@ type CreatePersonPayload {
   clientMutationId: String
 }
 
+input EditPersonInput {
+  personID: ID
+  handle: String
+  clientMutationId: String
+}
+
+type EditPersonPayload {
+  person: Person
+  self: PersonConnection
+  clientMutationId: String
+}
+
 # An object with an ID
 interface Node {
   # The id of the object.
@@ -48,6 +60,7 @@ type Person implements Node {
   # The ID of an object
   id: ID!
   personID: ID
+  profilePicUrl: String
   email: String
   name: String
   handle: String
@@ -104,6 +117,7 @@ type PersonTraitEdge {
 # The root mutation
 type RootMutation {
   createPerson(input: CreatePersonInput!): CreatePersonPayload
+  editPerson(input: EditPersonInput!): EditPersonPayload
 }
 
 # The root query

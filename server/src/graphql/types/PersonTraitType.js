@@ -43,7 +43,6 @@ const PersonTraitType = new GraphQLObjectType({
       resolve: async (personTrait, args, context) => {
         const traitKeyID =  personTrait.traitKeyID
         const instance = await TraitKey.findById(traitKeyID)
-        console.log(instance)
         return instance.key
       }
     },
@@ -52,7 +51,6 @@ const PersonTraitType = new GraphQLObjectType({
       resolve: async (personTrait, args, context) => {
         const traitValueID =  personTrait.traitValueID
         const instance = await TraitValue.findById(traitValueID)
-        console.log(instance)
         return instance.value
       }
     },

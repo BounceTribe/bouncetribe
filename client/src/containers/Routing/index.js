@@ -4,9 +4,8 @@ import Relay from 'react-relay'
 import useRelay from 'react-router-relay'
 
 import Routes from './Routes'
-import store from 'store'
 
-let localToken = store.getState().auth['id_token']
+let localToken = localStorage.getItem('id_token')
 
 const authorization = {
   Authorization: 'Bearer ' + localToken

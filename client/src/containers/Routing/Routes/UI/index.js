@@ -15,6 +15,7 @@ class UI extends Component {
             <TopBar
               user={this.props.user}
               isLoggedIn={this.props.isLoggedIn}
+              router={this.props.router}
             />
             <main>
               {this.props.children}

@@ -1,6 +1,8 @@
 import React from 'react'
 import {Route, IndexRoute} from 'react-router'
 import Relay from 'react-relay'
+// import store from 'store'
+// import {loadUserFromLocalStorage} from 'actions/auth'
 
 import ReduxProvider from './ReduxProvider'
 
@@ -18,6 +20,16 @@ const ViewerQueries = {
     }
   `,
 }
+
+// const requireAuth = (nextState, replace) => {
+//   store.dispatch(loadUserFromLocalStorage())
+//   const isLoggedIn = store.getState().auth.user
+//   if (!isLoggedIn) {
+//     console.log('you need to login')
+//     replace({ pathname: '/' })
+//   }
+// }
+
 
 const createRoutes = () => {
   return (

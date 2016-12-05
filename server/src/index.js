@@ -34,7 +34,7 @@ server.use('/graphql', permissionsMiddleware, graphQLHTTP((req)=>{
       pretty: true,
       schema,
       context: {
-        user: req.user
+        personID: req.user.personID
       }
     }
   }))

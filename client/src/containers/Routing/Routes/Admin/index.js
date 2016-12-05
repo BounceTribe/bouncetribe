@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
-import CreatePersonMutation from './CreatePersonMutation';
+import CreatePersonMutation from './CreatePersonMutation'
 import ListPerson from './ListPerson'
 
 class Admin extends Component {

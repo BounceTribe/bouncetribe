@@ -11,6 +11,7 @@ class ReduxProvider extends Component {
         >
           <UI
             children={this.props.children}
+            router={this.props.router}
           />
         </Provider>
 

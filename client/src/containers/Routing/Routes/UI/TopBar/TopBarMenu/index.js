@@ -62,7 +62,9 @@ class TopBarMenu extends Component {
             dropDown={
               <div>
                 {this.showUserDropdown}
-                <AuthContainer/>
+                <AuthContainer
+                  router={this.props.router}
+                />
               </div>
             }
           />

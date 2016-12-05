@@ -35,6 +35,7 @@ const TopBar = (props) => {
       />
       <TopBarMenu
         user={props.user}
+        router={props.router}
       />
     </header>
   )

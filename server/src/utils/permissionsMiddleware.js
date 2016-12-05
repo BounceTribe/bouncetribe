@@ -1,5 +1,5 @@
 import jwt from 'express-jwt'
-import Person from '../database/models/Person'
+import {Person} from '../database/models'
 import {secret, clientID} from '../config/auth0'
 
 const jwtCheck = jwt({
@@ -18,10 +18,13 @@ const jwtCheck = jwt({
 
 
 async function permissionsChecker(req, res, next) {
+  console.log(req.user)
   if (!req.user) {
     try {
-      const anonymous = await Person.findById('0048768e-5379-46c4-838f-7fbf49bf5fa1')
-      req.user = anonymous
+      console.log('permissionsChecker: you need to login', req.user)
+      req.user = {
+        personID: false
+      }
       next()
     } catch (error) {
       console.log('permissions error', error)

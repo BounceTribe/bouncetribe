@@ -30,6 +30,9 @@ const PersonType = new GraphQLObjectType({
     personID: {
       type: GraphQLID
     },
+    profilePicUrl: {
+      type: GraphQLString
+    },
     email: {
       type: GraphQLString
     },

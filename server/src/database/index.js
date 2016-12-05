@@ -11,7 +11,7 @@ async function initializeDB() {
 
     console.log(chalk.magenta('Database connection established.'))
 
-    await populate()
+    // await populate()
 
     console.log(chalk.magenta('Population Complete.'))
 

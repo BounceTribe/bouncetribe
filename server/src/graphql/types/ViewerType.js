@@ -43,7 +43,7 @@ const ViewerType = new GraphQLObjectType({
       args: connectionArgs,
       resolve: async (viewer, args, context) => {
         viewer.self =[]
-        const self = await Person.findById(context.user.personID)
+        const self = await Person.findById(viewer.personID)
         viewer.self.push(self)
         return connectionFromArray(
           viewer.self,

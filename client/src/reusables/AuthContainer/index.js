@@ -18,6 +18,11 @@ class AuthContainer extends Component {
     }
   }
 
+  handleLogout = () => {
+    this.props.logout()
+    this.props.router.push('/')
+  }
+
   showLoginCard = () => {
     this.setState({
       loginCardShowing: true,
@@ -37,7 +42,7 @@ class AuthContainer extends Component {
     if (this.props.user) {
       return (
         <ProfileCard
-          logout={this.props.logout}
+          logout={this.handleLogout}
           user={this.props.user}
         />
       )

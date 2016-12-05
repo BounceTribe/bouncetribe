@@ -18,10 +18,10 @@ import {
 
 import ViewerType from './types/ViewerType'
 import PersonType from './types/PersonType'
-import Person from '../database/models/Person'
+import {Person} from '../database/models'
 import {nodeInterface, nodeField} from './connections/nodeDefinitions'
 import personMutation from './mutations/personMutation'
-
+import editPerson from './mutations/editPerson'
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQuery',
@@ -36,7 +36,7 @@ const RootQuery = new GraphQLObjectType({
         },
       },
       resolve: async (source, args, context) => {
-        const viewer = await Person.findById(context.user.personID)
+        const viewer = await Person.findById(context.personID)
         return viewer
       },
       node: nodeField,
@@ -51,6 +51,7 @@ const RootMutation = new GraphQLObjectType({
   description: 'The root mutation',
   fields: ()=> ({
     createPerson: personMutation,
+    editPerson: editPerson,
   })
 })
 
