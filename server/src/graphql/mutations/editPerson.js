@@ -47,12 +47,6 @@ const editPerson = mutationWithClientMutationId({
 
       },
     },
-    self: {
-      type: personConnection,
-      resolve: async (payload) => {
-        return payload.modifiedPerson
-      }
-    }
   },
   mutateAndGetPayload: async ({personID, handle}) => {
     try {

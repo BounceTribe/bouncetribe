@@ -19,7 +19,7 @@ import {
 } from 'graphql-relay';
 
 import {nodeInterface, nodeField} from '../connections/nodeDefinitions'
-import {Person, PersonTrait} from '../../database/models'
+import {Person, PersonTrait, TraitValue} from '../../database/models'
 import {connectionType, personTraitConnection} from '../connections/personTraitConnection'
 
 
@@ -42,21 +42,48 @@ const PersonType = new GraphQLObjectType({
     handle: {
       type: GraphQLString
     },
-    traits: {
-      type: personTraitConnection,
-      args: connectionArgs,
+    influences: {
+      type: new GraphQLList(GraphQLString),
       resolve: async (person, args, context) => {
-        person.traits = await PersonTrait.findAll({
+        const results = await PersonTrait.findAll({
           where: {
-            personID: person.personID
+            personID: person.personID,
+            traitKeyID: '609a027f-b40f-4c64-b1cb-57e2509dbd5c'
           }
         })
-        return connectionFromArray(
-          person.traits,
-          args
-        )
+        const influences = []
+        results.forEach((influence) => {
+          influences.push({
+            traitValueID: influence.dataValues.traitValueID
+          })
+        })
+        const influenceValues = await TraitValue.findAll({
+          where: influences
+        })
+
+        person.influences = []
+        influenceValues.forEach((value)=> {
+          person.influences.push(value.dataValues.value)
+        })
+
+        return person.influences
       }
-    }
+    },
+    // traits: {
+    //   type: personTraitConnection,
+    //   args: connectionArgs,
+    //   resolve: async (person, args, context) => {
+    //     person.traits = await PersonTrait.findAll({
+    //       where: {
+    //         personID: person.personID
+    //       }
+    //     })
+    //     return connectionFromArray(
+    //       person.traits,
+    //       args
+    //     )
+    //   }
+    // }
   }),
   interfaces: [nodeInterface]
 })

@@ -47,13 +47,15 @@ export default Relay.createContainer(
     fragments: {
       person: () => Relay.QL`
         fragment on Person {
+          id,
+          personID,
+          name,
+          email,
+          handle,
+          profilePicUrl,
+          influences,
           ${EditPersonMutation.getFragment('person')}
-          id
-          personID
-          name
-          email
-          handle
-          profilePicUrl
+          ${ProfileField.getFragment('person')}
         }
       `,
     },

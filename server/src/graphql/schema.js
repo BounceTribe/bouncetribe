@@ -16,31 +16,27 @@ import {
   nodeDefinitions
 } from 'graphql-relay'
 
-import ViewerType from './types/ViewerType'
+// import ViewerType from './types/ViewerType'
 import PersonType from './types/PersonType'
 import {Person} from '../database/models'
 import {nodeInterface, nodeField} from './connections/nodeDefinitions'
 import personMutation from './mutations/personMutation'
 import editPerson from './mutations/editPerson'
 
-const RootQuery = new GraphQLObjectType({
-  name: 'RootQuery',
-  description: 'The root query',
+const Query = new GraphQLObjectType({
+  name: 'Query',
+  description: 'The BounceTribe GraphQL root query.',
   fields: ()=> ({
+    node: nodeField,
     viewer: {
       description: 'The person who is currently using the site.',
-      type: ViewerType,
-      args: {
-        personID: {
-          type: GraphQLID
-        },
-      },
+      type: PersonType,
+      args: connectionArgs,
       resolve: async (source, args, context) => {
         const viewer = await Person.findById(context.personID)
         return viewer
       },
-      node: nodeField,
-    },
+    }
   })
 })
 
@@ -56,7 +52,7 @@ const RootMutation = new GraphQLObjectType({
 })
 
 const Schema = new GraphQLSchema({
-  query: RootQuery,
+  query: Query,
   mutation: RootMutation
 })
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-
+import Relay from 'react-relay'
 
 class ProfileField extends Component {
   constructor(props) {
@@ -72,4 +72,21 @@ class ProfileField extends Component {
 
 }
 
-export default ProfileField
+export default Relay.createContainer(
+  ProfileField,
+  {
+    fragments: {
+      person: () => Relay.QL`
+        fragment on Person {
+          id,
+          personID,
+          name,
+          email,
+          handle,
+          profilePicUrl,
+          influences,
+        }
+      `,
+    },
+  }
+)

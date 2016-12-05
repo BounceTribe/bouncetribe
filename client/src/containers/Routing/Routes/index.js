@@ -14,9 +14,11 @@ import Tribe from './Tribe'
 
 
 const ViewerQueries = {
-  viewer: () => Relay.QL`
+  viewer: (Component) => Relay.QL`
     query {
-      viewer
+      viewer{
+        ${Component.getFragment('viewer')}
+      }
     }
   `,
 }

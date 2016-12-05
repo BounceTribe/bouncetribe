@@ -13,7 +13,7 @@ class Profile extends Component {
       <section>
         <h1>Profile</h1>
         <ProfileContainer
-          person={this.props.viewer.self.edges.map((edge) => edge.node).map((person) => person)[0]}
+          person={this.props.viewer}
         />
       </section>
     )
@@ -26,28 +26,13 @@ export default Relay.createContainer(
   {
     fragments: {
       viewer: () => Relay.QL`
-        fragment on Viewer {
-          self (first: 1) {
-            edges {
-              node {
-                personID
-                email
-                name
-                handle
-                profilePicUrl
-                ${ProfileContainer.getFragment('person')}
-                traits (first: 10) {
-                  edges {
-                    node {
-                      key
-                      value
-                    }
-                  }
-                }
-              }
-            }
-          }
-          personID
+        fragment on Person {
+          personID,
+          email,
+          name,
+          profilePicUrl,
+          handle,
+          ${ProfileContainer.getFragment('person')}
         }
       `,
     },
