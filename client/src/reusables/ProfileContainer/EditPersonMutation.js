@@ -31,6 +31,9 @@ class EditPersonMutation extends Relay.Mutation {
           name
           handle
         }
+        viewer {
+          self
+        }
       }
     `
   }
