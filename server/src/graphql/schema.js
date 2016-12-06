@@ -24,16 +24,22 @@ import personMutation from './mutations/personMutation'
 import editPerson from './mutations/editPerson'
 
 import chalk from 'chalk'
+import {b} from '../utils/logging'
 
-const RootQuery = new GraphQLObjectType({
+const Query = new GraphQLObjectType({
   name: 'RootQuery',
   description: 'The root query',
   fields: ()=> ({
     viewer: {
       description: 'The person who is currently using the site.',
       type: ViewerType,
-      resolve: async (source, args, context) => {
-        console.log(chalk.cyan('viewerRoot is resolving'))
+      args: {
+        personID: {
+          type: GraphQLID
+        },
+      },
+      resolve: async (_, args, context) => {
+        b('Root: ViewerResolve', '', args, context)
         const instance = await Person.findById(context.personID)
         const viewer = instance.dataValues
         return viewer
@@ -45,7 +51,7 @@ const RootQuery = new GraphQLObjectType({
 
 
 
-const RootMutation = new GraphQLObjectType({
+const Mutation = new GraphQLObjectType({
   name: 'RootMutation',
   description: 'The root mutation',
   fields: ()=> ({
@@ -55,8 +61,8 @@ const RootMutation = new GraphQLObjectType({
 })
 
 const Schema = new GraphQLSchema({
-  query: RootQuery,
-  mutation: RootMutation
+  query: Query,
+  mutation: Mutation
 })
 
 export default Schema

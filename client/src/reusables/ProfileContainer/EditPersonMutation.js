@@ -2,13 +2,22 @@ import Relay from 'react-relay'
 
 class EditPersonMutation extends Relay.Mutation {
 
+  static fragments = {
+    person: () => Relay.QL`
+      fragment on Person {
+        personID
+      }
+    `,
+
+  };
+
   getMutation() {
     return Relay.QL`mutation {editPerson}`
   }
 
   getVariables() {
     return {
-      personID: this.props.personID,
+      personID: this.props.person.personID,
       handle: this.props.handle
     }
   }
@@ -16,17 +25,12 @@ class EditPersonMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`
       fragment on EditPersonPayload {
-        viewer {
-          self {
-            personID
-            email
-            name
-            handle
-            profilePicUrl
-            influences
-          }
+        person {
+          personID
+          email
+          name
+          handle
         }
-        person
       }
     `
   }
@@ -35,7 +39,7 @@ class EditPersonMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-          viewer: this.props.viewer.self.personID,
+          person: this.props.person.personID,
       }
     }]
   }

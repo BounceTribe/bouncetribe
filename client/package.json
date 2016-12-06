@@ -72,7 +72,7 @@
     "relay": "^0.8.0-1"
   },
   "scripts": {
-    "start": "NODE_PATH=src/ REACT_APP_GRAPHQL_URL='http://www.bt-carl.info/graphql' node scripts/start.js",
+    "start": "NODE_PATH=src/ REACT_APP_GRAPHQL_URL='http://localhost:5000/graphql' node scripts/start.js",
     "build": "NODE_ENV=production NODE_PATH=src/ REACT_APP_GRAPHQL_URL='http://www.bt-carl.info/graphql' node scripts/build.js",
     "test": "NODE_PATH=src/ node scripts/test.js --env=jsdom"
   },

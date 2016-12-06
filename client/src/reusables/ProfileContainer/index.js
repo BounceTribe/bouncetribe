@@ -11,11 +11,12 @@ class ProfileContainer extends Component {
 
   handleEditField = (fields = {}) => {
     console.log(fields)
+    const person = this.props.viewer.self.edges[0].node
+    console.log(person)
     Relay.Store.commitUpdate(
       new EditPersonMutation({
-        personID: this.props.viewer.self.personID,
+        person: person,
         handle: fields.handle,
-        viewer: this.props.viewer
       }),
       {
         onSuccess: (success) => console.log(success),
@@ -23,6 +24,18 @@ class ProfileContainer extends Component {
       },
     )
   }
+
+  get renderProfileField() {
+      return this.props.viewer.self.edges.map(edge => (
+        <ProfileField
+          field={'handle'}
+          key={edge.node.personID}
+          text={edge.node.handle}
+          person={edge.node}
+          submitField={this.handleEditField}
+        />
+      ))
+    }
 
   render() {
     console.log(this.props.viewer)
@@ -34,12 +47,7 @@ class ProfileContainer extends Component {
         /> */}
         <h3>{this.props.viewer.self.email}</h3>
         <h4>{this.props.viewer.self.handle}</h4>
-        <ProfileField
-          field={'handle'}
-          text={this.props.viewer.self.handle}
-          person={this.props.viewer.self}
-          submitField={this.handleEditField}
-        />
+        {this.renderProfileField}
       </div>
     )
   }
@@ -52,13 +60,16 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          self {
-            personID
-            email
-            name
-            handle
-            profilePicUrl
-            influences
+          self (first: 1000) {
+            edges {
+              node {
+                personID
+                email
+                name
+                handle
+                ${EditPersonMutation.getFragment('person')}
+              }
+            }
           }
         }
       `,

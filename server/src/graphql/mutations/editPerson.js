@@ -18,6 +18,7 @@ import {
 } from 'graphql'
 
 import chalk from 'chalk'
+import {b} from '../../utils/logging'
 
 import {Person} from '../../database/models'
 import PersonType from '../types/PersonType'
@@ -40,40 +41,42 @@ const editPerson = mutationWithClientMutationId({
       type: PersonType,
       resolve: async (payload) => {
         try {
-          console.log(chalk.green('payload'), payload.modifiedPerson)
+          console.log(chalk.green('outputFields, editPerson, payload:'), payload)
 
-          return payload.modifiedPerson
+          const person = await Person.findById(payload.modifiedPersonID)
+
+          return person.dataValues
         } catch (error) {
           console.log(chalk.red('error'))
           console.log(error)
         }
-
       },
     },
     viewer: {
       type: ViewerType,
       resolve: async (payload) => {
         try {
-          console.log(chalk.green('payload'), payload)
-          return payload
+          console.log(chalk.green('outputFields, editPerson, payload:'), payload)
+
+          const person = await Person.findById(payload.modifiedPersonID)
+
+          return person.dataValues
         } catch (error) {
           console.log(chalk.red('error'))
           console.log(error)
         }
-
       },
     }
   },
-  mutateAndGetPayload: async ({personID, handle}) => {
+  mutateAndGetPayload: async (source, args, context) => {
     try {
-      console.log(chalk.cyan('mutateAndGetPayload'))
-      const person = await Person.findById(personID)
+      b('Edit Person mutateAndGetPayload', source, args, context)
+      const person = await Person.findById(source.personID)
       const modifiedPerson = await person.update({
-        handle
+        handle: source.handle
       })
-      console.log(modifiedPerson.dataValues)
       return {
-        modifiedPerson: modifiedPerson.dataValues
+        modifiedPersonID: modifiedPerson.dataValues.personID
       }
     } catch (error) {
       console.log(chalk.red('error'))

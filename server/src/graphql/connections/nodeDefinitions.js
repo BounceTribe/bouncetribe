@@ -19,10 +19,6 @@ export const {nodeInterface, nodeField} = nodeDefinitions(
       const viewer = await Person.findById(id)
       return viewer
     }
-    if (type === 'PersonTrait') {
-      const viewer = await PersonTrait.findById(id)
-      return viewer
-    }
     return null
   },
   (obj) => {
@@ -30,8 +26,6 @@ export const {nodeInterface, nodeField} = nodeDefinitions(
       return PersonType
     } else if (obj instanceof Viewer) {
       return ViewerType
-    } else if (obj instanceof PersontTrait) {
-      return PersonTraitType
     } else {
       return null
     }

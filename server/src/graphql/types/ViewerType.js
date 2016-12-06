@@ -23,6 +23,7 @@ import {Person} from '../../database/models'
 import PersonType from '../types/PersonType'
 import {connectionType, personConnection} from '../connections/personConnection'
 import chalk from 'chalk'
+import {b} from '../../utils/logging'
 
 const ViewerType = new GraphQLObjectType({
   name: 'Viewer',
@@ -30,11 +31,16 @@ const ViewerType = new GraphQLObjectType({
     id: globalIdField('Viewer'),
     self: {
       description: 'The person who is currently using the site.',
-      type: PersonType,
-      resolve: async (viewer, args, context) => {
-        console.log(chalk.cyan('viewerType is resolving'), viewer)
-        const self = viewer
-        return self
+      type: personConnection,
+      args: connectionArgs,
+      resolve: async (source, args, context) => {
+        b('ViewerTypeResolve', source, args, context)
+        const self = []
+        self.push(source)
+        return connectionFromArray(
+          self,
+          args
+        )
       }
     },
   }),

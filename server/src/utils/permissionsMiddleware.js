@@ -36,7 +36,8 @@ async function permissionsChecker(req, res, next) {
           auth0id: req.user.sub.split('|')[1],
         },
       })
-      req.user = {...user.dataValues}
+      req.user = user.dataValues.personID
+      console.log(req.user)
       next()
     } catch (error) {
       console.log('permissions error', error)
