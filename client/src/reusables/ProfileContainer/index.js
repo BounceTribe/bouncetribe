@@ -45,6 +45,7 @@ class ProfileContainer extends Component {
           src={this.props.self.profilePicUrl}
           alt="Profile"
         /> */}
+        <h1>Hi nilan!</h1>
         <h3>{this.props.viewer.self.email}</h3>
         <h4>{this.props.viewer.self.handle}</h4>
         {this.renderProfileField}

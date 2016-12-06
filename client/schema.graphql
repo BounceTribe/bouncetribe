@@ -31,6 +31,7 @@ input EditPersonInput {
 
 type EditPersonPayload {
   person: Person
+  viewer: Viewer
   clientMutationId: String
 }
 
