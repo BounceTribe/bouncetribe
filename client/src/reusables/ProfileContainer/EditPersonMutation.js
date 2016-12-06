@@ -2,14 +2,14 @@ import Relay from 'react-relay'
 
 class EditPersonMutation extends Relay.Mutation {
 
-  // static fragments = {
-  //   person: () => Relay.QL`
-  //     fragment on Person {
-  //       personID
-  //     }
-  //   `,
-  //
-  // };
+  static fragments = {
+    person: () => Relay.QL`
+      fragment on Person {
+        personID
+      }
+    `,
+
+  };
 
   getMutation() {
     return Relay.QL`mutation {editPerson}`
