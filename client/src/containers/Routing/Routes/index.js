@@ -8,7 +8,7 @@ import ReduxProvider from './ReduxProvider'
 
 import Home from './Home'
 import ProfileContainer from 'reusables/ProfileContainer'
-import Admin from './Admin'
+// import Admin from './Admin'
 import Projects from './Projects'
 import Tribe from './Tribe'
 
@@ -48,11 +48,11 @@ const createRoutes = () => {
         path="/tribe"
         component={Tribe}
       />
-      <Route
+      {/* <Route
         path="/admin"
         component={Admin}
         queries={ViewerQueries}
-      />
+      /> */}
     </Route>
   )
 }

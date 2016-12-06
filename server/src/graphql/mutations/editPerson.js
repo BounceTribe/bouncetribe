@@ -52,21 +52,21 @@ const editPerson = mutationWithClientMutationId({
         }
       },
     },
-    // viewer: {
-    //   type: ViewerType,
-    //   resolve: async (payload) => {
-    //     try {
-    //       console.log(chalk.green('outputFields, editPerson, payload:'), payload)
-    //
-    //       const person = await Person.findById(payload.modifiedPersonID)
-    //
-    //       return person.dataValues
-    //     } catch (error) {
-    //       console.log(chalk.red('error'))
-    //       console.log(error)
-    //     }
-    //   },
-    // }
+    viewer: {
+      type: ViewerType,
+      resolve: async (payload) => {
+        try {
+          console.log(chalk.green('outputFields, editPerson, payload:'), payload)
+
+          const person = await Person.findById(payload.modifiedPersonID)
+
+          return person.dataValues
+        } catch (error) {
+          console.log(chalk.red('error'))
+          console.log(error)
+        }
+      },
+    }
   },
   mutateAndGetPayload: async (source, args, context) => {
     try {
