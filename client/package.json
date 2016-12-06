@@ -72,8 +72,8 @@
     "relay": "^0.8.0-1"
   },
   "scripts": {
-    "start": "NODE_PATH=src/ REACT_APP_GRAPHQL_URL='https://www.bt-carl.info/graphql' node scripts/start.js",
-    "build": "NODE_ENV=production NODE_PATH=src/ REACT_APP_GRAPHQL_URL='https://www.bt-carl.info/graphql' node scripts/build.js",
+    "start": "NODE_PATH=src/ REACT_APP_GRAPHQL_URL='https://api.graph.cool/relay/v1/ciwdr6snu36fj01710o4ssheb' node scripts/start.js",
+    "build": "NODE_ENV=production NODE_PATH=src/ REACT_APP_GRAPHQL_URL='https://api.graph.cool/relay/v1/ciwdr6snu36fj01710o4ssheb' node scripts/build.js",
     "test": "NODE_PATH=src/ node scripts/test.js --env=jsdom"
   },
   "jest": {

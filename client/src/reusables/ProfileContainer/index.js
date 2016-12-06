@@ -1,54 +1,97 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import ProfileField from './ProfileField'
-import EditPersonMutation from './EditPersonMutation'
+import CreateUserMutation from './CreateUserMutation'
+import {signupRoute, signupOptions, loginRoute, loginOptions} from 'config/auth0'
 
 class ProfileContainer extends Component {
-  // constructor(props) {
-  //   super(props)
-  // }
 
-
-  handleEditField = (fields = {}) => {
-    console.log(fields)
-    const person = this.props.viewer.self.edges[0].node
-    console.log(person)
-    Relay.Store.commitUpdate(
-      new EditPersonMutation({
-        person: person,
-        handle: fields.handle,
-      }),
-      {
-        onSuccess: (success) => console.log(success),
-        onFailure: (transaction) => console.log(transaction),
-      },
-    )
+  constructor() {
+    super();
+    this.state = {
+      email: '',
+      password: ''
+    }
   }
 
-  get renderProfileField() {
-      return this.props.viewer.self.edges.map(edge => (
-        <ProfileField
-          field={'handle'}
-          key={edge.node.personID}
-          text={edge.node.handle}
-          person={edge.node}
-          submitField={this.handleEditField}
-        />
-      ))
-    }
+  handleCreatePerson = async () => {
+
+    let email = this.state.email
+    let password = this.state.password
+    let options = signupOptions(email, password)
+
+    const auth0signupResult = await fetch(signupRoute, options).then(
+      (response) => response.json()
+    ).then((json) => {
+        if (json.error) {
+          throw json.error
+        } else {
+          return json
+        }
+    })
+
+    options = loginOptions(email, password)
+
+    const loginResult = await fetch(loginRoute, options).then(
+      (response) => response.json()
+    ).then((json) => {
+        if (json.error) {
+          throw json.error
+        } else {
+          return json
+        }
+    })
+
+    this.props.relay.commitUpdate(
+      new CreateUserMutation({
+        email: email,
+        idToken: loginResult['id_token']
+      })
+    )
+    this.setState({
+      email: '',
+      password: ''
+    })
+  }
+
+  handleEmailChange(e) {
+    this.setState({
+      email: e.target.value,
+    })
+  }
+
+  handlePasswordChange(e) {
+    this.setState({
+      password: e.target.value,
+    })
+  }
 
   render() {
-    console.log(this.props.viewer)
     return (
       <div>
-        {/* <img
-          src={this.props.self.profilePicUrl}
-          alt="Profile"
-        /> */}
-        <h1>Hi nilan!</h1>
-        <h3>{this.props.viewer.self.email}</h3>
-        <h4>{this.props.viewer.self.handle}</h4>
-        {this.renderProfileField}
+        <ol>
+          <li>
+            Email:
+            <input
+              type="text"
+              value={this.state.email}
+              onChange={(e) => this.handleEmailChange(e)}
+            />
+          </li>
+          <li>
+            Password:
+            <input
+              type="password"
+              value={this.state.password}
+              onChange={(e) => this.handlePasswordChange(e)}
+            />
+          </li>
+          <li>
+            <button
+              onClick={()=>{this.handleCreatePerson()}}
+            >Create Person</button>
+          </li>
+        </ol>
+
       </div>
     )
   }
@@ -61,17 +104,14 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          self (first: 1000) {
+          allUsers(first: 2147483647) {
             edges {
               node {
-                personID
-                email
-                name
-                handle
-                ${EditPersonMutation.getFragment('person')}
-              }
-            }
-          }
+                id,
+                email,
+              },
+            },
+          },
         }
       `,
     },

@@ -1,38 +1,377 @@
-schema {
-  query: RootQuery
-  mutation: RootMutation
+type AddToUserInfluencesPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  userUser: User
+  influencesInfluence: Influence
+  userUserEdge: UserEdge
+  influencesInfluenceEdge: InfluenceEdge
+}
+
+input AddToUserInfluencesUserInput {
+  influencesInfluenceId: ID!
+  userUserId: ID!
+  clientMutationId: String!
+}
+
+input AUTH_PROVIDER_AUTH0 {
+  # Is returned when calling any of the Auth0 functions which invoke
+  # authentication. This includes calls to the Lock widget, to the auth0.js
+  # library, or the libraries for other languages. See
+  # https://auth0.com/docs/tokens/id_token for more detail
+  idToken: String!
+}
+
+input AuthProviderSignupData {
+  auth0: AUTH_PROVIDER_AUTH0
+}
+
+# The `BigDecimal` scalar type represents signed fractional values with arbitrary precision.
+scalar BigDecimal
+
+# The `BigInt` scalar type represents non-fractional signed whole numeric values. BigInt can represent arbitrary big values.
+scalar BigInt
+
+input CreateFileInput {
+  name: String!
+  clientMutationId: String!
+}
+
+type CreateFilePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  file: File
+  edge: FileEdge
+}
+
+input CreateInfluenceInput {
+  influence: String!
+  userId: ID
+  user: InfluenceuserUser
+  clientMutationId: String!
+}
+
+type CreateInfluencePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  influence: Influence
+  edge: InfluenceEdge
+  user: User
+}
+
+# If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
+type CreateUserPayload {
+  user: User
+  clientMutationId: String
+  viewer: Viewer!
+}
+
+scalar DateTime
+
+input DeleteFileInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteFilePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  file: File
+  edge: FileEdge
+  deletedId: ID
+}
+
+input DeleteInfluenceInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteInfluencePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  influence: Influence
+  edge: InfluenceEdge
+  user: User
+  deletedId: ID
+}
+
+input DeleteUserInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteUserPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  user: User
+  edge: UserEdge
+  deletedId: ID
+}
+
+# File
+type File implements Node {
+  contentType: String!
+  createdAt: DateTime
+  id: ID!
+  name: String!
+  secret: String!
+  size: Int!
+  updatedAt: DateTime
+  url: String!
+}
+
+# A connection to a list of items.
+type FileConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [FileEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
 }
 
 # An edge in a connection.
-type createPersonEdge {
-  # The item at the end of the edge
-  node: Person
+type FileEdge {
+  # The item at the end of the edge.
+  node: File!
 
-  # A cursor for use in pagination
+  # A cursor for use in pagination.
   cursor: String!
 }
 
-input CreatePersonInput {
+input FileFilter {
+  AND: [FileFilter!]
+  OR: [FileFilter!]
+  contentType: String
+  contentType_not: String
+  contentType_in: [String!]
+  contentType_not_in: [String!]
+  contentType_lt: String
+  contentType_lte: String
+  contentType_gt: String
+  contentType_gte: String
+  contentType_contains: String
+  contentType_not_contains: String
+  contentType_starts_with: String
+  contentType_not_starts_with: String
+  contentType_ends_with: String
+  contentType_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  secret: String
+  secret_not: String
+  secret_in: [String!]
+  secret_not_in: [String!]
+  secret_lt: String
+  secret_lte: String
+  secret_gt: String
+  secret_gte: String
+  secret_contains: String
+  secret_not_contains: String
+  secret_starts_with: String
+  secret_not_starts_with: String
+  secret_ends_with: String
+  secret_not_ends_with: String
+  size: Int
+  size_not: Int
+  size_in: [Int!]
+  size_not_in: [Int!]
+  size_lt: Int
+  size_lte: Int
+  size_gt: Int
+  size_gte: Int
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  url: String
+  url_not: String
+  url_in: [String!]
+  url_not_in: [String!]
+  url_lt: String
+  url_lte: String
+  url_gt: String
+  url_gte: String
+  url_contains: String
+  url_not_contains: String
+  url_starts_with: String
+  url_not_starts_with: String
+  url_ends_with: String
+  url_not_ends_with: String
+}
+
+enum FileOrderBy {
+  contentType_ASC
+  contentType_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  secret_ASC
+  secret_DESC
+  size_ASC
+  size_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  url_ASC
+  url_DESC
+}
+
+# Influence
+type Influence implements Node {
+  createdAt: DateTime
+  id: ID!
+  influence: String!
+  updatedAt: DateTime
+  user: User
+}
+
+# A connection to a list of items.
+type InfluenceConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [InfluenceEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type InfluenceEdge {
+  # The item at the end of the edge.
+  node: Influence!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input InfluenceFilter {
+  AND: [InfluenceFilter!]
+  OR: [InfluenceFilter!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  influence: String
+  influence_not: String
+  influence_in: [String!]
+  influence_not_in: [String!]
+  influence_lt: String
+  influence_lte: String
+  influence_gt: String
+  influence_gte: String
+  influence_contains: String
+  influence_not_contains: String
+  influence_starts_with: String
+  influence_not_starts_with: String
+  influence_ends_with: String
+  influence_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+}
+
+enum InfluenceOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  influence_ASC
+  influence_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input InfluenceuserUser {
   email: String!
-  password: String
-  clientMutationId: String
+  handle: String!
+  name: String!
+  profilePicUrl: String
 }
 
-type CreatePersonPayload {
-  newPersonEdge: createPersonEdge
-  clientMutationId: String
-}
+# The `Long` scalar type represents non-fractional signed whole numeric values.
+# Long can represent values between -(2^63) and 2^63 - 1.
+scalar Long
 
-input EditPersonInput {
-  personID: ID
-  handle: String
-  clientMutationId: String
-}
-
-type EditPersonPayload {
-  person: Person
-  viewer: Viewer
-  clientMutationId: String
+type Mutation {
+  createFile(input: CreateFileInput!): CreateFilePayload
+  createInfluence(input: CreateInfluenceInput!): CreateInfluencePayload
+  updateFile(input: UpdateFileInput!): UpdateFilePayload
+  updateInfluence(input: UpdateInfluenceInput!): UpdateInfluencePayload
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  deleteFile(input: DeleteFileInput!): DeleteFilePayload
+  deleteInfluence(input: DeleteInfluenceInput!): DeleteInfluencePayload
+  deleteUser(input: DeleteUserInput!): DeleteUserPayload
+  addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
+  removeFromUserInfluences(input: RemoveFromUserInfluencesUserInput!): RemoveFromUserInfluencesPayload
+  signinUser(input: SigninUserInput!): SigninPayload!
+  createUser(input: SignupUserInput!): CreateUserPayload!
 }
 
 # An object with an ID
@@ -56,45 +395,8 @@ type PageInfo {
   endCursor: String
 }
 
-type Person implements Node {
-  # The ID of an object
-  id: ID!
-  personID: ID
-  profilePicUrl: String
-  email: String
-  name: String
-  handle: String
-  influences: [String]
-}
-
-# A connection to a list of items.
-type PersonConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-
-  # A list of edges.
-  edges: [PersonEdge]
-}
-
-# An edge in a connection.
-type PersonEdge {
-  # The item at the end of the edge
-  node: Person
-
-  # A cursor for use in pagination
-  cursor: String!
-}
-
-# The root mutation
-type RootMutation {
-  createPerson(input: CreatePersonInput!): CreatePersonPayload
-  editPerson(input: EditPersonInput!): EditPersonPayload
-}
-
-# The root query
-type RootQuery {
-  # The person who is currently using the site.
-  viewer(personID: ID): Viewer
+type Query {
+  viewer: Viewer!
 
   # Fetches an object given its ID
   node(
@@ -103,10 +405,253 @@ type RootQuery {
   ): Node
 }
 
-type Viewer implements Node {
-  # The ID of an object
-  id: ID!
+type RemoveFromUserInfluencesPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  userUser: User
+  influencesInfluence: Influence
+  userUserEdge: UserEdge
+  influencesInfluenceEdge: InfluenceEdge
+}
 
-  # The person who is currently using the site.
-  self(after: String, first: Int, before: String, last: Int): PersonConnection
+input RemoveFromUserInfluencesUserInput {
+  influencesInfluenceId: ID!
+  userUserId: ID!
+  clientMutationId: String!
+}
+
+# If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
+type SigninPayload {
+  token: String
+  user: User
+  clientMutationId: String
+  viewer: Viewer!
+}
+
+input SigninUserInput {
+  auth0: AUTH_PROVIDER_AUTH0
+  clientMutationId: String!
+}
+
+input SignupUserInput {
+  email: String!
+  handle: String!
+  name: String!
+  profilePicUrl: String
+  clientMutationId: String!
+  authProvider: AuthProviderSignupData!
+}
+
+input UpdateFileInput {
+  id: ID!
+  name: String
+  clientMutationId: String!
+}
+
+type UpdateFilePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  file: File
+  edge: FileEdge
+}
+
+input UpdateInfluenceInput {
+  id: ID!
+  influence: String
+  userId: ID
+  clientMutationId: String!
+}
+
+type UpdateInfluencePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  influence: Influence
+  edge: InfluenceEdge
+  user: User
+}
+
+input UpdateUserInput {
+  email: String
+  handle: String
+  id: ID!
+  name: String
+  profilePicUrl: String
+  clientMutationId: String!
+}
+
+type UpdateUserPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  user: User
+  edge: UserEdge
+}
+
+# User
+type User implements Node {
+  auth0UserId: String
+  createdAt: DateTime
+  email: String!
+  handle: String!
+  id: ID!
+  influences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
+  name: String!
+  profilePicUrl: String
+  updatedAt: DateTime
+}
+
+# A connection to a list of items.
+type UserConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [UserEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type UserEdge {
+  # The item at the end of the edge.
+  node: User!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input UserFilter {
+  AND: [UserFilter!]
+  OR: [UserFilter!]
+  auth0UserId: String
+  auth0UserId_not: String
+  auth0UserId_in: [String!]
+  auth0UserId_not_in: [String!]
+  auth0UserId_lt: String
+  auth0UserId_lte: String
+  auth0UserId_gt: String
+  auth0UserId_gte: String
+  auth0UserId_contains: String
+  auth0UserId_not_contains: String
+  auth0UserId_starts_with: String
+  auth0UserId_not_starts_with: String
+  auth0UserId_ends_with: String
+  auth0UserId_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  email: String
+  email_not: String
+  email_in: [String!]
+  email_not_in: [String!]
+  email_lt: String
+  email_lte: String
+  email_gt: String
+  email_gte: String
+  email_contains: String
+  email_not_contains: String
+  email_starts_with: String
+  email_not_starts_with: String
+  email_ends_with: String
+  email_not_ends_with: String
+  handle: String
+  handle_not: String
+  handle_in: [String!]
+  handle_not_in: [String!]
+  handle_lt: String
+  handle_lte: String
+  handle_gt: String
+  handle_gte: String
+  handle_contains: String
+  handle_not_contains: String
+  handle_starts_with: String
+  handle_not_starts_with: String
+  handle_ends_with: String
+  handle_not_ends_with: String
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  profilePicUrl: String
+  profilePicUrl_not: String
+  profilePicUrl_in: [String!]
+  profilePicUrl_not_in: [String!]
+  profilePicUrl_lt: String
+  profilePicUrl_lte: String
+  profilePicUrl_gt: String
+  profilePicUrl_gte: String
+  profilePicUrl_contains: String
+  profilePicUrl_not_contains: String
+  profilePicUrl_starts_with: String
+  profilePicUrl_not_starts_with: String
+  profilePicUrl_ends_with: String
+  profilePicUrl_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+}
+
+enum UserOrderBy {
+  auth0UserId_ASC
+  auth0UserId_DESC
+  createdAt_ASC
+  createdAt_DESC
+  email_ASC
+  email_DESC
+  handle_ASC
+  handle_DESC
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  profilePicUrl_ASC
+  profilePicUrl_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+# This is the famous Relay viewer object
+type Viewer {
+  allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
+  allInfluences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection!
+  allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  File(id: ID, secret: String, url: String): File
+  Influence(id: ID): Influence
+  User(auth0UserId: String, id: ID): User
+  id: ID!
+  user: User
 }
