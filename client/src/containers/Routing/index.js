@@ -20,6 +20,7 @@ Relay.injectNetworkLayer(
   })
 );
 
+console.log('hello Routing 23')
 
 class Routing extends Component {
   render() {
