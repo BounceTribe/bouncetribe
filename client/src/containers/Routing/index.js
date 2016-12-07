@@ -2,10 +2,13 @@ import React, { Component } from 'react'
 import {Router, browserHistory, applyRouterMiddleware} from 'react-router'
 import Relay from 'react-relay'
 import useRelay from 'react-router-relay'
-
+import store from 'store'
 import Routes from './Routes'
+import {checkLocalStorageForToken} from 'actions/auth'
 
-let localToken = localStorage.getItem('id_token')
+store.dispatch(checkLocalStorageForToken())
+
+let localToken = store.getState().auth['id_token']
 
 const authorization = {
   Authorization: 'Bearer ' + localToken

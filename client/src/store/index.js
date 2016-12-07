@@ -1,7 +1,6 @@
 import { createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly'
-import {rootSaga} from '../actions/saga'
 import reducers from '../reducers'
 import INITIAL_STATE from './INITIAL_STATE'
 
@@ -28,9 +27,6 @@ const configureStore = () => {
 }
 
 const store = configureStore()
-
-sagaMiddleware.run(rootSaga)
-
 
 
 export default store

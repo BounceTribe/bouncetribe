@@ -15,7 +15,7 @@ const topBarMenu = new S({
 
 class TopBarMenu extends Component {
   get showMenu() {
-    if (this.props.user) {
+    if (this.props.isLoggedIn) {
       return ([
         <TopBarMenuItem
           text={'Projects'}
@@ -31,7 +31,7 @@ class TopBarMenu extends Component {
   }
 
   get showUserDropdown() {
-    if (this.props.user) {
+    if (this.props.isLoggedIn) {
       return ([
         <TopBarMenuItem
           text={'Profile'}
@@ -58,12 +58,14 @@ class TopBarMenu extends Component {
           {this.showMenu}
 
           <TopBarMenuItem
-            text={this.props.user ? this.props.user.name : 'Login or Signup'}
+            text={this.props.isLoggedIn ? 'Your Profile' : 'Login or Signup'}
             dropDown={
               <div>
                 {this.showUserDropdown}
+                <h2>AuthContainer</h2>
                 <AuthContainer
                   router={this.props.router}
+                  viewer={this.props.viewer}
                 />
               </div>
             }

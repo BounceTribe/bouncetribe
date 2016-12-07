@@ -1,95 +1,61 @@
-export const ATTEMPT_SIGNUP = 'ATTEMPT_SIGNUP'
-export function attemptSignup() {
-  return {
-    type: ATTEMPT_SIGNUP,
-  }
-}
+export const ATTEMPTED_LOGIN = 'ATTEMPTED_LOGIN'
 
-export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS'
-export function signupSuccess() {
-  return {
-    type: SIGNUP_SUCCESS,
-  }
-}
-
-export const RECEIVED_SIGNUP_ERROR = 'RECEIVED_SIGNUP_ERROR'
-export function receivedSignupError() {
-  return {
-    type: RECEIVED_SIGNUP_ERROR,
-  }
-}
-
-export const RECEIVED_LOGIN_ERROR = 'RECEIVED_LOGIN_ERROR'
-export function receivedLoginError() {
-  return {
-    type: RECEIVED_LOGIN_ERROR,
-  }
-}
-
-export const ATTEMPT_LOGIN = 'ATTEMPT_LOGIN'
 export function attemptLogin() {
   return {
-    type: ATTEMPT_LOGIN,
+    type: ATTEMPTED_LOGIN,
+    attemptingLogin: Date.now()
+  }
+}
+
+export const ATTEMPTED_SIGNUP = 'ATTEMPTED_SIGNUP'
+
+export function attemptSignup() {
+  return {
+    type: ATTEMPTED_SIGNUP,
+    attemptingSignup: Date.now()
   }
 }
 
 
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+export const LOGGED_IN = 'LOGGED_IN'
+
 export function loginSuccess(idToken) {
+  console.log('action', idToken)
   localStorage.setItem('id_token', idToken)
   return {
-    type: LOGIN_SUCCESS,
-    'id_token': idToken
+    type: LOGGED_IN,
+    'id_token': idToken,
+    attemptingLogin: false
   }
 }
 
-export const PROFILE_SUCCESS = 'PROFILE_SUCCESS'
-export function profileSuccess(profileResult) {
-  return {
-    type: PROFILE_SUCCESS,
-    profile: profileResult,
-  }
-}
+export const LOGGED_OUT = 'LOGGED_OUT'
 
-
-export const LOAD_USER_FROM_LOCAL_STORAGE = 'LOAD_USER_FROM_LOCAL_STORAGE'
-export function loadUserFromLocalStorage() {
-  const userToken = localStorage.getItem('id_token')
-  return {
-    type: LOAD_USER_FROM_LOCAL_STORAGE,
-    'id_token': userToken
-  }
-}
-
-export const REQUEST_PROFILE = 'REQUEST_PROFILE'
-export function requestProfile() {
-  return {
-    type: REQUEST_PROFILE
-  }
-}
-
-export const LOGOUT = 'LOGOUT'
 export function logout() {
   localStorage.removeItem('id_token')
   return {
-    type: LOGOUT,
-    idToken: false,
-    user: false
+    type: LOGGED_OUT,
+    'id_token': false
   }
 }
 
-export const LOGIN_ERROR_MESSAGE = 'LOGIN_ERROR_MESSAGE'
-export function loginErrorMessage(error) {
+export const SIGNEDUP = 'SIGNEDUP'
+
+export function signupSuccess() {
   return {
-    type: LOGIN_ERROR_MESSAGE,
-    loginError: error
+    type: SIGNEDUP,
+    attemptingSignup: false
   }
 }
 
-export const SIGNUP_ERROR_MESSAGE = 'SIGNUP_ERROR_MESSAGE'
-export function signupErrorMessage(error) {
+
+export const CHECKED_LOCAL_STORAGE_FOR_TOKEN = 'CHECKED_LOCAL_STORAGE_FOR_TOKEN'
+
+export function checkLocalStorageForToken() {
+  let localToken = localStorage.getItem('id_token')
+  const idToken = localToken ? localToken : false
   return {
-    type: SIGNUP_ERROR_MESSAGE,
-    signupError: error
+    type: CHECKED_LOCAL_STORAGE_FOR_TOKEN,
+    'id_token': idToken,
   }
 }

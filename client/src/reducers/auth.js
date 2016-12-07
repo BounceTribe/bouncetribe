@@ -1,77 +1,49 @@
-import {ATTEMPT_SIGNUP, SIGNUP_SUCCESS, LOGIN_SUCCESS, ATTEMPT_LOGIN, LOAD_USER_FROM_LOCAL_STORAGE, LOGOUT, RECEIVED_SIGNUP_ERROR, RECEIVED_LOGIN_ERROR, PROFILE_SUCCESS, LOGIN_ERROR_MESSAGE, SIGNUP_ERROR_MESSAGE} from '../actions/auth'
+import {
+  ATTEMPTED_LOGIN,
+  ATTEMPTED_SIGNUP,
+  LOGGED_IN,
+  LOGGED_OUT,
+  SIGNEDUP,
+  CHECKED_LOCAL_STORAGE_FOR_TOKEN
+} from 'actions/auth'
 
 function auth (state = {}, action) {
   switch (action.type) {
-    case ATTEMPT_SIGNUP: {
+    case ATTEMPTED_LOGIN: {
       return {
         ...state,
-        awaitingSignupResponse: true
+        attemptingLogin: action.attemptingLogin
       }
     }
-    case SIGNUP_SUCCESS: {
+    case ATTEMPTED_SIGNUP: {
       return {
         ...state,
-        awaitingSignupResponse: false
+        attemptingSignup: action.attemptingSignup
       }
     }
-    case RECEIVED_SIGNUP_ERROR: {
+    case LOGGED_IN: {
       return {
         ...state,
-        awaitingSignupResponse: false
+        'id_token': action['id_token'],
+        attemptingLogin: action.attemptingLogin,
       }
     }
-    case ATTEMPT_LOGIN: {
+    case LOGGED_OUT: {
       return {
         ...state,
-        awaitingLoginResponse: true
+        'id_token': action['id_token'],
       }
     }
-    case LOGIN_SUCCESS: {
+    case SIGNEDUP: {
       return {
         ...state,
-        awaitingLoginResponse: false,
-        'id_token': action['id_token']
+        attemptingSignup: action.attemptingSignup
       }
     }
-    case PROFILE_SUCCESS: {
+    case CHECKED_LOCAL_STORAGE_FOR_TOKEN: {
       return {
         ...state,
-        user: {
-          ...state.user,
-          ...action.profile
-        }
-      }
-    }
-    case RECEIVED_LOGIN_ERROR: {
-      return {
-        ...state,
-        awaitingLoginResponse: false,
-        user: null
-      }
-    }
-    case LOAD_USER_FROM_LOCAL_STORAGE: {
-      return {
-        ...state,
-        'id_token': action.idToken
-      }
-    }
-    case LOGOUT: {
-      return {
-        ...state,
-        user: action.user,
-        'id_token': false
-      }
-    }
-    case LOGIN_ERROR_MESSAGE: {
-      return {
-        ...state,
-        loginError: action.loginError,
-      }
-    }
-    case SIGNUP_ERROR_MESSAGE: {
-      return {
-        ...state,
-        signupError: action.loginError,
+        'id_token': action['id_token'],
       }
     }
     default: {

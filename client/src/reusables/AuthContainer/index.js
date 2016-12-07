@@ -1,13 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import SignUpCard from './SignUpCard'
+import SignupCard from './SignupCard'
+import Relay from 'react-relay'
 import ProfileCard from './ProfileCard'
 import LoginCard from './LoginCard'
 import LoginSignupTabs from './LoginSignupTabs'
 
-
-
-import {attemptSignup, logout, attemptLogin} from 'actions/auth'
+import {attemptSignup, attemptLogin, loginSuccess, signupSuccess, logout} from 'actions/auth'
 
 class AuthContainer extends Component {
   constructor () {
@@ -39,30 +38,31 @@ class AuthContainer extends Component {
 
 
   get showProfile() {
-    if (this.props.user) {
+    if (this.props.isLoggedIn) {
       return (
         <ProfileCard
           logout={this.handleLogout}
-          user={this.props.user}
+          viewer={this.props.viewer}
         />
       )
     }
-    if (!this.props.isLoggedIn && this.state.loginCardShowing){
+   else if (!this.props.isLoggedIn && this.state.loginCardShowing){
       return (
         <LoginCard
           attemptLogin={this.props.attemptLogin}
-          awaitingLoginResponse={this.props.awaitingLoginResponse}
-          loginError={this.props.loginError}
+          loginSuccess={this.props.loginSuccess}
+          viewer={this.props.viewer}
         />
       )
     }
-    if (!this.props.isLoggedIn && this.state.signupCardShowing) {
+    else if (!this.props.isLoggedIn && this.state.signupCardShowing) {
       return (
-        <SignUpCard
+        <SignupCard
+          attemptLogin={this.props.attemptLogin}
           attemptSignup={this.props.attemptSignup}
-          awaitingSignupResponse={this.props.awaitingSignupResponse}
-          awaitingLoginResponse={this.props.awaitingLoginResponse}
-          signupError={this.props.signupError}
+          signupSuccess={this.props.signupSuccess}
+          loginSuccess={this.props.loginSuccess}
+          viewer={this.props.viewer}
         />
       )
     }
@@ -104,26 +104,27 @@ class AuthContainer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    awaitingLoginResponse: state.auth.awaitingLoginResponse,
-    awaitingSignupResponse: state.auth.awaitingSignupResponse,
-    user: state.auth.user,
-    isLoggedIn: state.auth['id_token'],
-    loginError: state.auth.loginError,
-    signupError: state.auth.signupError,
+    isLoggedIn: state.auth['id_token']
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    attemptSignup: () => {
-      dispatch(attemptSignup())
-    },
     attemptLogin: () => {
       dispatch(attemptLogin())
     },
+    attemptSignup: () => {
+      dispatch(attemptSignup())
+    },
+    loginSuccess: (idToken) => {
+      dispatch(loginSuccess(idToken))
+    },
     logout: () => {
       dispatch(logout())
-    }
+    },
+    signupSuccess: () => {
+      dispatch(signupSuccess())
+    },
   }
 }
 
@@ -132,4 +133,19 @@ AuthContainer = connect(
   mapDispatchToProps
 )(AuthContainer)
 
-export default AuthContainer
+
+export default Relay.createContainer(
+  AuthContainer,
+  {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          ${SignupCard.getFragment('viewer')}
+          ${LoginCard.getFragment('viewer')}
+          ${ProfileCard.getFragment('viewer')}
+
+        }
+      `,
+    },
+  }
+)

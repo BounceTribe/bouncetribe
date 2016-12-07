@@ -1,99 +1,107 @@
 import React, {Component} from 'react'
-import { Field, reduxForm } from 'redux-form'
-import LoginInput from './LoginInput'
-import {validate, warn} from './validate'
+import Relay from 'react-relay'
+import {auth0Login} from '../auth0SignupLogin'
 
 
 class LoginCard extends Component {
-  constructor(props) {
-    super(props)
-    this.attemptLogin = this.props.attemptLogin.bind(this)
-    this.awaitingLoginResponse = this.props.awaitingLoginResponse
-    this.disableFields = false
-    this.errorMessage = this.props.loginError
+
+  constructor() {
+    super();
+    this.state = {
+      email: '',
+      password: '',
+      loginError: ''
+    }
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault()
-    this.attemptLogin()
-    this.disableFields = true
+  handleCreatePerson = async () => {
+    const {
+      attemptLogin,
+      loginSuccess
+    } = this.props
+
+    const email = this.state.email
+    const password = this.state.password
+
+    try {
+
+      attemptLogin()
+
+      const loggedinUser = await auth0Login(email, password)
+
+      console.log('loggedinUser', loggedinUser)
+
+      loginSuccess(loggedinUser['id_token'])
+
+
+    } catch (error) {
+      console.log('signup, mutation, login error', error)
+      this.setState({
+        loginError: error
+      })
+    }
+
   }
 
-  componentWillReceiveProps = (nextProps) => {
-    if (nextProps.loginError) {
-      this.errorMessage = nextProps.loginError
-    }
-    if (!nextProps.awaitingLoginResponse) {
-      this.disableFields = false
-    }
+  handleEmailChange(e) {
+    this.setState({
+      email: e.target.value,
+    })
+  }
+
+  handlePasswordChange(e) {
+    this.setState({
+      password: e.target.value,
+    })
   }
 
   render() {
     return (
-        <form
-          onSubmit={this.handleSubmit}
-        >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '100%',
-            height: '10%',
-            transition: 'opacity 1s',
-            alignContent: 'space-between',
-            allignItems: 'stretch'
-          }}
-        >
+      <div>
+        <ol>
+          <li>
+            Email:
+            <input
+              type="text"
+              value={this.state.email}
+              onChange={(e) => this.handleEmailChange(e)}
+            />
+          </li>
+          <li>
+            Password:
+            <input
+              type="password"
+              value={this.state.password}
+              onChange={(e) => this.handlePasswordChange(e)}
+            />
+          </li>
 
-          <Field
-            name="email"
-            type="text"
-            component={LoginInput}
-            label="email"
-            disableField={this.disableFields}
-          />
+          <li>
+            {this.state.loginError ? this.state.loginError.toString() : null}
+          </li>
 
-          <Field
-            name="password"
-            type="password"
-            component={LoginInput}
-            label="password"
-            disableField={this.disableFields}
-          />
+          <li>
+            <button
+              onClick={()=>{this.handleCreatePerson()}}
+            >Login</button>
+          </li>
+        </ol>
 
-          <div
-            style={{
-              minHeight: '1em',
-              margin: '.5em',
-              color: 'red'
-            }}
-          >
-            <span>{this.errorMessage}</span>
-          </div>
-
-          <button
-            type="submit"
-            style={{
-              display: 'flex',
-              width: '100%',
-              marginTop: '15px',
-              justifyContent: 'center'
-            }}
-            disabled={(this.props.invalid && !this.props.submitting)}
-          >
-            Login
-          </button>
-          </div>
-        </form>
+      </div>
     )
   }
+
 }
 
-
-LoginCard = reduxForm({
-  form: 'login',
-  validate,
-  warn,
-})(LoginCard)
-
-export default LoginCard
+export default Relay.createContainer(
+  LoginCard,
+  {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          user
+        }
+      `,
+    },
+  }
+)

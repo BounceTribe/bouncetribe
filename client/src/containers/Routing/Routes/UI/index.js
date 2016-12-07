@@ -13,9 +13,9 @@ class UI extends Component {
       <MuiThemeProvider>
           <div>
             <TopBar
-              user={this.props.user}
               isLoggedIn={this.props.isLoggedIn}
               router={this.props.router}
+              viewer={this.props.viewer}
             />
             <main>
               {this.props.children}
@@ -28,7 +28,6 @@ class UI extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.auth.user,
     isLoggedIn: state.auth['id_token'],
   }
 }

@@ -6,7 +6,7 @@ import Landing from './Landing'
 class Home extends Component {
 
   get showFeedOrLanding() {
-    if (this.props.user && this.props.isLoggedIn) {
+    if (this.props.isLoggedIn) {
       return (
         <Feed />
       )
@@ -30,7 +30,6 @@ class Home extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.auth.user,
     isLoggedIn: state.auth['id_token'],
   }
 }

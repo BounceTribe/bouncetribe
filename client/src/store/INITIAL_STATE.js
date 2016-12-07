@@ -1,8 +1,3 @@
-const INITIAL_STATE = {
-  auth: {
-    user: false,
-    'id_token': false
-  }
-}
+const INITIAL_STATE = {}
 
 export default INITIAL_STATE
