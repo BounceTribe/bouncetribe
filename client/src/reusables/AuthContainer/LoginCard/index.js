@@ -29,13 +29,11 @@ class LoginCard extends Component {
 
       const loggedinUser = await auth0Login(email, password)
 
-      console.log('loggedinUser', loggedinUser)
 
       loginSuccess(loggedinUser['id_token'])
 
 
     } catch (error) {
-      console.log('signup, mutation, login error', error)
       this.setState({
         loginError: error
       })

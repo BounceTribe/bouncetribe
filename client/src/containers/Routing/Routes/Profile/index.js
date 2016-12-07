@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Relay from 'react-relay'
+import ProfileContainer from 'reusables/ProfileContainer'
 
 class Profile extends Component {
   // constructor() {
@@ -7,14 +9,33 @@ class Profile extends Component {
   // }
 
   render() {
+    const {
+      viewer
+    } = this.props
     return (
       <section>
         <h1>Profile</h1>
+
+        <ProfileContainer
+          user={viewer.user}
+        />
 
       </section>
     )
   }
 }
 
-
-export default Profile
+export default Relay.createContainer(
+  Profile,
+  {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          user {
+            ${ProfileContainer.getFragment('user')}
+          }
+        }
+      `,
+    },
+  }
+)

@@ -58,6 +58,8 @@ const createRoutes = () => {
         path="/profile"
         component={Profile}
         onEnter={checkPermissions}
+        queries={ViewerQueries}
+
       />
       <Route
         path="/projects"
