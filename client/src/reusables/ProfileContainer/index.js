@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import Relay from 'react-relay'
 import ProfileField from './ProfileField'
 import InfluencesField from 'reusables/InfluencesField'
-import EditPersonMutation from './EditPersonMutation'
+import EditPersonMutation from 'mutations/EditPersonMutation'
+import CreateInfluenceMutation from 'mutations/CreateInfluenceMutation'
 import cat from 'styling/burritocat.jpg'
 import BTButton from 'reusables/BTButton'
+import {searchArtistsOptions, createArtistOptions} from 'apis/graphql'
+
 
 class ProfileContainer extends Component {
   // constructor() {
@@ -26,6 +29,34 @@ class ProfileContainer extends Component {
         onFailure: (transaction) => console.log(transaction),
       },
     )
+  }
+
+  handleSubmitInfluence = async (fields = {}) => {
+    const {
+      spotifyId,
+      name,
+      imageUrl,
+    } = fields
+    let options = searchArtistsOptions(spotifyId)
+    let artist = await fetch(...options).then(resp=>resp.json()).then(json=>json.data.allArtists)
+    if (artist.length < 1) {
+      let options = createArtistOptions(spotifyId, name, imageUrl)
+      artist = await fetch(...options).then(resp=>resp.json()).then(json=>json.data.createArtist)
+    } else {
+      artist = artist[0]
+    }
+    console.log(artist)
+    Relay.Store.commitUpdate(
+      new CreateInfluenceMutation({
+        user: this.props.user,
+        artist: artist,
+      }),
+      {
+        onSuccess: (success) => console.log('succes', success),
+        onFailure: (transaction) => console.log('failure', transaction),
+      }
+    )
+
   }
 
   render() {
@@ -78,6 +109,7 @@ class ProfileContainer extends Component {
         <InfluencesField
           influences={influences}
           user={this.props.user}
+          submitInfluence={this.handleSubmitInfluence}
         />
 
       </section>
@@ -108,6 +140,7 @@ export default Relay.createContainer(
             }
           }
           ${EditPersonMutation.getFragment('user')}
+          ${CreateInfluenceMutation.getFragment('user')}
         }
       `,
     },

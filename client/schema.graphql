@@ -1,15 +1,15 @@
-input AddToInfluenceArtistInfluenceInput {
+input AddToArtistInfluenceInfluenceInput {
   artistArtistId: ID!
-  influenceInfluenceId: ID!
+  influencesInfluenceId: ID!
   clientMutationId: String!
 }
 
-type AddToInfluenceArtistPayload {
+type AddToArtistInfluencePayload {
   viewer: Viewer!
   clientMutationId: String!
-  influenceInfluence: Influence
+  influencesInfluence: Influence
   artistArtist: Artist
-  influenceInfluenceEdge: InfluenceEdge
+  influencesInfluenceEdge: InfluenceEdge
   artistArtistEdge: ArtistEdge
 }
 
@@ -32,8 +32,10 @@ input AddToUserInfluencesUserInput {
 type Artist implements Node {
   createdAt: DateTime
   id: ID!
-  influence(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
+  imageUrl: String!
+  influences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
   name: String!
+  spotifyId: String!
   updatedAt: DateTime
 }
 
@@ -83,6 +85,20 @@ input ArtistFilter {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  imageUrl: String
+  imageUrl_not: String
+  imageUrl_in: [String!]
+  imageUrl_not_in: [String!]
+  imageUrl_lt: String
+  imageUrl_lte: String
+  imageUrl_gt: String
+  imageUrl_gte: String
+  imageUrl_contains: String
+  imageUrl_not_contains: String
+  imageUrl_starts_with: String
+  imageUrl_not_starts_with: String
+  imageUrl_ends_with: String
+  imageUrl_not_ends_with: String
   name: String
   name_not: String
   name_in: [String!]
@@ -97,6 +113,20 @@ input ArtistFilter {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  spotifyId: String
+  spotifyId_not: String
+  spotifyId_in: [String!]
+  spotifyId_not_in: [String!]
+  spotifyId_lt: String
+  spotifyId_lte: String
+  spotifyId_gt: String
+  spotifyId_gte: String
+  spotifyId_contains: String
+  spotifyId_not_contains: String
+  spotifyId_starts_with: String
+  spotifyId_not_starts_with: String
+  spotifyId_ends_with: String
+  spotifyId_not_ends_with: String
   updatedAt: DateTime
   updatedAt_not: DateTime
   updatedAt_in: [DateTime!]
@@ -112,8 +142,12 @@ enum ArtistOrderBy {
   createdAt_DESC
   id_ASC
   id_DESC
+  imageUrl_ASC
+  imageUrl_DESC
   name_ASC
   name_DESC
+  spotifyId_ASC
+  spotifyId_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
@@ -137,7 +171,9 @@ scalar BigDecimal
 scalar BigInt
 
 input CreateArtistInput {
+  imageUrl: String!
   name: String!
+  spotifyId: String!
   clientMutationId: String!
 }
 
@@ -401,7 +437,9 @@ type Influence implements Node {
 }
 
 input InfluenceartistArtist {
+  imageUrl: String!
   name: String!
+  spotifyId: String!
 }
 
 # A connection to a list of items.
@@ -494,10 +532,10 @@ type Mutation {
   deleteInfluence(input: DeleteInfluenceInput!): DeleteInfluencePayload
   deleteArtist(input: DeleteArtistInput!): DeleteArtistPayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
+  addToArtistInfluence(input: AddToArtistInfluenceInfluenceInput!): AddToArtistInfluencePayload
   addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
-  addToInfluenceArtist(input: AddToInfluenceArtistInfluenceInput!): AddToInfluenceArtistPayload
+  removeFromArtistInfluence(input: RemoveFromArtistInfluenceInfluenceInput!): RemoveFromArtistInfluencePayload
   removeFromUserInfluences(input: RemoveFromUserInfluencesUserInput!): RemoveFromUserInfluencesPayload
-  removeFromInfluenceArtist(input: RemoveFromInfluenceArtistInfluenceInput!): RemoveFromInfluenceArtistPayload
   signinUser(input: SigninUserInput!): SigninPayload!
   createUser(input: SignupUserInput!): CreateUserPayload!
 }
@@ -533,18 +571,18 @@ type Query {
   ): Node
 }
 
-input RemoveFromInfluenceArtistInfluenceInput {
+input RemoveFromArtistInfluenceInfluenceInput {
   artistArtistId: ID!
-  influenceInfluenceId: ID!
+  influencesInfluenceId: ID!
   clientMutationId: String!
 }
 
-type RemoveFromInfluenceArtistPayload {
+type RemoveFromArtistInfluencePayload {
   viewer: Viewer!
   clientMutationId: String!
-  influenceInfluence: Influence
+  influencesInfluence: Influence
   artistArtist: Artist
-  influenceInfluenceEdge: InfluenceEdge
+  influencesInfluenceEdge: InfluenceEdge
   artistArtistEdge: ArtistEdge
 }
 
@@ -589,7 +627,9 @@ input SignupUserInput {
 
 input UpdateArtistInput {
   id: ID!
+  imageUrl: String
   name: String
+  spotifyId: String
   clientMutationId: String!
 }
 

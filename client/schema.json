@@ -123,7 +123,7 @@
               "defaultValue": null
             },
             {
-              "name": "influenceInfluenceId",
+              "name": "influencesInfluenceId",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
@@ -151,7 +151,7 @@
               "defaultValue": null
             }
           ],
-          "name": "AddToInfluenceArtistInfluenceInput",
+          "name": "AddToArtistInfluenceInfluenceInput",
           "description": null,
           "interfaces": null,
           "enumValues": null,
@@ -161,7 +161,7 @@
         },
         {
           "inputFields": null,
-          "name": "AddToInfluenceArtistPayload",
+          "name": "AddToArtistInfluencePayload",
           "description": null,
           "interfaces": [],
           "enumValues": null,
@@ -199,7 +199,7 @@
               }
             },
             {
-              "name": "influenceInfluence",
+              "name": "influencesInfluence",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -223,7 +223,7 @@
               }
             },
             {
-              "name": "influenceInfluenceEdge",
+              "name": "influencesInfluenceEdge",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -418,7 +418,35 @@
         {
           "inputFields": [
             {
+              "name": "imageUrl",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
               "name": "name",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
@@ -1333,7 +1361,35 @@
         {
           "inputFields": [
             {
+              "name": "imageUrl",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
               "name": "name",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId",
               "description": null,
               "type": {
                 "kind": "NON_NULL",
@@ -1743,6 +1799,33 @@
               }
             },
             {
+              "name": "addToArtistInfluence",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AddToArtistInfluenceInfluenceInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "AddToArtistInfluencePayload",
+                "ofType": null
+              }
+            },
+            {
               "name": "addToUserInfluences",
               "description": null,
               "isDeprecated": false,
@@ -1770,7 +1853,7 @@
               }
             },
             {
-              "name": "addToInfluenceArtist",
+              "name": "removeFromArtistInfluence",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -1783,7 +1866,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "AddToInfluenceArtistInfluenceInput",
+                      "name": "RemoveFromArtistInfluenceInfluenceInput",
                       "ofType": null
                     }
                   },
@@ -1792,7 +1875,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "AddToInfluenceArtistPayload",
+                "name": "RemoveFromArtistInfluencePayload",
                 "ofType": null
               }
             },
@@ -1820,33 +1903,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "RemoveFromUserInfluencesPayload",
-                "ofType": null
-              }
-            },
-            {
-              "name": "removeFromInfluenceArtist",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "RemoveFromInfluenceArtistInfluenceInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "RemoveFromInfluenceArtistPayload",
                 "ofType": null
               }
             },
@@ -1933,7 +1989,7 @@
               "defaultValue": null
             },
             {
-              "name": "influenceInfluenceId",
+              "name": "influencesInfluenceId",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
@@ -1961,7 +2017,7 @@
               "defaultValue": null
             }
           ],
-          "name": "RemoveFromInfluenceArtistInfluenceInput",
+          "name": "RemoveFromArtistInfluenceInfluenceInput",
           "description": null,
           "interfaces": null,
           "enumValues": null,
@@ -1971,7 +2027,7 @@
         },
         {
           "inputFields": null,
-          "name": "RemoveFromInfluenceArtistPayload",
+          "name": "RemoveFromArtistInfluencePayload",
           "description": null,
           "interfaces": [],
           "enumValues": null,
@@ -2009,7 +2065,7 @@
               }
             },
             {
-              "name": "influenceInfluence",
+              "name": "influencesInfluence",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -2033,7 +2089,7 @@
               }
             },
             {
-              "name": "influenceInfluenceEdge",
+              "name": "influencesInfluenceEdge",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -2430,7 +2486,27 @@
               "defaultValue": null
             },
             {
+              "name": "imageUrl",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "name",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId",
               "description": "",
               "type": {
                 "kind": "SCALAR",
@@ -3003,7 +3079,23 @@
               }
             },
             {
-              "name": "influence",
+              "name": "imageUrl",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "name": "influences",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -3087,6 +3179,22 @@
             },
             {
               "name": "name",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "name": "spotifyId",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -3510,6 +3618,162 @@
               "defaultValue": null
             },
             {
+              "name": "imageUrl",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_not",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_in",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_not_in",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_lt",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_lte",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_gt",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_gte",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_contains",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_not_contains",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_starts_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_not_starts_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_ends_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "imageUrl_not_ends_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "name",
               "description": null,
               "type": {
@@ -3666,6 +3930,162 @@
               "defaultValue": null
             },
             {
+              "name": "spotifyId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_not",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_in",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_not_in",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_lt",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_lte",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_gt",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_gte",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_contains",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_not_contains",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_starts_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_not_starts_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_ends_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "spotifyId_not_ends_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "updatedAt",
               "description": null,
               "type": {
@@ -3801,6 +4221,18 @@
               "deprecationReason": null
             },
             {
+              "name": "imageUrl_ASC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "imageUrl_DESC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "name_ASC",
               "description": null,
               "isDeprecated": false,
@@ -3808,6 +4240,18 @@
             },
             {
               "name": "name_DESC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "spotifyId_ASC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "spotifyId_DESC",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null
