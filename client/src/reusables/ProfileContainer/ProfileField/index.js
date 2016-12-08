@@ -45,7 +45,6 @@ class ProfileField extends Component {
   }
 
   submitEdits = () => {
-    console.log('submission time')
     this.setState({
       canEdit: false
     })

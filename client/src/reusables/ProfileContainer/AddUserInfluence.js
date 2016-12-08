@@ -1,6 +1,6 @@
 import Relay from 'react-relay'
 
-export default class EditPersonMutation extends Relay.Mutation {
+export default class AddUserInfluenceMutation extends Relay.Mutation {
   static fragments = {
     user: () => Relay.QL`
       fragment on User {

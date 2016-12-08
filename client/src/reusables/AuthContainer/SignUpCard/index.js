@@ -32,24 +32,12 @@ class SignupCard extends Component {
 
       const signedupUser= await auth0Signup(email, password)
 
-      console.log('signedupUser', signedupUser)
-
-      // if (signedupUser instanceof Error) {
-      //   console.log('signupError')
-      //   throw signedupUser
-      // }
-
       signupSuccess()
 
 
       attemptLogin()
 
-      const loggedinUser = await auth0Login(email, password)
-
-      // if (loggedinUser instanceof Error) throw loggedinUser
-
-      console.log('loggedinUser', loggedinUser)
-
+      const loggedinUser = await auth0Login(signedupUser.email, password)
 
       this.props.relay.commitUpdate(
         new CreateUserMutation({
@@ -62,7 +50,6 @@ class SignupCard extends Component {
               email: '',
               password: ''
             })
-            console.log('loggedin', loggedinUser)
             loginSuccess(loggedinUser['id_token'])
           },
           onFailure: (error) => {

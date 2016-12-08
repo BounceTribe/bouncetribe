@@ -1,10 +1,12 @@
-h1, h2, h3, h4 {
-  margin: 0;
-}
-
 body {
   margin: 0;
   background-color: rgb(247,247,247);
+  font-family: 'Helvetica Neue', sans-serif;
+}
+
+
+h1, h2, h3, h4 {
+  margin: 0;
 }
 
 main {
@@ -21,4 +23,12 @@ a {
 
 li {
   text-decoration: none;
+}
+
+button {
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  color: black;
+  outline: none;
 }

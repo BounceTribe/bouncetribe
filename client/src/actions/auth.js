@@ -20,7 +20,6 @@ export function attemptSignup() {
 export const LOGGED_IN = 'LOGGED_IN'
 
 export function loginSuccess(idToken) {
-  console.log('action', idToken)
   localStorage.setItem('id_token', idToken)
   return {
     type: LOGGED_IN,

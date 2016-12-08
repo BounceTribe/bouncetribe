@@ -18,8 +18,7 @@ export async function auth0Signup (email, password) {
     return auth0signupResult
 
   } catch (error) {
-    console.log('auth0Signup error: \n', error)
-    throw error.description
+    console.log('auth0Signup error: maybe you already have an account?', error)
   }
 }
 

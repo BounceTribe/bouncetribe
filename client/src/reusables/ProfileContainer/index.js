@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
 import ProfileField from './ProfileField'
+import InfluencesField from 'reusables/InfluencesField'
 import EditPersonMutation from './EditPersonMutation'
 import cat from 'styling/burritocat.jpg'
+import BTButton from 'reusables/BTButton'
 
 class ProfileContainer extends Component {
   // constructor() {
@@ -31,7 +33,9 @@ class ProfileContainer extends Component {
       name,
       email,
       handle,
-      profilePicUrl
+      profilePicUrl,
+      summary,
+      influences
     } = this.props.user
     return (
       <section>
@@ -47,6 +51,12 @@ class ProfileContainer extends Component {
           role={'presentation'}
         />
 
+        <BTButton
+          icon={'logo'}
+        >
+          Hello
+        </BTButton>
+
         <ProfileField
           field={'email'}
           text={email}
@@ -59,7 +69,16 @@ class ProfileContainer extends Component {
           submitField={this.handleSubmitField}
         />
 
+        <ProfileField
+          field={'summary'}
+          text={summary}
+          submitField={this.handleSubmitField}
+        />
 
+        <InfluencesField
+          influences={influences}
+          user={this.props.user}
+        />
 
       </section>
     )
@@ -76,6 +95,18 @@ export default Relay.createContainer(
           name
           profilePicUrl
           handle
+          summary
+          id
+          influences (first: 1000000) {
+            edges {
+              node {
+                artist {
+                  name
+                  id
+                }
+              }
+            }
+          }
           ${EditPersonMutation.getFragment('user')}
         }
       `,

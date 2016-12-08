@@ -1,3 +1,18 @@
+input AddToInfluenceArtistInfluenceInput {
+  artistArtistId: ID!
+  influenceInfluenceId: ID!
+  clientMutationId: String!
+}
+
+type AddToInfluenceArtistPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  influenceInfluence: Influence
+  artistArtist: Artist
+  influenceInfluenceEdge: InfluenceEdge
+  artistArtistEdge: ArtistEdge
+}
+
 type AddToUserInfluencesPayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -11,6 +26,96 @@ input AddToUserInfluencesUserInput {
   influencesInfluenceId: ID!
   userUserId: ID!
   clientMutationId: String!
+}
+
+# Artist
+type Artist implements Node {
+  createdAt: DateTime
+  id: ID!
+  influence(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
+  name: String!
+  updatedAt: DateTime
+}
+
+# A connection to a list of items.
+type ArtistConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [ArtistEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type ArtistEdge {
+  # The item at the end of the edge.
+  node: Artist!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input ArtistFilter {
+  AND: [ArtistFilter!]
+  OR: [ArtistFilter!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+}
+
+enum ArtistOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 input AUTH_PROVIDER_AUTH0 {
@@ -31,6 +136,18 @@ scalar BigDecimal
 # The `BigInt` scalar type represents non-fractional signed whole numeric values. BigInt can represent arbitrary big values.
 scalar BigInt
 
+input CreateArtistInput {
+  name: String!
+  clientMutationId: String!
+}
+
+type CreateArtistPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  artist: Artist
+  edge: ArtistEdge
+}
+
 input CreateFileInput {
   name: String!
   clientMutationId: String!
@@ -44,7 +161,8 @@ type CreateFilePayload {
 }
 
 input CreateInfluenceInput {
-  influence: String!
+  artistId: ID
+  artist: InfluenceartistArtist
   userId: ID
   user: InfluenceuserUser
   clientMutationId: String!
@@ -55,6 +173,7 @@ type CreateInfluencePayload {
   clientMutationId: String!
   influence: Influence
   edge: InfluenceEdge
+  artist: Artist
   user: User
 }
 
@@ -66,6 +185,19 @@ type CreateUserPayload {
 }
 
 scalar DateTime
+
+input DeleteArtistInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteArtistPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  artist: Artist
+  edge: ArtistEdge
+  deletedId: ID
+}
 
 input DeleteFileInput {
   id: ID!
@@ -90,6 +222,7 @@ type DeleteInfluencePayload {
   clientMutationId: String!
   influence: Influence
   edge: InfluenceEdge
+  artist: Artist
   user: User
   deletedId: ID
 }
@@ -260,11 +393,15 @@ enum FileOrderBy {
 
 # Influence
 type Influence implements Node {
+  artist: Artist
   createdAt: DateTime
   id: ID!
-  influence: String!
   updatedAt: DateTime
   user: User
+}
+
+input InfluenceartistArtist {
+  name: String!
 }
 
 # A connection to a list of items.
@@ -313,20 +450,6 @@ input InfluenceFilter {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  influence: String
-  influence_not: String
-  influence_in: [String!]
-  influence_not_in: [String!]
-  influence_lt: String
-  influence_lte: String
-  influence_gt: String
-  influence_gte: String
-  influence_contains: String
-  influence_not_contains: String
-  influence_starts_with: String
-  influence_not_starts_with: String
-  influence_ends_with: String
-  influence_not_ends_with: String
   updatedAt: DateTime
   updatedAt_not: DateTime
   updatedAt_in: [DateTime!]
@@ -342,8 +465,6 @@ enum InfluenceOrderBy {
   createdAt_DESC
   id_ASC
   id_DESC
-  influence_ASC
-  influence_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
@@ -353,6 +474,7 @@ input InfluenceuserUser {
   handle: String!
   name: String!
   profilePicUrl: String
+  summary: String
 }
 
 # The `Long` scalar type represents non-fractional signed whole numeric values.
@@ -362,14 +484,19 @@ scalar Long
 type Mutation {
   createFile(input: CreateFileInput!): CreateFilePayload
   createInfluence(input: CreateInfluenceInput!): CreateInfluencePayload
+  createArtist(input: CreateArtistInput!): CreateArtistPayload
   updateFile(input: UpdateFileInput!): UpdateFilePayload
   updateInfluence(input: UpdateInfluenceInput!): UpdateInfluencePayload
+  updateArtist(input: UpdateArtistInput!): UpdateArtistPayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
   deleteFile(input: DeleteFileInput!): DeleteFilePayload
   deleteInfluence(input: DeleteInfluenceInput!): DeleteInfluencePayload
+  deleteArtist(input: DeleteArtistInput!): DeleteArtistPayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
   addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
+  addToInfluenceArtist(input: AddToInfluenceArtistInfluenceInput!): AddToInfluenceArtistPayload
   removeFromUserInfluences(input: RemoveFromUserInfluencesUserInput!): RemoveFromUserInfluencesPayload
+  removeFromInfluenceArtist(input: RemoveFromInfluenceArtistInfluenceInput!): RemoveFromInfluenceArtistPayload
   signinUser(input: SigninUserInput!): SigninPayload!
   createUser(input: SignupUserInput!): CreateUserPayload!
 }
@@ -405,6 +532,21 @@ type Query {
   ): Node
 }
 
+input RemoveFromInfluenceArtistInfluenceInput {
+  artistArtistId: ID!
+  influenceInfluenceId: ID!
+  clientMutationId: String!
+}
+
+type RemoveFromInfluenceArtistPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  influenceInfluence: Influence
+  artistArtist: Artist
+  influenceInfluenceEdge: InfluenceEdge
+  artistArtistEdge: ArtistEdge
+}
+
 type RemoveFromUserInfluencesPayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -438,8 +580,22 @@ input SignupUserInput {
   handle: String!
   name: String!
   profilePicUrl: String
+  summary: String
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
+}
+
+input UpdateArtistInput {
+  id: ID!
+  name: String
+  clientMutationId: String!
+}
+
+type UpdateArtistPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  artist: Artist
+  edge: ArtistEdge
 }
 
 input UpdateFileInput {
@@ -457,7 +613,7 @@ type UpdateFilePayload {
 
 input UpdateInfluenceInput {
   id: ID!
-  influence: String
+  artistId: ID
   userId: ID
   clientMutationId: String!
 }
@@ -467,6 +623,7 @@ type UpdateInfluencePayload {
   clientMutationId: String!
   influence: Influence
   edge: InfluenceEdge
+  artist: Artist
   user: User
 }
 
@@ -476,6 +633,7 @@ input UpdateUserInput {
   id: ID!
   name: String
   profilePicUrl: String
+  summary: String
   clientMutationId: String!
 }
 
@@ -496,6 +654,7 @@ type User implements Node {
   influences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
   name: String!
   profilePicUrl: String
+  summary: String!
   updatedAt: DateTime
 }
 
@@ -615,6 +774,20 @@ input UserFilter {
   profilePicUrl_not_starts_with: String
   profilePicUrl_ends_with: String
   profilePicUrl_not_ends_with: String
+  summary: String
+  summary_not: String
+  summary_in: [String!]
+  summary_not_in: [String!]
+  summary_lt: String
+  summary_lte: String
+  summary_gt: String
+  summary_gte: String
+  summary_contains: String
+  summary_not_contains: String
+  summary_starts_with: String
+  summary_not_starts_with: String
+  summary_ends_with: String
+  summary_not_ends_with: String
   updatedAt: DateTime
   updatedAt_not: DateTime
   updatedAt_in: [DateTime!]
@@ -640,6 +813,8 @@ enum UserOrderBy {
   name_DESC
   profilePicUrl_ASC
   profilePicUrl_DESC
+  summary_ASC
+  summary_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
@@ -648,9 +823,11 @@ enum UserOrderBy {
 type Viewer {
   allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   allInfluences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection!
+  allArtists(filter: ArtistFilter, orderBy: ArtistOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArtistConnection!
   allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   File(id: ID, secret: String, url: String): File
   Influence(id: ID): Influence
+  Artist(id: ID): Artist
   User(auth0UserId: String, id: ID): User
   id: ID!
   user: User
