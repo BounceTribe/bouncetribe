@@ -472,6 +472,7 @@ enum InfluenceOrderBy {
 input InfluenceuserUser {
   email: String!
   handle: String!
+  location: String
   name: String!
   profilePicUrl: String
   summary: String
@@ -578,6 +579,7 @@ input SigninUserInput {
 input SignupUserInput {
   email: String!
   handle: String!
+  location: String
   name: String!
   profilePicUrl: String
   summary: String
@@ -631,6 +633,7 @@ input UpdateUserInput {
   email: String
   handle: String
   id: ID!
+  location: String
   name: String
   profilePicUrl: String
   summary: String
@@ -652,6 +655,7 @@ type User implements Node {
   handle: String!
   id: ID!
   influences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
+  location: String
   name: String!
   profilePicUrl: String
   summary: String!
@@ -746,6 +750,20 @@ input UserFilter {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  location: String
+  location_not: String
+  location_in: [String!]
+  location_not_in: [String!]
+  location_lt: String
+  location_lte: String
+  location_gt: String
+  location_gte: String
+  location_contains: String
+  location_not_contains: String
+  location_starts_with: String
+  location_not_starts_with: String
+  location_ends_with: String
+  location_not_ends_with: String
   name: String
   name_not: String
   name_in: [String!]
@@ -809,6 +827,8 @@ enum UserOrderBy {
   handle_DESC
   id_ASC
   id_DESC
+  location_ASC
+  location_DESC
   name_ASC
   name_DESC
   profilePicUrl_ASC

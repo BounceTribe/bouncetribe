@@ -7,7 +7,7 @@ import TopBarMenuItem from './TopBarMenu/TopBarMenuItem'
 
 const topBarBase = {
   maxWidth: '100%',
-  height: '40px',
+  height: '25px',
   backgroundColor: btBlack,
   color: 'white',
   paddingLeft: '15%',
@@ -15,7 +15,8 @@ const topBarBase = {
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'space-between',
-  alignItems: 'baseline'
+  alignItems: 'baseline',
+  paddingTop: '10px'
 }
 
 const topBarS = new S({
@@ -30,9 +31,11 @@ const TopBar = (props) => {
       }}
     >
       <TopBarMenuItem
-        text={'BounceTribe'}
         to={'/'}
-      />
+      >
+        <span><b>BOUNCE</b>TRIBE</span>
+      </TopBarMenuItem>
+
       <TopBarMenu
         isLoggedIn={props.isLoggedIn}
         router={props.router}

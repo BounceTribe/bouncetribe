@@ -64,6 +64,7 @@ class TopBarMenuItem extends Component {
             to={this.props.to}
           >
             {this.props.text}
+            {this.props.children}
           </Link>
 
           {this.hasDropDown}
