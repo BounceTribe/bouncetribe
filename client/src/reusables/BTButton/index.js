@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import btLogo from 'imgs/btLogo.png'
 import styled from 'styled-components'
-
+import {btPurple, btWhite} from 'styling/T'
 
 const justifyContent = (props) => {
   if (props.text && props.icon) {
@@ -23,8 +23,8 @@ const Button = styled.button`
   align-content: center;
   justify-content: ${props => justifyContent(props)};
   align-items: center;
-  background: rgba(128,89,239, 1);
-  color: #FFFFFF;
+  background: ${btPurple};
+  color: ${btWhite};
   transition: all .20s;
   box-shadow: 0px 2px #999;
 

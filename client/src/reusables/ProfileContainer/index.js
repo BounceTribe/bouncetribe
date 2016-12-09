@@ -8,6 +8,7 @@ import DeleteInfluenceMutation from 'mutations/DeleteInfluenceMutation'
 import cat from 'styling/burritocat.jpg'
 import {searchArtistsOptions, createArtistOptions} from 'apis/graphql'
 import BTButton from 'reusables/BTButton'
+import BTEditableField from 'reusables/BTEditableField'
 
 class ProfileContainer extends Component {
   // constructor() {
@@ -97,6 +98,13 @@ class ProfileContainer extends Component {
 
         <BTButton
           text={'Hello'}
+        />
+
+        <BTEditableField
+          label={'Label'}
+          onChange={(content)=>{
+            console.log(content)
+          }}
         />
 
         <ProfileField

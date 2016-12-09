@@ -3,6 +3,8 @@ import Relay from 'react-relay'
 import {auth0Signup, auth0Login} from '../auth0SignupLogin'
 import CreateUserMutation from 'mutations/CreateUserMutation'
 import SigninUserMutation from 'mutations/SigninUserMutation'
+import BTButton from 'reusables/BTButton'
+import BTEditableField from 'reusables/BTEditableField'
 
 
 class SignupCard extends Component {
@@ -98,34 +100,31 @@ class SignupCard extends Component {
   render() {
     return (
       <div>
-        <ol>
-          <li>
-            Email:
-            <input
-              type="text"
-              value={this.state.email}
-              onChange={(e) => this.handleEmailChange(e)}
-            />
-          </li>
-          <li>
-            Password:
-            <input
-              type="password"
-              value={this.state.password}
-              onChange={(e) => this.handlePasswordChange(e)}
-            />
-          </li>
+        <BTEditableField
+          label={'Email'}
+          type={'text'}
+          value={this.state.email}
+          onChange={(e) => this.handleEmailChange(e)}
+        />
 
-          <li>
+        <BTEditableField
+          label={'Password'}
+          type={'password'}
+          value={this.state.password}
+          onChange={(e) => this.handlePasswordChange(e)}
+        />
+
+        <br />
+
+          <div>
             {this.state.signupError ? this.state.signupError.toString() : null}
-          </li>
+          </div>
 
-          <li>
-            <button
+
+            <BTButton
               onClick={()=>{this.handleCreatePerson()}}
-            >Signup</button>
-          </li>
-        </ol>
+              text={'Signup'}
+            />
 
       </div>
     )
