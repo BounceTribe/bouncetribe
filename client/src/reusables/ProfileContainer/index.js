@@ -4,6 +4,7 @@ import ProfileField from 'reusables/ProfileField'
 import InfluencesField from 'reusables/InfluencesField'
 import EditPersonMutation from 'mutations/EditPersonMutation'
 import CreateInfluenceMutation from 'mutations/CreateInfluenceMutation'
+import DeleteInfluenceMutation from 'mutations/DeleteInfluenceMutation'
 import cat from 'styling/burritocat.jpg'
 import BTButton from 'reusables/BTButton'
 import {searchArtistsOptions, createArtistOptions} from 'apis/graphql'
@@ -14,6 +15,20 @@ class ProfileContainer extends Component {
   //   super()
   //
   // }
+  handleDeleteInfluence = (fields = {}) => {
+    console.log(fields)
+    Relay.Store.commitUpdate(
+      new DeleteInfluenceMutation({
+        user: this.props.user,
+        influenceId: fields.influenceId
+      }),
+      {
+        onSuccess: (success) => console.log(success),
+        onFailure: (transaction) => console.log(transaction),
+      },
+    )
+  }
+
 
 
   handleSubmitField = (fields = {}) => {
@@ -103,6 +118,7 @@ class ProfileContainer extends Component {
           influences={influences}
           user={this.props.user}
           submitInfluence={this.handleSubmitInfluence}
+          deleteInfluence={this.handleDeleteInfluence}
         />
 
       </section>
@@ -130,11 +146,13 @@ export default Relay.createContainer(
                   id
                   imageUrl
                 }
+                id
               }
             }
           }
           ${EditPersonMutation.getFragment('user')}
           ${CreateInfluenceMutation.getFragment('user')}
+          ${DeleteInfluenceMutation.getFragment('user')}
         }
       `,
     },

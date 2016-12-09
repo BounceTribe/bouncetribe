@@ -21,6 +21,13 @@ class InfluenceChip extends Component {
     })
   }
 
+  handleDelete = () => {
+    let fields = {
+      influenceId: this.props.influenceId
+    }
+    this.props.deleteInfluence(fields)
+  }
+
   render() {
     return (
       <div
@@ -57,6 +64,7 @@ class InfluenceChip extends Component {
           }}
         >{this.props.artist.name}</span>
         <button
+          onClick={this.handleDelete}
           style={{
             height:'30px',
             width: '30px',

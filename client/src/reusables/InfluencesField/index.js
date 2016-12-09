@@ -26,12 +26,15 @@ class InfluencesField extends Component {
   }
 
   get renderInfluenceChips() {
-    const influences = this.props.influences.edges.map((edge, id) =>
+    const influences = this.props.influences.edges.map((edge) =>
       <InfluenceChip
         key={edge.node.artist.id}
         artist={edge.node.artist}
+        influenceId={edge.node.id}
+        deleteInfluence={this.props.deleteInfluence}
       />
     )
+    console.log(this.props.influences)
     return influences
   }
 
