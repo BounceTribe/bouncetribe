@@ -1,58 +1,70 @@
 import React, {Component} from 'react'
-import S from 'styling/S'
-import {btPurple, btWhite} from 'styling/T'
 import btLogo from 'imgs/btLogo.png'
+import styled from 'styled-components'
 
 
-const base = {
-  backgroundColor: btPurple,
-  color: btWhite,
-  height: '45px',
-  width: '140px',
-  borderRadius: '5px',
-  fontSize: '13px',
-  fontFamily: 'Helvetica Neue',
-  fontWeight: 'bold',
-  display: 'flex',
-  alignContent: 'center',
-  flexDirection: 'row',
-  justifyContent: 'flex-start',
-  alignItems: 'center',
-  transition: 'background-color 1s'
+const justifyContent = (props) => {
+  if (props.text && props.icon) {
+    return 'flex-start'
+  } else {
+    return 'center'
+  }
 }
 
+const Button = styled.button`
+  border-radius: 5px;
+  height: 45px;
+  width: 140px;
+  font-size: 13px;
+  font-family: 'Helvetica Neue';
+  font-weight: bold;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: ${props => justifyContent(props)};
+  align-items: center;
+  background: rgba(128,89,239, 1);
+  color: #FFFFFF;
+  transition: all .20s;
+  box-shadow: 0px 2px #999;
 
-const styles = new S({
-  base,
-})
+  &:after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 45px;
+    background: linear-gradient(to right, rgba(255,255,255,0) 30%, rgba(255,255,255,.08) 80%, rgba(255,255,255,0));
+    border-right: solid rgba(255,255,255,0) 0px;
+    position: absolute;
+    transition: all .10s;
+  }
+
+  &:hover:after {
+    width: 140px;
+    transition: all .20s;
+  }
+
+  &:active {
+    background: rgb(114, 69, 237);
+    transform: translateY(2px);
+    transition: all .20s;
+  }
+
+`
+
+const ButtonImg = styled.img`
+  height: 40px;
+  display: flex;
+  margin-left: 10px;
+  margin-right: 10px;
+`
+
+
+const ButtonText = styled.span`
+  display: flex;
+`
 
 class BTButton extends Component {
-
-  state = {
-    hovered: false
-  }
-
-  get hoverStyles () {
-    if (this.state.hovered) {
-      return {
-        backgroundColor: '#a18af5',
-      }
-    } else {
-      return {}
-    }
-  }
-
-  handleMouseEnter = () => {
-    this.setState({
-      hovered: true
-    })
-  }
-
-  handleMouseLeave = () => {
-    this.setState({
-      hovered: false
-    })
-  }
 
   get chooseIcon () {
     switch (this.props.icon) {
@@ -67,36 +79,42 @@ class BTButton extends Component {
     }
   }
 
-  render() {
-    return (
-      <button
-        style={{
-          ...styles.all,
-          ...this.hoverStyles
-        }}
-        onMouseEnter={this.handleMouseEnter}
-        onMouseLeave={this.handleMouseLeave}
-      >
-
-        <img
+  get useIcon () {
+    if (this.props.icon) {
+      return (
+        <ButtonImg
           src={this.chooseIcon}
           alt={'presentation'}
-          style={{
-            height: '40px',
-            display: 'flex',
-            marginLeft: '10px',
-            marginRight: '10px'
-          }}
         />
+      )
+    }
+  }
 
-        <span
-          style={{
-            display: 'flex'
-          }}
+  get useText () {
+    if (this.props.text) {
+      return (
+        <ButtonText
         >
-          {this.props.children}
-        </span>
-      </button>
+          {this.props.text}
+        </ButtonText>
+      )
+    }
+  }
+
+  render() {
+    const {
+      useIcon,
+      useText
+    } = this
+    return (
+      <Button
+        onClick={this.props.onClick ? this.props.onClick : null}
+      >
+        {useIcon}
+
+        {useText}
+
+      </Button>
     )
   }
 

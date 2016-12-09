@@ -45,8 +45,7 @@ class AuthContainer extends Component {
           viewer={this.props.viewer}
         />
       )
-    }
-   else if (!this.props.isLoggedIn && this.state.loginCardShowing){
+    } else if (!this.props.isLoggedIn && this.state.loginCardShowing){
       return (
         <LoginCard
           attemptLogin={this.props.attemptLogin}
@@ -54,8 +53,7 @@ class AuthContainer extends Component {
           viewer={this.props.viewer}
         />
       )
-    }
-    else if (!this.props.isLoggedIn && this.state.signupCardShowing) {
+    } else if (!this.props.isLoggedIn && this.state.signupCardShowing) {
       return (
         <SignupCard
           attemptLogin={this.props.attemptLogin}
@@ -143,7 +141,6 @@ export default Relay.createContainer(
           ${SignupCard.getFragment('viewer')}
           ${LoginCard.getFragment('viewer')}
           ${ProfileCard.getFragment('viewer')}
-
         }
       `,
     },

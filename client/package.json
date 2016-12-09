@@ -70,12 +70,14 @@
     "redux-devtools-extension": "^1.0.0",
     "redux-form": "^6.2.0",
     "redux-saga": "^0.13.0",
-    "relay": "^0.8.0-1"
+    "relay": "^0.8.0-1",
+    "styled-components": "^1.1.3"
   },
   "scripts": {
     "start": "NODE_PATH=src/ REACT_APP_GRAPHQL_URL='https://api.graph.cool/relay/v1/ciwdr6snu36fj01710o4ssheb' node scripts/start.js",
     "build": "NODE_ENV=production NODE_PATH=src/ REACT_APP_GRAPHQL_URL='https://api.graph.cool/relay/v1/ciwdr6snu36fj01710o4ssheb' node scripts/build.js",
-    "test": "NODE_PATH=src/ node scripts/test.js --env=jsdom"
+    "test": "NODE_PATH=src/ node scripts/test.js --env=jsdom",
+    "deploy": "git add . && git commit -m 'automatic' && git push heroku master"
   },
   "jest": {
     "moduleFileExtensions": [

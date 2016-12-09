@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {auth0Login} from '../auth0SignupLogin'
 import SigninUserMutation from 'mutations/SigninUserMutation'
+import BTButton from 'reusables/BTButton'
 
 class LoginCard extends Component {
 
@@ -74,35 +75,33 @@ class LoginCard extends Component {
   render() {
     return (
       <div>
-        <ol>
-          <li>
+          <div>
             Email:
             <input
               type="text"
               value={this.state.email}
               onChange={(e) => this.handleEmailChange(e)}
             />
-          </li>
-          <li>
+          </div>
+          <div>
             Password:
             <input
               type="password"
               value={this.state.password}
               onChange={(e) => this.handlePasswordChange(e)}
             />
-          </li>
+          </div>
 
-          <li>
+          <div>
             {this.state.loginError ? this.state.loginError.toString() : null}
-          </li>
+          </div>
 
-          <li>
-            <button
-              onClick={()=>{this.handleCreatePerson()}}
-            >Login</button>
-          </li>
-        </ol>
-
+          <div>
+            <BTButton
+              onClick={this.handleCreatePerson}
+              text={'login'}
+            />
+          </div>
       </div>
     )
   }

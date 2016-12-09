@@ -34,7 +34,6 @@ class InfluencesField extends Component {
         deleteInfluence={this.props.deleteInfluence}
       />
     )
-    console.log(this.props.influences)
     return influences
   }
 

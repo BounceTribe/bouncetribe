@@ -6,9 +6,8 @@ import EditPersonMutation from 'mutations/EditPersonMutation'
 import CreateInfluenceMutation from 'mutations/CreateInfluenceMutation'
 import DeleteInfluenceMutation from 'mutations/DeleteInfluenceMutation'
 import cat from 'styling/burritocat.jpg'
-import BTButton from 'reusables/BTButton'
 import {searchArtistsOptions, createArtistOptions} from 'apis/graphql'
-
+import BTButton from 'reusables/BTButton'
 
 class ProfileContainer extends Component {
   // constructor() {
@@ -97,10 +96,8 @@ class ProfileContainer extends Component {
         />
 
         <BTButton
-          icon={'logo'}
-        >
-          Hello
-        </BTButton>
+          text={'Hello'}
+        />
 
         <ProfileField
           field={'email'}
