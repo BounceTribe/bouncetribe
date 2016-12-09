@@ -32,11 +32,11 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
-            name
-            email
-            profilePicUrl
-            handle
-            summary
+            # name
+            # email
+            # profilePicUrl
+            # handle
+            # summary
             ${ProfileContainer.getFragment('user')}
           }
         }

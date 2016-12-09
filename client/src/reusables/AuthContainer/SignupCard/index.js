@@ -51,6 +51,7 @@ class SignupCard extends Component {
               password: ''
             })
             loginSuccess(loggedinUser['id_token'])
+            location.reload()
           },
           onFailure: (error) => {
             console.log('CreateUserMutationmutation failure', error)

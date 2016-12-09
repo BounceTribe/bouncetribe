@@ -10,7 +10,10 @@ import Projects from './Projects'
 import Tribe from './Tribe'
 
 
-const ViewerQueries = { viewer: () => Relay.QL`query { viewer }` }
+const ViewerQueries = {
+  viewer: () => Relay.QL`query { viewer }`
+}
+
 
 const checkPermissions = async (nextState, replace) => {
   try {
@@ -57,7 +60,6 @@ const createRoutes = () => {
       <Route
         path="/profile"
         component={Profile}
-        onEnter={checkPermissions}
         queries={ViewerQueries}
 
       />

@@ -31,7 +31,7 @@ class LoginCard extends Component {
 
 
       loginSuccess(loggedinUser['id_token'])
-
+      location.reload()
 
     } catch (error) {
       this.setState({
