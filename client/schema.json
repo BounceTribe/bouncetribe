@@ -5762,7 +5762,18 @@
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
-              "args": [],
+              "args": [
+                {
+                  "name": "filter",
+                  "description": "",
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ArtistFilter",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
               "type": {
                 "kind": "OBJECT",
                 "name": "Artist",
@@ -5814,7 +5825,18 @@
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
-              "args": [],
+              "args": [
+                {
+                  "name": "filter",
+                  "description": "",
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserFilter",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
               "type": {
                 "kind": "OBJECT",
                 "name": "User",

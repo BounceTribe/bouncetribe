@@ -36,7 +36,7 @@ class TopBarMenu extends Component {
         <TopBarMenuItem
           text={'Profile'}
           key='profile'
-          to={`/${this.props.viewer.user.handle}`}
+          to={`/profile`}
         />,
         <TopBarMenuItem
           text={'My Tribe'}

@@ -429,11 +429,11 @@ enum FileOrderBy {
 
 # Influence
 type Influence implements Node {
-  artist: Artist
+  artist(filter: ArtistFilter): Artist
   createdAt: DateTime
   id: ID!
   updatedAt: DateTime
-  user: User
+  user(filter: UserFilter): User
 }
 
 input InfluenceartistArtist {
