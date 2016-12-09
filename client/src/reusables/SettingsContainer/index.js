@@ -29,7 +29,6 @@ class SettingsContainer extends Component {
   render() {
     const {
       name,
-      email,
       handle,
     } = this.props.user
     return (
@@ -43,11 +42,6 @@ class SettingsContainer extends Component {
           submitField={this.handleSubmitField}
         />
 
-        <ProfileField
-          field={'email'}
-          text={email}
-          submitField={this.handleSubmitField}
-        />
 
         <ProfileField
           field={'handle'}

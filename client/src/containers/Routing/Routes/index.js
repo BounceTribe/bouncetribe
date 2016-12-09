@@ -59,17 +59,17 @@ const createRoutes = () => {
         component={Home}
       />
       <Route
-        path="/projects"
+        path="/:profile/projects"
         component={Projects}
         onEnter={checkPermissions}
       />
       <Route
-        path="/tribe"
+        path="/:profile/tribe"
         component={Tribe}
         onEnter={checkPermissions}
       />
       <Route
-        path="/settings"
+        path="/:profile/settings"
         component={Settings}
         onEnter={checkPermissions}
         queries={ViewerQueries}
@@ -78,7 +78,9 @@ const createRoutes = () => {
         path="/:profile"
         component={Profile}
         queries={ViewerQueries}
-      />
+      >
+
+      </Route>
     </Route>
   )
 }

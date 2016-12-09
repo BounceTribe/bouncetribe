@@ -16,11 +16,12 @@ const topBarMenu = new S({
 class TopBarMenu extends Component {
   get showMenu() {
     if (this.props.isLoggedIn) {
+      let handle = this.props.viewer.user.handle
       return ([
         <TopBarMenuItem
           text={'Projects'}
           key='projects'
-          to={'/projects'}
+          to={`/${handle}/projects`}
         />,
         <TopBarMenuItem
           text={'Notifications'}
@@ -32,21 +33,22 @@ class TopBarMenu extends Component {
 
   get showUserDropdown() {
     if (this.props.isLoggedIn) {
+      let handle = this.props.viewer.user.handle
       return ([
         <TopBarMenuItem
           text={'Profile'}
           key='profile'
-          to={`/${this.props.viewer.user.handle}`}
+          to={`/${handle}`}
         />,
         <TopBarMenuItem
           text={'My Tribe'}
           key='myTribe'
-          to={`/tribe`}
+          to={`/${handle}/tribe`}
         />,
         <TopBarMenuItem
           text={'Settings'}
           key='settings'
-          to={`/settings`}
+          to={`/${handle}/settings`}
         />
       ])
     }
