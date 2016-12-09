@@ -2,6 +2,10 @@ import React, {Component} from 'react'
 import S from 'styling/S'
 import TopBarMenuItem from './TopBarMenuItem'
 import AuthContainer from 'reusables/AuthContainer'
+import projectIcon from 'imgs/project.svg'
+// import sessionIcon from 'imgs/session.svg'
+import notifications from 'imgs/notifications.svg'
+
 
 const topBarMenuBase = {
   display: 'flex'
@@ -22,10 +26,12 @@ class TopBarMenu extends Component {
           text={'Projects'}
           key='projects'
           to={`/${handle}/projects`}
+          icon={projectIcon}
         />,
         <TopBarMenuItem
           text={'Notifications'}
           key='notifications'
+          icon={notifications}
         />
       ])
     }
@@ -70,7 +76,6 @@ class TopBarMenu extends Component {
             dropDown={
               <div>
                 {this.showUserDropdown}
-                <h2>AuthContainer</h2>
                 <AuthContainer
                   router={this.props.router}
                   viewer={this.props.viewer}

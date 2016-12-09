@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import btLogo from 'imgs/btLogo.png'
+import logo from 'imgs/logo.svg'
 import styled from 'styled-components'
 import {btPurple, btWhite} from 'styling/T'
 
@@ -69,7 +69,7 @@ class BTButton extends Component {
   get chooseIcon () {
     switch (this.props.icon) {
       case 'logo': {
-        return btLogo
+        return logo
       }
 
       default: {

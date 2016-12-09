@@ -69,8 +69,14 @@ class TopBarMenuItem extends Component {
           <Link
             to={this.props.to}
           >
-            {this.props.text}
-            {this.props.children}
+            <img
+              src={this.props.icon}
+              role='presentation'
+            />
+            <span>
+              {this.props.text}
+              {this.props.children}
+            </span>
           </Link>
 
           {this.hasDropDown}

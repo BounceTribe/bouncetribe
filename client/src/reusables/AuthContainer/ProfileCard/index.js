@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
+import BTButton from 'reusables/BTButton'
 
 class ProfileCard extends Component {
   // constructor(props) {
@@ -10,19 +11,11 @@ class ProfileCard extends Component {
   render() {
     return (
       <div>
-        {/* <img
-          src={this.props.user.picture}
-          style={{
-            maxWidth: '50px',
-            height: 'auto'
-          }}
-          role="presentation"
-        ></img> */}
-        {/* <span>{this.props.user.email}</span> */}
-        <h3>You're logged in.</h3>
-        <button
+        <span>{this.props.viewer.user.name}</span>
+        <BTButton
           onClick={()=>{this.props.logout()}}
-        >logout</button>
+          text={'Logout'}
+        />
       </div>
     )
   }
@@ -34,7 +27,9 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user
+          user {
+            name
+          }
         }
       `,
     },
