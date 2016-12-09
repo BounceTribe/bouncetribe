@@ -36,7 +36,7 @@ class TopBarMenu extends Component {
         <TopBarMenuItem
           text={'Profile'}
           key='profile'
-          to={`/profile`}
+          to={`/${this.props.viewer.user.handle}`}
         />,
         <TopBarMenuItem
           text={'My Tribe'}
@@ -64,6 +64,7 @@ class TopBarMenu extends Component {
 
           <TopBarMenuItem
             text={this.props.isLoggedIn ? 'Your Profile' : 'Login or Signup'}
+            isLoggedIn={this.props.isLoggedIn}
             dropDown={
               <div>
                 {this.showUserDropdown}

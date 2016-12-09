@@ -35,6 +35,12 @@ class TopBarMenuItem extends Component {
     })
   }
 
+  componentWillReceiveProps = (newProps) => {
+    if (newProps.isLoggedIn) {
+      this.handleRequestClose()
+    }
+  }
+
   get hasDropDown() {
     if (this.props.dropDown) {
       return (
