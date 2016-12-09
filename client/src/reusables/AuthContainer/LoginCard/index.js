@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {auth0Login} from '../auth0SignupLogin'
-
+import SigninUserMutation from 'mutations/SigninUserMutation'
 
 class LoginCard extends Component {
 
@@ -29,8 +29,26 @@ class LoginCard extends Component {
 
       const loggedinUser = await auth0Login(email, password)
 
+      this.props.relay.commitUpdate(
+        new SigninUserMutation({
+          authToken: loggedinUser['id_token'],
+          viewer: this.props.viewer
+        }), {
+          onSuccess: (response) => {
+            console.log('success', response)
+            this.setState({
+              email: '',
+              password: ''
+            })
+            loginSuccess(loggedinUser['id_token'])
+          },
+          onFailure: (error) => {
+            console.log('SigninUserMutation failure', error)
+            throw error
+          }
+        }
+      )
 
-      loginSuccess(loggedinUser['id_token'])
 
     } catch (error) {
       this.setState({
