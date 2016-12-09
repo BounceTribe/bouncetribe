@@ -8,7 +8,7 @@ export async function auth0Signup (email, password) {
     const auth0signupResult = await fetch(signupRoute, options).then(
       (response) => response.json()
     ).then((json) => {
-        if (json.statusCode) {
+        if (json.error) {
           throw json
         } else {
           return json
@@ -19,6 +19,7 @@ export async function auth0Signup (email, password) {
 
   } catch (error) {
     console.log('auth0Signup error: maybe you already have an account?', error)
+    throw error
   }
 }
 
@@ -31,8 +32,8 @@ export async function auth0Login (email, password) {
     const loginResult = await fetch(loginRoute, options).then(
       (response) => response.json()
     ).then((json) => {
-        if (json.statusCode) {
-          throw json.error
+        if (json.error) {
+          throw json
         } else {
           return json
         }
@@ -43,6 +44,6 @@ export async function auth0Login (email, password) {
 
   } catch (error) {
     console.log('auth0Login error: \n', error)
-    throw error.description
+    throw error
   }
 }

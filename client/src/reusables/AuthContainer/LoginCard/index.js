@@ -51,8 +51,9 @@ class LoginCard extends Component {
 
 
     } catch (error) {
+      console.log('logincard error', error)
       this.setState({
-        loginError: error
+        loginError: error['error_description']
       })
     }
 

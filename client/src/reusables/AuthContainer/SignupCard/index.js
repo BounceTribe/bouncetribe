@@ -77,7 +77,7 @@ class SignupCard extends Component {
     } catch (error) {
       console.log('signup, mutation, login error', error)
       this.setState({
-        signupError: error
+        signupError: error['error_description']
       })
     }
 
