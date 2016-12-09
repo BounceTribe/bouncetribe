@@ -9,14 +9,11 @@ import {
   RelayNetworkLayer,
   urlMiddleware
 } from 'react-relay-network-layer'
-// import {profileRoute, profileOptions} from 'config/auth0'
-
-// let localToken = store.getState().auth['id_token']
 
 const createHeaders = (localToken) => {
   if (localToken) {
     return {
-      'Authorization': 'Bearer ' + localToken
+      Authorization: 'Bearer ' + localToken
     }
   } else {
     return {}
@@ -43,22 +40,6 @@ Relay.injectNetworkLayer(
     },
   ],{ disableBatchQuery: true })
 )
-
-// const select = (state) => {
-//   return state.auth['id_token']
-// }
-//
-// const handleChange = () => {
-//   localToken = select(store.getState())
-//   if (localToken) {
-//     headers = createHeaders()
-//     console.log(headers)
-//   } else {
-//     headers = {}
-//   }
-// }
-//
-// store.subscribe(handleChange)
 
 store.dispatch(checkLocalStorageForToken())
 

@@ -30,6 +30,9 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           ${AuthContainer.getFragment('viewer')}
+          user {
+            handle
+          }
         }
       `,
     },

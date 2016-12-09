@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
-import ProfileField from './ProfileField'
+import ProfileField from 'reusables/ProfileField'
 import InfluencesField from 'reusables/InfluencesField'
 import EditPersonMutation from 'mutations/EditPersonMutation'
 import CreateInfluenceMutation from 'mutations/CreateInfluenceMutation'
@@ -63,7 +63,6 @@ class ProfileContainer extends Component {
     const {
       name,
       email,
-      handle,
       profilePicUrl,
       summary,
       influences
@@ -91,12 +90,6 @@ class ProfileContainer extends Component {
         <ProfileField
           field={'email'}
           text={email}
-          submitField={this.handleSubmitField}
-        />
-
-        <ProfileField
-          field={'handle'}
-          text={handle}
           submitField={this.handleSubmitField}
         />
 
@@ -135,6 +128,7 @@ export default Relay.createContainer(
                 artist {
                   name
                   id
+                  imageUrl
                 }
               }
             }

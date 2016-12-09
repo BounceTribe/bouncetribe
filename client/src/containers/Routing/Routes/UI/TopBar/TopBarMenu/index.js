@@ -36,12 +36,17 @@ class TopBarMenu extends Component {
         <TopBarMenuItem
           text={'Profile'}
           key='profile'
-          to='/profile'
+          to={`/${this.props.viewer.user.handle}`}
         />,
         <TopBarMenuItem
           text={'My Tribe'}
           key='myTribe'
-          to='/tribe'
+          to={`/tribe`}
+        />,
+        <TopBarMenuItem
+          text={'Settings'}
+          key='settings'
+          to={`/settings`}
         />
       ])
     }

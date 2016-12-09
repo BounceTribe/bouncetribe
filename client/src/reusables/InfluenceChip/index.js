@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import logo from 'imgs/btLogo.png'
 import {btLight, btWhite, btMedium} from 'styling/T'
 
 class InfluenceChip extends Component {
@@ -40,11 +39,13 @@ class InfluenceChip extends Component {
         }}
       >
         <img
-          src={logo}
+          src={this.props.artist.imageUrl}
           alt='presentation'
           style={{
+            width: '30px',
             height: '100%',
             display: 'flex',
+            borderRadius: '30px'
           }}
         />
         <span

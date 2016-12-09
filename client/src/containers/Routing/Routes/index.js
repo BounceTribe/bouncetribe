@@ -8,6 +8,7 @@ import Home from './Home'
 import Profile from './Profile'
 import Projects from './Projects'
 import Tribe from './Tribe'
+import Settings from './Settings'
 
 
 const ViewerQueries = {
@@ -58,12 +59,6 @@ const createRoutes = () => {
         component={Home}
       />
       <Route
-        path="/profile"
-        component={Profile}
-        queries={ViewerQueries}
-
-      />
-      <Route
         path="/projects"
         component={Projects}
         onEnter={checkPermissions}
@@ -72,6 +67,17 @@ const createRoutes = () => {
         path="/tribe"
         component={Tribe}
         onEnter={checkPermissions}
+      />
+      <Route
+        path="/settings"
+        component={Settings}
+        onEnter={checkPermissions}
+        queries={ViewerQueries}
+      />
+      <Route
+        path="/:profile"
+        component={Profile}
+        queries={ViewerQueries}
       />
     </Route>
   )
