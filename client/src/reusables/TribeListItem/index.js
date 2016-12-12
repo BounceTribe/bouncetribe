@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import cat from 'styling/burritocat.png'
 import styled from 'styled-components'
 import BTButton from 'reusables/BTButton'
+import {subtleBorder} from 'styling/T'
 
 const TribeListItemDisplay = styled.div`
   display: flex;
@@ -10,7 +11,10 @@ const TribeListItemDisplay = styled.div`
   justify-content: flex-start;
   align-items: center;
   max-height: 100px;
-  margin: 10px 0px;
+  margin: 10px auto;
+  padding: 10px;
+  width: 45%;
+  ${subtleBorder}
 `
 
 const TribeListItemImage = styled.img`
@@ -50,7 +54,56 @@ const UserScore = styled.li`
   font-size: 1em;
 `
 
+const TribeButtonColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  margin-left: 20px;
+`
+
 class TribeListItem extends Component {
+
+  get showButtons () {
+
+    if (this.props.myTribe) {
+      return null
+    } else if (this.props.pending) {
+      return (
+        <TribeButtonColumn>
+
+          <BTButton
+            text={'Accept'}
+            teal
+            onClick={()=>{
+              let fields = {
+                otherId: this.props.user.id
+              }
+              this.props.makeTribeRequest(fields)
+            }}
+          />
+
+        </TribeButtonColumn>
+      )
+    } else {
+      return (
+        <TribeButtonColumn>
+
+          <BTButton
+            text={'Invite'}
+            onClick={()=>{
+              let fields = {
+                otherId: this.props.user.id
+              }
+              this.props.makeTribeRequest(fields)
+            }}
+          />
+
+        </TribeButtonColumn>
+      )
+    }
+  }
 
   render() {
     return (
@@ -75,15 +128,9 @@ class TribeListItem extends Component {
 
         </TribeListItemInfoColumn>
 
-        <BTButton
-          text={'Invite'}
-          onClick={()=>{
-            let fields = {
-              otherId: this.props.user.id
-            }
-            this.props.makeTribeRequest(fields)
-          }}
-        />
+
+          {this.showButtons}
+
 
       </TribeListItemDisplay>
     )

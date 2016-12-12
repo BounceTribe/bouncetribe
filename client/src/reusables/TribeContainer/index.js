@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
-import BTButton from 'reusables/BTButton'
 import CreateTribeshipMutation from 'mutations/CreateTribeshipMutation'
 import TribeListItem from 'reusables/TribeListItem'
 import styled from 'styled-components'
@@ -22,6 +21,16 @@ const TribeHeaderRight = styled.li`
   justify-content: space-between;
   align-items: center;
   width: 33%;
+`
+
+const TribeList = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
 `
 
 class TribeContainer extends Component {
@@ -56,6 +65,7 @@ class TribeContainer extends Component {
               key={user.id}
               user={user}
               makeTribeRequest={this.handleTribeshipInvitation}
+              pending
             />
           ))
         } else {
@@ -71,6 +81,7 @@ class TribeContainer extends Component {
               key={user.id}
               user={user}
               makeTribeRequest={this.handleTribeshipInvitation}
+              myTribe
             />
           ))
         } else {
@@ -175,14 +186,15 @@ class TribeContainer extends Component {
             >
               <h4>Pending Requests</h4>
             </a>
-            <BTButton
-              text='Find Tribe'
+            <a
               onClick={()=>{
                 this.setState({
                   list: 'FIND_TRIBE'
                 })
               }}
-            />
+            >
+              <h4>Find</h4>
+            </a>
           </TribeHeaderRight>
 
 
@@ -190,7 +202,9 @@ class TribeContainer extends Component {
 
         <h4>{this.state.list}</h4>
 
-        {this.userList}
+        <TribeList>
+          {this.userList}
+        </TribeList>
       </section>
     )
   }

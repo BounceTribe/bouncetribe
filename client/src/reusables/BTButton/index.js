@@ -1,13 +1,25 @@
 import React, {Component} from 'react'
 import logo from 'imgs/logo.svg'
 import styled from 'styled-components'
-import {btPurple, btWhite} from 'styling/T'
+import {btPurple, btWhite, btTeal, btWarn, btMedium} from 'styling/T'
 
 const justifyContent = (props) => {
   if (props.text && props.icon) {
     return 'flex-start'
   } else {
     return 'center'
+  }
+}
+
+const setColor = (props) => {
+  if (props.danger) {
+    return btWarn
+  } else if (props.teal) {
+    return btTeal
+  } else if (props.grey) {
+    return btMedium
+  } else {
+    return btPurple
   }
 }
 
@@ -23,7 +35,7 @@ const Button = styled.button`
   align-content: center;
   justify-content: ${props => justifyContent(props)};
   align-items: center;
-  background: ${btPurple};
+  background: ${props =>  setColor(props)};
   color: ${btWhite};
   transition: all .20s;
   box-shadow: 0px 2px #999;
@@ -110,6 +122,9 @@ class BTButton extends Component {
     return (
       <Button
         onClick={this.props.onClick ? this.props.onClick : null}
+        teal={this.props.teal}
+        danger={this.props.danger}
+        grey={this.props.grey}
       >
         {useIcon}
 
