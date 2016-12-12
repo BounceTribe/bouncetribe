@@ -2,26 +2,82 @@ import React, { Component } from 'react'
 import Relay from 'react-relay'
 import BTButton from 'reusables/BTButton'
 import CreateTribeshipMutation from 'mutations/CreateTribeshipMutation'
+import TribeListItem from 'reusables/TribeListItem'
+import styled from 'styled-components'
+
+
+const TribeHeader = styled.ul`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`
+
+const TribeHeaderRight = styled.li`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  width: 33%;
+`
 
 class TribeContainer extends Component {
 
+  constructor(props) {
+    super(props)
+    this.handleTribeshipInvitation = this.handleTribeshipInvitation.bind(this)
+  }
+
+
+  state = {
+    list: 'MY_TRIBE'
+  }
+
   get userList () {
-    return this.props.viewer.allUsers.edges.map(edge => (
-      <div
-        key={edge.node.id}
-      >
-        {edge.node.name}
-        <BTButton
-          text={'Invite'}
-          onClick={()=>{
-            let fields = {
-              user: edge.node
-            }
-            this.handleTribeshipInvitation(fields)
-          }}
-        />
-      </div>)
-    )
+
+    switch (this.state.list) {
+      case 'FIND_TRIBE':{
+        return this.props.viewer.allUsers.edges.map(edge => (
+          <TribeListItem
+            key={edge.node.id}
+            user={edge.node}
+            makeTribeRequest={this.handleTribeshipInvitation}
+          />
+        ))
+      }
+      case 'MY_PENDING': {
+        console.log('my_pending', this.myPending)
+        if (this.myPending.length > 0) {
+          return this.myPending.map(user => (
+            <TribeListItem
+              key={user.id}
+              user={user}
+              makeTribeRequest={this.handleTribeshipInvitation}
+            />
+          ))
+        } else {
+          return <h4>No Pending!</h4>
+        }
+      }
+      default:
+      case 'MY_TRIBE': {
+        console.log('my_tribe', this.myTribe)
+        if (this.myTribe.length > 0) {
+          return this.myTribe.map(user => (
+            <TribeListItem
+              key={user.id}
+              user={user}
+              makeTribeRequest={this.handleTribeshipInvitation}
+            />
+          ))
+        } else {
+          return <h4>No tribe!</h4>
+        }
+      }
+    }
 
   }
 
@@ -30,7 +86,7 @@ class TribeContainer extends Component {
     Relay.Store.commitUpdate(
       new CreateTribeshipMutation({
         user: this.props.user,
-        party2: fields.user,
+        otherId: fields.otherId,
       }),
       {
         onSuccess: (success) => console.log('succes', success),
@@ -39,11 +95,100 @@ class TribeContainer extends Component {
     )
   }
 
+  get myTribe () {
+    let allRequestedUsers = this.props.user.party1.edges.map(edge =>edge.node.party2)
+    let allPendingUsers = this.props.user.party2.edges.map(edge => edge.node.party1)
+
+    let myTribe = []
+
+    myTribe = allRequestedUsers.filter((value) => {
+      if (allPendingUsers.length > 0) {
+        let match = allPendingUsers.find((item)=> {
+          return item.id === value.id
+        })
+        if (match) {
+          return true
+        } else {
+          return false
+        }
+
+      } else {
+        return false
+      }
+    })
+
+    return myTribe
+
+  }
+
+  get myPending () {
+    let myTribe = this.myTribe
+    let allPendingUsers = this.props.user.party2.edges.map(edge => edge.node.party1)
+
+    console.log('myTribe', myTribe)
+    console.log('allPendingUsers', allPendingUsers)
+
+    let myPending = []
+
+    myPending = allPendingUsers.filter((value) => {
+      if (myTribe.length > 0) {
+        let match = myTribe.find((item)=> {
+          return item.id === value.id
+        })
+        if (match) {
+          return false
+        } else {
+          return true
+        }
+
+      } else {
+        return true
+      }
+    })
+
+    return myPending
+
+  }
+
   render() {
+
     return (
       <section>
 
-        <h3>Find Friends</h3>
+        <TribeHeader>
+          <a
+            onClick={()=>{
+              this.setState({
+                list: 'MY_TRIBE'
+              })
+            }}
+          >
+            <h2>My Tribe</h2>
+          </a>
+          <TribeHeaderRight>
+            <a
+              onClick={()=>{
+                this.setState({
+                  list: 'MY_PENDING'
+                })
+              }}
+            >
+              <h4>Pending Requests</h4>
+            </a>
+            <BTButton
+              text='Find Tribe'
+              onClick={()=>{
+                this.setState({
+                  list: 'FIND_TRIBE'
+                })
+              }}
+            />
+          </TribeHeaderRight>
+
+
+        </TribeHeader>
+
+        <h4>{this.state.list}</h4>
 
         {this.userList}
       </section>
@@ -64,6 +209,26 @@ export default Relay.createContainer(
           summary
           id
           ${CreateTribeshipMutation.getFragment('user')}
+          party1 (first:1000) {
+            edges {
+              node {
+                party2 {
+                  name
+                  id
+                }
+              }
+            }
+          }
+          party2 (first:1000) {
+            edges {
+              node {
+                party1 {
+                  name
+                  id
+                }
+              }
+            }
+          }
         }
       `,
       viewer: () => Relay.QL`

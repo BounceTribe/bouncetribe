@@ -74,7 +74,6 @@ class ProfileContainer extends Component {
 
   render() {
     const {
-      email,
       summary,
       influences
     } = this.props.user

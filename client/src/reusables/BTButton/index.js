@@ -15,7 +15,7 @@ const Button = styled.button`
   border-radius: 5px;
   height: 45px;
   width: 140px;
-  font-size: 13px;
+  font-size: 1em;
   font-family: 'Helvetica Neue';
   font-weight: bold;
   display: flex;

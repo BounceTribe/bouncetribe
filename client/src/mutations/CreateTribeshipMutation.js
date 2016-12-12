@@ -38,7 +38,7 @@ export default class CreateInfluenceMutation extends Relay.Mutation {
   getVariables () {
     return {
       party1Id: this.props.user.id,
-      party2Id: this.props.party2.id,
+      party2Id: this.props.otherId,
     }
   }
 

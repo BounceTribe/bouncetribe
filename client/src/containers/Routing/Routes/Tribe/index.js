@@ -14,7 +14,6 @@ class Tribe extends Component {
     } = this.props
     return (
       <section>
-        <h1>Tribe</h1>
 
         <TribeContainer
           user={viewer.user}
