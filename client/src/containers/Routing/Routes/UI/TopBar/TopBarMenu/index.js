@@ -29,7 +29,6 @@ class TopBarMenu extends Component {
           icon={projectIcon}
         />,
         <TopBarMenuItem
-          text={'Notifications'}
           key='notifications'
           icon={notifications}
         />

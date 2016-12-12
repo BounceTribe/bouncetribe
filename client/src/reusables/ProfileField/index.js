@@ -1,4 +1,44 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
+
+
+const ProfileFieldContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 20px 0px;
+`
+
+const ProfileFieldLabel = styled.h3`
+  font-weight: bold;
+  margin-bottom: 10px;
+`
+
+const ProfileFieldContents = styled.div`
+  width: 100%;
+  min-height: 100px;
+`
+
+const ProfileFieldP = styled.p`
+  width: 100%;
+  min-height: 100px;
+  line-height: 1.15;
+  font-style: italic;
+`
+
+
+const TextArea = styled.textarea`
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0px;
+  border: none;
+  outline: none;
+  font-style: italic;
+`
+
 
 class ProfileField extends Component {
   constructor(props) {
@@ -14,20 +54,21 @@ class ProfileField extends Component {
     const canEdit = this.state.canEdit
     if (canEdit) {
       return (
-        <input
+        <TextArea
           type="text"
           value={this.state.text}
           onChange={(e) => {
             this.editText(e)
           }}
           onBlur={(e)=>{
+            console.log('blur')
             this.submitEdits()
           }}
         />
       )
     } else {
       return (
-        <h5>{this.props.text}</h5>
+        <ProfileFieldP>{this.props.text}</ProfileFieldP>
       )
     }
   }
@@ -54,16 +95,20 @@ class ProfileField extends Component {
   }
 
   render() {
+    const {
+      label,
+    } = this.props
     return (
-      <div
-        style={{
-          margin: '20px',
-          border: 'solid 5px purple'
-        }}
+      <ProfileFieldContainer
         onDoubleClick={this.doubleClickToEdit}
       >
-        {this.inputOrDisplay}
-      </div>
+        <ProfileFieldLabel>{label}</ProfileFieldLabel>
+
+        <ProfileFieldContents>
+          {this.inputOrDisplay}
+        </ProfileFieldContents>
+
+      </ProfileFieldContainer>
     )
   }
 

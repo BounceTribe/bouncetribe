@@ -14,12 +14,9 @@ class Profile extends Component {
     } = this.props
     return (
       <section>
-        <h1>Profile</h1>
-
         <ProfileContainer
           user={viewer.user}
         />
-
       </section>
     )
   }

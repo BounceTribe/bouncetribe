@@ -2,23 +2,33 @@ body {
   margin: 0;
   background-color: rgb(247,247,247);
   font-family: 'Helvetica Neue', sans-serif;
+  font-size: 1em;
 }
 
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5, p {
   margin: 0;
 }
 
 main {
-  padding-left: 15%;
-  padding-right: 15%;
-  padding-top: 10px;
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 60px;
+  border: solid rgba(200, 200, 200, .9) .5px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 1px 1px rgba(160, 160, 160, .9);
 }
 
 a {
   color: inherit;
   text-decoration: none;
   cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
 li {

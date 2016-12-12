@@ -5,10 +5,8 @@ import InfluencesField from 'reusables/InfluencesField'
 import EditPersonMutation from 'mutations/EditPersonMutation'
 import CreateInfluenceMutation from 'mutations/CreateInfluenceMutation'
 import DeleteInfluenceMutation from 'mutations/DeleteInfluenceMutation'
-import cat from 'styling/burritocat.jpg'
 import {searchArtistsOptions, createArtistOptions} from 'apis/graphql'
-import BTButton from 'reusables/BTButton'
-import BTEditableField from 'reusables/BTEditableField'
+import ProfileTop from 'reusables/ProfileTop'
 
 class ProfileContainer extends Component {
   // constructor() {
@@ -76,45 +74,21 @@ class ProfileContainer extends Component {
 
   render() {
     const {
-      name,
       email,
-      profilePicUrl,
       summary,
       influences
     } = this.props.user
     return (
       <section>
 
-        <ProfileField
-          field={'name'}
-          text={name}
-          submitField={this.handleSubmitField}
+        <ProfileTop
+          user={this.props.user}
         />
 
-        <img
-          src={profilePicUrl ? profilePicUrl : cat}
-          role={'presentation'}
-        />
-
-        <BTButton
-          text={'Hello'}
-        />
-
-        <BTEditableField
-          label={'Label'}
-          onChange={(content)=>{
-            console.log(content)
-          }}
-        />
-
-        <ProfileField
-          field={'email'}
-          text={email}
-          submitField={this.handleSubmitField}
-        />
 
         <ProfileField
           field={'summary'}
+          label={'Summary'}
           text={summary}
           submitField={this.handleSubmitField}
         />

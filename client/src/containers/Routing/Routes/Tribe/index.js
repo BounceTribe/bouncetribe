@@ -1,12 +1,43 @@
-import React from 'react'
+import React, { Component } from 'react'
+import Relay from 'react-relay'
+import TribeContainer from 'reusables/TribeContainer'
 
-const Tribe = () => {
-  return (
-    <section>
-      <h1>Tribe</h1>
-      <h5>check out ur tribe</h5>
-    </section>
-  )
+class Tribe extends Component {
+  // constructor() {
+  //   super()
+  //
+  // }
+
+  render() {
+    const {
+      viewer
+    } = this.props
+    return (
+      <section>
+        <h1>Tribe</h1>
+
+        <TribeContainer
+          user={viewer.user}
+          viewer={viewer}
+        />
+
+      </section>
+    )
+  }
 }
 
-export default Tribe
+export default Relay.createContainer(
+  Tribe,
+  {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          user {
+            ${TribeContainer.getFragment('user')}
+          }
+          ${TribeContainer.getFragment('viewer')}
+        }
+      `,
+    },
+  }
+)

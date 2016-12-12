@@ -2,6 +2,12 @@ import React, {Component} from 'react'
 import InfluenceChip from 'reusables/InfluenceChip'
 import {btTeal, btWhite} from 'styling/T'
 import {spotifyConfig} from 'apis/spotify'
+import styled from 'styled-components'
+
+const ProfileFieldLabel = styled.h3`
+  font-weight: bold;
+  margin-bottom: 10px;
+`
 
 class InfluencesField extends Component {
 
@@ -92,7 +98,7 @@ class InfluencesField extends Component {
           }
         }}
       >
-        <h3>Influences</h3>
+        <ProfileFieldLabel>Influences</ProfileFieldLabel>
         <input
           type={'text'}
           list={'artistOptions'}

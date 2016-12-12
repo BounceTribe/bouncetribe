@@ -67,6 +67,7 @@ const createRoutes = () => {
         path="/:profile/tribe"
         component={Tribe}
         onEnter={checkPermissions}
+        queries={ViewerQueries}
       />
       <Route
         path="/:profile/settings"

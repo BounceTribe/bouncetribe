@@ -13,6 +13,36 @@ type AddToArtistInfluencePayload {
   artistArtistEdge: ArtistEdge
 }
 
+type AddToParty1Payload {
+  viewer: Viewer!
+  clientMutationId: String!
+  party1Tribeship: Tribeship
+  party1User: User
+  party1TribeshipEdge: TribeshipEdge
+  party1UserEdge: UserEdge
+}
+
+input AddToParty1TribeshipInput {
+  party1UserId: ID!
+  party1TribeshipId: ID!
+  clientMutationId: String!
+}
+
+type AddToParty2Payload {
+  viewer: Viewer!
+  clientMutationId: String!
+  party2Tribeship: Tribeship
+  party2User: User
+  party2TribeshipEdge: TribeshipEdge
+  party2UserEdge: UserEdge
+}
+
+input AddToParty2TribeshipInput {
+  party2UserId: ID!
+  party2TribeshipId: ID!
+  clientMutationId: String!
+}
+
 type AddToUserInfluencesPayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -213,6 +243,23 @@ type CreateInfluencePayload {
   user: User
 }
 
+input CreateTribeshipInput {
+  party1Id: ID
+  party1: Tribeshipparty1User
+  party2Id: ID
+  party2: Tribeshipparty2User
+  clientMutationId: String!
+}
+
+type CreateTribeshipPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  tribeship: Tribeship
+  edge: TribeshipEdge
+  party1: User
+  party2: User
+}
+
 # If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
 type CreateUserPayload {
   user: User
@@ -260,6 +307,21 @@ type DeleteInfluencePayload {
   edge: InfluenceEdge
   artist: Artist
   user: User
+  deletedId: ID
+}
+
+input DeleteTribeshipInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteTribeshipPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  tribeship: Tribeship
+  edge: TribeshipEdge
+  party1: User
+  party2: User
   deletedId: ID
 }
 
@@ -521,21 +583,28 @@ input InfluenceuserUser {
 scalar Long
 
 type Mutation {
-  createFile(input: CreateFileInput!): CreateFilePayload
   createInfluence(input: CreateInfluenceInput!): CreateInfluencePayload
+  createTribeship(input: CreateTribeshipInput!): CreateTribeshipPayload
   createArtist(input: CreateArtistInput!): CreateArtistPayload
-  updateFile(input: UpdateFileInput!): UpdateFilePayload
+  createFile(input: CreateFileInput!): CreateFilePayload
   updateInfluence(input: UpdateInfluenceInput!): UpdateInfluencePayload
-  updateArtist(input: UpdateArtistInput!): UpdateArtistPayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
-  deleteFile(input: DeleteFileInput!): DeleteFilePayload
+  updateTribeship(input: UpdateTribeshipInput!): UpdateTribeshipPayload
+  updateArtist(input: UpdateArtistInput!): UpdateArtistPayload
+  updateFile(input: UpdateFileInput!): UpdateFilePayload
   deleteInfluence(input: DeleteInfluenceInput!): DeleteInfluencePayload
-  deleteArtist(input: DeleteArtistInput!): DeleteArtistPayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
+  deleteTribeship(input: DeleteTribeshipInput!): DeleteTribeshipPayload
+  deleteArtist(input: DeleteArtistInput!): DeleteArtistPayload
+  deleteFile(input: DeleteFileInput!): DeleteFilePayload
   addToArtistInfluence(input: AddToArtistInfluenceInfluenceInput!): AddToArtistInfluencePayload
   addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
+  addToParty2(input: AddToParty2TribeshipInput!): AddToParty2Payload
+  addToParty1(input: AddToParty1TribeshipInput!): AddToParty1Payload
   removeFromArtistInfluence(input: RemoveFromArtistInfluenceInfluenceInput!): RemoveFromArtistInfluencePayload
   removeFromUserInfluences(input: RemoveFromUserInfluencesUserInput!): RemoveFromUserInfluencesPayload
+  removeFromParty2(input: RemoveFromParty2TribeshipInput!): RemoveFromParty2Payload
+  removeFromParty1(input: RemoveFromParty1TribeshipInput!): RemoveFromParty1Payload
   signinUser(input: SigninUserInput!): SigninPayload!
   createUser(input: SignupUserInput!): CreateUserPayload!
 }
@@ -586,6 +655,36 @@ type RemoveFromArtistInfluencePayload {
   artistArtistEdge: ArtistEdge
 }
 
+type RemoveFromParty1Payload {
+  viewer: Viewer!
+  clientMutationId: String!
+  party1Tribeship: Tribeship
+  party1User: User
+  party1TribeshipEdge: TribeshipEdge
+  party1UserEdge: UserEdge
+}
+
+input RemoveFromParty1TribeshipInput {
+  party1UserId: ID!
+  party1TribeshipId: ID!
+  clientMutationId: String!
+}
+
+type RemoveFromParty2Payload {
+  viewer: Viewer!
+  clientMutationId: String!
+  party2Tribeship: Tribeship
+  party2User: User
+  party2TribeshipEdge: TribeshipEdge
+  party2UserEdge: UserEdge
+}
+
+input RemoveFromParty2TribeshipInput {
+  party2UserId: ID!
+  party2TribeshipId: ID!
+  clientMutationId: String!
+}
+
 type RemoveFromUserInfluencesPayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -623,6 +722,98 @@ input SignupUserInput {
   summary: String
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
+}
+
+# Tribeship
+type Tribeship implements Node {
+  createdAt: DateTime
+  id: ID!
+  party1(filter: UserFilter): User
+  party2(filter: UserFilter): User
+  updatedAt: DateTime
+}
+
+# A connection to a list of items.
+type TribeshipConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [TribeshipEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type TribeshipEdge {
+  # The item at the end of the edge.
+  node: Tribeship!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input TribeshipFilter {
+  AND: [TribeshipFilter!]
+  OR: [TribeshipFilter!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+}
+
+enum TribeshipOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input Tribeshipparty1User {
+  email: String!
+  handle: String!
+  location: String
+  name: String!
+  profilePicUrl: String
+  summary: String
+}
+
+input Tribeshipparty2User {
+  email: String!
+  handle: String!
+  location: String
+  name: String!
+  profilePicUrl: String
+  summary: String
 }
 
 input UpdateArtistInput {
@@ -669,6 +860,22 @@ type UpdateInfluencePayload {
   user: User
 }
 
+input UpdateTribeshipInput {
+  id: ID!
+  party1Id: ID
+  party2Id: ID
+  clientMutationId: String!
+}
+
+type UpdateTribeshipPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  tribeship: Tribeship
+  edge: TribeshipEdge
+  party1: User
+  party2: User
+}
+
 input UpdateUserInput {
   email: String
   handle: String
@@ -697,6 +904,8 @@ type User implements Node {
   influences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
   location: String
   name: String!
+  party1(filter: TribeshipFilter, orderBy: TribeshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TribeshipConnection
+  party2(filter: TribeshipFilter, orderBy: TribeshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TribeshipConnection
   profilePicUrl: String
   summary: String!
   updatedAt: DateTime
@@ -881,14 +1090,16 @@ enum UserOrderBy {
 
 # This is the famous Relay viewer object
 type Viewer {
-  allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   allInfluences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection!
-  allArtists(filter: ArtistFilter, orderBy: ArtistOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArtistConnection!
   allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  File(id: ID, secret: String, url: String): File
+  allTribeships(filter: TribeshipFilter, orderBy: TribeshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TribeshipConnection!
+  allArtists(filter: ArtistFilter, orderBy: ArtistOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArtistConnection!
+  allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   Influence(id: ID): Influence
-  Artist(id: ID): Artist
   User(auth0UserId: String, id: ID): User
+  Tribeship(id: ID): Tribeship
+  Artist(id: ID): Artist
+  File(id: ID, secret: String, url: String): File
   id: ID!
   user: User
 }

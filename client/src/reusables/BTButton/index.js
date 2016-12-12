@@ -27,6 +27,7 @@ const Button = styled.button`
   color: ${btWhite};
   transition: all .20s;
   box-shadow: 0px 2px #999;
+  cursor: pointer;
 
   &:after {
     content: '';
