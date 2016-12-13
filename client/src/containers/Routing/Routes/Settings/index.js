@@ -14,8 +14,6 @@ class Settings extends Component {
     } = this.props
     return (
       <section>
-        <h1>Settings</h1>
-
         <SettingsContainer
           user={viewer.user}
         />

@@ -200,8 +200,6 @@ class TribeContainer extends Component {
 
         </TribeHeader>
 
-        <h4>{this.state.list}</h4>
-
         <TribeList>
           {this.userList}
         </TribeList>

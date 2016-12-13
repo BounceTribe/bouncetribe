@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Relay from 'react-relay'
 import ProfileField from 'reusables/ProfileField'
 import EditPersonMutation from 'mutations/EditPersonMutation'
-
+import {handleValidator} from './handleValidator'
 
 class SettingsContainer extends Component {
   // constructor() {
@@ -34,10 +34,9 @@ class SettingsContainer extends Component {
     return (
       <section>
 
-        <h4>Settings</h4>
-
         <ProfileField
           field={'name'}
+          label={'Name'}
           text={name}
           submitField={this.handleSubmitField}
         />
@@ -45,6 +44,8 @@ class SettingsContainer extends Component {
 
         <ProfileField
           field={'handle'}
+          label={'Handle'}
+          validate={handleValidator}
           text={handle}
           submitField={this.handleSubmitField}
         />

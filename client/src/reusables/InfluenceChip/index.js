@@ -1,5 +1,19 @@
 import React, {Component} from 'react'
 import {btLight, btWhite, btMedium} from 'styling/T'
+import styled from 'styled-components'
+
+const ChipContainer = styled.div`
+  height: 30px;
+  background-color: ${btLight};
+  color: ${btWhite};
+  display: inline-flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 30px;
+`
+
 
 class InfluenceChip extends Component {
   // constructor() {
@@ -30,20 +44,9 @@ class InfluenceChip extends Component {
 
   render() {
     return (
-      <div
+      <ChipContainer
         onMouseOver={this.handleMouseOver}
         onMouseOut={this.handleMouseOut}
-        style={{
-          height: '30px',
-          backgroundColor: btLight,
-          color: btWhite,
-          display: 'inline-flex',
-          flexDirection: 'row',
-          alignContent: 'center',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderRadius: '30px'
-        }}
       >
         <img
           src={this.props.artist.imageUrl}
@@ -78,7 +81,7 @@ class InfluenceChip extends Component {
             marginLeft: '10px'
           }}
         >X</button>
-      </div>
+      </ChipContainer>
     )
   }
 }

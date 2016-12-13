@@ -1,12 +1,19 @@
 import React, {Component} from 'react'
 import InfluenceChip from 'reusables/InfluenceChip'
-import {btTeal, btWhite} from 'styling/T'
+import {btTeal} from 'styling/T'
 import {spotifyConfig} from 'apis/spotify'
 import styled from 'styled-components'
 
 const ProfileFieldLabel = styled.h3`
   font-weight: bold;
   margin-bottom: 10px;
+`
+
+const PlusButton = styled.button`
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  background-color: ${btTeal};
 `
 
 class InfluencesField extends Component {
@@ -117,26 +124,10 @@ class InfluencesField extends Component {
         >
           {this.state.artistOptions}
         </datalist>
-        <button
-          style={{
-            height: '50px',
-            width: '50px',
-            borderRadius: '50px',
-            backgroundColor: btTeal,
-            color: btWhite,
-            verticalAlign: 'center'
-          }}
+        <PlusButton
           onClick={this.submitInfluence}
         >
-          <span
-            style={{
-              fontSize: '50px',
-              lineHeight: '50px'
-            }}
-          >
-            &#43;
-          </span>
-        </button>
+        </PlusButton>
         <div>
           {this.renderInfluenceChips}
         </div>
