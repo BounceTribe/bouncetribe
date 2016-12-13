@@ -6,14 +6,16 @@ import {subtleBorder} from 'styling/T'
 
 const TribeListItemDisplay = styled.div`
   display: flex;
+  flex-grow: 1;
   flex-direction: row;
-  align-content: center;
-  justify-content: flex-start;
+  align-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   max-height: 100px;
-  margin: 10px auto;
+  margin: 10px 1%;
   padding: 10px;
-  width: 45%;
+  max-width: 45.6%;
+  min-width: 40%;
   ${subtleBorder}
 `
 
@@ -29,16 +31,24 @@ const TribeListItemInfoColumn = styled.div`
   align-content: center;
   justify-content: flex-start;
   align-items: flex-start;
-  margin-left: 20px;
+  margin-left: 10px;
+`
+
+const TribeListItemRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: flex-start;
 `
 
 const UserName = styled.h2`
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: normal;
 `
 
 const UserLocation = styled.h4`
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: normal;
 `
 
@@ -51,7 +61,7 @@ const UserScores = styled.ul`
 `
 
 const UserScore = styled.li`
-  font-size: 1em;
+  font-size: .8em;
 `
 
 const TribeButtonColumn = styled.div`
@@ -61,6 +71,7 @@ const TribeButtonColumn = styled.div`
   justify-content: center;
   align-items: center;
   margin-left: 20px;
+  min-width: 100px;
 `
 
 class TribeListItem extends Component {
@@ -98,6 +109,7 @@ class TribeListItem extends Component {
               }
               this.props.makeTribeRequest(fields)
             }}
+            flex
           />
 
         </TribeButtonColumn>
@@ -110,27 +122,27 @@ class TribeListItem extends Component {
       <TribeListItemDisplay
 
       >
-        <TribeListItemImage
-          src={cat}
-          alt={'TribeListItem'}
-        />
+        <TribeListItemRow>
+          <TribeListItemImage
+            src={cat}
+            alt={'TribeListItem'}
+          />
 
-        <TribeListItemInfoColumn>
-          <UserName>{this.props.user.name}</UserName>
-          <UserLocation>Location</UserLocation>
-          <UserScores>
-            <UserScore>Rank</UserScore>
-            <UserScore>Projects</UserScore>
-            <UserScore>Tribe</UserScore>
-
-
-          </UserScores>
-
-        </TribeListItemInfoColumn>
+          <TribeListItemInfoColumn>
+            <UserName>{this.props.user.name}</UserName>
+            <UserLocation>Location</UserLocation>
+            <UserScores>
+              <UserScore>Rank</UserScore>
+              <UserScore>Projects</UserScore>
+              <UserScore>Tribe</UserScore>
 
 
-          {this.showButtons}
+            </UserScores>
 
+          </TribeListItemInfoColumn>
+        </TribeListItemRow>
+
+        {this.showButtons}
 
       </TribeListItemDisplay>
     )

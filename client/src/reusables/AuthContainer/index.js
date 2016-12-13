@@ -82,16 +82,11 @@ class AuthContainer extends Component {
   render() {
     return (
       <div
-        style={{
-          margin: '10px',
-          border: 'solid 1px black'
-        }}
+
       >
         {this.showTabs}
         <div
-          style={{
-            margin: '5px'
-          }}
+
         >
           {this.showProfile}
         </div>

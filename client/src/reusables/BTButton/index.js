@@ -25,8 +25,8 @@ const setColor = (props) => {
 
 const Button = styled.button`
   border-radius: 5px;
-  height: 45px;
-  width: 140px;
+  height: ${props => (props.flex) ? '1.5em' : '45px'};
+  width: ${props => (props.flex) ? '100%' : '140px'};
   font-size: 1em;
   font-family: 'Helvetica Neue';
   font-weight: bold;
@@ -45,7 +45,7 @@ const Button = styled.button`
     content: '';
     display: block;
     width: 0;
-    height: 45px;
+    height: ${props => (props.flex) ? '1.5em' : '45px'};
     background: linear-gradient(to right, rgba(255,255,255,0) 30%, rgba(255,255,255,.08) 80%, rgba(255,255,255,0));
     border-right: solid rgba(255,255,255,0) 0px;
     position: absolute;
@@ -53,7 +53,7 @@ const Button = styled.button`
   }
 
   &:hover:after {
-    width: 140px;
+    width: ${props => (props.flex) ? '100%' : '140px'};
     transition: all .20s;
   }
 
@@ -125,6 +125,7 @@ class BTButton extends Component {
         teal={this.props.teal}
         danger={this.props.danger}
         grey={this.props.grey}
+        flex={this.props.flex}
       >
         {useIcon}
 

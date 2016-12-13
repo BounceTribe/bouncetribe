@@ -3,6 +3,7 @@ import Relay from 'react-relay'
 import CreateTribeshipMutation from 'mutations/CreateTribeshipMutation'
 import TribeListItem from 'reusables/TribeListItem'
 import styled from 'styled-components'
+import {btMedium, btBlack} from 'styling/T'
 
 
 const TribeHeader = styled.ul`
@@ -11,10 +12,11 @@ const TribeHeader = styled.ul`
   align-content: center;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  margin: 0 1.2%;
+  box-sizing: border-box;
 `
 
-const TribeHeaderRight = styled.li`
+const TribeHeaderRight = styled.div`
   display: flex;
   flex-direction: row;
   align-content: center;
@@ -31,6 +33,12 @@ const TribeList = styled.div`
   align-items: flex-start;
   flex-wrap: wrap;
 
+`
+
+const TribeHeaderText = styled.li`
+  color: ${props=> props.active ? btBlack : btMedium };
+  text-decoration: ${props=> props.active ? 'underline' : 'none' };
+  cursor: pointer;
 `
 
 class TribeContainer extends Component {
@@ -167,7 +175,8 @@ class TribeContainer extends Component {
       <section>
 
         <TribeHeader>
-          <a
+          <TribeHeaderText
+            active={(this.state.list === 'MY_TRIBE')}
             onClick={()=>{
               this.setState({
                 list: 'MY_TRIBE'
@@ -175,9 +184,10 @@ class TribeContainer extends Component {
             }}
           >
             <h2>My Tribe</h2>
-          </a>
+          </TribeHeaderText>
           <TribeHeaderRight>
-            <a
+            <TribeHeaderText
+              active={(this.state.list === 'MY_PENDING')}
               onClick={()=>{
                 this.setState({
                   list: 'MY_PENDING'
@@ -185,8 +195,9 @@ class TribeContainer extends Component {
               }}
             >
               <h4>Pending Requests</h4>
-            </a>
-            <a
+            </TribeHeaderText>
+            <TribeHeaderText
+              active={(this.state.list === 'FIND_TRIBE')}
               onClick={()=>{
                 this.setState({
                   list: 'FIND_TRIBE'
@@ -194,7 +205,7 @@ class TribeContainer extends Component {
               }}
             >
               <h4>Find</h4>
-            </a>
+            </TribeHeaderText>
           </TribeHeaderRight>
 
 

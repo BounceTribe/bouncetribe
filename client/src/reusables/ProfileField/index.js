@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import {btWarn, btPurple, btTeal} from 'styling/T'
+import {btWarn, btTeal} from 'styling/T'
 
 const singleLine = (props) => {
   if (props.fontSize) {
@@ -18,7 +18,7 @@ const ProfileFieldContainer = styled.div`
   align-items: flex-start;
   margin: ${props => (props.fontSize) ? '5px 0px' : '30px 0px'};
 
-  &:after {
+  ${''/* &:after {
     content: "${props => props.label}";
     background-color: ${btTeal};
     position: relative;
@@ -31,28 +31,10 @@ const ProfileFieldContainer = styled.div`
     transition: all .25s;
   }
 
-  &:before {
-    background-color: ${btWarn};
-    position: relative;
-    display: block;
-    top: -${props => props.fontSize}em;
-    padding: 2px;
-    visibility: hidden;
-    opacity: 0;
-    transition: all .25s;
-    border-color: transparent transparent ${btWarn} transparent;
-    border-width: 5px;
-  }
-
   &:hover:after {
     visibility: visible;
     opacity: 1;
-  }
-
-  &:hover:before {
-    visibility: visible;
-    opacity: 1;
-  }
+  }*/}
 `
 
 const ProfileFieldLabels = styled.div`
@@ -91,11 +73,12 @@ const TextArea = styled.textarea`
   height: 100%;
   box-sizing: border-box;
   padding: 0px;
-  border: ${props => (props.valid) ? 'none' : '2px solid red' };
+  border: ${props => (props.valid) ? btTeal : '2px solid '+btWarn };
   outline: none;
   font-style: ${props => (props.fontSize) ? 'normal' : 'italic'};
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
+  box-shadow: 0 0 10px ${btTeal};
 `
 
 const TextInput = styled.input`
@@ -103,11 +86,13 @@ const TextInput = styled.input`
   height: 100%;
   box-sizing: border-box;
   padding: 0px;
-  border: ${props => (props.valid) ? 'none' : '2px solid red' };
+  border: ${props => (props.valid) ? btTeal : '2px solid '+btWarn };
   outline: none;
   font-style: normal;
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
+  border-color: ${btTeal};
+  box-shadow: 0 0 10px ${btTeal};
 `
 
 class ProfileField extends Component {

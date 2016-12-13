@@ -72,6 +72,11 @@ class TopBarMenuItem extends Component {
             <img
               src={this.props.icon}
               role='presentation'
+              style={{
+                maxHeight: '1em',
+                marginRight: '5px',
+                height: '100%'
+              }}
             />
             <span>
               {this.props.text}
