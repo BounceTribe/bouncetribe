@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import cat from 'styling/burritocat.png'
 import styled from 'styled-components'
+import ProfileField from 'reusables/ProfileField'
 
 const ProfileDisplay = styled.div`
   display: flex;
@@ -26,15 +27,15 @@ const ProfileInfoColumn = styled.div`
   margin-left: 20px;
 `
 
-const UserName = styled.h2`
-  font-size: 1.5em;
-  font-weight: normal;
-`
-
-const UserLocation = styled.h4`
-  font-size: 1.2em;
-  font-weight: normal;
-`
+// const UserName = styled.h2`
+//   font-size: 1.5em;
+//   font-weight: normal;
+// `
+//
+// const UserLocation = styled.h4`
+//   font-size: 1.2em;
+//   font-weight: normal;
+// `
 
 const UserScores = styled.ul`
   display: flex;
@@ -61,8 +62,20 @@ class ProfileTop extends Component {
         />
 
         <ProfileInfoColumn>
-          <UserName>{this.props.user.name}</UserName>
-          <UserLocation>Location</UserLocation>
+          <ProfileField
+            field={'name'}
+            label={'Name'}
+            text={this.props.user.name}
+            submitField={this.props.submitField}
+            fontSize={1.5}
+          />
+          <ProfileField
+            field={'location'}
+            label={'Location'}
+            text={this.props.user.location}
+            submitField={this.props.submitField}
+            fontSize={.9}
+          />
           <UserScores>
             <UserScore>Rank</UserScore>
             <UserScore>Projects</UserScore>

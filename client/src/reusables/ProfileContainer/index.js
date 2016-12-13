@@ -82,6 +82,7 @@ class ProfileContainer extends Component {
 
         <ProfileTop
           user={this.props.user}
+          submitField={this.handleSubmitField}
         />
 
 
@@ -116,6 +117,7 @@ export default Relay.createContainer(
           handle
           summary
           id
+          location
           influences (first: 1000000) {
             edges {
               node {

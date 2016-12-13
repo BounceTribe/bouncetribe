@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import {btWarn} from 'styling/T'
+import {btWarn, btPurple, btTeal} from 'styling/T'
+
+const singleLine = (props) => {
+  if (props.fontSize) {
+    return props.fontSize
+  } else {
+    return 1
+  }
+}
 
 const ProfileFieldContainer = styled.div`
   display: flex;
@@ -8,7 +16,43 @@ const ProfileFieldContainer = styled.div`
   align-content: flex-start;
   justify-content: flex-start;
   align-items: flex-start;
-  margin: 20px 0px;
+  margin: ${props => (props.fontSize) ? '5px 0px' : '30px 0px'};
+
+  &:after {
+    content: "${props => props.label}";
+    background-color: ${btTeal};
+    position: relative;
+    display: block;
+    margin-left: 100%;
+    top: -${props => props.fontSize}em;
+    padding: 2px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .25s;
+  }
+
+  &:before {
+    background-color: ${btWarn};
+    position: relative;
+    display: block;
+    top: -${props => props.fontSize}em;
+    padding: 2px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .25s;
+    border-color: transparent transparent ${btWarn} transparent;
+    border-width: 5px;
+  }
+
+  &:hover:after {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  &:hover:before {
+    visibility: visible;
+    opacity: 1;
+  }
 `
 
 const ProfileFieldLabels = styled.div`
@@ -35,9 +79,10 @@ const ProfileFieldContents = styled.div`
 
 const ProfileFieldP = styled.p`
   width: 100%;
-  min-height: 100px;
   line-height: 1.15;
-  font-style: italic;
+  font-style: ${props => (props.fontSize) ? 'normal' : 'italic'};
+  font-size: ${props => singleLine(props)}em;
+  height: 100%;
 `
 
 
@@ -48,9 +93,22 @@ const TextArea = styled.textarea`
   padding: 0px;
   border: ${props => (props.valid) ? 'none' : '2px solid red' };
   outline: none;
-  font-style: italic;
+  font-style: ${props => (props.fontSize) ? 'normal' : 'italic'};
+  font-size: ${props => singleLine(props)}em;
+  line-height: 1.15;
 `
 
+const TextInput = styled.input`
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0px;
+  border: ${props => (props.valid) ? 'none' : '2px solid red' };
+  outline: none;
+  font-style: normal;
+  font-size: ${props => singleLine(props)}em;
+  line-height: 1.15;
+`
 
 class ProfileField extends Component {
 
@@ -62,7 +120,7 @@ class ProfileField extends Component {
 
   get inputOrDisplay() {
     const canEdit = this.state.canEdit
-    if (canEdit) {
+    if (canEdit && !this.props.fontSize) {
       return (
         <TextArea
           type="text"
@@ -77,15 +135,35 @@ class ProfileField extends Component {
           valid={this.state.valid}
         />
       )
+    } else if (canEdit && this.props.fontSize) {
+      return (
+        <TextInput
+          type="text"
+          value={this.state.text}
+          onChange={(e) => {
+            this.editText(e)
+          }}
+          onBlur={(e)=>{
+            console.log('blur')
+            this.submitEdits()
+          }}
+          valid={this.state.valid}
+          fontSize={this.props.fontSize}
+        />
+      )
     } else {
       return (
-        <ProfileFieldP>{this.props.text}</ProfileFieldP>
+        <ProfileFieldP
+          fontSize={this.props.fontSize}
+        >{this.props.text}</ProfileFieldP>
       )
     }
   }
 
   editText = (e) => {
-    this.validator(e.target.value)
+    if (this.props.validate) {
+      this.validator(e.target.value)
+    }
     this.setState({
       text: e.target.value
     })
@@ -124,18 +202,29 @@ class ProfileField extends Component {
     }
   }
 
+  get showLabel() {
+    if (this.props.fontSize) {
+      return (
+        null
+      )
+    } else {
+      return (
+        <ProfileFieldLabels>
+          <ProfileFieldLabel>{this.props.label}</ProfileFieldLabel>
+          <ProfileErrorMessage>{this.state.message}</ProfileErrorMessage>
+        </ProfileFieldLabels>
+      )
+    }
+  }
+
   render() {
-    const {
-      label,
-    } = this.props
     return (
       <ProfileFieldContainer
         onDoubleClick={this.doubleClickToEdit}
+        fontSize={this.props.fontSize}
+        label={this.props.label}
       >
-        <ProfileFieldLabels>
-          <ProfileFieldLabel>{label}</ProfileFieldLabel>
-          <ProfileErrorMessage>{this.state.message}</ProfileErrorMessage>
-        </ProfileFieldLabels>
+        {this.showLabel}
 
         <ProfileFieldContents>
           {this.inputOrDisplay}
