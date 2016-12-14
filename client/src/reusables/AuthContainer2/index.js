@@ -3,10 +3,22 @@ import Relay from 'react-relay'
 import {connect} from 'react-redux'
 import BTEditableField from 'reusables/BTEditableField'
 import BTButton from 'reusables/BTButton'
-import {fbAccessRoute, loginOptions, loginRoute, profileRoute, profileOptions} from 'config/auth0'
-import {checkIfUserExists} from 'apis/graphql'
+import {fbAccessRoute, loginOptions, loginRoute, profileRoute, profileOptions, signupRoute, signupOptions} from 'config/auth0'
+import {checkIfUserExists, checkIfUserEmailExists} from 'apis/graphql'
 import SigninUserMutation from 'mutations/SigninUserMutation'
+import CreateUserMutation from 'mutations/CreateUserMutation'
 import {loginSuccess} from 'actions/auth'
+import styled from 'styled-components'
+
+const AuthDiv = styled.div`
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  width: 250px;
+`
 
 class AuthContainer2 extends Component {
 
@@ -17,6 +29,7 @@ class AuthContainer2 extends Component {
       blur: false,
       valid: true,
       error: false,
+      message: false
     },
     password: {
       value: '',
@@ -24,6 +37,7 @@ class AuthContainer2 extends Component {
       blur: false,
       valid: true,
       error: false,
+      message: false
     }
   }
 
@@ -34,6 +48,12 @@ class AuthContainer2 extends Component {
         ...this.state.email,
         value: e.target.value,
         error: false,
+        message: false
+      },
+      password: {
+        ...this.state.password,
+        error: false,
+        message: false
       }
     })
     this.emailTimerStart(e.target.value)
@@ -45,7 +65,8 @@ class AuthContainer2 extends Component {
       password: {
         ...this.state.password,
         value: e.target.value,
-        error: false
+        error: false,
+        message: false
       }
     })
     this.passwordTimerStart(e.target.value)
@@ -79,6 +100,7 @@ class AuthContainer2 extends Component {
       }
     })
     this.emailValidator(this.state.email.value)
+    this.checkBtForEmail(this.state.email.value)
   }
 
   passwordBlur = () => {
@@ -144,7 +166,7 @@ class AuthContainer2 extends Component {
   emailTimerStart = (email) => {
     const emailTimer = setTimeout(()=> {
       this.emailValidator(email)
-    },1000)
+    },1500)
     this.setState({
       emailTimer: emailTimer
     })
@@ -173,6 +195,38 @@ class AuthContainer2 extends Component {
   }
 
 
+  checkBtForEmail = async(email) => {
+    let options = checkIfUserEmailExists(email)
+    try {
+      const btEmail = await fetch(...options).then(data => data.json()).then((json) => {
+        console.log('btAccount', json)
+        if (json.data.allUsers.length < 1) {
+          throw json
+        } else {
+          return json
+        }
+      })
+      console.log('checkIfUserEmailExists, exists', btEmail)
+      let name = btEmail.data.allUsers[0].name
+      this.setState({
+        mode: 'LOGIN',
+        email: {
+          ...this.state.email,
+          message: `Welcome back ${name}!`
+        }
+      })
+    } catch (error) {
+      console.log('checkIfUserEmailExists, doesnt exist', error)
+      this.setState({
+        mode: 'SIGNUP',
+        email: {
+          ...this.state.email,
+          message: "New user? We'll create you an account."
+        }
+      })
+    }
+  }
+
   checkForAuth0Account = async () => {
     let email = this.state.email.value
     let password = this.state.password.value
@@ -189,6 +243,14 @@ class AuthContainer2 extends Component {
       return auth0Account
     } catch (error) {
       console.log('checkForAuth0Account error', error)
+      if (error.error === 'invalid_user_password') {
+        this.setState({
+          password: {
+            ...this.state.password,
+            error: "Password doesn't match email."
+          }
+        })
+      }
       throw error
     }
   }
@@ -225,7 +287,29 @@ class AuthContainer2 extends Component {
       return auth0Profile
     } catch (error) {
       console.log('getAuth0Profile error', error)
+
       throw error
+    }
+  }
+
+  auth0Signup = async () => {
+    let email = this.state.email.value
+    let password = this.state.password.value
+    let route = signupRoute
+    let options = signupOptions(email, password)
+    try {
+      const auth0Account = fetch(route, options).then(
+        (response) => response.json()
+      ).then((json) => {
+          if (json.error) {
+            throw json
+          } else {
+            return json
+          }
+      })
+      return auth0Account
+    } catch (error) {
+      console.log('auth0Signup error', error)
     }
   }
 
@@ -246,6 +330,12 @@ class AuthContainer2 extends Component {
           },
           onFailure: (error) => {
             console.log('SigninUserMutation failure', error)
+            this.setState({
+              email: {
+                ...this.state.email,
+                error: "Email not recgonized."
+              }
+            })
             throw error
           }
         }
@@ -255,8 +345,25 @@ class AuthContainer2 extends Component {
     }
   }
 
+  btRelayCreateUserMutation = async(email, idToken) => {
+    this.props.relay.commitUpdate(
+      new CreateUserMutation({
+        email: email,
+        idToken: idToken
+      }), {
+        onSuccess: (response) => {
+          console.log('success', response)
+          this.btRelaySigninMutation(idToken)
+        },
+        onFailure: (error) => {
+          console.log('CreateUserMutation failure', error)
+          throw error
+        }
+      }
+    )
+  }
 
-  runIt = async () => {
+  login = async () => {
     try {
       const validAuth0Account = await this.checkForAuth0Account()
 
@@ -275,13 +382,61 @@ class AuthContainer2 extends Component {
       this.btRelaySigninMutation(idToken)
 
     } catch (error) {
-      console.log('runit error', error)
+      console.log('login error', error)
+      this.setState({
+        email: {
+          ...this.state.email,
+          error: "Email not recgonized."
+        }
+      })
+    }
+  }
+
+  signup = async () => {
+    try {
+      const auth0Account = await this.auth0Signup()
+
+      console.log('auth0account', auth0Account)
+
+      let email = auth0Account.email
+
+      const loggedinUser = await this.checkForAuth0Account()
+
+      let idToken = loggedinUser['id_token']
+
+      console.log('loggedinUser', loggedinUser)
+
+      this.btRelayCreateUserMutation(email, idToken)
+
+    } catch (error) {
+      console.log('signup error', error)
+    }
+  }
+
+  get showButton() {
+    if (this.state.mode === 'SIGNUP') {
+      return (
+        <BTButton
+          onClick={this.signup}
+          text={'Signup'}
+          teal
+          flex
+        />
+      )
+    } else {
+      return (
+        <BTButton
+          onClick={this.login}
+          text={'Login'}
+          flex
+        />
+      )
     }
   }
 
   render() {
     return (
-      <div>
+      <AuthDiv>
 
         <BTButton
           onClick={()=>{
@@ -289,7 +444,8 @@ class AuthContainer2 extends Component {
 
           }}
           text={'Facebook'}
-          teal
+          fb
+          flex
         />
 
         <BTEditableField
@@ -303,6 +459,7 @@ class AuthContainer2 extends Component {
           blur={this.state.email.blur}
           valid={this.state.email.valid}
           error={this.state.email.error}
+          message={this.state.email.message}
         />
 
         <BTEditableField
@@ -316,16 +473,17 @@ class AuthContainer2 extends Component {
           blur={this.state.password.blur}
           valid={this.state.password.valid}
           error={this.state.password.error}
+          message={this.state.password.message}
         />
 
         <br/>
 
-        <BTButton
-          onClick={this.runIt}
-          text={'Login / Signup'}
-        />
 
-      </div>
+        {this.showButton}
+
+
+
+      </AuthDiv>
     )
   }
 }

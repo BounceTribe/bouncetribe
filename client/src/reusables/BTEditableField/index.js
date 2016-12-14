@@ -72,6 +72,10 @@ const ErrorText = styled.span`
   color: ${btWarn};
 `
 
+const MessageText = styled.span`
+  color: ${btTeal};
+`
+
 class BTEditableField extends Component {
   state = {
     text: '',
@@ -89,11 +93,21 @@ class BTEditableField extends Component {
   //   })
   // }
 
-  // editText = (e) => {
-  //   this.setState({
-  //     content: e.target.value
-  //   })
-  // }
+  get messageOrError () {
+    if (this.props.error) {
+      return (
+        <ErrorText>
+          {this.props.error}
+        </ErrorText>
+      )
+    } else {
+      return (
+        <MessageText>
+          {this.props.message}
+        </MessageText>
+      )
+    }
+  }
 
   render() {
     return (
@@ -107,9 +121,9 @@ class BTEditableField extends Component {
           <LabelText>
             {this.props.label}
           </LabelText>
-          <ErrorText>
-            {this.props.error}
-          </ErrorText>
+
+          {this.messageOrError}
+
         </Label>
         <Input
           onFocus={this.props.onFocus}

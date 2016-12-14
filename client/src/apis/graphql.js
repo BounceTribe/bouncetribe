@@ -75,3 +75,26 @@ export const checkIfUserExists = (auth0id) => {
     }
   ]
 }
+
+export const checkIfUserEmailExists = (email) => {
+  return [
+    graphqlUrl,
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `{
+          allUsers (filter: {
+            email: "${email}"
+          }) {
+            id
+            name
+            email
+          }
+        }`
+      }),
+    }
+  ]
+}

@@ -9,6 +9,7 @@ export const btWhite = '#FFFFFF'
 export const btPurple = 'rgba(128,89,239, 1)'
 export const btTeal = 'rgb(23, 207, 170)'
 export const btWarn= 'rgb(204, 0, 51)'
+export const fbBlue = 'rgb(59,89,152)'
 
 export const subtleBorder = `
   border: solid rgba(200, 200, 200, .9) .5px;

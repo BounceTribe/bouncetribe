@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import logo from 'imgs/logo.svg'
 import styled from 'styled-components'
-import {btPurple, btWhite, btTeal, btWarn, btMedium} from 'styling/T'
+import {btPurple, btWhite, btTeal, btWarn, btMedium, fbBlue} from 'styling/T'
 
 const justifyContent = (props) => {
   if (props.text && props.icon) {
@@ -18,6 +18,8 @@ const setColor = (props) => {
     return btTeal
   } else if (props.grey) {
     return btMedium
+  } else if (props.fb) {
+    return fbBlue
   } else {
     return btPurple
   }
@@ -126,6 +128,7 @@ class BTButton extends Component {
         danger={this.props.danger}
         grey={this.props.grey}
         flex={this.props.flex}
+        fb={this.props.fb}
       >
         {useIcon}
 

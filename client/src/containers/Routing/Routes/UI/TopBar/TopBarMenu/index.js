@@ -30,6 +30,10 @@ class TopBarMenu extends Component {
         <TopBarMenuItem
           key='notifications'
           icon={notifications}
+        />,
+        <TopBarMenuItem
+          text={'Your Profile'}
+          key={'profile'}
         />
       ])
     }
@@ -68,10 +72,7 @@ class TopBarMenu extends Component {
 
           {this.showMenu}
 
-          <TopBarMenuItem
-            text={this.props.isLoggedIn ? 'Your Profile' : 'Login or Signup'}
-            isLoggedIn={this.props.isLoggedIn}
-          />
+
         </menu>
     )
   }
