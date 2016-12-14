@@ -5,7 +5,7 @@ import Relay from 'react-relay'
 import ProfileCard from './ProfileCard'
 import LoginCard from './LoginCard'
 import LoginSignupTabs from './LoginSignupTabs'
-
+import {profileRoute, profileOptions} from 'config/auth0'
 import {attemptSignup, attemptLogin, loginSuccess, signupSuccess, logout} from 'actions/auth'
 
 class AuthContainer extends Component {
@@ -37,12 +37,24 @@ class AuthContainer extends Component {
   }
 
 
+  socialLogin = async () => {
+    const location = this.props.router.location
+    if (location.pathname === '/login/social/') {
+      console.log(location.hash)
+      const idToken = location.hash.split('id_token=')[1].split('&')[0]
+      console.log(idToken)
+      let options = profileOptions(idToken)
+      let profile = await fetch(profileRoute, options).then(data => data.json()).then(json=>json)
+      console.log(profile)
+
+    }
+  }
+
   get showProfile() {
     if (this.props.isLoggedIn) {
       return (
         <ProfileCard
           logout={this.handleLogout}
-          viewer={this.props.viewer}
         />
       )
     } else if (!this.props.isLoggedIn && this.state.loginCardShowing){
@@ -51,6 +63,7 @@ class AuthContainer extends Component {
           attemptLogin={this.props.attemptLogin}
           loginSuccess={this.props.loginSuccess}
           viewer={this.props.viewer}
+          router={this.props.router}
         />
       )
     } else if (!this.props.isLoggedIn && this.state.signupCardShowing) {
@@ -61,6 +74,7 @@ class AuthContainer extends Component {
           signupSuccess={this.props.signupSuccess}
           loginSuccess={this.props.loginSuccess}
           viewer={this.props.viewer}
+          router={this.props.router}
         />
       )
     }
@@ -80,6 +94,7 @@ class AuthContainer extends Component {
   }
 
   render() {
+    this.socialLogin()
     return (
       <div
 
@@ -135,7 +150,6 @@ export default Relay.createContainer(
         fragment on Viewer {
           ${SignupCard.getFragment('viewer')}
           ${LoginCard.getFragment('viewer')}
-          ${ProfileCard.getFragment('viewer')}
         }
       `,
     },

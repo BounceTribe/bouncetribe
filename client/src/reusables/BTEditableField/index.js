@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import {btMedium, btTeal, btWarn} from 'styling/T'
+import {btMedium, btTeal, btWarn, btDark} from 'styling/T'
 
 const labelFocusMargin = (props) => {
-  if (props.focus || props.content) {
+  if (props.focus || props.value.length > 0 || props.error) {
     return '.5em'
   } else {
     return '1.25em'
@@ -11,7 +11,7 @@ const labelFocusMargin = (props) => {
 }
 
 const labelFocusFontSize = (props) => {
-  if (props.focus || props.content) {
+  if (props.focus || props.value.length > 0 || props.error) {
     return '.7em'
   } else {
     return '1em'
@@ -19,9 +19,9 @@ const labelFocusFontSize = (props) => {
 }
 
 const inputUnderline = (props) => {
-  if ((props.focus || props.content) && props.error) {
+  if (props.error) {
     return `solid 3px ${btWarn}`
-  } else if (props.focus || props.content) {
+  } else if (props.focus || props.value) {
     return `solid 3px ${btTeal}`
   } else {
     return `solid 3px ${btMedium}`
@@ -29,11 +29,12 @@ const inputUnderline = (props) => {
 }
 
 const Container = styled.div`
-  width: 200px;
+  width: 250px;
   box-sizing: border-box;
 `
 
 const Input = styled.input`
+  position: relative;
   width: 100%;
   padding: .85em .15em .4em .15em;
   margin-top: 1em;
@@ -45,72 +46,85 @@ const Input = styled.input`
   background: transparent;
   font-size: 1em;
   transition: all .3s;
+  z-index: 1;
 `
 
 const Label = styled.label`
-  width: 100%;
+  width: 250px;
   position: absolute;
   padding: .85em .15em .4em 0em;
   margin-top: ${props => labelFocusMargin(props)};
   font-size: ${props => labelFocusFontSize(props)};
   line-height: 1em;
-  z-index: -2;
   transition: all 2s;
   border-bottom: solid 3px transparent;
   transition: all .3s;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const LabelText = styled.span`
+  color: ${btDark};
+`
+
+const ErrorText = styled.span`
+  color: ${btWarn};
 `
 
 class BTEditableField extends Component {
   state = {
-    focus: false,
-    content: '',
-    error: false
+    text: '',
   }
+  //
+  // handleFocus = () => {
+  //   this.setState({
+  //     focus: true,
+  //   })
+  // }
+  //
+  // handleBlur = () => {
+  //   this.setState({
+  //     focus: false,
+  //   })
+  // }
 
-  handleFocus = () => {
-    this.setState({
-      focus: true,
-    })
-  }
-
-  handleBlur = () => {
-    this.setState({
-      focus: false,
-    })
-  }
-
-  editText = (e) => {
-    this.setState({
-      content: e.target.value
-    })
-  }
+  // editText = (e) => {
+  //   this.setState({
+  //     content: e.target.value
+  //   })
+  // }
 
   render() {
     return (
       <Container>
         <Label
-          focus={this.state.focus}
-          content={this.state.content}
-          error={this.state.error}
+          focus={this.props.focus}
+          blur={this.props.blur}
+          value={this.state.text}
+          error={this.props.error}
         >
-          <span>
+          <LabelText>
             {this.props.label}
-          </span>
-          <span>
+          </LabelText>
+          <ErrorText>
             {this.props.error}
-          </span>
+          </ErrorText>
         </Label>
         <Input
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
+          onFocus={this.props.onFocus}
+          onBlur={this.props.onBlur}
           onChange={(e) => {
-            this.editText(e)
+            this.setState({
+              text: e.target.value
+            })
             this.props.onChange(e)
           }}
-          focus={this.state.focus}
-          content={this.state.content}
+          focus={this.props.focus}
+          blur={this.props.blur}
           type={this.props.type}
-          value={this.props.value}
+          value={this.state.text}
+          error={this.props.error}
         />
       </Container>
     )

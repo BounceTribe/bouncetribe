@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import S from 'styling/S'
-import {Popover, PopoverAnimationVertical} from 'material-ui'
 import {Link} from 'react-router'
 
 const topBarMenuItemBase = {
@@ -21,42 +20,42 @@ class TopBarMenuItem extends Component {
     }
   }
 
-  handleTouchTap = (event) => {
-    event.preventDefault()
-    this.setState({
-      open: true,
-      anchorEl: event.currentTarget,
-    })
-  }
+  // handleTouchTap = (event) => {
+  //   event.preventDefault()
+  //   this.setState({
+  //     open: true,
+  //     anchorEl: event.currentTarget,
+  //   })
+  // }
+  //
+  // handleRequestClose = () => {
+  //   this.setState({
+  //     open: false,
+  //   })
+  // }
+  //
+  // componentWillReceiveProps = (newProps) => {
+  //   if (newProps.isLoggedIn) {
+  //     this.handleRequestClose()
+  //   }
+  // }
 
-  handleRequestClose = () => {
-    this.setState({
-      open: false,
-    })
-  }
-
-  componentWillReceiveProps = (newProps) => {
-    if (newProps.isLoggedIn) {
-      this.handleRequestClose()
-    }
-  }
-
-  get hasDropDown() {
-    if (this.props.dropDown) {
-      return (
-        <Popover
-          open={this.state.open}
-          anchorEl={this.state.anchorEl}
-          anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-          targetOrigin={{horizontal: 'right', vertical: 'top'}}
-          onRequestClose={this.handleRequestClose}
-          animation={PopoverAnimationVertical}
-        >
-          {this.props.dropDown}
-        </Popover>
-      )
-    }
-  }
+  // get hasDropDown() {
+  //   if (this.props.dropDown) {
+  //     return (
+  //       <Popover
+  //         open={this.state.open}
+  //         anchorEl={this.state.anchorEl}
+  //         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+  //         targetOrigin={{horizontal: 'right', vertical: 'top'}}
+  //         onRequestClose={this.handleRequestClose}
+  //         animation={PopoverAnimationVertical}
+  //       >
+  //         {this.props.dropDown}
+  //       </Popover>
+  //     )
+  //   }
+  // }
 
   render() {
     return (
@@ -64,7 +63,6 @@ class TopBarMenuItem extends Component {
           style={{
             ...topBarMenuItem.all
           }}
-          onTouchTap={this.handleTouchTap}
         >
           <Link
             to={this.props.to}
@@ -84,7 +82,6 @@ class TopBarMenuItem extends Component {
             </span>
           </Link>
 
-          {this.hasDropDown}
         </div>
     )
   }

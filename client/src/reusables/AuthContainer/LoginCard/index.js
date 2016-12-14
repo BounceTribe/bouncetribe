@@ -19,7 +19,8 @@ class LoginCard extends Component {
   handleCreatePerson = async () => {
     const {
       attemptLogin,
-      loginSuccess
+      loginSuccess,
+      router
     } = this.props
 
     const email = this.state.email
@@ -43,6 +44,7 @@ class LoginCard extends Component {
               password: ''
             })
             loginSuccess(loggedinUser['id_token'])
+            router.push('/')
           },
           onFailure: (error) => {
             console.log('SigninUserMutation failure', error)
@@ -72,6 +74,8 @@ class LoginCard extends Component {
       password: e.target.value,
     })
   }
+
+
 
   render() {
     return (

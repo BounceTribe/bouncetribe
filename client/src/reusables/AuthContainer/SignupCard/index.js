@@ -5,6 +5,7 @@ import CreateUserMutation from 'mutations/CreateUserMutation'
 import SigninUserMutation from 'mutations/SigninUserMutation'
 import BTButton from 'reusables/BTButton'
 import BTEditableField from 'reusables/BTEditableField'
+import {fbAccessRoute} from 'config/auth0'
 
 
 class SignupCard extends Component {
@@ -23,7 +24,8 @@ class SignupCard extends Component {
       attemptSignup,
       signupSuccess,
       attemptLogin,
-      loginSuccess
+      loginSuccess,
+      router
     } = this.props
 
     const email = this.state.email
@@ -61,6 +63,7 @@ class SignupCard extends Component {
                     password: ''
                   })
                   loginSuccess(loggedinUser['id_token'])
+                  router.push('/')
                 },
                 onFailure: (error) => {
                   console.log('SigninUserMutation failure', error)
@@ -124,6 +127,15 @@ class SignupCard extends Component {
             <BTButton
               onClick={()=>{this.handleCreatePerson()}}
               text={'Signup'}
+            />
+
+            <BTButton
+              onClick={()=>{
+                window.open(fbAccessRoute, '_self')
+
+              }}
+              text={'Facebook'}
+              teal
             />
 
       </div>

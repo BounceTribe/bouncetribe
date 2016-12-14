@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
 import BTButton from 'reusables/BTButton'
 
 class ProfileCard extends Component {
@@ -11,7 +10,6 @@ class ProfileCard extends Component {
   render() {
     return (
       <div>
-        <span>{this.props.viewer.user.name}</span>
         <BTButton
           onClick={()=>{this.props.logout()}}
           text={'Logout'}
@@ -21,17 +19,4 @@ class ProfileCard extends Component {
   }
 }
 
-export default Relay.createContainer(
-  ProfileCard,
-  {
-    fragments: {
-      viewer: () => Relay.QL`
-        fragment on Viewer {
-          user {
-            name
-          }
-        }
-      `,
-    },
-  }
-)
+export default ProfileCard

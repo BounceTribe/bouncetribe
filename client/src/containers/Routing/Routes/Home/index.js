@@ -1,18 +1,22 @@
 import React, {Component} from 'react'
+import Relay from 'react-relay'
 import {connect} from 'react-redux'
 import Feed from './Feed'
-import Landing from './Landing'
+import AuthContainer2 from 'reusables/AuthContainer2'
 
 class Home extends Component {
 
-  get showFeedOrLanding() {
+  get showFeedOrAuth() {
     if (this.props.isLoggedIn) {
       return (
         <Feed />
       )
     } else {
       return (
-        <Landing />
+        <AuthContainer2
+          viewer={this.props.viewer}
+          router={this.props.router}
+        />
       )
     }
   }
@@ -20,8 +24,7 @@ class Home extends Component {
   render() {
     return (
       <section>
-        <h1>Home</h1>
-        {this.showFeedOrLanding}
+        {this.showFeedOrAuth}
       </section>
     )
   }
@@ -45,4 +48,15 @@ Home = connect(
   mapDispatchToProps
 )(Home)
 
-export default Home
+export default Relay.createContainer(
+  Home,
+  {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          ${AuthContainer2.getFragment('viewer')}
+        }
+      `,
+    },
+  }
+)

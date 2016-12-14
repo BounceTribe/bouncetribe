@@ -9,6 +9,7 @@ import Profile from './Profile'
 import Projects from './Projects'
 import Tribe from './Tribe'
 import Settings from './Settings'
+import Auth from './Auth'
 
 
 const ViewerQueries = {
@@ -43,7 +44,7 @@ const checkPermissions = async (nextState, replace) => {
   } catch (error) {
     console.log(error)
     replace({
-      pathname: '/'
+      pathname: '/login'
     })
   }
 }
@@ -53,35 +54,46 @@ const createRoutes = () => {
     <Route
       path="/"
       component={ReduxProvider}
-      queries={ViewerQueries}
     >
+      <Route
+        path="/login"
+        queries={ViewerQueries}
+        component={Auth}
+      >
+        <Route
+          path="social/*"
+          queries={ViewerQueries}
+          component={Auth}
+        />
+      </Route>
       <IndexRoute
         component={Home}
+        queries={ViewerQueries}
       />
       <Route
-        path="/:profile/projects"
+        path="/profile/projects"
         component={Projects}
         onEnter={checkPermissions}
       />
       <Route
-        path="/:profile/tribe"
+        path="/profile/tribe"
         component={Tribe}
         onEnter={checkPermissions}
         queries={ViewerQueries}
       />
       <Route
-        path="/:profile/settings"
+        path="/profile/settings"
         component={Settings}
         onEnter={checkPermissions}
         queries={ViewerQueries}
       />
       <Route
-        path="/:profile"
+        path="/profile"
         component={Profile}
         queries={ViewerQueries}
-      >
+        onEnter={checkPermissions}
+      />
 
-      </Route>
     </Route>
   )
 }

@@ -51,3 +51,27 @@ export const createArtistOptions = (spotifyId, name, imageUrl) => {
     }
   ]
 }
+
+
+export const checkIfUserExists = (auth0id) => {
+  return [
+    graphqlUrl,
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `{
+          allUsers (filter: {
+            auth0UserId_contains: "${auth0id}"
+          }) {
+            id
+            name
+            email
+          }
+        }`
+      }),
+    }
+  ]
+}

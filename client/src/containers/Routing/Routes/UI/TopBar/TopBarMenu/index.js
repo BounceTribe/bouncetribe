@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import S from 'styling/S'
 import TopBarMenuItem from './TopBarMenuItem'
-import AuthContainer from 'reusables/AuthContainer'
 import projectIcon from 'imgs/project.svg'
 // import sessionIcon from 'imgs/session.svg'
 import notifications from 'imgs/notifications.svg'
@@ -20,7 +19,7 @@ const topBarMenu = new S({
 class TopBarMenu extends Component {
   get showMenu() {
     if (this.props.isLoggedIn) {
-      let handle = this.props.viewer.user.handle
+      let handle = 'profile'
       return ([
         <TopBarMenuItem
           text={'Projects'}
@@ -38,7 +37,7 @@ class TopBarMenu extends Component {
 
   get showUserDropdown() {
     if (this.props.isLoggedIn) {
-      let handle = this.props.viewer.user.handle
+      let handle = 'profile'
       return ([
         <TopBarMenuItem
           text={'Profile'}
@@ -72,15 +71,6 @@ class TopBarMenu extends Component {
           <TopBarMenuItem
             text={this.props.isLoggedIn ? 'Your Profile' : 'Login or Signup'}
             isLoggedIn={this.props.isLoggedIn}
-            dropDown={
-              <div>
-                {this.showUserDropdown}
-                <AuthContainer
-                  router={this.props.router}
-                  viewer={this.props.viewer}
-                />
-              </div>
-            }
           />
         </menu>
     )
