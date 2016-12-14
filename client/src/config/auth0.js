@@ -7,7 +7,7 @@ export const signupRoute = baseRoute + '/dbconnections/signup'
 export const loginRoute = baseRoute + '/oauth/ro'
 export const logoutRoute = baseRoute + '/v2/logout?'
 export const profileRoute = baseRoute + '/tokeninfo'
-export const fbAccessRoute =  baseRoute + `/authorize?response_type=token&client_id=${auth0id}&connection=facebook&redirect_uri=http://localhost:3000/login/social/&state=VALUE_THAT_SURVIVES_REDIRECTS&nonce=RANDOM_VALUE&scope=openid`
+export const fbAccessRoute =  baseRoute + `/authorize?response_type=token&client_id=${auth0id}&connection=facebook&redirect_uri=http://localhost:3000/social/&state=VALUE_THAT_SURVIVES_REDIRECTS&nonce=RANDOM_VALUE&scope=openid`
 
 export const fbLoginRoute = baseRoute + '/oauth/access_token'
 

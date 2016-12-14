@@ -3,13 +3,16 @@ import Relay from 'react-relay'
 import {connect} from 'react-redux'
 import Feed from './Feed'
 import AuthContainer2 from 'reusables/AuthContainer2'
+import {logout} from 'actions/auth'
 
 class Home extends Component {
 
   get showFeedOrAuth() {
     if (this.props.isLoggedIn) {
       return (
-        <Feed />
+        <Feed
+          logout={this.props.logout}
+        />
       )
     } else {
       return (
@@ -39,7 +42,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    logout: () => {
+      dispatch(logout())
+    },
   }
 }
 

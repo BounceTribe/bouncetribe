@@ -9,7 +9,6 @@ import Profile from './Profile'
 import Projects from './Projects'
 import Tribe from './Tribe'
 import Settings from './Settings'
-import Auth from './Auth'
 
 
 const ViewerQueries = {
@@ -56,16 +55,11 @@ const createRoutes = () => {
       component={ReduxProvider}
     >
       <Route
-        path="/login"
+        path="/social/*"
         queries={ViewerQueries}
-        component={Auth}
-      >
-        <Route
-          path="social/*"
-          queries={ViewerQueries}
-          component={Auth}
-        />
-      </Route>
+        component={Home}
+      />
+
       <IndexRoute
         component={Home}
         queries={ViewerQueries}

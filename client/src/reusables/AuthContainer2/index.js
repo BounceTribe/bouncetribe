@@ -22,6 +22,11 @@ const AuthDiv = styled.div`
 
 class AuthContainer2 extends Component {
 
+  constructor(props) {
+    super(props)
+    this.handleSocial()
+  }
+
   state = {
     email: {
       value: '',
@@ -327,6 +332,9 @@ class AuthContainer2 extends Component {
               password: {value: ''}
             })
             this.props.loginSuccess(response.signinUser.token)
+            this.props.router.push({
+              pathname: '/'
+            })
           },
           onFailure: (error) => {
             console.log('SigninUserMutation failure', error)
@@ -375,7 +383,9 @@ class AuthContainer2 extends Component {
 
       console.log('auth0Profile', auth0Profile)
 
-      const validBtAccount = await this.checkForBtAccount(auth0Profile['user_id'])
+      let auth0id = auth0Profile['user_id']
+
+      const validBtAccount = await this.checkForBtAccount(auth0id)
 
       console.log('validBtAccount', validBtAccount)
 
@@ -431,6 +441,43 @@ class AuthContainer2 extends Component {
           flex
         />
       )
+    }
+  }
+
+  handleSocial = async() => {
+    console.log(this.props.router.location.pathname)
+    if (this.props.router.location.pathname === '/social/') {
+      let hash = this.props.router.location.hash
+      const idToken = hash.split('&id_token=')[1].split('&')[0]
+
+      try {
+        const auth0Profile = await this.getAuth0Profile(idToken)
+
+        console.log('auth0Profile', auth0Profile)
+
+        const auth0id = auth0Profile['user_id']
+        const email = auth0Profile.email
+
+        if (auth0id) {
+          try {
+            const validBtAccount = await this.checkForBtAccount(auth0id)
+
+            console.log('validBtAccount', validBtAccount)
+
+            this.btRelaySigninMutation(idToken)
+          } catch (error) {
+            try {
+              this.btRelayCreateUserMutation(email, idToken)
+            } catch (error) {
+              console.log('CreateUserMutation error', error)
+            }
+          }
+        }
+
+      } catch (error) {
+        console.log('handleSocial error', error)
+      }
+
     }
   }
 
