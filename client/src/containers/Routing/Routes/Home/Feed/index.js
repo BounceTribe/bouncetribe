@@ -1,37 +1,7 @@
 import React, {Component} from 'react'
 import BTButton from 'reusables/BTButton'
-import {linkAccountsOptions} from 'config/auth0'
 
 class Feed extends Component {
-
-  state = {
-    userId: '',
-    secondaryToken: ''
-  }
-
-  handleUserId = (e) =>{
-    this.setState({
-      userId: e.target.value
-    })
-  }
-
-  handleToken = (e) =>{
-    this.setState({
-      secondaryToken: e.target.value
-    })
-  }
-
-
-  mergeAccounts = async () => {
-    let {
-      userId,
-      secondaryToken
-    } = this.state
-    let primaryToken = this.props.isLoggedIn
-    let options = linkAccountsOptions(userId, primaryToken, secondaryToken)
-    let result = await fetch(...options).then(data=>data.json()).then(json=>json)
-    console.log(result)
-  }
 
   render() {
     return (
@@ -41,35 +11,8 @@ class Feed extends Component {
         <BTButton
           onClick={this.props.logout}
           text={'Logout'}
+          danger
         />
-
-        <br/>
-        <h4>idToken</h4>
-        <h5><i>{this.props.isLoggedIn}</i></h5>
-        <br/>
-
-        <h4>userId</h4>
-        <input
-          onChange={(e) => this.handleUserId(e)}
-          value={this.state.userId}
-        />
-
-        <br/>
-
-        <h4>secondaryToken</h4>
-        <input
-          onChange={(e) => this.handleToken(e)}
-          value={this.state.secondaryToken}
-        />
-
-        <br/>
-
-        <button
-          onClick={this.mergeAccounts}
-
-        >
-          Merge Accounts
-        </button>
 
       </section>
     )

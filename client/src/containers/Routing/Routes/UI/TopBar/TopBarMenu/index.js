@@ -4,6 +4,8 @@ import TopBarMenuItem from './TopBarMenuItem'
 import projectIcon from 'imgs/project.svg'
 // import sessionIcon from 'imgs/session.svg'
 import notifications from 'imgs/notifications.svg'
+import {connect} from 'react-redux'
+import {logout} from 'actions/auth'
 
 
 const topBarMenuBase = {
@@ -19,7 +21,7 @@ const topBarMenu = new S({
 class TopBarMenu extends Component {
   get showMenu() {
     if (this.props.isLoggedIn) {
-      let handle = 'profile'
+      let handle = this.props.handle
       return ([
         <TopBarMenuItem
           text={'Projects'}
@@ -34,33 +36,34 @@ class TopBarMenu extends Component {
         <TopBarMenuItem
           text={'Your Profile'}
           key={'profile'}
-        />
-      ])
-    }
-  }
-
-  get showUserDropdown() {
-    if (this.props.isLoggedIn) {
-      let handle = 'profile'
-      return ([
-        <TopBarMenuItem
-          text={'Profile'}
-          key='profile'
           to={`/${handle}`}
-        />,
-        <TopBarMenuItem
-          text={'My Tribe'}
-          key='myTribe'
-          to={`/${handle}/tribe`}
-        />,
-        <TopBarMenuItem
-          text={'Settings'}
-          key='settings'
-          to={`/${handle}/settings`}
         />
       ])
     }
   }
+  // 
+  // get showUserDropdown() {
+  //   if (this.props.isLoggedIn) {
+  //     let handle = 'profile'
+  //     return ([
+  //       <TopBarMenuItem
+  //         text={'Profile'}
+  //         key='profile'
+  //         to={`/${handle}`}
+  //       />,
+  //       <TopBarMenuItem
+  //         text={'My Tribe'}
+  //         key='myTribe'
+  //         to={`/${handle}/tribe`}
+  //       />,
+  //       <TopBarMenuItem
+  //         text={'Settings'}
+  //         key='settings'
+  //         to={`/${handle}/settings`}
+  //       />
+  //     ])
+  //   }
+  // }
 
   render () {
     return (
@@ -77,5 +80,25 @@ class TopBarMenu extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    isLoggedIn: state.auth['id_token'],
+    handle: state.auth.user.handle
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    logout: () => {
+      dispatch(logout())
+    },
+  }
+}
+
+TopBarMenu = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TopBarMenu)
 
 export default TopBarMenu

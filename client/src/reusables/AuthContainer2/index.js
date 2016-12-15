@@ -423,7 +423,9 @@ class AuthContainer2 extends Component {
               email: {value: ''},
               password: {value: ''}
             })
-            this.props.loginSuccess(response.signinUser.token)
+            let idToken = response.signinUser.token
+            let user = response.signinUser.viewer.user
+            this.props.loginSuccess(idToken, user)
             this.props.router.push({
               pathname: '/'
             })
@@ -804,8 +806,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    loginSuccess: (idToken) => {
-      dispatch(loginSuccess(idToken))
+    loginSuccess: (idToken, user) => {
+      dispatch(loginSuccess(idToken, user))
     },
   }
 }

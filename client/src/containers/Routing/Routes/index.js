@@ -1,8 +1,8 @@
 import React from 'react'
 import {Route, IndexRoute} from 'react-router'
 import Relay from 'react-relay'
-import {profileRoute, profileOptions} from 'config/auth0'
-import store from 'store'
+// import {profileRoute, profileOptions} from 'config/auth0'
+// import store from 'store'
 import ReduxProvider from './ReduxProvider'
 import Home from './Home'
 import Profile from './Profile'
@@ -15,38 +15,38 @@ const ViewerQueries = {
   viewer: () => Relay.QL`query { viewer }`
 }
 
-
-const checkPermissions = async (nextState, replace) => {
-  try {
-
-    const errorMessage = "Sorry, you're not logged in."
-
-    const idToken = store.getState().auth['id_token']
-
-
-
-    if (!idToken) throw errorMessage
-
-    const options = profileOptions(idToken)
-
-    fetch(profileRoute, options ).then(
-      (response) => response.json()
-    ).then((json) => {
-        if (json.statusCode) {
-          throw json
-        } else {
-          return json
-        }
-    })
-
-
-  } catch (error) {
-    console.log(error)
-    replace({
-      pathname: '/login'
-    })
-  }
-}
+//this is messed up right now
+// const checkPermissions = async (nextState, replace) => {
+//   try {
+//
+//     const errorMessage = "Sorry, you're not logged in."
+//
+//     const idToken = store.getState().auth['id_token']
+//
+//
+//
+//     if (!idToken) throw errorMessage
+//
+//     const options = profileOptions(idToken)
+//
+//     const result = await fetch(profileRoute, options ).then((response) => {
+//       if (!response.ok) {
+//         throw response.json()
+//       } else {
+//         return response.json()
+//       }
+//     }).then(json => json)
+//
+//     console.log('result', result)
+//
+//   } catch (error) {
+//     let errorResult = error.then(json=>json)
+//     console.log('error result', errorResult)
+//     replace({
+//       pathname: '/'
+//     })
+//   }
+// }
 
 const createRoutes = () => {
   return (
@@ -54,38 +54,33 @@ const createRoutes = () => {
       path="/"
       component={ReduxProvider}
     >
-      <Route
-        path="/social/*"
-        queries={ViewerQueries}
-        component={Home}
-      />
-
       <IndexRoute
         component={Home}
         queries={ViewerQueries}
       />
       <Route
-        path="/profile/projects"
+        path="/social/*"
+        queries={ViewerQueries}
+        component={Home}
+      />
+      <Route
+        path="/:handle/projects"
         component={Projects}
-        onEnter={checkPermissions}
       />
       <Route
-        path="/profile/tribe"
+        path="/:handle/tribe"
         component={Tribe}
-        onEnter={checkPermissions}
         queries={ViewerQueries}
       />
       <Route
-        path="/profile/settings"
+        path="/:handle/settings"
         component={Settings}
-        onEnter={checkPermissions}
         queries={ViewerQueries}
       />
       <Route
-        path="/profile"
+        path="/:handle"
         component={Profile}
         queries={ViewerQueries}
-        onEnter={checkPermissions}
       />
 
     </Route>
