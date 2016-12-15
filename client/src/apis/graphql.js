@@ -92,6 +92,7 @@ export const checkIfUserEmailExists = (email) => {
             id
             name
             email
+            auth0UserId
           }
         }`
       }),

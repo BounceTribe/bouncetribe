@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import logo from 'imgs/logo.svg'
 import styled from 'styled-components'
-import {btPurple, btWhite, btTeal, btWarn, btMedium, fbBlue} from 'styling/T'
+import {btPurple, btWhite, btTeal, btWarn, btMedium, fbBlue, btLight, btDark, btTealActive, btPurpleActive} from 'styling/T'
 
 const justifyContent = (props) => {
   if (props.text && props.icon) {
@@ -22,6 +22,20 @@ const setColor = (props) => {
     return fbBlue
   } else {
     return btPurple
+  }
+}
+
+const setActiveColor = (props) => {
+  if (props.danger) {
+    return btWarn
+  } else if (props.teal) {
+    return btTealActive
+  } else if (props.grey) {
+    return btMedium
+  } else if (props.fb) {
+    return fbBlue
+  } else {
+    return btPurpleActive
   }
 }
 
@@ -60,9 +74,18 @@ const Button = styled.button`
   }
 
   &:active {
-    background: rgb(114, 69, 237);
+    background: ${props=>setActiveColor(props)};
     transform: translateY(2px);
     transition: all .20s;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-image: linear-gradient(to right, rgba(200,200,200,.7) 30%, rgba(200,200,200,.8) 80%, rgba(200,200,200,.7));
+    border: 1px inset ${btLight};
+    box-shadow: none;
+    text-shadow: 1px 1px ${btDark};
+    transition: all .10s;
   }
 
 `
@@ -129,6 +152,7 @@ class BTButton extends Component {
         grey={this.props.grey}
         flex={this.props.flex}
         fb={this.props.fb}
+        disabled={this.props.disabled}
       >
         {useIcon}
 

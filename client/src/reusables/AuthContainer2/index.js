@@ -3,7 +3,7 @@ import Relay from 'react-relay'
 import {connect} from 'react-redux'
 import BTEditableField from 'reusables/BTEditableField'
 import BTButton from 'reusables/BTButton'
-import {fbAccessRoute, loginOptions, loginRoute, profileRoute, profileOptions, signupRoute, signupOptions} from 'config/auth0'
+import {fbAccessRoute, loginOptions, loginRoute, profileRoute, profileOptions, signupRoute, signupOptions, linkAccountsOptions} from 'config/auth0'
 import {checkIfUserExists, checkIfUserEmailExists} from 'apis/graphql'
 import SigninUserMutation from 'mutations/SigninUserMutation'
 import CreateUserMutation from 'mutations/CreateUserMutation'
@@ -22,10 +22,6 @@ const AuthDiv = styled.div`
 
 class AuthContainer2 extends Component {
 
-  constructor(props) {
-    super(props)
-    this.handleSocial()
-  }
 
   state = {
     email: {
@@ -34,7 +30,8 @@ class AuthContainer2 extends Component {
       blur: false,
       valid: true,
       error: false,
-      message: false
+      message: false,
+      disabled: false
     },
     password: {
       value: '',
@@ -42,8 +39,16 @@ class AuthContainer2 extends Component {
       blur: false,
       valid: true,
       error: false,
-      message: false
-    }
+      message: false,
+      disabled: false
+    },
+    signupDisabled: 'enter your email',
+    loginDisabled: 'enter your email',
+    mode: 'SOCIAL'
+  }
+
+  componentDidMount() {
+    this.handleSocial()
   }
 
   emailChange = (e) => {
@@ -59,7 +64,9 @@ class AuthContainer2 extends Component {
         ...this.state.password,
         error: false,
         message: false
-      }
+      },
+      loginDisabled: `...checking email...`,
+      signupDisabled: `...checking email...`
     })
     this.emailTimerStart(e.target.value)
   }
@@ -72,7 +79,9 @@ class AuthContainer2 extends Component {
         value: e.target.value,
         error: false,
         message: false
-      }
+      },
+      loginDisabled: '...checking password...',
+      signupDisabled: '...checking password...'
     })
     this.passwordTimerStart(e.target.value)
   }
@@ -104,8 +113,8 @@ class AuthContainer2 extends Component {
         focus: false,
       }
     })
+    this.emailDebounce()
     this.emailValidator(this.state.email.value)
-    this.checkBtForEmail(this.state.email.value)
   }
 
   passwordBlur = () => {
@@ -128,9 +137,14 @@ class AuthContainer2 extends Component {
           email: {
             ...this.state.email,
             error: 'Must be a valid email address.'
-          }
+          },
+          loginDisabled: 'check your email',
+          signupDisabled: 'check your email'
         })
         return
+      }
+      if (email.length > 8) {
+        this.checkBtForEmail(this.state.email.value)
       }
     }
     if (email.length < 1) {
@@ -138,7 +152,9 @@ class AuthContainer2 extends Component {
         email: {
           ...this.state.email,
           error: "Don't forget your email."
-        }
+        },
+        loginDisabled: 'check your email',
+        signupDisabled: 'check your email'
       })
       return
     }
@@ -148,6 +164,15 @@ class AuthContainer2 extends Component {
         error: false
       }
     })
+
+    this.passwordValidator(this.state.password.value)
+
+    if (!this.state.email.error && !this.state.password.error && this.state.password.value > 8) {
+      this.setState({
+        loginDisabled: false,
+        signupDisabled: false
+      })
+    }
   }
 
   passwordValidator = async (password) => {
@@ -155,8 +180,20 @@ class AuthContainer2 extends Component {
       this.setState({
         password: {
           ...this.state.password,
-          error: "You'll need a password."
-        }
+        },
+        loginDisabled: 'Enter your password',
+        signupDisabled: 'Enter your password'
+      })
+      return
+    }
+    if (password.length < 8) {
+      this.setState({
+        password: {
+          ...this.state.password,
+          error: "Password must be 8 characters."
+        },
+        loginDisabled: 'Check your password',
+        signupDisabled: 'Check your password'
       })
       return
     }
@@ -164,8 +201,14 @@ class AuthContainer2 extends Component {
       password: {
         ...this.state.password,
         error: false
-      }
+      },
     })
+    if (!this.state.email.error) {
+      this.setState({
+        loginDisabled: false,
+        signupDisabled: false
+      })
+    }
   }
 
   emailTimerStart = (email) => {
@@ -187,7 +230,7 @@ class AuthContainer2 extends Component {
   passwordTimerStart = (password) => {
     const passwordTimer = setTimeout(()=> {
       this.passwordValidator(password)
-    },1000)
+    },250)
     this.setState({
       passwordTimer: passwordTimer
     })
@@ -203,23 +246,50 @@ class AuthContainer2 extends Component {
   checkBtForEmail = async(email) => {
     let options = checkIfUserEmailExists(email)
     try {
-      const btEmail = await fetch(...options).then(data => data.json()).then((json) => {
+      const btAccount = await fetch(...options).then(data => data.json()).then((json) => {
         console.log('btAccount', json)
         if (json.data.allUsers.length < 1) {
           throw json
         } else {
-          return json
+          return json.data.allUsers[0]
         }
       })
-      console.log('checkIfUserEmailExists, exists', btEmail)
-      let name = btEmail.data.allUsers[0].name
-      this.setState({
-        mode: 'LOGIN',
-        email: {
-          ...this.state.email,
-          message: `Welcome back ${name}!`
-        }
-      })
+      console.log('checkIfUserEmailExists, exists', btAccount)
+      let name = btAccount.name
+      let provider = btAccount.auth0UserId.split('|')[0]
+
+      if (provider === 'auth0') {
+        this.setState({
+          mode: 'LOGIN',
+          email: {
+            ...this.state.email,
+            message: `Welcome back ${name}!`
+          },
+          signupDisabled: true
+        })
+        this.passwordValidator(this.state.password.value)
+      } else if (provider === 'facebook') {
+        this.setState({
+          email: {
+            ...this.state.email,
+            message: `Hi ${name}! Your account is through Facebook. Sign in with the button above`
+          },
+          password: {
+            error: false,
+            message: false,
+            value: '',
+            disabled: true,
+            focus: false,
+            blur: false,
+            valid: true
+          },
+          signupDisabled: true,
+          loginDisabled: true
+        })
+      } else {
+        console.log('auth0 provider not recognized', provider)
+        throw provider
+      }
     } catch (error) {
       console.log('checkIfUserEmailExists, doesnt exist', error)
       this.setState({
@@ -227,8 +297,30 @@ class AuthContainer2 extends Component {
         email: {
           ...this.state.email,
           message: "New user? We'll create you an account."
+        },
+        loginDisabled: true
+      })
+    }
+  }
+
+
+  checkBtForEmailSocial = async(email) => {
+    let options = checkIfUserEmailExists(email)
+    try {
+      const matchingUser = await fetch(...options).then(data => data.json()).then((json) => {
+        console.log('btAccount', json)
+        if (json.data.allUsers.length !== 1) {
+          throw json
+        } else {
+          let user = json.data.allUsers[0]
+          console.log('matching user', user)
+          return user
         }
       })
+      return matchingUser
+    } catch (error) {
+      console.log('checkIfUserEmailExists, doesnt exist', error)
+      throw error
     }
   }
 
@@ -265,10 +357,10 @@ class AuthContainer2 extends Component {
     try {
       const btAccount = await fetch(...options).then(data => data.json()).then((json) => {
         console.log('btAccount', json)
-        if (json.data.allUsers.length < 1) {
+        if (json.data.allUsers.length !== 1) {
           throw json
         } else {
-          return json
+          return json.data.allUsers[0]
         }
       })
       return btAccount
@@ -372,6 +464,19 @@ class AuthContainer2 extends Component {
   }
 
   login = async () => {
+    this.setState({
+      email: {
+        ...this.state.email,
+        disabled: true,
+      },
+      password: {
+        ...this.state.password,
+        disabled: true,
+      },
+      loginDisabled: '...logging in...',
+      signupDisabled: true,
+      socialDisabled: true,
+    })
     try {
       const validAuth0Account = await this.checkForAuth0Account()
 
@@ -396,13 +501,32 @@ class AuthContainer2 extends Component {
       this.setState({
         email: {
           ...this.state.email,
-          error: "Email not recgonized."
-        }
+          disabled: false,
+        },
+        password: {
+          ...this.state.password,
+          disabled: false,
+        },
+        socialDisabled: false,
+        loginDisabled: '...login error...',
       })
     }
   }
 
   signup = async () => {
+    this.setState({
+      email: {
+        ...this.state.email,
+        disabled: true,
+      },
+      password: {
+        ...this.state.password,
+        disabled: true,
+      },
+      loginDisabled: true,
+      signupDisabled: '...signing up...',
+      socialDisabled: true,
+    })
     try {
       const auth0Account = await this.auth0Signup()
 
@@ -420,116 +544,252 @@ class AuthContainer2 extends Component {
 
     } catch (error) {
       console.log('signup error', error)
-    }
-  }
-
-  get showButton() {
-    if (this.state.mode === 'SIGNUP') {
-      return (
-        <BTButton
-          onClick={this.signup}
-          text={'Signup'}
-          teal
-          flex
-        />
-      )
-    } else {
-      return (
-        <BTButton
-          onClick={this.login}
-          text={'Login'}
-          flex
-        />
-      )
+      this.setState({
+        email: {
+          ...this.state.email,
+          disabled: false,
+        },
+        password: {
+          ...this.state.password,
+          disabled: false,
+        },
+        socialDisabled: false,
+        signupDisabled: '...signup error...'
+      })
     }
   }
 
   handleSocial = async() => {
-    console.log(this.props.router.location.pathname)
     if (this.props.router.location.pathname === '/social/') {
+      console.log('Someone is trying to access the site using a social login...')
+
+      this.setState({
+        email: {
+          ...this.state.email,
+          disabled: true,
+        },
+        password: {
+          ...this.state.password,
+          disabled: true,
+        },
+        loginDisabled: true,
+        signupDisabled: true,
+        socialDisabled: true,
+        mode: 'SOCIAL'
+      })
+
       let hash = this.props.router.location.hash
       const idToken = hash.split('&id_token=')[1].split('&')[0]
 
       try {
+        console.log('Checking to see if they have an auth0 profile...')
         const auth0Profile = await this.getAuth0Profile(idToken)
-
-        console.log('auth0Profile', auth0Profile)
-
         const auth0id = auth0Profile['user_id']
         const email = auth0Profile.email
-
-        if (auth0id) {
-          try {
-            const validBtAccount = await this.checkForBtAccount(auth0id)
-
-            console.log('validBtAccount', validBtAccount)
-
+        console.log('This is their auth0Profile: \n', auth0Profile, '\n Email: ', email, '\n auth0id: ', auth0id)
+        try {
+          console.log('Checking to see if they have a BT account associated with auth0id:', auth0id)
+          const validBtAccount = await this.checkForBtAccount(auth0id)
+          console.log('Found a btAccount with that auth0id:', validBtAccount)
+          if (validBtAccount) {
+            console.log('Attempting to login...')
             this.btRelaySigninMutation(idToken)
+          }
+        } catch (error) {
+          console.log("Didn't find a btAccount with that auth0id.")
+          try {
+            console.log("Checking to see if there is a btAccount with that email: ", email)
+            const accountWithSameEmail = await this.checkBtForEmailSocial(email)
+            if (accountWithSameEmail) {
+              console.log('Found bt account with same email: \n', accountWithSameEmail)
+              try {
+                console.log('Attempting to link new account under existing account...')
+                let primaryAuth0UserId = accountWithSameEmail.auth0UserId
+                let secondaryProvider = auth0id.split('|')[0]
+                let secondaryAuth0Id = auth0id
+                const linkOptions = linkAccountsOptions(primaryAuth0UserId, secondaryProvider, secondaryAuth0Id)
+                const linkedAccount = await fetch(...linkOptions).then(data=>{
+                  console.log(data)
+                  if (data.status !== 201) {
+                    throw data.json()
+                  } else {
+                    return data.json()
+                  }
+                }).then((json)=>{
+                  return json
+                })
+                if (linkedAccount) {
+                  console.log('Accounts were succesfully linked: \n', linkedAccount)
+                  console.log('Going back to social to refresh token for linked accounts.')
+                  window.open(fbAccessRoute, '_self')
+                }
+              } catch (error) {
+                console.log('Linking error', error)
+              }
+            }
           } catch (error) {
+            console.log("Didn't find a bt account with that email.", error)
             try {
+              console.log('Attempting to create a new bt user.')
               this.btRelayCreateUserMutation(email, idToken)
             } catch (error) {
               console.log('CreateUserMutation error', error)
             }
           }
         }
-
       } catch (error) {
-        console.log('handleSocial error', error)
+        console.log('There was a problem finding their auth0 profile', error)
+        this.setState({
+          email: {
+            value: '',
+            focus: false,
+            blur: false,
+            valid: true,
+            error: false,
+            message: false,
+            disabled: false
+          },
+          password: {
+            value: '',
+            focus: false,
+            blur: false,
+            valid: true,
+            error: false,
+            message: false,
+            disabled: false
+          },
+          signupDisabled: 'enter your email',
+          loginDisabled: 'enter your email',
+          socialDisabled: false,
+          mode: 'SOCIAL_ERROR',
+          errorButton: 'Sorry, there was an error. Try again.'
+        })
+        this.props.router.push('/')
       }
+    } else {
+      this.setState({
+        mode: false
+      })
+    }
+  }
 
+  get showButton() {
+    let {
+      signupDisabled,
+      loginDisabled,
+      mode,
+      errorButton,
+      email,
+      password
+    } = this.state
+
+    if (mode === 'SIGNUP') {
+      return (
+        <BTButton
+          onClick={this.signup}
+          text={(signupDisabled) ? signupDisabled : 'Signup'}
+          teal
+          flex
+          disabled={signupDisabled}
+          danger={(email.error || password.error)}
+        />
+      )
+    } else if (mode === 'LOGIN') {
+      return (
+        <BTButton
+          onClick={this.login}
+          text={(loginDisabled) ? loginDisabled : 'Login'}
+          teal
+          flex
+          disabled={loginDisabled}
+          danger={(email.error || password.error)}
+        />
+      )
+    } else if (mode === 'SOCIAL_ERROR') {
+      return (
+        <BTButton
+          text={errorButton}
+          flex
+          disabled={true}
+          danger
+        />
+      )
+    } else {
+      return (
+        <BTButton
+          text={'Enter Email'}
+          flex
+          disabled={true}
+          teal
+          danger={(email.error)}
+        />
+      )
+    }
+  }
+
+  get showEverything(){
+    if (this.state.mode !== 'SOCIAL') {
+      return (
+        <div>
+
+          <BTButton
+            onClick={()=>{
+              window.open(fbAccessRoute, '_self')
+
+            }}
+            text={'Facebook'}
+            fb
+            flex
+            disabled={this.state.socialDisabled}
+          />
+
+          <BTEditableField
+            label={'Email'}
+            type={'text'}
+            value={this.state.email.value}
+            onChange={(e) => this.emailChange(e)}
+            onFocus={this.emailFocus}
+            focus={this.state.email.focus}
+            onBlur={this.emailBlur}
+            blur={this.state.email.blur}
+            valid={this.state.email.valid}
+            error={this.state.email.error}
+            message={this.state.email.message}
+            disabled={this.state.email.disabled}
+          />
+
+          <BTEditableField
+            label={'Password'}
+            type={'password'}
+            value={this.state.password.value}
+            onChange={(e) => this.passwordChange(e)}
+            onFocus={this.passwordFocus}
+            focus={this.state.password.focus}
+            onBlur={this.passwordBlur}
+            blur={this.state.password.blur}
+            valid={this.state.password.valid}
+            error={this.state.password.error}
+            message={this.state.password.message}
+            disabled={this.state.password.disabled}
+          />
+
+          <br/>
+
+          {this.showButton}
+
+        </div>
+      )
+    } else {
+      return (
+        null
+      )
     }
   }
 
   render() {
     return (
       <AuthDiv>
-
-        <BTButton
-          onClick={()=>{
-            window.open(fbAccessRoute, '_self')
-
-          }}
-          text={'Facebook'}
-          fb
-          flex
-        />
-
-        <BTEditableField
-          label={'Email'}
-          type={'text'}
-          value={this.state.email.value}
-          onChange={(e) => this.emailChange(e)}
-          onFocus={this.emailFocus}
-          focus={this.state.email.focus}
-          onBlur={this.emailBlur}
-          blur={this.state.email.blur}
-          valid={this.state.email.valid}
-          error={this.state.email.error}
-          message={this.state.email.message}
-        />
-
-        <BTEditableField
-          label={'Password'}
-          type={'password'}
-          value={this.state.password.value}
-          onChange={(e) => this.passwordChange(e)}
-          onFocus={this.passwordFocus}
-          focus={this.state.password.focus}
-          onBlur={this.passwordBlur}
-          blur={this.state.password.blur}
-          valid={this.state.password.valid}
-          error={this.state.password.error}
-          message={this.state.password.message}
-        />
-
-        <br/>
-
-
-        {this.showButton}
-
-
-
+        {this.showEverything}
       </AuthDiv>
     )
   }

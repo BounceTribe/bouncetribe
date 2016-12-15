@@ -1,5 +1,9 @@
+import url from 'config/url'
+
 export const auth0id = 'wMoUQb2Kb9XViLB6Wek2fLYPlMxJV5hg'
 export const auth0domain = 'carlpeaslee.auth0.com'
+
+export const apiToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJkajdDOVFCZkV3cG45bVBTSE1FUU04YnduNU9lNHZ0bSIsInNjb3BlcyI6eyJ1c2VycyI6eyJhY3Rpb25zIjpbInVwZGF0ZSJdfX0sImlhdCI6MTQ4MTgxNDY2NywianRpIjoiZDI4ZWZhZmMyMjBkY2EwYTI2NGI4NzRhMDRiYzMwMGUifQ.V4t6mu445DmLS4FSVt7E86meiIwFngAlnNkTlX8x03E'
 
 const baseRoute = 'https://'+ auth0domain
 
@@ -7,9 +11,10 @@ export const signupRoute = baseRoute + '/dbconnections/signup'
 export const loginRoute = baseRoute + '/oauth/ro'
 export const logoutRoute = baseRoute + '/v2/logout?'
 export const profileRoute = baseRoute + '/tokeninfo'
-export const fbAccessRoute =  baseRoute + `/authorize?response_type=token&client_id=${auth0id}&connection=facebook&redirect_uri=http://localhost:3000/social/&state=VALUE_THAT_SURVIVES_REDIRECTS&nonce=RANDOM_VALUE&scope=openid`
+export const fbAccessRoute =  baseRoute + `/authorize?response_type=token&client_id=${auth0id}&connection=facebook&redirect_uri=${url}/social/&state=VALUE_THAT_SURVIVES_REDIRECTS&nonce=RANDOM_VALUE&scope=openid`
 
 export const fbLoginRoute = baseRoute + '/oauth/access_token'
+
 
 export const loginOptions = (email, password) => {
   return {
@@ -86,3 +91,32 @@ export const fbLoginOptions = (accessToken) => {
     })
   }
 }
+
+
+export const linkAccountsOptions = (primaryAuth0UserId, secondaryProvider, secondaryAuth0Id) => {
+  return [
+    `${baseRoute}/api/v2/users/${primaryAuth0UserId}/identities`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: "Bearer "+apiToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "provider": secondaryProvider,
+        "user_id": secondaryAuth0Id
+      })
+    }
+  ]
+}
+
+
+// "client_id": auth0id,
+// "audience": audience,
+// "scopes": {
+//   "current_user_identities": {
+//     actions: [
+//       "update"
+//     ]
+//   }
+// }

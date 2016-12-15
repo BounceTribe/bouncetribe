@@ -12,6 +12,7 @@ class Home extends Component {
       return (
         <Feed
           logout={this.props.logout}
+          isLoggedIn={this.props.isLoggedIn}
         />
       )
     } else {

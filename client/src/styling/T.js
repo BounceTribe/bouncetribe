@@ -7,7 +7,9 @@ export const btLight = '#999999'
 export const btWhite = '#FFFFFF'
 
 export const btPurple = 'rgba(128,89,239, 1)'
+export const btPurpleActive = 'rgb(114, 69, 237)'
 export const btTeal = 'rgb(23, 207, 170)'
+export const btTealActive = 'rgb(18, 161, 132)'
 export const btWarn= 'rgb(204, 0, 51)'
 export const fbBlue = 'rgb(59,89,152)'
 

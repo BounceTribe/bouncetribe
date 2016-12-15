@@ -47,6 +47,11 @@ const Input = styled.input`
   font-size: 1em;
   transition: all .3s;
   z-index: 1;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-image: radial-gradient(rgba(200,200,200,.5), rgba(200,200,200,.2));
+  }
 `
 
 const Label = styled.label`
@@ -80,18 +85,6 @@ class BTEditableField extends Component {
   state = {
     text: '',
   }
-  //
-  // handleFocus = () => {
-  //   this.setState({
-  //     focus: true,
-  //   })
-  // }
-  //
-  // handleBlur = () => {
-  //   this.setState({
-  //     focus: false,
-  //   })
-  // }
 
   get messageOrError () {
     if (this.props.error) {
@@ -139,6 +132,7 @@ class BTEditableField extends Component {
           type={this.props.type}
           value={this.state.text}
           error={this.props.error}
+          disabled={this.props.disabled}
         />
       </Container>
     )
