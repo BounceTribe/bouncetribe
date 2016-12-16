@@ -448,6 +448,7 @@ class AuthContainer2 extends Component {
   }
 
   btRelayCreateUserMutation = async(email, idToken) => {
+    console.log('email', email)
     this.props.relay.commitUpdate(
       new CreateUserMutation({
         email: email,

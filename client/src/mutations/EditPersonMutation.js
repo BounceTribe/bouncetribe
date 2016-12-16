@@ -10,6 +10,8 @@ export default class EditPersonMutation extends Relay.Mutation {
         location
         summary
         id
+        website
+        experience
       }
     `,
   }
@@ -28,6 +30,8 @@ export default class EditPersonMutation extends Relay.Mutation {
           name
           summary
           location
+          website
+          experience
         }
       }
     `
@@ -48,7 +52,9 @@ export default class EditPersonMutation extends Relay.Mutation {
       name: this.props.name,
       email: this.props.email,
       summary: this.props.summary,
-      location: this.props.location
+      location: this.props.location,
+      website: this.props.website,
+      experience: this.props.experience
 
     }
   }
@@ -61,7 +67,9 @@ export default class EditPersonMutation extends Relay.Mutation {
         name: this.props.name,
         email: this.props.email,
         summary: this.props.summary,
-        location: this.props.location
+        location: this.props.location,
+        website: this.props.website,
+        experience: this.props.experience
       },
     }
   }

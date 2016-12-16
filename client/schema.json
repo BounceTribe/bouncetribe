@@ -2014,6 +2014,16 @@
               "defaultValue": null
             },
             {
+              "name": "experience",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "USER_EXPERIENCE",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "handle",
               "description": null,
               "type": {
@@ -2063,6 +2073,16 @@
             },
             {
               "name": "summary",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -3438,6 +3458,16 @@
               "defaultValue": null
             },
             {
+              "name": "experience",
+              "description": "",
+              "type": {
+                "kind": "ENUM",
+                "name": "USER_EXPERIENCE",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "handle",
               "description": "",
               "type": {
@@ -3487,6 +3517,16 @@
             },
             {
               "name": "summary",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website",
               "description": "",
               "type": {
                 "kind": "SCALAR",
@@ -3549,6 +3589,16 @@
               "defaultValue": null
             },
             {
+              "name": "experience",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "USER_EXPERIENCE",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "handle",
               "description": null,
               "type": {
@@ -3598,6 +3648,16 @@
             },
             {
               "name": "summary",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -3632,6 +3692,16 @@
               "defaultValue": null
             },
             {
+              "name": "experience",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "USER_EXPERIENCE",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "handle",
               "description": null,
               "type": {
@@ -3681,6 +3751,16 @@
             },
             {
               "name": "summary",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -4263,6 +4343,16 @@
               "defaultValue": null
             },
             {
+              "name": "experience",
+              "description": "",
+              "type": {
+                "kind": "ENUM",
+                "name": "USER_EXPERIENCE",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "handle",
               "description": "",
               "type": {
@@ -4318,6 +4408,16 @@
             },
             {
               "name": "summary",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website",
               "description": "",
               "type": {
                 "kind": "SCALAR",
@@ -8593,6 +8693,53 @@
         },
         {
           "inputFields": null,
+          "name": "USER_EXPERIENCE",
+          "description": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "ACCOMPLISHED",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "BEGINNER",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "NOVICE",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "PROFESSIONAL",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "SKILLED",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "VETERAN",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "fields": null,
+          "kind": "ENUM",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": null,
           "name": "User",
           "description": "User",
           "interfaces": [
@@ -8640,6 +8787,22 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "name": "experience",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "USER_EXPERIENCE",
                   "ofType": null
                 }
               }
@@ -8991,6 +9154,22 @@
                 "kind": "SCALAR",
                 "name": "DateTime",
                 "ofType": null
+              }
+            },
+            {
+              "name": "website",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
               }
             }
           ],
@@ -9542,6 +9721,62 @@
                 "kind": "SCALAR",
                 "name": "String",
                 "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "experience",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "USER_EXPERIENCE",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "experience_not",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "USER_EXPERIENCE",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "experience_in",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "USER_EXPERIENCE",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "experience_not_in",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "USER_EXPERIENCE",
+                    "ofType": null
+                  }
+                }
               },
               "defaultValue": null
             },
@@ -10576,6 +10811,162 @@
                 "ofType": null
               },
               "defaultValue": null
+            },
+            {
+              "name": "website",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_not",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_in",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_not_in",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_lt",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_lte",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_gt",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_gte",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_contains",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_not_contains",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_starts_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_not_starts_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_ends_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website_not_ends_with",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
             }
           ],
           "name": "UserFilter",
@@ -10624,6 +11015,18 @@
             },
             {
               "name": "email_DESC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "experience_ASC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "experience_DESC",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null
@@ -10708,6 +11111,18 @@
             },
             {
               "name": "updatedAt_DESC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "website_ASC",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "website_DESC",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null
@@ -11190,6 +11605,26 @@
               "args": [
                 {
                   "name": "auth0UserId",
+                  "description": "",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "email",
+                  "description": "",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
+                  "name": "handle",
                   "description": "",
                   "type": {
                     "kind": "SCALAR",

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import {btWarn, btTeal, btPurple, btLight} from 'styling/T'
-import EditIcon from 'imgs/edit'
+import EditIcon from 'imgs/icons/edit'
 
 const singleLine = (props) => {
   if (props.fontSize) {
@@ -18,7 +18,7 @@ const ProfileFieldContainer = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   margin: ${props => (props.fontSize) ? '5px 0px' : '30px 0px'};
-
+  width: 90%;
 `
 
 const ProfileFieldLabels = styled.div`
@@ -86,7 +86,7 @@ class ProfileField extends Component {
 
   state = {
     canEdit: false,
-    text: this.props.text,
+    text: this.props.text || '',
     valid: true
   }
 
@@ -110,7 +110,6 @@ class ProfileField extends Component {
               this.submitEdits()
             }
           }}
-          
         />
       )
     } else if (canEdit && this.props.fontSize) {
@@ -207,7 +206,7 @@ class ProfileField extends Component {
             onClick={this.iconClick}
           >
             {this.props.label}
-            {this.normalIcon}
+            {this.normalEditIcon}
           </ProfileFieldLabel>
           <ProfileErrorMessage>{this.state.message}</ProfileErrorMessage>
         </ProfileFieldLabels>
@@ -231,26 +230,40 @@ class ProfileField extends Component {
     }
   }
 
-  get fontSizeIcon () {
+  get fontSizeEditIcon () {
     if (this.props.fontSize) {
       return (
         <EditIcon
           height={'20px'}
           width={'20px'}
-          fill={(this.state.hover) ? btPurple : btLight}
+          fill={(this.state.hover) ? btPurple : 'rgba(160,160,160, .5)'}
         />
       )
     }
   }
 
-  get normalIcon () {
+  get normalEditIcon () {
     if (!this.props.fontSize) {
       return (
         <EditIcon
           height={'20px'}
           width={'20px'}
-          fill={(this.state.hover) ? btPurple : btLight}
+          fill={(this.state.hover) ? btPurple : 'rgba(160,160,160, .5)'}
         />
+      )
+    }
+  }
+
+  get showIcon () {
+    if (this.props.icon && this.props.fontSize) {
+      const Icon = this.props.icon
+      return (
+        <Icon
+          height={this.props.fontSize + 'em'}
+          width={this.props.fontSize + 'em'}
+          fill={this.props.fill || btPurple}
+        />
+
       )
     }
   }
@@ -265,6 +278,8 @@ class ProfileField extends Component {
         onMouseOut={this.handleMouseOut}
       >
 
+        {this.showIcon}
+
         {this.showLabel}
 
         <ProfileFieldContents
@@ -274,7 +289,7 @@ class ProfileField extends Component {
           {this.inputOrDisplay}
         </ProfileFieldContents>
 
-        {this.fontSizeIcon}
+        {this.fontSizeEditIcon}
 
       </ProfileFieldContainer>
     )

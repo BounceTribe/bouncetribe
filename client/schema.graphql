@@ -571,11 +571,13 @@ enum InfluenceOrderBy {
 
 input InfluenceuserUser {
   email: String!
+  experience: USER_EXPERIENCE
   handle: String!
   location: String
   name: String!
   profilePicUrl: String
   summary: String
+  website: String
 }
 
 # The `Long` scalar type represents non-fractional signed whole numeric values.
@@ -715,11 +717,13 @@ input SigninUserInput {
 
 input SignupUserInput {
   email: String!
+  experience: USER_EXPERIENCE
   handle: String!
   location: String
   name: String!
   profilePicUrl: String
   summary: String
+  website: String
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
 }
@@ -800,20 +804,24 @@ enum TribeshipOrderBy {
 
 input Tribeshipparty1User {
   email: String!
+  experience: USER_EXPERIENCE
   handle: String!
   location: String
   name: String!
   profilePicUrl: String
   summary: String
+  website: String
 }
 
 input Tribeshipparty2User {
   email: String!
+  experience: USER_EXPERIENCE
   handle: String!
   location: String
   name: String!
   profilePicUrl: String
   summary: String
+  website: String
 }
 
 input UpdateArtistInput {
@@ -878,12 +886,14 @@ type UpdateTribeshipPayload {
 
 input UpdateUserInput {
   email: String
+  experience: USER_EXPERIENCE
   handle: String
   id: ID!
   location: String
   name: String
   profilePicUrl: String
   summary: String
+  website: String
   clientMutationId: String!
 }
 
@@ -899,6 +909,7 @@ type User implements Node {
   auth0UserId: String
   createdAt: DateTime
   email: String!
+  experience: USER_EXPERIENCE!
   handle: String!
   id: ID!
   influences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
@@ -909,6 +920,16 @@ type User implements Node {
   profilePicUrl: String
   summary: String!
   updatedAt: DateTime
+  website: String!
+}
+
+enum USER_EXPERIENCE {
+  ACCOMPLISHED
+  BEGINNER
+  NOVICE
+  PROFESSIONAL
+  SKILLED
+  VETERAN
 }
 
 # A connection to a list of items.
@@ -971,6 +992,10 @@ input UserFilter {
   email_not_starts_with: String
   email_ends_with: String
   email_not_ends_with: String
+  experience: USER_EXPERIENCE
+  experience_not: USER_EXPERIENCE
+  experience_in: [USER_EXPERIENCE!]
+  experience_not_in: [USER_EXPERIENCE!]
   handle: String
   handle_not: String
   handle_in: [String!]
@@ -1063,6 +1088,20 @@ input UserFilter {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  website: String
+  website_not: String
+  website_in: [String!]
+  website_not_in: [String!]
+  website_lt: String
+  website_lte: String
+  website_gt: String
+  website_gte: String
+  website_contains: String
+  website_not_contains: String
+  website_starts_with: String
+  website_not_starts_with: String
+  website_ends_with: String
+  website_not_ends_with: String
 }
 
 enum UserOrderBy {
@@ -1072,6 +1111,8 @@ enum UserOrderBy {
   createdAt_DESC
   email_ASC
   email_DESC
+  experience_ASC
+  experience_DESC
   handle_ASC
   handle_DESC
   id_ASC
@@ -1086,6 +1127,8 @@ enum UserOrderBy {
   summary_DESC
   updatedAt_ASC
   updatedAt_DESC
+  website_ASC
+  website_DESC
 }
 
 # This is the famous Relay viewer object
@@ -1096,7 +1139,7 @@ type Viewer {
   allArtists(filter: ArtistFilter, orderBy: ArtistOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArtistConnection!
   allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
   Influence(id: ID): Influence
-  User(auth0UserId: String, id: ID): User
+  User(auth0UserId: String, email: String, handle: String, id: ID): User
   Tribeship(id: ID): Tribeship
   Artist(id: ID): Artist
   File(id: ID, secret: String, url: String): File

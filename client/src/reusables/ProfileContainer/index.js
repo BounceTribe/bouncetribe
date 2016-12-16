@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
-import ProfileField from 'reusables/ProfileField'
-import InfluencesField from 'reusables/InfluencesField'
 import EditPersonMutation from 'mutations/EditPersonMutation'
 import CreateInfluenceMutation from 'mutations/CreateInfluenceMutation'
 import DeleteInfluenceMutation from 'mutations/DeleteInfluenceMutation'
 import {searchArtistsOptions, createArtistOptions} from 'apis/graphql'
 import ProfileTop from 'reusables/ProfileTop'
+import ProfileRight from 'reusables/ProfileRight'
+import ProfileLeft from 'reusables/ProfileLeft'
+import styled from 'styled-components'
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
 
 class ProfileContainer extends Component {
   // constructor() {
@@ -73,10 +79,6 @@ class ProfileContainer extends Component {
   }
 
   render() {
-    const {
-      summary,
-      influences
-    } = this.props.user
     return (
       <section>
 
@@ -85,20 +87,21 @@ class ProfileContainer extends Component {
           submitField={this.handleSubmitField}
         />
 
+        <FlexRow>
 
-        <ProfileField
-          field={'summary'}
-          label={'Summary'}
-          text={summary}
-          submitField={this.handleSubmitField}
-        />
+          <ProfileLeft
+            user={this.props.user}
+            submitField={this.handleSubmitField}
+            submitInfluence={this.handleSubmitInfluence}
+            deleteInfluence={this.handleDeleteInfluence}
+          />
+          <ProfileRight
+            user={this.props.user}
+            submitField={this.handleSubmitField}
+          />
 
-        <InfluencesField
-          influences={influences}
-          user={this.props.user}
-          submitInfluence={this.handleSubmitInfluence}
-          deleteInfluence={this.handleDeleteInfluence}
-        />
+        </FlexRow>
+
 
       </section>
     )
@@ -111,6 +114,8 @@ export default Relay.createContainer(
     fragments: {
       user: () => Relay.QL`
         fragment on User {
+          website
+          experience
           email
           name
           profilePicUrl

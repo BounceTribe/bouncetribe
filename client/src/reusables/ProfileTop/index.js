@@ -2,6 +2,13 @@ import React, { Component } from 'react'
 import cat from 'styling/burritocat.png'
 import styled from 'styled-components'
 import ProfileField from 'reusables/ProfileField'
+import location from 'imgs/icons/location'
+
+import Bolt from 'imgs/icons/bolt'
+import Notes from 'imgs/icons/notes'
+import Tribe from 'imgs/icons/tribe'
+import {btMedium} from 'styling/T'
+
 
 const ProfileDisplay = styled.div`
   display: flex;
@@ -75,11 +82,31 @@ class ProfileTop extends Component {
             text={this.props.user.location}
             submitField={this.props.submitField}
             fontSize={.9}
+            icon={location}
+            fill={btMedium}
           />
           <UserScores>
-            <UserScore>Rank</UserScore>
-            <UserScore>Projects</UserScore>
-            <UserScore>Tribe</UserScore>
+            <UserScore>
+              <Bolt
+                height={'1em'}
+                width={'1em'}
+              />
+              Score
+            </UserScore>
+            <UserScore>
+              <Notes
+                height={'1em'}
+                width={'1em'}
+              />
+              Projects
+            </UserScore>
+            <UserScore>
+              <Tribe
+                height={'1em'}
+                width={'1em'}
+              />
+              Tribe
+            </UserScore>
 
 
           </UserScores>
