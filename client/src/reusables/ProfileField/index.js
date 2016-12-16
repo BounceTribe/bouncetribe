@@ -110,6 +110,7 @@ class ProfileField extends Component {
               this.submitEdits()
             }
           }}
+          
         />
       )
     } else if (canEdit && this.props.fontSize) {
