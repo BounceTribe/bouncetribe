@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import S from 'styling/S'
-import TopBarMenuItem from './TopBarMenuItem'
+import TopBarMenuItem from 'reusables/TopBarMenuItem'
 import projectIcon from 'imgs/project.svg'
-// import sessionIcon from 'imgs/session.svg'
 import notifications from 'imgs/notifications.svg'
 import {connect} from 'react-redux'
 import {logout} from 'actions/auth'
-
+import BTButton from 'reusables/BTButton'
 
 const topBarMenuBase = {
   display: 'flex'
@@ -34,37 +33,37 @@ class TopBarMenu extends Component {
           icon={notifications}
         />,
         <TopBarMenuItem
-          text={'Your Profile'}
-          key={'profile'}
-          to={`/${handle}`}
+          text={'Stuff'}
+          key={'stuff'}
+          dropdown={[
+
+              <TopBarMenuItem
+                text={'Profile'}
+                key={'profile'}
+                to={`/${handle}`}
+              />,
+              <TopBarMenuItem
+                text={'My Tribe'}
+                key={'tribe'}
+                to={`/${handle}/tribe`}
+              />,
+              <TopBarMenuItem
+                text={'Settings'}
+                key={'settings'}
+                to={`/${handle}/settings`}
+              />,
+              <BTButton
+                onClick={this.props.logout}
+                key={'logout'}
+                text={'Logout'}
+                danger
+                flex
+              />
+          ]}
         />
       ])
     }
   }
-  // 
-  // get showUserDropdown() {
-  //   if (this.props.isLoggedIn) {
-  //     let handle = 'profile'
-  //     return ([
-  //       <TopBarMenuItem
-  //         text={'Profile'}
-  //         key='profile'
-  //         to={`/${handle}`}
-  //       />,
-  //       <TopBarMenuItem
-  //         text={'My Tribe'}
-  //         key='myTribe'
-  //         to={`/${handle}/tribe`}
-  //       />,
-  //       <TopBarMenuItem
-  //         text={'Settings'}
-  //         key='settings'
-  //         to={`/${handle}/settings`}
-  //       />
-  //     ])
-  //   }
-  // }
-
   render () {
     return (
         <menu

@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import BTButton from 'reusables/BTButton'
 
 class Feed extends Component {
 
@@ -8,11 +7,7 @@ class Feed extends Component {
       <section>
         <h1>Feed</h1>
         <h4>Woah cool check out your feed</h4>
-        <BTButton
-          onClick={this.props.logout}
-          text={'Logout'}
-          danger
-        />
+
 
       </section>
     )

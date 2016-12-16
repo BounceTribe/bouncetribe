@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import {btWarn, btTeal} from 'styling/T'
+import {btWarn, btTeal, btPurple, btLight} from 'styling/T'
+import EditIcon from 'imgs/edit'
 
 const singleLine = (props) => {
   if (props.fontSize) {
@@ -12,29 +13,12 @@ const singleLine = (props) => {
 
 const ProfileFieldContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${props => (props.fontSize) ? 'row' : 'column'};
   align-content: flex-start;
   justify-content: flex-start;
   align-items: flex-start;
   margin: ${props => (props.fontSize) ? '5px 0px' : '30px 0px'};
 
-  ${''/* &:after {
-    content: "${props => props.label}";
-    background-color: ${btTeal};
-    position: relative;
-    display: block;
-    margin-left: 100%;
-    top: -${props => props.fontSize}em;
-    padding: 2px;
-    visibility: hidden;
-    opacity: 0;
-    transition: all .25s;
-  }
-
-  &:hover:after {
-    visibility: visible;
-    opacity: 1;
-  }*/}
 `
 
 const ProfileFieldLabels = styled.div`
@@ -45,6 +29,7 @@ const ProfileFieldLabels = styled.div`
   align-items: flex-start;
   margin-bottom: 10px;
   width: 100%;
+  cursor: pointer;
 `
 
 const ProfileFieldLabel = styled.h3`
@@ -57,6 +42,7 @@ const ProfileErrorMessage = styled.span`
 
 const ProfileFieldContents = styled.div`
   width: 100%;
+  box-shadow: ${props=>(props.hover && !props.canEdit)? '0 0 5px '+ btTeal : 'none'};
 `
 
 const ProfileFieldP = styled.p`
@@ -65,6 +51,7 @@ const ProfileFieldP = styled.p`
   font-style: ${props => (props.fontSize) ? 'normal' : 'italic'};
   font-size: ${props => singleLine(props)}em;
   height: 100%;
+  cursor: pointer;
 `
 
 
@@ -118,6 +105,11 @@ class ProfileField extends Component {
             this.submitEdits()
           }}
           valid={this.state.valid}
+          onKeyPress={(e)=>{
+            if (e.key === 'Enter' && !e.shiftKey) {
+              this.submitEdits()
+            }
+          }}
         />
       )
     } else if (canEdit && this.props.fontSize) {
@@ -134,6 +126,11 @@ class ProfileField extends Component {
           }}
           valid={this.state.valid}
           fontSize={this.props.fontSize}
+          onKeyPress={(e)=>{
+            if (e.key === 'Enter') {
+              this.submitEdits()
+            }
+          }}
         />
       )
     } else {
@@ -154,7 +151,7 @@ class ProfileField extends Component {
     })
   }
 
-  doubleClickToEdit = () => {
+  startEditing = () => {
     this.setState({
       canEdit: true
     })
@@ -187,6 +184,16 @@ class ProfileField extends Component {
     }
   }
 
+  iconClick = () => {
+    if (!this.state.canEdit) {
+      this.setState({
+        canEdit: true,
+      })
+    } else {
+      this.submitEdits()
+    }
+  }
+
   get showLabel() {
     if (this.props.fontSize) {
       return (
@@ -195,9 +202,54 @@ class ProfileField extends Component {
     } else {
       return (
         <ProfileFieldLabels>
-          <ProfileFieldLabel>{this.props.label}</ProfileFieldLabel>
+          <ProfileFieldLabel
+            onClick={this.iconClick}
+          >
+            {this.props.label}
+            {this.normalIcon}
+          </ProfileFieldLabel>
           <ProfileErrorMessage>{this.state.message}</ProfileErrorMessage>
         </ProfileFieldLabels>
+      )
+    }
+  }
+
+  handleMouseOver = () => {
+    if(!this.state.hover) {
+      this.setState({
+        hover: true
+      })
+    }
+  }
+
+  handleMouseOut = () => {
+    if(this.state.hover) {
+      this.setState({
+        hover: false
+      })
+    }
+  }
+
+  get fontSizeIcon () {
+    if (this.props.fontSize) {
+      return (
+        <EditIcon
+          height={'20px'}
+          width={'20px'}
+          fill={(this.state.hover) ? btPurple : btLight}
+        />
+      )
+    }
+  }
+
+  get normalIcon () {
+    if (!this.props.fontSize) {
+      return (
+        <EditIcon
+          height={'20px'}
+          width={'20px'}
+          fill={(this.state.hover) ? btPurple : btLight}
+        />
       )
     }
   }
@@ -205,15 +257,23 @@ class ProfileField extends Component {
   render() {
     return (
       <ProfileFieldContainer
-        onDoubleClick={this.doubleClickToEdit}
+        onDoubleClick={this.startEditing}
         fontSize={this.props.fontSize}
         label={this.props.label}
+        onMouseOver={this.handleMouseOver}
+        onMouseOut={this.handleMouseOut}
       >
+
         {this.showLabel}
 
-        <ProfileFieldContents>
+        <ProfileFieldContents
+          hover={this.state.hover}
+          canEdit={this.state.canEdit}
+        >
           {this.inputOrDisplay}
         </ProfileFieldContents>
+
+        {this.fontSizeIcon}
 
       </ProfileFieldContainer>
     )
