@@ -447,12 +447,13 @@ class AuthContainer2 extends Component {
     }
   }
 
-  btRelayCreateUserMutation = async(email, idToken) => {
+  btRelayCreateUserMutation = async(email, idToken, profilePicUrl) => {
     console.log('email', email)
     this.props.relay.commitUpdate(
       new CreateUserMutation({
         email: email,
-        idToken: idToken
+        idToken: idToken,
+        profilePicUrl: profilePicUrl
       }), {
         onSuccess: (response) => {
           console.log('success', response)
@@ -589,6 +590,7 @@ class AuthContainer2 extends Component {
         const auth0Profile = await this.getAuth0Profile(idToken)
         const auth0id = auth0Profile['user_id']
         const email = auth0Profile.email
+        const profilePicUrl = auth0Profile.picture
         console.log('This is their auth0Profile: \n', auth0Profile, '\n Email: ', email, '\n auth0id: ', auth0id)
         try {
           console.log('Checking to see if they have a BT account associated with auth0id:', auth0id)
@@ -634,7 +636,7 @@ class AuthContainer2 extends Component {
             console.log("Didn't find a bt account with that email.", error)
             try {
               console.log('Attempting to create a new bt user.')
-              this.btRelayCreateUserMutation(email, idToken)
+              this.btRelayCreateUserMutation(email, idToken, profilePicUrl)
             } catch (error) {
               console.log('CreateUserMutation error', error)
             }

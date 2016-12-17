@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import cat from 'styling/burritocat.png'
 import styled from 'styled-components'
 import ProfileField from 'reusables/ProfileField'
 import location from 'imgs/icons/location'
+import {handleValidator} from 'utils/validators'
 
 import Bolt from 'imgs/icons/bolt'
 import Notes from 'imgs/icons/notes'
@@ -64,17 +64,25 @@ class ProfileTop extends Component {
 
       >
         <ProfileImage
-          src={cat}
+          src={this.props.user.profilePicUrl}
           alt={'Profile'}
         />
 
         <ProfileInfoColumn>
           <ProfileField
+            field={'handle'}
+            label={'Handle'}
+            text={this.props.user.handle}
+            submitField={this.props.submitField}
+            fontSize={1.5}
+            validate={handleValidator}
+          />
+          <ProfileField
             field={'name'}
             label={'Name'}
             text={this.props.user.name}
             submitField={this.props.submitField}
-            fontSize={1.5}
+            fontSize={1.2}
           />
           <ProfileField
             field={'location'}

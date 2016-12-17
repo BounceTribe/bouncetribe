@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import {btWarn, btTeal, btPurple, btLight} from 'styling/T'
+import {btWarn, btTeal, btPurple} from 'styling/T'
 import EditIcon from 'imgs/icons/edit'
 
 const singleLine = (props) => {
@@ -38,11 +38,14 @@ const ProfileFieldLabel = styled.h3`
 
 const ProfileErrorMessage = styled.span`
   color: ${btWarn};
+  font-size: ${props=>props.fontSize ? '.2em' : 'inherit'};
+  max-width: ${props=>props.fontSize ? '20%' : null}
 `
 
 const ProfileFieldContents = styled.div`
   width: 100%;
   box-shadow: ${props=>(props.hover && !props.canEdit)? '0 0 5px '+ btTeal : 'none'};
+  transition: all .2s;
 `
 
 const ProfileFieldP = styled.p`
@@ -69,7 +72,7 @@ const TextArea = styled.textarea`
 `
 
 const TextInput = styled.input`
-  width: 100%;
+  max-width: 100%;
   height: 100%;
   box-sizing: border-box;
   padding: 0px;
@@ -78,7 +81,6 @@ const TextInput = styled.input`
   font-style: normal;
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
-  border-color: ${btTeal};
   box-shadow: 0 0 10px ${btTeal};
 `
 
@@ -131,6 +133,7 @@ class ProfileField extends Component {
               this.submitEdits()
             }
           }}
+          message={this.state.message}
         />
       )
     } else {
@@ -268,6 +271,17 @@ class ProfileField extends Component {
     }
   }
 
+  get fontSizeMessage() {
+    if (this.props.fontSize && !this.state.valid && this.state.message)
+    return (
+      <ProfileErrorMessage
+        fontSize={this.props.fontSize}
+      >
+        {this.state.message}
+      </ProfileErrorMessage>
+    )
+  }
+
   render() {
     return (
       <ProfileFieldContainer
@@ -290,6 +304,7 @@ class ProfileField extends Component {
         </ProfileFieldContents>
 
         {this.fontSizeEditIcon}
+        {this.fontSizeMessage}
 
       </ProfileFieldContainer>
     )

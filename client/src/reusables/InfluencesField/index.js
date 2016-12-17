@@ -3,6 +3,8 @@ import InfluenceChip from 'reusables/InfluenceChip'
 import {btTeal} from 'styling/T'
 import {spotifyConfig} from 'apis/spotify'
 import styled from 'styled-components'
+import Plus from 'imgs/icons/plus'
+import {btWhite} from 'styling/T'
 
 const ProfileFieldLabel = styled.h3`
   font-weight: bold;
@@ -14,6 +16,28 @@ const PlusButton = styled.button`
   width: 40px;
   border-radius: 50%;
   background-color: ${btTeal};
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`
+
+const InfluencesInput = styled.input`
+  display: flex;
+  width: ${props => props.showInput ? '200px' : 0 };
+  margin-right: ${props => props.showInput ? '15px' : 0 };
+  opacity: ${props => props.showInput ? 1 : 0 };
+  transition: all .3s;
+`
+
+const ChipContainer = styled.div`
+  min-height: 30px;
+`
+
+const InfluencesRow = styled.div`
+  display: flex;
+  flex-direction: row;
 `
 
 class InfluencesField extends Component {
@@ -96,6 +120,12 @@ class InfluencesField extends Component {
     clearTimeout(this.state.timer)
   }
 
+  showInput = () => {
+    this.setState({
+      showInput: true
+    })
+  }
+
   render() {
     return (
       <div
@@ -106,31 +136,47 @@ class InfluencesField extends Component {
         }}
       >
         <ProfileFieldLabel>Influences</ProfileFieldLabel>
-        <input
-          type={'text'}
-          list={'artistOptions'}
-          onChange={(e) => {
-            this.handleChange(e)
-          }}
-          onBlur={()=>{
-            this.debounce()
-            this.setState({
-              active: false
-            })
-          }}
-        />
-        <datalist
-          id={'artistOptions'}
-        >
-          {this.state.artistOptions}
-        </datalist>
-        <PlusButton
-          onClick={this.submitInfluence}
-        >
-        </PlusButton>
-        <div>
+
+        <ChipContainer>
           {this.renderInfluenceChips}
-        </div>
+        </ChipContainer>
+
+        <InfluencesRow>
+
+          <InfluencesInput
+            type={'text'}
+            list={'artistOptions'}
+            onChange={(e) => {
+              this.handleChange(e)
+            }}
+            onBlur={()=>{
+              this.debounce()
+              this.setState({
+                active: false
+              })
+            }}
+            showInput={this.state.showInput}
+          />
+          <datalist
+            id={'artistOptions'}
+          >
+            {this.state.artistOptions}
+          </datalist>
+          <PlusButton
+            onClick={this.showInput}
+          >
+            <Plus
+              height={'40px'}
+              width={'40px'}
+              fill={btWhite}
+            />
+
+          </PlusButton>
+
+
+        </InfluencesRow>
+
+
       </div>
     )
   }
