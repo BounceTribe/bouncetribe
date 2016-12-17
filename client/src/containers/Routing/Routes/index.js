@@ -8,6 +8,7 @@ import Home from './Home'
 import Profile from './Profile'
 import Projects from './Projects'
 import Tribe from './Tribe'
+import Admin from './Admin'
 
 
 const ViewerQueries = {
@@ -57,6 +58,13 @@ const createRoutes = () => {
         component={Home}
         queries={ViewerQueries}
       />
+
+      <Route
+        path="/admin"
+        queries={ViewerQueries}
+        component={Admin}
+      />
+
       <Route
         path="/social/*"
         queries={ViewerQueries}

@@ -110,13 +110,24 @@ export const linkAccountsOptions = (primaryAuth0UserId, secondaryProvider, secon
   ]
 }
 
-
-// "client_id": auth0id,
-// "audience": audience,
-// "scopes": {
-//   "current_user_identities": {
-//     actions: [
-//       "update"
-//     ]
-//   }
-// }
+export const newLoginOptions = (email, password) => {
+  return [
+    `${baseRoute}/oauth/token`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body:   JSON.stringify({
+        'client_id': auth0id,
+        username: email,
+        password: password,
+        connection: 'Username-Password-Authentication',
+        'id_token': '',
+        'grant_type': 'password',
+        scope: 'openid',
+        'device': 'browser'
+      })
+    }
+  ]
+}
