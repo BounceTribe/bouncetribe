@@ -1,7 +1,6 @@
 import {
   LOGGED_IN,
   LOGGED_OUT,
-  CHECKED_LOCAL_STORAGE_FOR_TOKEN
 } from 'actions/auth'
 
 function auth (state = {}, action) {
@@ -38,16 +37,16 @@ function auth (state = {}, action) {
     //     attemptingSignup: action.attemptingSignup
     //   }
     // }
-    case CHECKED_LOCAL_STORAGE_FOR_TOKEN: {
-      return {
-        ...state,
-        'id_token': action['id_token'],
-        user: {
-          ...state.user,
-          handle: action.handle
-        }
-      }
-    }
+    // case CHECKED_LOCAL_STORAGE_FOR_TOKEN: {
+    //   return {
+    //     ...state,
+    //     'id_token': action['id_token'],
+    //     user: {
+    //       ...state.user,
+    //       handle: action.handle
+    //     }
+    //   }
+    // }
     default: {
       return {
         ...state,

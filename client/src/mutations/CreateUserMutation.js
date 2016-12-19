@@ -1,4 +1,5 @@
 import Relay from 'react-relay'
+
 export default class CreateUserMutation extends Relay.Mutation {
 
   getMutation () {
@@ -8,8 +9,8 @@ export default class CreateUserMutation extends Relay.Mutation {
   getVariables () {
     return {
       email: this.props.email,
-      name: this.props.email.split('@')[0],
-      handle: this.props.email.split('@')[0],
+      name: this.props.name,
+      handle: this.props.handle,
       authProvider: {
         auth0: {
           idToken: this.props.idToken

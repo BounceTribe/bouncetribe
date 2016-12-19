@@ -93,18 +93,22 @@ export const fbLoginOptions = (accessToken) => {
 }
 
 
-export const linkAccountsOptions = (primaryAuth0UserId, secondaryProvider, secondaryAuth0Id) => {
+export const linkAccountsOptions = (inputObject) => {
+  let {
+    primaryAuth0UserId,
+    primaryToken,
+    secondaryToken
+  } = inputObject
   return [
     `${baseRoute}/api/v2/users/${primaryAuth0UserId}/identities`,
     {
       method: 'POST',
       headers: {
-        Authorization: "Bearer "+apiToken,
+        Authorization: "Bearer "+primaryToken,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        "provider": secondaryProvider,
-        "user_id": secondaryAuth0Id
+        "link_with": secondaryToken,
       })
     }
   ]
@@ -119,15 +123,24 @@ export const newLoginOptions = (email, password) => {
         'Content-Type': 'application/json'
       },
       body:   JSON.stringify({
-        'client_id': auth0id,
+        'grant_type': 'password',
+        'client_id': 'fjV44gUO1o1RLFfaKJL7LEfE4ofb7qCA',
+        'audience': 'BounceTribeAPI',
         username: email,
         password: password,
-        connection: 'Username-Password-Authentication',
-        'id_token': '',
-        'grant_type': 'password',
         scope: 'openid',
-        'device': 'browser'
       })
     }
+  ]
+}
+
+export const newSignupOptions = (email, password) => {
+  return [
+    `${baseRoute}/authorize?response_type=token
+    &client_id=wMoUQb2Kb9XViLB6Wek2fLYPlMxJV5hg
+    &connection=null
+    &redirect_uri=http://localhost:3000/admin/
+    &state=OPAQUE_VALUE
+    &scope=openid%20name%20picture`
   ]
 }

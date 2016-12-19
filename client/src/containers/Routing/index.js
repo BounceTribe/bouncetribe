@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import {Router, browserHistory, applyRouterMiddleware} from 'react-router'
 import Relay from 'react-relay'
 import useRelay from 'react-router-relay'
-import store from 'store'
 import Routes from './Routes'
-import {checkLocalStorageForToken} from 'actions/auth'
 import {
   RelayNetworkLayer,
   urlMiddleware
@@ -40,8 +38,6 @@ Relay.injectNetworkLayer(
     },
   ],{ disableBatchQuery: true })
 )
-
-store.dispatch(checkLocalStorageForToken())
 
 class Routing extends Component {
   render() {

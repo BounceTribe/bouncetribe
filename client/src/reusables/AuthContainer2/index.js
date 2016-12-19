@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {connect} from 'react-redux'
-import BTEditableField from 'reusables/BTEditableField'
+// import BTEditableField from 'reusables/BTEditableField'
 import BTButton from 'reusables/BTButton'
 import {fbAccessRoute, loginOptions, loginRoute, profileRoute, profileOptions, signupRoute, signupOptions, linkAccountsOptions} from 'config/auth0'
 import {checkIfUserExists, checkIfUserEmailExists} from 'apis/graphql'
@@ -748,7 +748,7 @@ class AuthContainer2 extends Component {
             disabled={this.state.socialDisabled}
           />
 
-          <BTEditableField
+          {/* <BTEditableField
             label={'Email'}
             type={'text'}
             value={this.state.email.value}
@@ -780,7 +780,7 @@ class AuthContainer2 extends Component {
 
           <br/>
 
-          {this.showButton}
+          {this.showButton} */}
 
         </div>
       )

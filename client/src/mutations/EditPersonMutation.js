@@ -1,4 +1,5 @@
 import Relay from 'react-relay'
+import {handleSanitizer} from 'utils/validators'
 
 export default class EditPersonMutation extends Relay.Mutation {
   static fragments = {
@@ -48,7 +49,7 @@ export default class EditPersonMutation extends Relay.Mutation {
   getVariables () {
     return {
       id: this.props.user.id,
-      handle: this.props.handle,
+      handle: handleSanitizer(this.props.handle),
       name: this.props.name,
       email: this.props.email,
       summary: this.props.summary,

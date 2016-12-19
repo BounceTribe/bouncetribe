@@ -19,10 +19,10 @@ class TopBarMenu extends Component {
       let handle = this.props.handle
       return (
         <MenuRow>
-          <TopBarMenuItem
+          {/* <TopBarMenuItem
             to={'/admin'}
             text={'Admin'}
-          />
+          /> */}
           <TopBarMenuItem
             text={'Projects'}
             to={`/${handle}/projects`}
@@ -42,10 +42,6 @@ class TopBarMenu extends Component {
                 <TopBarMenuItem
                   text={'My Tribe'}
                   to={`/${handle}/tribe`}
-                />
-                <TopBarMenuItem
-                  text={'Settings'}
-                  to={`/${handle}/settings`}
                 />
                 <BTButton
                   onClick={this.props.logout}
@@ -72,9 +68,16 @@ class TopBarMenu extends Component {
 }
 
 const mapStateToProps = (state) => {
+  const handle = () => {
+    if (state.auth.user) {
+      return state.auth.user.handle
+    } else {
+      return 'profile'
+    }
+  }
   return {
     isLoggedIn: state.auth['id_token'],
-    handle: state.auth.user.handle
+    handle: handle()
   }
 }
 

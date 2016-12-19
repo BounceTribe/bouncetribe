@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Relay from 'react-relay'
 import {allUsers, deleteAllUsers} from 'apis/btCarlInfo'
 import BTButton from 'reusables/BTButton'
+import {newLoginOptions, newSignupOptions} from 'config/auth0'
+
 
 
 class Admin extends Component {
@@ -41,15 +43,58 @@ class Admin extends Component {
     console.log(result)
   }
 
-  get onlyShowInProduction() {
+  login = async() => {
+    let options = newLoginOptions(this.state.email, this.state.password)
+    const result = fetch(...options).then(r=>r.json()).then(json=>json)
+    console.log(result)
+  }
+
+  get onlyShowInDevelopment() {
     if (process.env.PRODUCTION) {
       return (
         <h2>Not allowed</h2>
       )
     } else {
-      this.showAllUsers()
+      // this.showAllUsers()
       return (
         <div>
+
+          <h2>hello</h2>
+
+          <button
+            onClick={auth.login}
+          >
+            fuck this
+          </button>
+
+          {/* <input
+            type={'text'}
+            onChange={
+              (e)=>{
+                this.setState({
+                  email: e.target.value
+                })
+              }
+            }
+          />
+
+          <input
+            type={'password'}
+            onChange={
+              (e)=>{
+                this.setState({
+                  password: e.target.value
+                })
+              }
+            }
+          />
+
+          <button
+            onClick={window.open(...newSignupOptions(), '_self')}
+          >
+            Login
+          </button>
+
           <h3>Admin</h3>
           <BTButton
             danger
@@ -57,7 +102,7 @@ class Admin extends Component {
             onClick={this.deleteAllUsers}
           />
 
-          {this.state.allUsers}
+          {this.state.allUsers}*/}
 
         </div>
       )
@@ -66,9 +111,10 @@ class Admin extends Component {
 
 
   render() {
+    console.log(this.props.router)
     return (
       <section>
-        {this.onlyShowInProduction}
+        {this.onlyShowInDevelopment}
       </section>
     )
   }

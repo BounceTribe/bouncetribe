@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {connect} from 'react-redux'
 import Feed from './Feed'
-import AuthContainer2 from 'reusables/AuthContainer2'
+import AuthContainer3 from 'reusables/AuthContainer3'
 import {logout} from 'actions/auth'
 
 class Home extends Component {
@@ -17,9 +17,10 @@ class Home extends Component {
       )
     } else {
       return (
-        <AuthContainer2
+        <AuthContainer3
           viewer={this.props.viewer}
           router={this.props.router}
+          auth={this.props.route.auth}
         />
       )
     }
@@ -60,7 +61,7 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          ${AuthContainer2.getFragment('viewer')}
+          ${AuthContainer3.getFragment('viewer')}
         }
       `,
     },

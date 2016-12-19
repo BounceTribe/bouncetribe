@@ -41,3 +41,70 @@ server.use('/graphql', permissionsMiddleware, graphQLHTTP((req)=>{
   }))
 
 server.listen(config.port, () => console.log(chalk.green(`Server is listening on port ${config.port}`)))
+
+
+
+
+export const newLoginOptions = (email, password) => {
+  return [
+    `https://carlpeaslee.auth0.com/oauth/token`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body:   JSON.stringify({
+        'grant_type': 'password',
+        'client_id': '6jfxOKSqF51fNxmPXqkvPLZFNXHqHWJY',
+        'audience': 'https://carlpeaslee.auth0.com/api/v2/',
+        username: email,
+        password: password,
+        scope: 'openid profile',
+      })
+    }
+  ]
+}
+
+export const newSignupOptions = (email, password) => {
+  return [
+    `https://carlpeaslee.auth0.com/dbconnections/signup`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body:   JSON.stringify({
+        'client_id': '6jfxOKSqF51fNxmPXqkvPLZFNXHqHWJY',
+        email: email,
+        password: password,
+        connection: 'Username-Password-Authentication'
+      })
+    }
+  ]
+}
+
+const login = async () => {
+  try {
+    console.log("hello")
+    let options = newLoginOptions('cpeaslee@gmail.com', 'G0rg0n9f0x')
+    const result = await fetch(...options).then(r=>r.json()).then(json=>json)
+    console.log(chalk.cyan('login result'), result)
+  } catch (error) {
+    console.log('error')
+  }
+}
+
+const signup = async () => {
+  try {
+    console.log("hello")
+    let options = newSignupOptions('cpeaslee@gmail.com', 'G0rg0n9f0x')
+    const result = await fetch(...options).then(r=>r.json()).then(json=>json)
+    console.log(chalk.cyan('signup result'), result)
+  } catch (error) {
+    console.log('error')
+  }
+}
+
+login()
+
+// signup()

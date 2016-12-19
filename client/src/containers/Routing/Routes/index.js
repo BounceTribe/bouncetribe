@@ -8,7 +8,8 @@ import Home from './Home'
 import Profile from './Profile'
 import Projects from './Projects'
 import Tribe from './Tribe'
-import Admin from './Admin'
+// import Admin from './Admin'
+import auth from 'config/auth'
 
 
 const ViewerQueries = {
@@ -48,6 +49,7 @@ const ViewerQueries = {
 //   }
 // }
 
+
 const createRoutes = () => {
   return (
     <Route
@@ -57,13 +59,21 @@ const createRoutes = () => {
       <IndexRoute
         component={Home}
         queries={ViewerQueries}
+        auth={auth}
       />
 
       <Route
-        path="/admin"
+        path="/login/*"
+        queries={ViewerQueries}
+        component={Home}
+        auth={auth}
+      />
+
+      {/* <Route
+        path="/admin/*"
         queries={ViewerQueries}
         component={Admin}
-      />
+      /> */}
 
       <Route
         path="/social/*"
