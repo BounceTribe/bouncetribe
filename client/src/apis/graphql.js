@@ -1,4 +1,4 @@
-const graphqlUrl = 'https://api.graph.cool/simple/v1/ciwdr6snu36fj01710o4ssheb'
+import {graphqlUrl} from 'config/urls'
 
 export const searchArtistsOptions = (spotifyId) => {
   return [

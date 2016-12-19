@@ -5,7 +5,6 @@ import notifications from 'imgs/notifications.svg'
 import {connect} from 'react-redux'
 import {logout} from 'actions/auth'
 import styled from 'styled-components'
-import auth from 'config/auth'
 import {Link} from 'react-router'
 
 const MenuRow = styled.div`

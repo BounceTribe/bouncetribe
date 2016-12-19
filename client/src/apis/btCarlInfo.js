@@ -1,7 +1,5 @@
 import store from 'store'
-
-const url = (process.env.PRODUCTION) ? 'https://www.bt-carl.info' : 'http://localhost:5000/graphql'
-
+import {api} from 'config/urls'
 
 export const allUsers = () => {
   return [

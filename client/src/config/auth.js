@@ -1,8 +1,10 @@
 import Auth0Lock from 'auth0-lock'
-import {Err} from 'utils'
-import {linkAccountsOptions} from 'config/auth0'
+import {Err, Log} from 'utils'
+import {linkAccountsOptions} from 'apis/auth'
 import {btPurple} from 'styling/T'
+import {auth0} from 'config/urls'
 
+const clientId = 'cKacry8a5wk5N8HfYggEXJ1r7Izpnq8J'
 
 class AuthService {
   constructor(clientId, domain) {
@@ -25,7 +27,7 @@ class AuthService {
 
   _doAuthentication = async (authResult) => {
     try {
-      console.log('authResult received', authResult)
+      Log('authResult received', authResult)
       // Saves the user token
       let state = JSON.parse(authResult.state)
 
@@ -131,7 +133,7 @@ class AuthService {
   }
 }
 
-const auth = new AuthService('cKacry8a5wk5N8HfYggEXJ1r7Izpnq8J', 'carlpeaslee.auth0.com')
+const auth = new AuthService(clientId, auth0)
 
 
 export default auth

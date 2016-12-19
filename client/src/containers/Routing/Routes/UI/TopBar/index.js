@@ -1,5 +1,4 @@
 import React from 'react'
-import S from 'styling/S'
 import {btBlack} from 'styling/T'
 
 import TopBarMenu from './TopBarMenu'
@@ -19,15 +18,12 @@ const topBarBase = {
   paddingTop: '10px'
 }
 
-const topBarS = new S({
-  base: topBarBase
-})
 
 const TopBar = (props) => {
   return (
     <header
       style={{
-        ...topBarS.all
+        ...topBarBase
       }}
     >
       <TopBarMenuItem

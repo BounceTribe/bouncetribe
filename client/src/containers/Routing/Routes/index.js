@@ -11,6 +11,8 @@ import Tribe from './Tribe'
 import auth from 'config/auth'
 import SigninUserMutation from 'mutations/SigninUserMutation'
 import {loginSuccess} from 'actions/auth'
+import {Err, Log} from 'utils'
+
 
 const ViewerQueries = {
   viewer: () => Relay.QL`query { viewer }`
@@ -22,7 +24,7 @@ const requireAuth = async (nextState, replace) => {
     let reduxToken = store.getState().auth['id_token']
     let localToken = auth.getToken()
     if (reduxToken) {
-      console.log('logged in, looks good')
+      Log('logged in, looks good')
     } else if (localToken && !reduxToken) {
       await new Promise ( (resolve, reject) => {
         Relay.Store.commitUpdate(
@@ -31,14 +33,14 @@ const requireAuth = async (nextState, replace) => {
             viewer: {id: "viewer-fixed"}
           }), {
             onSuccess: (response) => {
-              console.log('signed in to BT', response)
+              Log('signed in to BT', response)
               let idToken = response.signinUser.token
               let user = response.signinUser.viewer.user
               store.dispatch(loginSuccess(idToken, user))
               resolve()
             },
             onFailure: (response) => {
-              console.log('Failed to signin to BT')
+              Log('Failed to signin to BT')
               reject(response.getError())
             }
           }
@@ -46,15 +48,15 @@ const requireAuth = async (nextState, replace) => {
       }).catch((reason)=>{
         throw reason
       })
-      console.log('welcome back')
+      Log('welcome back')
       replace({
         pathname: `/${nextState.location}`
       })
     } else {
-      throw 'not logged in'
+      throw Err('Couldnt login')
     }
   } catch (error) {
-    console.log(error)
+    Log(error)
     replace({ pathname: '/' })
   }
 }

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 import styled from 'styled-components'
 import SigninUserMutation from 'mutations/SigninUserMutation'
 import CreateUserMutation from 'mutations/CreateUserMutation'
-import {Err} from 'utils'
+import {Err, Log} from 'utils'
 import {loginSuccess} from 'actions/auth'
 import {checkIfUserEmailExists} from 'apis/graphql'
 import {handleSanitizer} from 'utils/validators'
@@ -32,18 +32,18 @@ class AuthContainer3 extends Component {
     let options = checkIfUserEmailExists(email)
     try {
       const btAccount = await fetch(...options).then(data => data.json()).then((json) => {
-        console.log('btAccount', json)
+        Log('btAccount', json)
         if (json.data.allUsers.length < 1) {
           throw json
         } else {
           return json.data.allUsers[0]
         }
       })
-      console.log('A BT accounts already exists with that email', btAccount)
+      Log('A BT accounts already exists with that email', btAccount)
       return btAccount
 
     } catch (noUser) {
-      console.log('No user with that email exists', noUser)
+      Log('No user with that email exists', noUser)
     }
   }
 
@@ -77,12 +77,12 @@ class AuthContainer3 extends Component {
             handle: handleSanitizer(email)
           }), {
             onSuccess: (response) => {
-              console.log('Succesfully created a BT user.', response)
+              Log('Succesfully created a BT user.', response)
               this.signInMutation()
               resolve()
             },
             onFailure: (response) => {
-              console.log('Failed to create a BT user.')
+              Log('Failed to create a BT user.')
               reject(response.getError())
             }
           }
@@ -91,7 +91,7 @@ class AuthContainer3 extends Component {
         throw reason
       })
     } catch (error){
-      console.log('CreateUserMutation error')
+      Log('CreateUserMutation error')
       throw error
     }
   }
@@ -107,7 +107,7 @@ class AuthContainer3 extends Component {
             viewer: this.props.viewer
           }), {
             onSuccess: (response) => {
-              console.log('signed in to BT', response)
+              Log('signed in to BT', response)
               let idToken = response.signinUser.token
               let user = response.signinUser.viewer.user
               this.props.loginSuccess(idToken, user)
@@ -117,7 +117,7 @@ class AuthContainer3 extends Component {
               resolve()
             },
             onFailure: (response) => {
-              console.log('Failed to signin to BT')
+              Log('Failed to signin to BT')
               reject(response.getError())
             }
           }
@@ -132,26 +132,26 @@ class AuthContainer3 extends Component {
 
   init = async() => {
     if (this.props.auth.getToken() && !this.props.isLoggedIn) {
-      console.log('...found a token in local storage...')
+      Log('...found a token in local storage...', 'this.props', this.props)
       try {
-        console.log('...attempting to login to BT...')
+        Log('...attempting to login to BT...')
         await this.signInMutation()
       } catch (error) {
-        console.log("Couldn't login to BT with the token currently in storage ", error)
+        Log("Couldn't login to BT with the token currently in storage ", error)
         try {
-          console.log('...fetching auth0Profile using token...')
+          Log('...fetching auth0Profile using token...')
           const auth0Profile = await this.props.auth.getUserInfo()
-          console.log('Found a profile: ', auth0Profile)
-          console.log('Attempting to create a BT user with that auth0Profile')
+          Log('Found a profile: ', auth0Profile)
+          Log('Attempting to create a BT user with that auth0Profile')
           try {
             await this.createUserMutation(auth0Profile)
           } catch (error) {
-            console.log('Encountered an error creating that user.', error)
+            Log('Encountered an error creating that user.', error)
             try {
-              console.log('...checking to see if there is already a user with that email... ')
+              Log('...checking to see if there is already a user with that email... ')
               const primaryUser = await this.checkBtForEmail(auth0Profile.email)
 
-              console.log('primaryUser', primaryUser)
+              Log('primaryUser', primaryUser)
               let auth0UserId = primaryUser.auth0UserId
 
               let provider = auth0UserId.split('|')[0]
@@ -169,11 +169,11 @@ class AuthContainer3 extends Component {
                 provider
               })
             } catch (error) {
-              console.log("That user doesn't exist in BT's database", error)
+              Log("That user doesn't exist in BT's database", error)
             }
           }
         } catch (error) {
-          console.log("Couldn't find an auth0Profile with that token.")
+          Log("Couldn't find an auth0Profile with that token.")
         }
       }
     } else{

@@ -1,20 +1,4 @@
-// export const ATTEMPTED_LOGIN = 'ATTEMPTED_LOGIN'
-//
-// export function attemptLogin() {
-//   return {
-//     type: ATTEMPTED_LOGIN,
-//     attemptingLogin: Date.now()
-//   }
-// }
-//
-// export const ATTEMPTED_SIGNUP = 'ATTEMPTED_SIGNUP'
-//
-// export function attemptSignup() {
-//   return {
-//     type: ATTEMPTED_SIGNUP,
-//     attemptingSignup: Date.now()
-//   }
-// }
+
 import {browserHistory} from 'react-router'
 
 export const LOGGED_IN = 'LOGGED_IN'
@@ -41,24 +25,3 @@ export function logout() {
     user: false
   }
 }
-
-// export const SIGNEDUP = 'SIGNEDUP'
-//
-// export function signupSuccess() {
-//   return {
-//     type: SIGNEDUP,
-//     attemptingSignup: false
-//   }
-// }
-
-
-// export const CHECKED_LOCAL_STORAGE_FOR_TOKEN = 'CHECKED_LOCAL_STORAGE_FOR_TOKEN'
-//
-// export function checkLocalStorageForToken() {
-//   let localToken = localStorage.getItem('id_token')
-//   const idToken = localToken ? localToken : false
-//   return {
-//     type: CHECKED_LOCAL_STORAGE_FOR_TOKEN,
-//     'id_token': idToken,
-//   }
-// }
