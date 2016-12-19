@@ -16,6 +16,16 @@ const TribeHeader = styled.ul`
   box-sizing: border-box;
 `
 
+const Search = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 1.2%;
+  box-sizing: border-box;
+`
+
 const TribeHeaderRight = styled.div`
   display: flex;
   flex-direction: row;
@@ -48,6 +58,10 @@ class TribeContainer extends Component {
     this.handleTribeshipInvitation = this.handleTribeshipInvitation.bind(this)
   }
 
+
+  discover = async() => {
+
+  }
 
   get userList () {
     let {
@@ -175,7 +189,6 @@ class TribeContainer extends Component {
     let {
       router
     } = this.props
-    console.log(this.props.router)
     return (
       <section>
 
@@ -212,6 +225,10 @@ class TribeContainer extends Component {
 
 
         </TribeHeader>
+
+        <Search>
+
+        </Search>
 
         <TribeList>
           {this.userList}
