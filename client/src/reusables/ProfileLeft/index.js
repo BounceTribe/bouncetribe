@@ -25,6 +25,7 @@ class ProfileLeft extends Component {
           label={'Summary'}
           text={this.props.user.summary}
           submitField={this.props.submitField}
+          ownProfile={this.props.ownProfile}
         />
 
         <InfluencesField
@@ -32,6 +33,7 @@ class ProfileLeft extends Component {
           user={this.props.user}
           submitInfluence={this.props.submitInfluence}
           deleteInfluence={this.props.deleteInfluence}
+          ownProfile={this.props.ownProfile}
         />
 
       </ProfileLeftContainer>

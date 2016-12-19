@@ -11,20 +11,18 @@ import Tribe from './Tribe'
 import auth from 'config/auth'
 import SigninUserMutation from 'mutations/SigninUserMutation'
 import {loginSuccess} from 'actions/auth'
-import {Err, Log} from 'utils'
+import {Err} from 'utils'
 
 
 const ViewerQueries = {
   viewer: () => Relay.QL`query { viewer }`
 }
 
-
 const requireAuth = async (nextState, replace) => {
   try {
     let reduxToken = store.getState().auth['id_token']
     let localToken = auth.getToken()
     if (reduxToken) {
-      Log('logged in, looks good')
     } else if (localToken && !reduxToken) {
       await new Promise ( (resolve, reject) => {
         Relay.Store.commitUpdate(
@@ -33,14 +31,12 @@ const requireAuth = async (nextState, replace) => {
             viewer: {id: "viewer-fixed"}
           }), {
             onSuccess: (response) => {
-              Log('signed in to BT', response)
               let idToken = response.signinUser.token
               let user = response.signinUser.viewer.user
               store.dispatch(loginSuccess(idToken, user))
               resolve()
             },
             onFailure: (response) => {
-              Log('Failed to signin to BT')
               reject(response.getError())
             }
           }
@@ -48,7 +44,6 @@ const requireAuth = async (nextState, replace) => {
       }).catch((reason)=>{
         throw reason
       })
-      Log('welcome back')
       replace({
         pathname: `/${nextState.location}`
       })
@@ -56,10 +51,31 @@ const requireAuth = async (nextState, replace) => {
       throw Err('Couldnt login')
     }
   } catch (error) {
-    Log(error)
     replace({ pathname: '/' })
   }
 }
+
+
+// const SelfHandle = {
+//   user: () => Relay.QL`
+//     query {
+//       viewer {
+//         user
+//       }
+//     }
+//   `
+// }
+//
+// const OtherHandle = {
+//   user: () => Relay.QL`
+//     query {
+//       viewer {
+//         User (handle: $handle)
+//       }
+//     }
+//   `
+// }
+
 
 const createRoutes = () => {
   return (
@@ -97,13 +113,26 @@ const createRoutes = () => {
         component={Tribe}
         queries={ViewerQueries}
         onEnter={requireAuth}
-      />
+      >
+        <Route
+          path="/:handle/tribe/:list"
+          component={Tribe}
+          queries={ViewerQueries}
+          onEnter={requireAuth}
+        />
+      </Route>
 
       <Route
         path="/:handle"
         component={Profile}
-        queries={ViewerQueries}
         onEnter={requireAuth}
+        queries={ViewerQueries}
+        prepareParams={(params, {location}) => {
+          return {
+            ...params,
+            handle: params.handle
+          }
+        }}
       />
 
     </Route>
@@ -113,3 +142,14 @@ const createRoutes = () => {
 const Routes = createRoutes()
 
 export default Routes
+
+//
+// getQueries={({location, params}) => {
+//   const userHandle = store.getState().auth.user.handle
+//   const queryHandle = params.handle
+//   if (userHandle === queryHandle ) {
+//     return SelfHandle
+//   } else {
+//     return OtherHandle
+//   }
+// }}

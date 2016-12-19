@@ -29,7 +29,7 @@ const ProfileFieldLabels = styled.div`
   align-items: flex-start;
   margin-bottom: 10px;
   width: 100%;
-  cursor: pointer;
+  cursor: ${props => (props.ownProfile) ? 'pointer' : 'default'};
 `
 
 const ProfileFieldLabel = styled.h3`
@@ -44,7 +44,7 @@ const ProfileErrorMessage = styled.span`
 
 const ProfileFieldContents = styled.div`
   width: 100%;
-  box-shadow: ${props=>(props.hover && !props.canEdit)? '0 0 5px '+ btTeal : 'none'};
+  box-shadow: ${props=>(props.hover && !props.canEdit && props.ownProfile)? '0 0 5px '+ btTeal : 'none'};
   transition: all .2s;
 `
 
@@ -54,9 +54,8 @@ const ProfileFieldP = styled.p`
   font-style: ${props => (props.fontSize) ? 'normal' : 'italic'};
   font-size: ${props => singleLine(props)}em;
   height: 100%;
-  cursor: pointer;
+  cursor: ${props => (props.ownProfile) ? 'pointer' : 'default'};
 `
-
 
 const TextArea = styled.textarea`
   width: 100%;
@@ -94,7 +93,7 @@ class ProfileField extends Component {
 
   get inputOrDisplay() {
     const canEdit = this.state.canEdit
-    if (canEdit && !this.props.fontSize) {
+    if (canEdit && !this.props.fontSize && this.props.ownProfile) {
       return (
         <TextArea
           type="text"
@@ -114,7 +113,7 @@ class ProfileField extends Component {
           }}
         />
       )
-    } else if (canEdit && this.props.fontSize) {
+    } else if (canEdit && this.props.fontSize && this.props.ownProfile) {
       return (
         <TextInput
           type="text"
@@ -140,29 +139,34 @@ class ProfileField extends Component {
       return (
         <ProfileFieldP
           fontSize={this.props.fontSize}
+          ownProfile={this.props.ownProfile}
         >{this.props.text}</ProfileFieldP>
       )
     }
   }
 
   editText = (e) => {
-    if (this.props.validate) {
-      this.validator(e.target.value)
+    if (this.props.ownProfile) {
+      if (this.props.validate) {
+        this.validator(e.target.value)
+      }
+      this.setState({
+        text: e.target.value
+      })
     }
-    this.setState({
-      text: e.target.value
-    })
   }
 
   startEditing = () => {
-    this.setState({
-      canEdit: true
-    })
+    if (this.props.ownProfile) {
+      this.setState({
+        canEdit: true
+      })
+    }
   }
 
   submitEdits = () => {
 
-    if (this.state.valid) {
+    if (this.state.valid && this.props.ownProfile) {
       this.setState({
         canEdit: false
       })
@@ -188,7 +192,7 @@ class ProfileField extends Component {
   }
 
   iconClick = () => {
-    if (!this.state.canEdit) {
+    if (!this.state.canEdit && this.props.ownProfile) {
       this.setState({
         canEdit: true,
       })
@@ -204,7 +208,9 @@ class ProfileField extends Component {
       )
     } else {
       return (
-        <ProfileFieldLabels>
+        <ProfileFieldLabels
+          ownProfile={this.props.ownProfile}
+        >
           <ProfileFieldLabel
             onClick={this.iconClick}
           >
@@ -234,7 +240,7 @@ class ProfileField extends Component {
   }
 
   get fontSizeEditIcon () {
-    if (this.props.fontSize) {
+    if (this.props.fontSize && this.props.ownProfile) {
       return (
         <EditIcon
           height={'20px'}
@@ -246,7 +252,7 @@ class ProfileField extends Component {
   }
 
   get normalEditIcon () {
-    if (!this.props.fontSize) {
+    if (!this.props.fontSize && this.props.ownProfile) {
       return (
         <EditIcon
           height={'20px'}
@@ -299,6 +305,7 @@ class ProfileField extends Component {
         <ProfileFieldContents
           hover={this.state.hover}
           canEdit={this.state.canEdit}
+          ownProfile={this.props.ownProfile}
         >
           {this.inputOrDisplay}
         </ProfileFieldContents>

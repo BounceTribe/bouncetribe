@@ -59,12 +59,17 @@ const UserScore = styled.li`
 class ProfileTop extends Component {
 
   render() {
+    let {
+      user,
+      submitField,
+      ownProfile
+    } = this.props
     return (
       <ProfileDisplay
 
       >
         <ProfileImage
-          src={this.props.user.profilePicUrl}
+          src={user.profilePicUrl}
           alt={'Profile'}
         />
 
@@ -72,26 +77,29 @@ class ProfileTop extends Component {
           <ProfileField
             field={'handle'}
             label={'Handle'}
-            text={this.props.user.handle}
-            submitField={this.props.submitField}
+            text={user.handle}
+            submitField={submitField}
             fontSize={1.5}
             validate={handleValidator}
+            ownProfile={ownProfile}
           />
           <ProfileField
             field={'name'}
             label={'Name'}
-            text={this.props.user.name}
-            submitField={this.props.submitField}
+            text={user.name}
+            submitField={submitField}
             fontSize={1.2}
+            ownProfile={ownProfile}
           />
           <ProfileField
             field={'location'}
             label={'Location'}
-            text={this.props.user.location}
-            submitField={this.props.submitField}
+            text={user.location}
+            submitField={submitField}
             fontSize={.9}
             icon={location}
             fill={btMedium}
+            ownProfile={ownProfile}
           />
           <UserScores>
             <UserScore>

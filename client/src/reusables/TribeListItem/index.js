@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import cat from 'styling/burritocat.png'
 import styled from 'styled-components'
 import BTButton from 'reusables/BTButton'
 import {subtleBorder} from 'styling/T'
+import {Link} from 'react-router'
 
 const TribeListItemDisplay = styled.div`
   display: flex;
@@ -118,18 +118,28 @@ class TribeListItem extends Component {
   }
 
   render() {
+    let {
+      name,
+      handle
+    } = this.props.user
     return (
       <TribeListItemDisplay
 
       >
         <TribeListItemRow>
           <TribeListItemImage
-            src={cat}
+            src={this.props.profilePicUrl}
             alt={'TribeListItem'}
           />
 
           <TribeListItemInfoColumn>
-            <UserName>{this.props.user.name}</UserName>
+            <UserName>
+              <Link
+                to={`/${handle}`}
+              >
+                {name}
+              </Link>
+            </UserName>
             <UserLocation>Location</UserLocation>
             <UserScores>
               <UserScore>Rank</UserScore>

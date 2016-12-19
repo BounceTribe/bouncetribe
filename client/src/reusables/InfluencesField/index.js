@@ -21,6 +21,7 @@ const PlusButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  visibility: ${props=>(props.ownProfile)? 'visible' : 'hidden'};
 `
 
 const InfluencesInput = styled.input`
@@ -29,6 +30,7 @@ const InfluencesInput = styled.input`
   margin-right: ${props => props.showInput ? '15px' : 0 };
   opacity: ${props => props.showInput ? 1 : 0 };
   transition: all .3s;
+  visibility: ${props=>(props.ownProfile)? 'visible' : 'hidden'};
 `
 
 const ChipContainer = styled.div`
@@ -54,12 +56,14 @@ class InfluencesField extends Component {
   }
 
   submitInfluence = () => {
-    let influence = {
-      name: this.state.artists[0].name,
-      spotifyId: this.state.artists[0].id,
-      imageUrl: this.state.artists[0].images[0].url
+    if (this.props.ownProfile) {
+      let influence = {
+        name: this.state.artists[0].name,
+        spotifyId: this.state.artists[0].id,
+        imageUrl: this.state.artists[0].images[0].url
+      }
+      this.props.submitInfluence(influence)
     }
-    this.props.submitInfluence(influence)
   }
 
   get renderInfluenceChips() {
@@ -93,9 +97,11 @@ class InfluencesField extends Component {
   }
 
   editText = (e) => {
-    this.setState({
-      artist: e.target.value,
-    })
+    if (this.props.ownProfile) {
+      this.setState({
+        artist: e.target.value,
+      })
+    }
   }
 
   handleChange = (e) => {
@@ -156,6 +162,7 @@ class InfluencesField extends Component {
               })
             }}
             showInput={this.state.showInput}
+            ownProfile={this.props.ownProfile}
           />
           <datalist
             id={'artistOptions'}
@@ -164,6 +171,7 @@ class InfluencesField extends Component {
           </datalist>
           <PlusButton
             onClick={this.showInput}
+            ownProfile={this.props.ownProfile}
           >
             <Plus
               height={'40px'}

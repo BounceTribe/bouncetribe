@@ -78,26 +78,47 @@ class ProfileContainer extends Component {
 
   }
 
+  ifOwnProfile = (action) => {
+    if (this.props.ownProfile) {
+      return action
+    } else {
+      return null
+    }
+  }
+
   render() {
+    let {
+      handleSubmitField,
+      handleSubmitInfluence,
+      handleDeleteInfluence,
+      ifOwnProfile
+    } = this
+    let {
+      user,
+      ownProfile
+    } = this.props
     return (
       <section>
 
         <ProfileTop
-          user={this.props.user}
-          submitField={this.handleSubmitField}
+          user={user}
+          submitField={ifOwnProfile(handleSubmitField)}
+          ownProfile={ownProfile}
         />
 
         <FlexRow>
 
           <ProfileLeft
-            user={this.props.user}
-            submitField={this.handleSubmitField}
-            submitInfluence={this.handleSubmitInfluence}
-            deleteInfluence={this.handleDeleteInfluence}
+            user={user}
+            submitField={ifOwnProfile(handleSubmitField)}
+            submitInfluence={ifOwnProfile(handleSubmitInfluence)}
+            deleteInfluence={ifOwnProfile(handleDeleteInfluence)}
+            ownProfile={ownProfile}
           />
           <ProfileRight
-            user={this.props.user}
-            submitField={this.handleSubmitField}
+            user={user}
+            submitField={ifOwnProfile(handleSubmitField)}
+            ownProfile={ownProfile}
           />
 
         </FlexRow>

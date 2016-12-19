@@ -10,7 +10,8 @@ class Tribe extends Component {
 
   render() {
     const {
-      viewer
+      viewer,
+      router
     } = this.props
     return (
       <section>
@@ -18,6 +19,7 @@ class Tribe extends Component {
         <TribeContainer
           user={viewer.user}
           viewer={viewer}
+          router={router}
         />
 
       </section>

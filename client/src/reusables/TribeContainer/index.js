@@ -4,7 +4,7 @@ import CreateTribeshipMutation from 'mutations/CreateTribeshipMutation'
 import TribeListItem from 'reusables/TribeListItem'
 import styled from 'styled-components'
 import {btMedium, btBlack} from 'styling/T'
-
+import {Link} from 'react-router'
 
 const TribeHeader = styled.ul`
   display: flex;
@@ -49,29 +49,30 @@ class TribeContainer extends Component {
   }
 
 
-  state = {
-    list: 'MY_TRIBE'
-  }
-
   get userList () {
-
-    switch (this.state.list) {
-      case 'FIND_TRIBE':{
+    let {
+      router
+    } =  this.props
+    switch (router.location.pathname) {
+      case `/${router.params.handle}/tribe/find`:{
+        console.log('find')
         return this.props.viewer.allUsers.edges.map(edge => (
           <TribeListItem
             key={edge.node.id}
             user={edge.node}
+            profilePicUrl={edge.node.profilePicUrl}
             makeTribeRequest={this.handleTribeshipInvitation}
           />
         ))
       }
-      case 'MY_PENDING': {
-        console.log('my_pending', this.myPending)
+      case `/${router.params.handle}/tribe/requests`: {
+        console.log('requests')
         if (this.myPending.length > 0) {
           return this.myPending.map(user => (
             <TribeListItem
               key={user.id}
               user={user}
+              profilePicUrl={user.profilePicUrl}
               makeTribeRequest={this.handleTribeshipInvitation}
               pending
             />
@@ -81,13 +82,14 @@ class TribeContainer extends Component {
         }
       }
       default:
-      case 'MY_TRIBE': {
+      case `/${router.params.handle}/tribe`: {
         console.log('my_tribe', this.myTribe)
         if (this.myTribe.length > 0) {
           return this.myTribe.map(user => (
             <TribeListItem
               key={user.id}
               user={user}
+              profilePicUrl={user.profilePicUrl}
               makeTribeRequest={this.handleTribeshipInvitation}
               myTribe
             />
@@ -170,41 +172,41 @@ class TribeContainer extends Component {
   }
 
   render() {
-
+    let {
+      router
+    } = this.props
+    console.log(this.props.router)
     return (
       <section>
 
         <TribeHeader>
           <TribeHeaderText
-            active={(this.state.list === 'MY_TRIBE')}
-            onClick={()=>{
-              this.setState({
-                list: 'MY_TRIBE'
-              })
-            }}
+            active={(router.params.list === ' ')}
           >
-            <h2>My Tribe</h2>
+            <Link
+              to={`/${router.params.handle}/tribe`}
+            >
+              <h2>My Tribe</h2>
+            </Link>
           </TribeHeaderText>
           <TribeHeaderRight>
             <TribeHeaderText
-              active={(this.state.list === 'MY_PENDING')}
-              onClick={()=>{
-                this.setState({
-                  list: 'MY_PENDING'
-                })
-              }}
+              active={(router.params.list === 'requests')}
             >
+              <Link
+                to={`/${router.params.handle}/tribe/requests`}
+              >
+                <h4>Requests</h4>
+              </Link>
               <h4>Pending Requests</h4>
             </TribeHeaderText>
             <TribeHeaderText
-              active={(this.state.list === 'FIND_TRIBE')}
-              onClick={()=>{
-                this.setState({
-                  list: 'FIND_TRIBE'
-                })
-              }}
+              active={(router.params.list === 'find')}
             >
-              <h4>Find</h4>
+              <Link
+                to={`/${router.params.handle}/tribe/find`}             >
+                <h4>Find</h4>
+              </Link>
             </TribeHeaderText>
           </TribeHeaderRight>
 
@@ -261,6 +263,8 @@ export default Relay.createContainer(
               node {
                 name
                 id
+                profilePicUrl
+                handle
               }
             }
           }

@@ -3,19 +3,31 @@ import Relay from 'react-relay'
 import ProfileContainer from 'reusables/ProfileContainer'
 
 class Profile extends Component {
-  // constructor() {
-  //   super()
-  //
-  // }
+
+  get ownProfile () {
+    let {
+      user,
+      User
+    } = this.props.viewer
+    if (user.id === User.id) {
+      return true
+    } else {
+      return false
+    }
+  }
 
   render() {
-    const {
-      viewer
+    let {
+      viewer,
+      router
     } = this.props
     return (
       <section>
         <ProfileContainer
-          user={viewer.user}
+          router={router}
+          user={viewer.User}
+          self={viewer.user}
+          ownProfile={this.ownProfile}
         />
       </section>
     )
@@ -23,12 +35,15 @@ class Profile extends Component {
 }
 
 export default Relay.createContainer(
-  Profile,
-  {
+  Profile, {
+    initialVariables: {
+      handle: ''
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user {
+          User (handle: $handle) {
+            id
             name
             email
             profilePicUrl
@@ -37,6 +52,9 @@ export default Relay.createContainer(
             experience
             website
             ${ProfileContainer.getFragment('user')}
+          }
+          user {
+            id
           }
         }
       `,

@@ -30,6 +30,7 @@ class ProfileRight extends Component {
           submitField={this.props.submitField}
           fontSize={1.3}
           icon={Clock}
+          ownProfile={this.props.ownProfile}
         />
 
         <br/>
@@ -41,6 +42,7 @@ class ProfileRight extends Component {
           submitField={this.props.submitField}
           fontSize={1.1}
           icon={Email}
+          ownProfile={this.props.ownProfile}
         />
 
         <ProfileField
@@ -50,6 +52,7 @@ class ProfileRight extends Component {
           submitField={this.props.submitField}
           fontSize={1.1}
           icon={Link}
+          ownProfile={this.props.ownProfile}
         />
 
       </ProfileRightContainer>
