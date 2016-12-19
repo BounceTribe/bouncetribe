@@ -1,16 +1,35 @@
 import React, {Component} from 'react'
 import TopBarMenuItem from 'reusables/TopBarMenuItem'
-import projectIcon from 'imgs/project.svg'
-import notification from 'imgs/icons/notification'
+import DropdownMenuItem from 'reusables/DropdownMenuItem'
 import {connect} from 'react-redux'
 import {logout} from 'actions/auth'
 import styled from 'styled-components'
-import {Link} from 'react-router'
+import notes from 'imgs/icons/notes'
+import notification from 'imgs/icons/notification'
 
 const MenuRow = styled.div`
   display: flex;
   flex-direction: row;
 `
+const DropHr = styled.hr`
+  color: rgb(220,220,240);
+  background: rgb(220,220,240);
+  height: 1px;
+  border: 0px;
+`
+
+const ProfilePic = (props) => {
+  return (
+    <img
+      src={props.profilePicUrl}
+      role='presentation'
+      style={{
+        height: '18px',
+        borderRadius: '18px',
+      }}
+    />
+  )
+}
 
 class TopBarMenu extends Component {
   get showMenu() {
@@ -29,29 +48,43 @@ class TopBarMenu extends Component {
           <TopBarMenuItem
             text={'Projects'}
             to={`/${handle}/projects`}
-            icon={projectIcon}
+            icon={notes}
           />
           <TopBarMenuItem
             icon={notification}
           />
           <TopBarMenuItem
             text={`${name}`}
-            icon={profilePicUrl}
+            icon={()=>{
+              return (
+                <ProfilePic
+                  profilePicUrl={profilePicUrl}
+                />
+              )
+            }}
             dropdown={(
               <div>
-                <TopBarMenuItem
-                  text={'Profile'}
+                <DropdownMenuItem
+                  text={'View Profile'}
                   to={`/${handle}`}
                 />
-                <TopBarMenuItem
+                <DropdownMenuItem
                   text={'My Tribe'}
                   to={`/${handle}/tribe`}
                 />
-                <Link
+                <DropHr/>
+                <DropdownMenuItem
+                  text={'Settings'}
+                  to={`/settings`}
+                />
+                <DropdownMenuItem
+                  text={'Help'}
+                />
+                <DropHr/>
+                <DropdownMenuItem
+                  text={'Logout'}
                   onClick={this.props.logout}
-                >
-                  Logout
-                </Link>
+                />
               </div>
             )}
           />

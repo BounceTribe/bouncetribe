@@ -2,7 +2,7 @@ import React from 'react'
 
 const notification = (props) => {
   return (
-    <svg fill={props.fill} height={props.height} viewBox="0 0 24 24" width={props.width} xmlns="http://www.w3.org/2000/svg">
+    <svg fill={props.fill} height={props.height} viewBox="0 0 26 26" width={props.width} xmlns="http://www.w3.org/2000/svg">
     <g id="Layouts" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="FEED-(D)" transform="translate(-1117.000000, -17.000000)">
             <g id="Top-Nav">

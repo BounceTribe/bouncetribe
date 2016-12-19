@@ -1,31 +1,29 @@
 import React from 'react'
-import {btBlack} from 'styling/T'
+import {btBlack, btWhite} from 'styling/T'
 
 import TopBarMenu from './TopBarMenu'
 import TopBarMenuItem from 'reusables/TopBarMenuItem'
+import styled from 'styled-components'
 
-const topBarBase = {
-  maxWidth: '100%',
-  height: '25px',
-  backgroundColor: btBlack,
-  color: 'white',
-  paddingLeft: '15%',
-  paddingRight: '15%',
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'baseline',
-  paddingTop: '10px'
-}
+const TopBarContainer = styled.div`
+  max-width: 100%;
+  height: 25px;
+  background-color: ${btBlack};
+  padding-left: 15%;
+  padding-right: 15%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-top: 10px;
+  color: ${btWhite};
+`
+
 
 
 const TopBar = (props) => {
   return (
-    <header
-      style={{
-        ...topBarBase
-      }}
-    >
+    <TopBarContainer>
       <TopBarMenuItem
         to={'/'}
       >
@@ -36,7 +34,7 @@ const TopBar = (props) => {
         isLoggedIn={props.isLoggedIn}
         router={props.router}
       />
-    </header>
+    </TopBarContainer>
   )
 }
 

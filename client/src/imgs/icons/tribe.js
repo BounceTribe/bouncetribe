@@ -2,7 +2,7 @@ import React from 'react'
 
 const tribe = (props) => {
   return (
-    <svg width={props.height} height={props.width} viewBox="0 0 142 93" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <svg width={props.width} height={props.height} viewBox="0 0 142 93" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
         <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
             <g id="Tribe-Icon" fill="#9075F3">

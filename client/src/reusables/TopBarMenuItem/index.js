@@ -3,10 +3,27 @@ import {Link} from 'react-router'
 import styled from 'styled-components'
 import TopBarMenuItemDropdown from 'reusables/TopBarMenuItemDropdown'
 import onClickOutside from 'react-onclickoutside'
+import {btPurple} from 'styling/T'
 
 const MenuItemContainer = styled.li`
   display: flex;
-  margin-left: 10px;
+  margin-left: 25px;
+`
+
+const MenuItemRow =  styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const IconSpan = styled.span`
+  margin-right: 5px;
+`
+
+const DropdownColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 `
 
 class TopBarMenuItem extends Component {
@@ -32,38 +49,56 @@ class TopBarMenuItem extends Component {
   }
 
   toggleDropdown = (e) => {
-    console.log('hello', this.state.showDropdown)
     this.setState({
       showDropdown: !this.state.showDropdown
     })
   }
 
+  get showIcon () {
+    if (this.props.icon) {
+      const Icon = this.props.icon
+      return (
+        <IconSpan>
+          <Icon
+            height={'18px'}
+            width={'18px'}
+            fill={btPurple}
+          />
+        </IconSpan>
+      )
+    }
+  }
+
   render() {
     return (
-      <div>
+      <DropdownColumn>
+
         <MenuItemContainer
-          onClick={(e)=> {this.toggleDropdown(e)}}
+          onClick={(e)=> {
+            if (this.props.onClick) {
+              this.props.onClick()
+            } else {
+              this.toggleDropdown(e)
+            }
+          }}
         >
-          <Link
-            to={this.props.to}
-          >
-            <img
-              src={this.props.icon}
-              role='presentation'
-              style={{
-                maxHeight: '1em',
-                marginRight: '5px',
-                height: '100%'
-              }}
-            />
-            <span>
-              {this.props.text}
-              {this.props.children}
-            </span>
-          </Link>
-        </MenuItemContainer>
-        {this.showDropdown}
-      </div>
+            <Link
+              to={this.props.to}
+            >
+              <MenuItemRow>
+                {this.showIcon}
+                <span>
+                  {this.props.text}
+                  {this.props.children}
+                </span>
+              </MenuItemRow>
+            </Link>
+
+      </MenuItemContainer>
+      {this.showDropdown}
+
+    </DropdownColumn>
+
     )
   }
 }
