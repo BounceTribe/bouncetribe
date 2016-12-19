@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import TopBarMenuItem from 'reusables/TopBarMenuItem'
 import projectIcon from 'imgs/project.svg'
-import notifications from 'imgs/notifications.svg'
+import notification from 'imgs/icons/notification'
 import {connect} from 'react-redux'
 import {logout} from 'actions/auth'
 import styled from 'styled-components'
@@ -15,7 +15,11 @@ const MenuRow = styled.div`
 class TopBarMenu extends Component {
   get showMenu() {
     if (this.props.isLoggedIn) {
-      let handle = this.props.handle
+      let {
+        handle,
+        name,
+        profilePicUrl
+      } = this.props.user
       return (
         <MenuRow>
           {/* <TopBarMenuItem
@@ -28,10 +32,11 @@ class TopBarMenu extends Component {
             icon={projectIcon}
           />
           <TopBarMenuItem
-            icon={notifications}
+            icon={notification}
           />
           <TopBarMenuItem
-            text={'Stuff'}
+            text={`${name}`}
+            icon={profilePicUrl}
             dropdown={(
               <div>
                 <TopBarMenuItem
@@ -66,16 +71,9 @@ class TopBarMenu extends Component {
 }
 
 const mapStateToProps = (state) => {
-  const handle = () => {
-    if (state.auth.user) {
-      return state.auth.user.handle
-    } else {
-      return 'profile'
-    }
-  }
   return {
     isLoggedIn: state.auth['id_token'],
-    handle: handle()
+    user: state.auth.user
   }
 }
 

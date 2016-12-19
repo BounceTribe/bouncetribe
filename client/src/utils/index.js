@@ -17,7 +17,7 @@ export const Log = (message, label, data) => {
       }
     } else {
       if (message) {
-        console.log(`%c ${message}`, `color: midnightblue; font-size: 13px; background-color: lightgreen;`)
+        console.log(`%c ${message}`, `color: midnightblue; font-size: 10px; background-color: lightgreen;`)
       }
       if (label && data) {
         console.groupCollapsed(label)

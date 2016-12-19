@@ -53,20 +53,10 @@ class AuthContainer3 extends Component {
         email,
         picture,
         name,
-        identities,
       } = profile
 
-      if (identities) {
-        // eslint-disable-next-line
-        identities.find((identity)=>{
-          if (identity.provider === 'facebook') {
-            picture = identity.profileData.picture
-            name = identity.profileData.name
-            return 'found it'
-          }
-        })
-      }
       let token = this.props.auth.getToken()
+      let handle = handleSanitizer(email.split('@')[0])
       await new Promise ((resolve, reject) => {
         this.props.relay.commitUpdate(
           new CreateUserMutation({
@@ -74,7 +64,7 @@ class AuthContainer3 extends Component {
             idToken: token,
             profilePicUrl: picture,
             name: name,
-            handle: handleSanitizer(email)
+            handle: handle
           }), {
             onSuccess: (response) => {
               Log('Succesfully created a BT user.', response)
@@ -141,7 +131,7 @@ class AuthContainer3 extends Component {
         try {
           Log('...fetching auth0Profile using token...')
           const auth0Profile = await this.props.auth.getUserInfo()
-          Log('Found a profile: ', auth0Profile)
+          Log('Found a profile: ', 'auth0Profile', auth0Profile)
           Log('Attempting to create a BT user with that auth0Profile')
           try {
             await this.createUserMutation(auth0Profile)
@@ -151,7 +141,7 @@ class AuthContainer3 extends Component {
               Log('...checking to see if there is already a user with that email... ')
               const primaryUser = await this.checkBtForEmail(auth0Profile.email)
 
-              Log('primaryUser', primaryUser)
+              Log('primaryUser', 'primaryUser', primaryUser)
               let auth0UserId = primaryUser.auth0UserId
 
               let provider = auth0UserId.split('|')[0]
