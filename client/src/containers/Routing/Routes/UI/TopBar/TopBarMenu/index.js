@@ -4,9 +4,9 @@ import projectIcon from 'imgs/project.svg'
 import notifications from 'imgs/notifications.svg'
 import {connect} from 'react-redux'
 import {logout} from 'actions/auth'
-import BTButton from 'reusables/BTButton'
 import styled from 'styled-components'
-
+import auth from 'config/auth'
+import {Link} from 'react-router'
 
 const MenuRow = styled.div`
   display: flex;
@@ -43,12 +43,11 @@ class TopBarMenu extends Component {
                   text={'My Tribe'}
                   to={`/${handle}/tribe`}
                 />
-                <BTButton
+                <Link
                   onClick={this.props.logout}
-                  text={'Logout'}
-                  danger
-                  flex
-                />
+                >
+                  Logout
+                </Link>
               </div>
             )}
           />

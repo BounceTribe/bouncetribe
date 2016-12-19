@@ -3,6 +3,7 @@ import {Err} from 'utils'
 import {linkAccountsOptions} from 'config/auth0'
 import {btPurple} from 'styling/T'
 
+
 class AuthService {
   constructor(clientId, domain) {
     // Configure Auth0
