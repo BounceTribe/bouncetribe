@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import ProfileField from 'reusables/ProfileField'
 import location from 'imgs/icons/location'
 import {handleValidator} from 'utils/validators'
+import {placenameOptions} from 'apis/google'
 
 import Bolt from 'imgs/icons/bolt'
 import Notes from 'imgs/icons/notes'
@@ -70,7 +71,7 @@ class ProfileTop extends Component {
         <ProfileField
           field={'placename'}
           label={'Location'}
-          text={user.placename }
+          text={user.placename}
           submitField={submitField}
           fontSize={.9}
           icon={location}
@@ -78,14 +79,25 @@ class ProfileTop extends Component {
           ownProfile={ownProfile}
         />
       )
-    } else if (("geolocation" in navigator) && !user.placename) {
-      const success = (position) => {
-        console.log(position)
-        let submission = {
-          longitude: position.coords.longitude,
-          latitude: position.coords.latitude
+    } else if (("geolocation" in navigator) && !user.placename && ownProfile) {
+      const success = async (position) => {
+        let longitude = position.coords.longitude
+        let latitude = position.coords.latitude
+        try {
+          let options = placenameOptions(latitude, longitude)
+          const mapResult = await fetch(...options).then(resp=>resp.json()).then(json=>json)
+          console.log('mapResult', mapResult)
+          let placename = mapResult.results[0]['formatted_address']
+          console.log('placename', placename)
+          let submission = {
+            longitude,
+            latitude,
+            placename
+          }
+          submitField(submission)
+        } catch (error) {
+          console.log('map error', error)
         }
-        submitField(submission)
       }
       const error = () => {
         console.log('error')

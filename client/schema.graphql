@@ -73,7 +73,6 @@ input AddToUserRequestsUserInput {
   clientMutationId: String!
 }
 
-# Artist
 type Artist implements Node {
   createdAt: DateTime
   id: ID!
@@ -219,6 +218,7 @@ input CreateArtistInput {
   imageUrl: String!
   name: String!
   spotifyId: String!
+  influencesId: [ID!]
   clientMutationId: String!
 }
 
@@ -261,6 +261,7 @@ type CreateFriendRequestPayload {
 }
 
 input CreateFriendshipInput {
+  usersId: [ID!]
   clientMutationId: String!
 }
 
@@ -379,7 +380,6 @@ type DeleteUserPayload {
   deletedId: ID
 }
 
-# File
 type File implements Node {
   contentType: String!
   createdAt: DateTime
@@ -530,7 +530,6 @@ enum FileOrderBy {
   url_DESC
 }
 
-# FriendRequest
 type FriendRequest implements Node {
   accepted: Boolean!
   actor(filter: UserFilter): User
@@ -552,6 +551,10 @@ input FriendRequestactorUser {
   profilePicUrl: String
   summary: String
   website: String
+  friendshipsId: [ID!]
+  influencesId: [ID!]
+  invitationsId: [ID!]
+  sentrequestsId: [ID!]
 }
 
 # A connection to a list of items.
@@ -638,9 +641,12 @@ input FriendRequestrecipientUser {
   profilePicUrl: String
   summary: String
   website: String
+  friendshipsId: [ID!]
+  influencesId: [ID!]
+  invitationsId: [ID!]
+  sentrequestsId: [ID!]
 }
 
-# Friendship
 type Friendship implements Node {
   createdAt: DateTime
   id: ID!
@@ -713,7 +719,6 @@ enum FriendshipOrderBy {
   updatedAt_DESC
 }
 
-# Influence
 type Influence implements Node {
   artist(filter: ArtistFilter): Artist
   createdAt: DateTime
@@ -726,6 +731,7 @@ input InfluenceartistArtist {
   imageUrl: String!
   name: String!
   spotifyId: String!
+  influencesId: [ID!]
 }
 
 # A connection to a list of items.
@@ -804,6 +810,10 @@ input InfluenceuserUser {
   profilePicUrl: String
   summary: String
   website: String
+  friendshipsId: [ID!]
+  influencesId: [ID!]
+  invitationsId: [ID!]
+  sentrequestsId: [ID!]
 }
 
 # The `Long` scalar type represents non-fractional signed whole numeric values.
@@ -972,6 +982,10 @@ input SignupUserInput {
   profilePicUrl: String
   summary: String
   website: String
+  friendshipsId: [ID!]
+  influencesId: [ID!]
+  invitationsId: [ID!]
+  sentrequestsId: [ID!]
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
 }
@@ -981,6 +995,7 @@ input UpdateArtistInput {
   imageUrl: String
   name: String
   spotifyId: String
+  influencesId: [ID!]
   clientMutationId: String!
 }
 
@@ -1024,6 +1039,7 @@ type UpdateFriendRequestPayload {
 
 input UpdateFriendshipInput {
   id: ID!
+  usersId: [ID!]
   clientMutationId: String!
 }
 
@@ -1062,6 +1078,10 @@ input UpdateUserInput {
   profilePicUrl: String
   summary: String
   website: String
+  friendshipsId: [ID!]
+  influencesId: [ID!]
+  invitationsId: [ID!]
+  sentrequestsId: [ID!]
   clientMutationId: String!
 }
 
@@ -1072,7 +1092,6 @@ type UpdateUserPayload {
   edge: UserEdge
 }
 
-# User
 type User implements Node {
   auth0UserId: String
   createdAt: DateTime

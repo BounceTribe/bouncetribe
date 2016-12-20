@@ -1,7 +1,7 @@
 
 const nonAlphanumeric = /[^a-zA-Z\w_:]/gi
 
-const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /login/i, /signup/i, /messages/i, /peaslee/i, /carlpe/i]
+const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /login/i, /signup/i, /messages/i]
 
 export const handleValidator = (handle) => {
   if (handle.length < 6) {
@@ -54,7 +54,7 @@ export const handleSanitizer = (handle) => {
   if (sanitized < 6) {
     let difference = 6 - sanitized.length
     let hash = Math.random().splice(2,difference)
-    sanitized.join(hash)
+    let sanitized = sanitized.join(hash)
   }
   console.log(sanitized)
   return sanitized
