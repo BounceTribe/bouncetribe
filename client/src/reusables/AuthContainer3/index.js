@@ -49,22 +49,27 @@ class AuthContainer3 extends Component {
 
   createUserMutation = async (profile) => {
     try {
-      let {
-        email,
-        picture,
-        name,
-      } = profile
-
       let token = this.props.auth.getToken()
-      let handle = handleSanitizer(email.split('@')[0])
+      let handle = handleSanitizer(profile.email.split('@')[0])
+      let fields = {}
+      fields.email = profile.email
+      fields.idToken = token
+      if (profile.picture) {
+        fields.profilePicThumb = profile.picture
+        if (profile['picture_large']) {
+          fields.profilePicUrl = profile['picture_large']
+        }
+      }
+      fields.name = profile.name
+      fields.handle = handle
+      if (profile.location) {
+        fields.placename = profile.location.name
+      }
+
       await new Promise ((resolve, reject) => {
         this.props.relay.commitUpdate(
           new CreateUserMutation({
-            email: email,
-            idToken: token,
-            profilePicUrl: picture,
-            name: name,
-            handle: handle
+            ...fields
           }), {
             onSuccess: (response) => {
               Log('Succesfully created a BT user.', response)

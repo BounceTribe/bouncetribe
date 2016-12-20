@@ -16,7 +16,9 @@ export default class CreateUserMutation extends Relay.Mutation {
           idToken: this.props.idToken
         }
       },
-      profilePicUrl: this.props.profilePicUrl
+      profilePicUrl: this.props.profilePicUrl,
+      profilePicThumb: this.props.profilePicThumb,
+      placename: this.props.placename
     }
   }
 

@@ -89,7 +89,23 @@ class TribeListItem extends Component {
             teal
             onClick={()=>{
               let fields = {
-                otherId: this.props.user.id
+                id: this.props.id,
+                accepted: true,
+                ignored: false,
+                newFriendId: this.props.user.id
+              }
+              this.props.makeTribeRequest(fields)
+            }}
+          />
+          <BTButton
+            text={'Ignore'}
+            warn
+            onClick={()=>{
+              let fields = {
+                id: this.props.id,
+                accepted: false,
+                ignored: true,
+                newFriendId:this.props.user.id
               }
               this.props.makeTribeRequest(fields)
             }}

@@ -12,6 +12,7 @@ import styled from 'styled-components'
 const FlexRow = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
 `
 
 class ProfileContainer extends Component {
@@ -137,7 +138,7 @@ export default Relay.createContainer(
         fragment on User {
           placename
           longitude
-          latitude 
+          latitude
           website
           experience
           email

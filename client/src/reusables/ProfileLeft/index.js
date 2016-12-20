@@ -10,6 +10,7 @@ const ProfileLeftContainer = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   min-width: 66%;
+  margin-top: 60px;
 `
 
 
@@ -22,7 +23,7 @@ class ProfileLeft extends Component {
 
         <ProfileField
           field={'summary'}
-          label={'Summary'}
+          label={'summary'}
           text={this.props.user.summary}
           submitField={this.props.submitField}
           ownProfile={this.props.ownProfile}

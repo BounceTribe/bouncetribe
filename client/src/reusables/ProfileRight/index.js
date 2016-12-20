@@ -12,7 +12,8 @@ const ProfileRightContainer = styled.div`
   justify-content: flex-start;
   align-items: center;
   max-height: 150px;
-  min-width: 200px;
+  min-width: 33%;
+  margin-top: 60px;
 `
 
 
@@ -25,10 +26,10 @@ class ProfileRight extends Component {
 
         <ProfileField
           field={'experience'}
-          label={'Experience'}
-          text={this.props.user.experience}
+          label={'experience'}
+          text={(this.props.user.experience) ? this.props.user.experience.toLowerCase() : this.props.user.experience}
           submitField={this.props.submitField}
-          fontSize={1.3}
+          fontSize={.9}
           icon={Clock}
           ownProfile={this.props.ownProfile}
         />
@@ -37,20 +38,20 @@ class ProfileRight extends Component {
 
         <ProfileField
           field={'email'}
-          label={'Email'}
+          label={'email'}
           text={this.props.user.email}
           submitField={this.props.submitField}
-          fontSize={1.1}
+          fontSize={.9}
           icon={Email}
           ownProfile={this.props.ownProfile}
         />
 
         <ProfileField
           field={'website'}
-          label={'Website'}
+          label={'website'}
           text={this.props.user.website}
           submitField={this.props.submitField}
-          fontSize={1.1}
+          fontSize={.9}
           icon={Link}
           ownProfile={this.props.ownProfile}
         />

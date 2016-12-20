@@ -2,7 +2,7 @@ import React from 'react'
 
 const clock = (props) => {
   return (
-    <svg fill={props.fill} height={props.height} viewBox="0 0 24 24" width={props.width} xmlns="http://www.w3.org/2000/svg">
+    <svg fill={props.fill} height="1em" viewBox="0 0 24 24" width="1em" xmlns="http://www.w3.org/2000/svg">
       <g id="Layouts" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <g id="MY-PROFILE-(D)" transform="translate(-937.000000, -405.000000)" fill="#9075F3">
               <g id="Body" transform="translate(256.000000, 202.000000)">

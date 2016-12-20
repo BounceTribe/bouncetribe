@@ -546,8 +546,9 @@ input FriendRequestactorUser {
   handle: String!
   latitude: BigDecimal
   longitude: BigDecimal
-  name: String!
+  name: String
   placename: String
+  profilePicThumb: String
   profilePicUrl: String
   summary: String
   website: String
@@ -636,8 +637,9 @@ input FriendRequestrecipientUser {
   handle: String!
   latitude: BigDecimal
   longitude: BigDecimal
-  name: String!
+  name: String
   placename: String
+  profilePicThumb: String
   profilePicUrl: String
   summary: String
   website: String
@@ -805,8 +807,9 @@ input InfluenceuserUser {
   handle: String!
   latitude: BigDecimal
   longitude: BigDecimal
-  name: String!
+  name: String
   placename: String
+  profilePicThumb: String
   profilePicUrl: String
   summary: String
   website: String
@@ -977,8 +980,9 @@ input SignupUserInput {
   handle: String!
   latitude: BigDecimal
   longitude: BigDecimal
-  name: String!
+  name: String
   placename: String
+  profilePicThumb: String
   profilePicUrl: String
   summary: String
   website: String
@@ -1075,6 +1079,7 @@ input UpdateUserInput {
   longitude: BigDecimal
   name: String
   placename: String
+  profilePicThumb: String
   profilePicUrl: String
   summary: String
   website: String
@@ -1096,7 +1101,7 @@ type User implements Node {
   auth0UserId: String
   createdAt: DateTime
   email: String!
-  experience: USER_EXPERIENCE!
+  experience: USER_EXPERIENCE
   friendships(filter: FriendshipFilter, orderBy: FriendshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendshipConnection
   handle: String!
   id: ID!
@@ -1104,22 +1109,19 @@ type User implements Node {
   invitations(filter: FriendRequestFilter, orderBy: FriendRequestOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendRequestConnection
   latitude: BigDecimal
   longitude: BigDecimal
-  name: String!
+  name: String
   placename: String
+  profilePicThumb: String
   profilePicUrl: String
   sentrequests(filter: FriendRequestFilter, orderBy: FriendRequestOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendRequestConnection
-  summary: String!
+  summary: String
   updatedAt: DateTime
-  website: String!
+  website: String
 }
 
 enum USER_EXPERIENCE {
-  ACCOMPLISHED
-  BEGINNER
   NOVICE
   PROFESSIONAL
-  SKILLED
-  VETERAN
 }
 
 # A connection to a list of items.
@@ -1258,6 +1260,20 @@ input UserFilter {
   placename_not_starts_with: String
   placename_ends_with: String
   placename_not_ends_with: String
+  profilePicThumb: String
+  profilePicThumb_not: String
+  profilePicThumb_in: [String!]
+  profilePicThumb_not_in: [String!]
+  profilePicThumb_lt: String
+  profilePicThumb_lte: String
+  profilePicThumb_gt: String
+  profilePicThumb_gte: String
+  profilePicThumb_contains: String
+  profilePicThumb_not_contains: String
+  profilePicThumb_starts_with: String
+  profilePicThumb_not_starts_with: String
+  profilePicThumb_ends_with: String
+  profilePicThumb_not_ends_with: String
   profilePicUrl: String
   profilePicUrl_not: String
   profilePicUrl_in: [String!]
@@ -1331,6 +1347,8 @@ enum UserOrderBy {
   name_DESC
   placename_ASC
   placename_DESC
+  profilePicThumb_ASC
+  profilePicThumb_DESC
   profilePicUrl_ASC
   profilePicUrl_DESC
   summary_ASC

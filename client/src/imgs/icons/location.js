@@ -2,7 +2,7 @@ import React from 'react'
 
 const location = (props) => {
   return (
-    <svg width={props.width} height={props.height} viewBox="0 0 11 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <svg width="1em" height="1em" viewBox="0 0 11 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <g id="Layouts" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
             <g id="MY-PROFILE-(D)" transform="translate(-431.000000, -267.000000)" fill={props.fill}>
                 <g id="Body" transform="translate(256.000000, 202.000000)">

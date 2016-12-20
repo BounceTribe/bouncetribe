@@ -1,54 +1,56 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
-//import TribeListItem from 'reusables/TribeListItem'
-// import styled from 'styled-components'
-// import {btMedium, btBlack} from 'styling/T'
-//import {Link} from 'react-router'
+import TribeListItem from 'reusables/TribeListItem'
+import styled from 'styled-components'
+import {btMedium, btBlack} from 'styling/T'
+import {Link} from 'react-router'
+// import EditFriendRequestMutation from 'mutations/EditFriendRequestMutation'
+// import CreateFriendshipMutation from 'mutations/CreateFriendshipMutation'
 
-// const TribeHeader = styled.ul`
-//   display: flex;
-//   flex-direction: row;
-//   align-content: center;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin: 0 1.2%;
-//   box-sizing: border-box;
-// `
-//
-// const Search = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   align-content: center;
-//   justify-content: flex-start;
-//   align-items: center;
-//   margin: 0 1.2%;
-//   box-sizing: border-box;
-// `
-//
-// const TribeHeaderRight = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   align-content: center;
-//   justify-content: space-between;
-//   align-items: center;
-//   width: 33%;
-// `
-//
-// const TribeList = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   align-content: flex-start;
-//   justify-content: flex-start;
-//   align-items: flex-start;
-//   flex-wrap: wrap;
-//
-// `
-//
-// const TribeHeaderText = styled.li`
-//   color: ${props=> props.active ? btBlack : btMedium };
-//   text-decoration: ${props=> props.active ? 'underline' : 'none' };
-//   cursor: pointer;
-// `
+const TribeHeader = styled.ul`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 1.2%;
+  box-sizing: border-box;
+`
+
+const Search = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0 1.2%;
+  box-sizing: border-box;
+`
+
+const TribeHeaderRight = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  width: 33%;
+`
+
+const TribeList = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+`
+
+const TribeHeaderText = styled.li`
+  color: ${props=> props.active ? btBlack : btMedium };
+  text-decoration: ${props=> props.active ? 'underline' : 'none' };
+  cursor: pointer;
+`
 
 class TribeContainer extends Component {
 
@@ -62,136 +64,126 @@ class TribeContainer extends Component {
   //
   // }
   //
-  // get userList () {
-  //   let {
-  //     router
-  //   } =  this.props
-  //   switch (router.location.pathname) {
-  //     case `/${router.params.handle}/tribe/find`:{
-  //       console.log('find')
-  //       return this.props.viewer.allUsers.edges.map(edge => (
-  //         <TribeListItem
-  //           key={edge.node.id}
-  //           user={edge.node}
-  //           profilePicUrl={edge.node.profilePicUrl}
-  //           makeTribeRequest={this.handleTribeshipInvitation}
-  //         />
-  //       ))
-  //     }
-  //     case `/${router.params.handle}/tribe/requests`: {
-  //       console.log('requests')
-  //       if (this.myPending.length > 0) {
-  //         return this.myPending.map(user => (
-  //           <TribeListItem
-  //             key={user.id}
-  //             user={user}
-  //             profilePicUrl={user.profilePicUrl}
-  //             makeTribeRequest={this.handleTribeshipInvitation}
-  //             pending
-  //           />
-  //         ))
-  //       } else {
-  //         return <h4>No Pending!</h4>
-  //       }
-  //     }
-  //     default:
-  //     case `/${router.params.handle}/tribe`: {
-  //       console.log('my_tribe', this.myTribe)
-  //       if (this.myTribe.length > 0) {
-  //         return this.myTribe.map(user => (
-  //           <TribeListItem
-  //             key={user.id}
-  //             user={user}
-  //             profilePicUrl={user.profilePicUrl}
-  //             makeTribeRequest={this.handleTribeshipInvitation}
-  //             myTribe
-  //           />
-  //         ))
-  //       } else {
-  //         return <h4>No tribe!</h4>
-  //       }
-  //     }
-  //   }
-  //
-  // }
-  //
-  // handleTribeshipInvitation = async (fields = {}) => {
-  //
-  //   Relay.Store.commitUpdate(
-  //     new CreateTribeshipMutation({
-  //       user: this.props.user,
-  //       otherId: fields.otherId,
-  //     }),
-  //     {
-  //       onSuccess: (success) => console.log('succes', success),
-  //       onFailure: (transaction) => console.log('failure', transaction),
-  //     }
-  //   )
-  // }
-  //
-  // get myTribe () {
-  //   let allRequestedUsers = this.props.user.party1.edges.map(edge =>edge.node.party2)
-  //   let allPendingUsers = this.props.user.party2.edges.map(edge => edge.node.party1)
-  //
-  //   let myTribe = []
-  //
-  //   myTribe = allRequestedUsers.filter((value) => {
-  //     if (allPendingUsers.length > 0) {
-  //       let match = allPendingUsers.find((item)=> {
-  //         return item.id === value.id
+  get userList () {
+    let {
+      router,
+      user
+    } =  this.props
+    switch (router.location.pathname) {
+      case `/${router.params.handle}/tribe/find`:{
+        return this.props.viewer.allUsers.edges.map(edge => (
+          <TribeListItem
+            key={edge.node.id}
+            user={edge.node}
+            profilePicUrl={edge.node.profilePicUrl}
+            makeTribeRequest={this.handleTribeshipInvitation}
+          />
+        ))
+      }
+      case `/${router.params.handle}/tribe/requests`: {
+        if (user.invitations.edges.length > 0) {
+          return user.invitations.edges.map(edge => (
+            <TribeListItem
+              key={edge.node.id}
+              id={edge.node.id}
+              user={edge.node.actor}
+              profilePicUrl={edge.node.actor.profilePicUrl}
+              makeTribeRequest={this.respondToFriendRequest}
+              pending
+            />
+          ))
+        } else {
+          return <h4>No invitations right now.</h4>
+        }
+      }
+      default:
+      case `/${router.params.handle}/tribe`: {
+        if (user.friendships.edges.length > 0) {
+          return user.friendships.edges.map(edge => edge.node.users.edges.map(edge => (
+            <TribeListItem
+              key={edge.node.id}
+              user={edge.node}
+              profilePicUrl={edge.node.profilePicUrl}
+              makeTribeRequest={this.handleTribeshipInvitation}
+              myTribe
+            />
+          )))
+        } else {
+          return <h4>Start building your tribe.</h4>
+        }
+      }
+    }
+
+  }
+
+  // respondToFriendRequest = async (fields = {}) => {
+  //   try {
+  //     const createFriendship = async () => {
+  //         new Promise( (resolve, reject) => {
+  //           Relay.Store.commitUpdate(
+  //           new CreateFriendshipMutation({
+  //             selfId: this.props.user.id,
+  //             newFriendId: fields.newFriendId
+  //           }),
+  //           {
+  //             onSuccess: ()=>{
+  //               console.log('createFriendshipMutation succeeded')
+  //               resolve()
+  //             },
+  //             onFailure: (transaction) => {
+  //               console.log('createFriendship failed')
+  //               reject(transaction)
+  //             }
+  //           }
+  //         )
+  //       }).catch((reason)=>{
+  //         console.log('createFriendship promise reject reason', reason)
+  //         throw reason
   //       })
-  //       if (match) {
-  //         return true
-  //       } else {
-  //         return false
+  //     }
+  //
+  //     const friendRequest = await new Promise( (resolve, reject) => {
+  //       Relay.Store.applyUpdate(
+  //         new EditFriendRequestMutation({
+  //           id: fields.id,
+  //           accepted: fields.accepted,
+  //           ignored: fields.ignored
+  //         }),
+  //         {
+  //           onSuccess: () => {
+  //             createFriendship()
+  //             console.log('createFriendship in friendReqest callback succeeded', friendship)
+  //             resolve()
+  //           },
+  //           onFailure: (transaction) => {
+  //             console.log('EditFriendRequestMutation failed')
+  //             throw transaction
+  //           },
+  //         }
+  //       ).catch( (reason) => {
+  //         throw reason
   //       }
   //
-  //     } else {
-  //       return false
+  //       friendRequest.commit()
+  //
+  //     } catch (error) {
+  //
   //     }
   //   })
   //
-  //   return myTribe
-  //
-  // }
-  //
-  // get myPending () {
-  //   let myTribe = this.myTribe
-  //   let allPendingUsers = this.props.user.party2.edges.map(edge => edge.node.party1)
-  //
-  //   console.log('myTribe', myTribe)
-  //   console.log('allPendingUsers', allPendingUsers)
-  //
-  //   let myPending = []
-  //
-  //   myPending = allPendingUsers.filter((value) => {
-  //     if (myTribe.length > 0) {
-  //       let match = myTribe.find((item)=> {
-  //         return item.id === value.id
-  //       })
-  //       if (match) {
-  //         return false
-  //       } else {
-  //         return true
-  //       }
-  //
-  //     } else {
-  //       return true
-  //     }
-  //   })
-  //
-  //   return myPending
   //
   // }
 
   render() {
-    // let {
-    //   router
-    // } = this.props
+    let {
+      router,
+      user
+    } = this.props
+    console.log(user.friendships)
     return (
       <section>
 
-        {/* <TribeHeader>
+        <TribeHeader>
           <TribeHeaderText
             active={(router.params.list === ' ')}
           >
@@ -216,7 +208,8 @@ class TribeContainer extends Component {
               active={(router.params.list === 'find')}
             >
               <Link
-                to={`/${router.params.handle}/tribe/find`}             >
+                to={`/${router.params.handle}/tribe/find`}
+              >
                 <h4>Find</h4>
               </Link>
             </TribeHeaderText>
@@ -231,7 +224,7 @@ class TribeContainer extends Component {
 
         <TribeList>
           {this.userList}
-        </TribeList> */}
+        </TribeList>
       </section>
     )
   }
@@ -249,11 +242,47 @@ export default Relay.createContainer(
           handle
           summary
           id
+          friendships(first: 2147483647) {
+            edges {
+              node {
+                users(first: 2147483647) {
+                  edges {
+                    node {
+                      email
+                      name
+                      id
+                      profilePicUrl
+                    }
+                  }
+                }
+              }
+            }
+          }
+          invitations (
+            filter: {
+              accepted: false
+              ignored: false
+            }
+            first: 2147483647
+            orderBy: createdAt_ASC
+          ) {
+            edges {
+              node {
+                id
+                actor {
+                  email
+                  name
+                  id
+                  profilePicUrl
+                }
+              }
+            }
+          }
         }
       `,
       viewer: () => Relay.QL`
         fragment on Viewer {
-          allUsers (first: 1000) {
+          allUsers (first: 2147483647) {
             edges {
               node {
                 name

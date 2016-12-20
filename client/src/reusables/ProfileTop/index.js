@@ -9,15 +9,13 @@ import Bolt from 'imgs/icons/bolt'
 import Notes from 'imgs/icons/notes'
 import Tribe from 'imgs/icons/tribe'
 import {btMedium} from 'styling/T'
-import BTButton from 'reusables/BTButton'
 
 const ProfileDisplay = styled.div`
   display: flex;
   flex-direction: row;
-  align-content: center;
+  align-content: flex-start;
   justify-content: flex-start;
-  align-items: center;
-  max-height: 150px;
+  align-items: flex-start;
 `
 
 const ProfileImage = styled.img`
@@ -29,10 +27,11 @@ const ProfileImage = styled.img`
 const ProfileInfoColumn = styled.div`
   display: flex;
   flex-direction: column;
-  align-content: center;
+  align-content: flex-start;
   justify-content: flex-start;
   align-items: flex-start;
   margin-left: 20px;
+  min-width: 500px;
 `
 
 // const UserName = styled.h2`
@@ -55,7 +54,17 @@ const UserScores = styled.ul`
 
 const UserScore = styled.li`
   font-size: 1em;
+  margin-right: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 `
+
+const IconContainer = styled.div`
+  display: flex;
+  margin-right: 5px;
+`
+
 
 class ProfileTop extends Component {
 
@@ -70,7 +79,7 @@ class ProfileTop extends Component {
       return (
         <ProfileField
           field={'placename'}
-          label={'Location'}
+          label={'location'}
           text={user.placename}
           submitField={submitField}
           fontSize={.9}
@@ -103,18 +112,19 @@ class ProfileTop extends Component {
         console.log('error')
       }
       return (
-        <BTButton
-          text={'Share your location'}
+        <p
           onClick={()=>{
             navigator.geolocation.getCurrentPosition(success, error)
           }}
-        />
+        >
+          add your location
+        </p>
       )
     } else {
       return (
         <ProfileField
           field={'placename'}
-          label={'Location'}
+          label={'location'}
           text={user.placename}
           submitField={submitField}
           fontSize={.9}
@@ -145,19 +155,11 @@ class ProfileTop extends Component {
         <ProfileInfoColumn>
           <ProfileField
             field={'handle'}
-            label={'Handle'}
+            label={'handle'}
             text={user.handle}
             submitField={submitField}
             fontSize={1.5}
             validate={handleValidator}
-            ownProfile={ownProfile}
-          />
-          <ProfileField
-            field={'name'}
-            label={'Name'}
-            text={user.name}
-            submitField={submitField}
-            fontSize={1.2}
             ownProfile={ownProfile}
           />
 
@@ -165,25 +167,22 @@ class ProfileTop extends Component {
 
           <UserScores>
             <UserScore>
-              <Bolt
-                height={'1em'}
-                width={'1em'}
-              />
-              Score
+              <IconContainer>
+                <Bolt/>
+              </IconContainer>
+              <span>0</span>
             </UserScore>
             <UserScore>
-              <Notes
-                height={'1em'}
-                width={'1em'}
-              />
-              Projects
+              <IconContainer>
+                <Notes/>
+              </IconContainer>
+              <span>0</span>
             </UserScore>
             <UserScore>
-              <Tribe
-                height={'1em'}
-                width={'1em'}
-              />
-              Tribe
+              <IconContainer>
+                <Tribe/>
+              </IconContainer>
+              <span>0</span>
             </UserScore>
 
 

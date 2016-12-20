@@ -1,9 +1,9 @@
 
 //colors
 export const btBlack = '#333333'
-export const btDark = '#555555'
+export const btDark = 'rgb(85, 85, 85)'
 export const btMedium = 'rgb(119, 119, 119)'
-export const btLight = '#999999'
+export const btLight = 'rgb(153, 153, 153)'
 export const btWhite = '#FFFFFF'
 
 export const btPurple = 'rgba(128,89,239, 1)'

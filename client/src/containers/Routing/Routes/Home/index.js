@@ -27,7 +27,6 @@ class Home extends Component {
   }
 
   render() {
-    console.log('env:', process.env)
     return (
       <section>
         {this.showFeedOrAuth}

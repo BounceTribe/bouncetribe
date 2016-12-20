@@ -4,7 +4,7 @@ import {btTeal} from 'styling/T'
 import {spotifyConfig} from 'apis/spotify'
 import styled from 'styled-components'
 import Plus from 'imgs/icons/plus'
-import {btWhite} from 'styling/T'
+import {btWhite, btLight} from 'styling/T'
 
 const ProfileFieldLabel = styled.h3`
   font-weight: bold;
@@ -21,7 +21,7 @@ const PlusButton = styled.button`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  visibility: ${props=>(props.ownProfile)? 'visible' : 'hidden'};
+  visibility: ${props=>(props.ownProfile && props.showButton)? 'visible' : 'hidden'};
 `
 
 const InfluencesInput = styled.input`
@@ -42,6 +42,12 @@ const InfluencesRow = styled.div`
   flex-direction: row;
 `
 
+const EmptyMessage = styled.p`
+  cursor: pointer;
+  color: ${btLight};
+  font-size: .9em;
+`
+
 class InfluencesField extends Component {
 
   state = {
@@ -53,6 +59,7 @@ class InfluencesField extends Component {
     ],
     artistOptions: [],
     active: false,
+    showButton: (this.props.influences.length > 0) ? true : false
   }
 
   submitInfluence = () => {
@@ -67,15 +74,28 @@ class InfluencesField extends Component {
   }
 
   get renderInfluenceChips() {
-    const influences = this.props.influences.edges.map((edge) =>
-      <InfluenceChip
-        key={edge.node.artist.id}
-        artist={edge.node.artist}
-        influenceId={edge.node.id}
-        deleteInfluence={this.props.deleteInfluence}
-      />
-    )
-    return influences
+    if (!this.state.showButton) {
+      return (
+        <EmptyMessage
+          onClick={()=>{
+            this.setState({
+              showButton: true,
+              showInput: true
+            })
+          }}
+        >add your influences
+      </EmptyMessage>
+      )
+    } else {
+      return this.props.influences.edges.map((edge) =>
+        <InfluenceChip
+          key={edge.node.artist.id}
+          artist={edge.node.artist}
+          influenceId={edge.node.id}
+          deleteInfluence={this.props.deleteInfluence}
+        />
+      )
+    }
   }
 
   callApi = async () => {
@@ -172,6 +192,7 @@ class InfluencesField extends Component {
           <PlusButton
             onClick={this.showInput}
             ownProfile={this.props.ownProfile}
+            showButton={this.state.showButton}
           >
             <Plus
               height={'40px'}

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import {btWarn, btTeal, btPurple} from 'styling/T'
+import {btWarn, btTeal, btPurple, btLight, btMedium, btBlack} from 'styling/T'
 import EditIcon from 'imgs/icons/edit'
 
 const singleLine = (props) => {
   if (props.fontSize) {
     return props.fontSize
   } else {
-    return 1
+    return .9
   }
 }
 
@@ -16,8 +16,8 @@ const ProfileFieldContainer = styled.div`
   flex-direction: ${props => (props.fontSize) ? 'row' : 'column'};
   align-content: flex-start;
   justify-content: flex-start;
-  align-items: flex-start;
-  margin: ${props => (props.fontSize) ? '5px 0px' : '30px 0px'};
+  align-items: center;
+  margin: ${props => (props.fontSize) ? '5px 0px' : '0 0 30px 0'};
   width: 90%;
 `
 
@@ -25,8 +25,8 @@ const ProfileFieldLabels = styled.div`
   display: flex;
   flex-direction: row;
   align-content: flex-start;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
   margin-bottom: 10px;
   width: 100%;
   cursor: ${props => (props.ownProfile) ? 'pointer' : 'default'};
@@ -34,6 +34,8 @@ const ProfileFieldLabels = styled.div`
 
 const ProfileFieldLabel = styled.h3`
   font-weight: bold;
+  display: flex;
+  align-items: center;
 `
 
 const ProfileErrorMessage = styled.span`
@@ -43,18 +45,20 @@ const ProfileErrorMessage = styled.span`
 `
 
 const ProfileFieldContents = styled.div`
-  width: 100%;
   box-shadow: ${props=>(props.hover && !props.canEdit && props.ownProfile)? '0 0 5px '+ btTeal : 'none'};
   transition: all .2s;
+  width: ${props => (props.fontSize) ? 'auto' : '100%'};
+  min-height: ${props => (props.fontSize) ? 'auto' : '50px'};
 `
 
 const ProfileFieldP = styled.p`
-  width: 100%;
   line-height: 1.15;
-  font-style: ${props => (props.fontSize) ? 'normal' : 'italic'};
+  font-style: normal;
   font-size: ${props => singleLine(props)}em;
   height: 100%;
   cursor: ${props => (props.ownProfile) ? 'pointer' : 'default'};
+  color: ${props => (props.text) ? btBlack : btLight};
+  margin-right: 5px;
 `
 
 const TextArea = styled.textarea`
@@ -68,10 +72,10 @@ const TextArea = styled.textarea`
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
   box-shadow: 0 0 10px ${btTeal};
+  color: ${btMedium};
 `
 
 const TextInput = styled.input`
-  max-width: 100%;
   height: 100%;
   box-sizing: border-box;
   padding: 0px;
@@ -81,12 +85,19 @@ const TextInput = styled.input`
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
   box-shadow: 0 0 10px ${btTeal};
+  color: ${btMedium};
+`
+
+const IconContainer = styled.div`
+  display: flex;
+  margin-right: 5px;
 `
 
 class ProfileField extends Component {
 
   state = {
     canEdit: false,
+    displayText: this.props.text || `add your ${this.props.label}`,
     text: this.props.text || '',
     valid: true
   }
@@ -140,7 +151,8 @@ class ProfileField extends Component {
         <ProfileFieldP
           fontSize={this.props.fontSize}
           ownProfile={this.props.ownProfile}
-        >{this.props.text}</ProfileFieldP>
+          text={this.props.text}
+        >{this.state.displayText}</ProfileFieldP>
       )
     }
   }
@@ -214,7 +226,7 @@ class ProfileField extends Component {
           <ProfileFieldLabel
             onClick={this.iconClick}
           >
-            {this.props.label}
+            {this.props.label.charAt(0).toUpperCase() + this.props.label.slice(1)}
             {this.normalEditIcon}
           </ProfileFieldLabel>
           <ProfileErrorMessage>{this.state.message}</ProfileErrorMessage>
@@ -240,11 +252,9 @@ class ProfileField extends Component {
   }
 
   get fontSizeEditIcon () {
-    if (this.props.fontSize && this.props.ownProfile) {
+    if (this.props.fontSize && this.props.ownProfile && this.props.text) {
       return (
         <EditIcon
-          height={'20px'}
-          width={'20px'}
           fill={(this.state.hover) ? btPurple : 'rgba(160,160,160, .5)'}
         />
       )
@@ -252,11 +262,9 @@ class ProfileField extends Component {
   }
 
   get normalEditIcon () {
-    if (!this.props.fontSize && this.props.ownProfile) {
+    if (!this.props.fontSize && this.props.ownProfile && this.props.text) {
       return (
         <EditIcon
-          height={'20px'}
-          width={'20px'}
           fill={(this.state.hover) ? btPurple : 'rgba(160,160,160, .5)'}
         />
       )
@@ -268,11 +276,8 @@ class ProfileField extends Component {
       const Icon = this.props.icon
       return (
         <Icon
-          height={this.props.fontSize + 'em'}
-          width={this.props.fontSize + 'em'}
           fill={this.props.fill || btPurple}
         />
-
       )
     }
   }
@@ -291,14 +296,15 @@ class ProfileField extends Component {
   render() {
     return (
       <ProfileFieldContainer
-        onDoubleClick={this.startEditing}
+        onClick={this.startEditing}
         fontSize={this.props.fontSize}
         label={this.props.label}
         onMouseOver={this.handleMouseOver}
         onMouseOut={this.handleMouseOut}
       >
-
-        {this.showIcon}
+        <IconContainer>
+          {this.showIcon}
+        </IconContainer>
 
         {this.showLabel}
 
@@ -306,6 +312,7 @@ class ProfileField extends Component {
           hover={this.state.hover}
           canEdit={this.state.canEdit}
           ownProfile={this.props.ownProfile}
+          fontSize={this.props.fontSize}
         >
           {this.inputOrDisplay}
         </ProfileFieldContents>
