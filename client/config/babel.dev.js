@@ -1,5 +1,5 @@
 var path = require('path');
-var findCacheDir = require('find-cache-dir');
+// var findCacheDir = require('find-cache-dir');
 var relayPlugin = require('../plugins/relay');
 
 module.exports = {
@@ -9,9 +9,7 @@ module.exports = {
   // It enables caching results in ./node_modules/.cache/react-scripts/
   // directory for faster rebuilds. We use findCacheDir() because of:
   // https://github.com/facebookincubator/create-react-app/issues/483
-  cacheDirectory: findCacheDir({
-    name: 'react-scripts'
-  }),
+  cacheDirectory: false,
   presets: [
     // Latest stable ECMAScript features
     require.resolve('babel-preset-latest'),

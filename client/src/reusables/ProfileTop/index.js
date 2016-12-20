@@ -94,7 +94,7 @@ class ProfileTop extends Component {
           <ProfileField
             field={'location'}
             label={'Location'}
-            text={user.location}
+            text={(user.placename) ? user.placename : 'Share location'}
             submitField={submitField}
             fontSize={.9}
             icon={location}

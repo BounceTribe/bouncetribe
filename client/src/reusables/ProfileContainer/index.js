@@ -135,6 +135,9 @@ export default Relay.createContainer(
     fragments: {
       user: () => Relay.QL`
         fragment on User {
+          placename
+          longitude
+          latitude 
           website
           experience
           email
@@ -143,7 +146,6 @@ export default Relay.createContainer(
           handle
           summary
           id
-          location
           influences (first: 1000000) {
             edges {
               node {

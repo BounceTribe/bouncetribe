@@ -51,6 +51,9 @@ export default Relay.createContainer(
             summary
             experience
             website
+            placename
+            longitude
+            latitude
             ${ProfileContainer.getFragment('user')}
           }
           user {

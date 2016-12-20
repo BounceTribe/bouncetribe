@@ -13,33 +13,18 @@ type AddToArtistInfluencePayload {
   artistArtistEdge: ArtistEdge
 }
 
-type AddToParty1Payload {
+type AddToUserFriendshipsPayload {
   viewer: Viewer!
   clientMutationId: String!
-  party1Tribeship: Tribeship
-  party1User: User
-  party1TribeshipEdge: TribeshipEdge
-  party1UserEdge: UserEdge
+  usersUser: User
+  friendshipsFriendship: Friendship
+  usersUserEdge: UserEdge
+  friendshipsFriendshipEdge: FriendshipEdge
 }
 
-input AddToParty1TribeshipInput {
-  party1UserId: ID!
-  party1TribeshipId: ID!
-  clientMutationId: String!
-}
-
-type AddToParty2Payload {
-  viewer: Viewer!
-  clientMutationId: String!
-  party2Tribeship: Tribeship
-  party2User: User
-  party2TribeshipEdge: TribeshipEdge
-  party2UserEdge: UserEdge
-}
-
-input AddToParty2TribeshipInput {
-  party2UserId: ID!
-  party2TribeshipId: ID!
+input AddToUserFriendshipsUserInput {
+  friendshipsFriendshipId: ID!
+  usersUserId: ID!
   clientMutationId: String!
 }
 
@@ -55,6 +40,36 @@ type AddToUserInfluencesPayload {
 input AddToUserInfluencesUserInput {
   influencesInfluenceId: ID!
   userUserId: ID!
+  clientMutationId: String!
+}
+
+type AddToUserInvitationsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  recipientUser: User
+  invitationsFriendRequest: FriendRequest
+  recipientUserEdge: UserEdge
+  invitationsFriendRequestEdge: FriendRequestEdge
+}
+
+input AddToUserInvitationsUserInput {
+  invitationsFriendRequestId: ID!
+  recipientUserId: ID!
+  clientMutationId: String!
+}
+
+type AddToUserRequestsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  actorUser: User
+  sentrequestsFriendRequest: FriendRequest
+  actorUserEdge: UserEdge
+  sentrequestsFriendRequestEdge: FriendRequestEdge
+}
+
+input AddToUserRequestsUserInput {
+  sentrequestsFriendRequestId: ID!
+  actorUserId: ID!
   clientMutationId: String!
 }
 
@@ -226,6 +241,36 @@ type CreateFilePayload {
   edge: FileEdge
 }
 
+input CreateFriendRequestInput {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  actor: FriendRequestactorUser
+  recipientId: ID
+  recipient: FriendRequestrecipientUser
+  clientMutationId: String!
+}
+
+type CreateFriendRequestPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  friendRequest: FriendRequest
+  edge: FriendRequestEdge
+  actor: User
+  recipient: User
+}
+
+input CreateFriendshipInput {
+  clientMutationId: String!
+}
+
+type CreateFriendshipPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  friendship: Friendship
+  edge: FriendshipEdge
+}
+
 input CreateInfluenceInput {
   artistId: ID
   artist: InfluenceartistArtist
@@ -241,23 +286,6 @@ type CreateInfluencePayload {
   edge: InfluenceEdge
   artist: Artist
   user: User
-}
-
-input CreateTribeshipInput {
-  party1Id: ID
-  party1: Tribeshipparty1User
-  party2Id: ID
-  party2: Tribeshipparty2User
-  clientMutationId: String!
-}
-
-type CreateTribeshipPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  tribeship: Tribeship
-  edge: TribeshipEdge
-  party1: User
-  party2: User
 }
 
 # If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
@@ -295,6 +323,34 @@ type DeleteFilePayload {
   deletedId: ID
 }
 
+input DeleteFriendRequestInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteFriendRequestPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  friendRequest: FriendRequest
+  edge: FriendRequestEdge
+  actor: User
+  recipient: User
+  deletedId: ID
+}
+
+input DeleteFriendshipInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteFriendshipPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  friendship: Friendship
+  edge: FriendshipEdge
+  deletedId: ID
+}
+
 input DeleteInfluenceInput {
   id: ID!
   clientMutationId: String!
@@ -307,21 +363,6 @@ type DeleteInfluencePayload {
   edge: InfluenceEdge
   artist: Artist
   user: User
-  deletedId: ID
-}
-
-input DeleteTribeshipInput {
-  id: ID!
-  clientMutationId: String!
-}
-
-type DeleteTribeshipPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  tribeship: Tribeship
-  edge: TribeshipEdge
-  party1: User
-  party2: User
   deletedId: ID
 }
 
@@ -489,6 +530,189 @@ enum FileOrderBy {
   url_DESC
 }
 
+# FriendRequest
+type FriendRequest implements Node {
+  accepted: Boolean!
+  actor(filter: UserFilter): User
+  createdAt: DateTime
+  id: ID!
+  ignored: Boolean!
+  recipient(filter: UserFilter): User
+  updatedAt: DateTime
+}
+
+input FriendRequestactorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String!
+  placename: String
+  profilePicUrl: String
+  summary: String
+  website: String
+}
+
+# A connection to a list of items.
+type FriendRequestConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [FriendRequestEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type FriendRequestEdge {
+  # The item at the end of the edge.
+  node: FriendRequest!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input FriendRequestFilter {
+  AND: [FriendRequestFilter!]
+  OR: [FriendRequestFilter!]
+  accepted: Boolean
+  accepted_not: Boolean
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  ignored: Boolean
+  ignored_not: Boolean
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+}
+
+enum FriendRequestOrderBy {
+  accepted_ASC
+  accepted_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  ignored_ASC
+  ignored_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+input FriendRequestrecipientUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String!
+  placename: String
+  profilePicUrl: String
+  summary: String
+  website: String
+}
+
+# Friendship
+type Friendship implements Node {
+  createdAt: DateTime
+  id: ID!
+  updatedAt: DateTime
+  users(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection
+}
+
+# A connection to a list of items.
+type FriendshipConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [FriendshipEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type FriendshipEdge {
+  # The item at the end of the edge.
+  node: Friendship!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input FriendshipFilter {
+  AND: [FriendshipFilter!]
+  OR: [FriendshipFilter!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+}
+
+enum FriendshipOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
 # Influence
 type Influence implements Node {
   artist(filter: ArtistFilter): Artist
@@ -573,8 +797,10 @@ input InfluenceuserUser {
   email: String!
   experience: USER_EXPERIENCE
   handle: String!
-  location: String
+  latitude: BigDecimal
+  longitude: BigDecimal
   name: String!
+  placename: String
   profilePicUrl: String
   summary: String
   website: String
@@ -586,27 +812,32 @@ scalar Long
 
 type Mutation {
   createInfluence(input: CreateInfluenceInput!): CreateInfluencePayload
-  createTribeship(input: CreateTribeshipInput!): CreateTribeshipPayload
+  createFriendRequest(input: CreateFriendRequestInput!): CreateFriendRequestPayload
   createArtist(input: CreateArtistInput!): CreateArtistPayload
   createFile(input: CreateFileInput!): CreateFilePayload
+  createFriendship(input: CreateFriendshipInput!): CreateFriendshipPayload
   updateInfluence(input: UpdateInfluenceInput!): UpdateInfluencePayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
-  updateTribeship(input: UpdateTribeshipInput!): UpdateTribeshipPayload
+  updateFriendRequest(input: UpdateFriendRequestInput!): UpdateFriendRequestPayload
   updateArtist(input: UpdateArtistInput!): UpdateArtistPayload
   updateFile(input: UpdateFileInput!): UpdateFilePayload
+  updateFriendship(input: UpdateFriendshipInput!): UpdateFriendshipPayload
   deleteInfluence(input: DeleteInfluenceInput!): DeleteInfluencePayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
-  deleteTribeship(input: DeleteTribeshipInput!): DeleteTribeshipPayload
+  deleteFriendRequest(input: DeleteFriendRequestInput!): DeleteFriendRequestPayload
   deleteArtist(input: DeleteArtistInput!): DeleteArtistPayload
   deleteFile(input: DeleteFileInput!): DeleteFilePayload
-  addToArtistInfluence(input: AddToArtistInfluenceInfluenceInput!): AddToArtistInfluencePayload
+  deleteFriendship(input: DeleteFriendshipInput!): DeleteFriendshipPayload
+  addToUserFriendships(input: AddToUserFriendshipsUserInput!): AddToUserFriendshipsPayload
   addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
-  addToParty2(input: AddToParty2TribeshipInput!): AddToParty2Payload
-  addToParty1(input: AddToParty1TribeshipInput!): AddToParty1Payload
-  removeFromArtistInfluence(input: RemoveFromArtistInfluenceInfluenceInput!): RemoveFromArtistInfluencePayload
+  addToArtistInfluence(input: AddToArtistInfluenceInfluenceInput!): AddToArtistInfluencePayload
+  addToUserInvitations(input: AddToUserInvitationsUserInput!): AddToUserInvitationsPayload
+  addToUserRequests(input: AddToUserRequestsUserInput!): AddToUserRequestsPayload
+  removeFromUserFriendships(input: RemoveFromUserFriendshipsUserInput!): RemoveFromUserFriendshipsPayload
   removeFromUserInfluences(input: RemoveFromUserInfluencesUserInput!): RemoveFromUserInfluencesPayload
-  removeFromParty2(input: RemoveFromParty2TribeshipInput!): RemoveFromParty2Payload
-  removeFromParty1(input: RemoveFromParty1TribeshipInput!): RemoveFromParty1Payload
+  removeFromArtistInfluence(input: RemoveFromArtistInfluenceInfluenceInput!): RemoveFromArtistInfluencePayload
+  removeFromUserInvitations(input: RemoveFromUserInvitationsUserInput!): RemoveFromUserInvitationsPayload
+  removeFromUserRequests(input: RemoveFromUserRequestsUserInput!): RemoveFromUserRequestsPayload
   signinUser(input: SigninUserInput!): SigninPayload!
   createUser(input: SignupUserInput!): CreateUserPayload!
 }
@@ -657,33 +888,18 @@ type RemoveFromArtistInfluencePayload {
   artistArtistEdge: ArtistEdge
 }
 
-type RemoveFromParty1Payload {
+type RemoveFromUserFriendshipsPayload {
   viewer: Viewer!
   clientMutationId: String!
-  party1Tribeship: Tribeship
-  party1User: User
-  party1TribeshipEdge: TribeshipEdge
-  party1UserEdge: UserEdge
+  usersUser: User
+  friendshipsFriendship: Friendship
+  usersUserEdge: UserEdge
+  friendshipsFriendshipEdge: FriendshipEdge
 }
 
-input RemoveFromParty1TribeshipInput {
-  party1UserId: ID!
-  party1TribeshipId: ID!
-  clientMutationId: String!
-}
-
-type RemoveFromParty2Payload {
-  viewer: Viewer!
-  clientMutationId: String!
-  party2Tribeship: Tribeship
-  party2User: User
-  party2TribeshipEdge: TribeshipEdge
-  party2UserEdge: UserEdge
-}
-
-input RemoveFromParty2TribeshipInput {
-  party2UserId: ID!
-  party2TribeshipId: ID!
+input RemoveFromUserFriendshipsUserInput {
+  friendshipsFriendshipId: ID!
+  usersUserId: ID!
   clientMutationId: String!
 }
 
@@ -699,6 +915,36 @@ type RemoveFromUserInfluencesPayload {
 input RemoveFromUserInfluencesUserInput {
   influencesInfluenceId: ID!
   userUserId: ID!
+  clientMutationId: String!
+}
+
+type RemoveFromUserInvitationsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  recipientUser: User
+  invitationsFriendRequest: FriendRequest
+  recipientUserEdge: UserEdge
+  invitationsFriendRequestEdge: FriendRequestEdge
+}
+
+input RemoveFromUserInvitationsUserInput {
+  invitationsFriendRequestId: ID!
+  recipientUserId: ID!
+  clientMutationId: String!
+}
+
+type RemoveFromUserRequestsPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  actorUser: User
+  sentrequestsFriendRequest: FriendRequest
+  actorUserEdge: UserEdge
+  sentrequestsFriendRequestEdge: FriendRequestEdge
+}
+
+input RemoveFromUserRequestsUserInput {
+  sentrequestsFriendRequestId: ID!
+  actorUserId: ID!
   clientMutationId: String!
 }
 
@@ -719,109 +965,15 @@ input SignupUserInput {
   email: String!
   experience: USER_EXPERIENCE
   handle: String!
-  location: String
+  latitude: BigDecimal
+  longitude: BigDecimal
   name: String!
+  placename: String
   profilePicUrl: String
   summary: String
   website: String
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
-}
-
-# Tribeship
-type Tribeship implements Node {
-  createdAt: DateTime
-  id: ID!
-  party1(filter: UserFilter): User
-  party2(filter: UserFilter): User
-  updatedAt: DateTime
-}
-
-# A connection to a list of items.
-type TribeshipConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-
-  # A list of edges.
-  edges: [TribeshipEdge]
-
-  # Count of filtered result set without considering pagination arguments
-  count: Int!
-}
-
-# An edge in a connection.
-type TribeshipEdge {
-  # The item at the end of the edge.
-  node: Tribeship!
-
-  # A cursor for use in pagination.
-  cursor: String!
-}
-
-input TribeshipFilter {
-  AND: [TribeshipFilter!]
-  OR: [TribeshipFilter!]
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-}
-
-enum TribeshipOrderBy {
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-input Tribeshipparty1User {
-  email: String!
-  experience: USER_EXPERIENCE
-  handle: String!
-  location: String
-  name: String!
-  profilePicUrl: String
-  summary: String
-  website: String
-}
-
-input Tribeshipparty2User {
-  email: String!
-  experience: USER_EXPERIENCE
-  handle: String!
-  location: String
-  name: String!
-  profilePicUrl: String
-  summary: String
-  website: String
 }
 
 input UpdateArtistInput {
@@ -852,6 +1004,36 @@ type UpdateFilePayload {
   edge: FileEdge
 }
 
+input UpdateFriendRequestInput {
+  accepted: Boolean
+  id: ID!
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+  clientMutationId: String!
+}
+
+type UpdateFriendRequestPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  friendRequest: FriendRequest
+  edge: FriendRequestEdge
+  actor: User
+  recipient: User
+}
+
+input UpdateFriendshipInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type UpdateFriendshipPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  friendship: Friendship
+  edge: FriendshipEdge
+}
+
 input UpdateInfluenceInput {
   id: ID!
   artistId: ID
@@ -868,29 +1050,15 @@ type UpdateInfluencePayload {
   user: User
 }
 
-input UpdateTribeshipInput {
-  id: ID!
-  party1Id: ID
-  party2Id: ID
-  clientMutationId: String!
-}
-
-type UpdateTribeshipPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  tribeship: Tribeship
-  edge: TribeshipEdge
-  party1: User
-  party2: User
-}
-
 input UpdateUserInput {
   email: String
   experience: USER_EXPERIENCE
   handle: String
   id: ID!
-  location: String
+  latitude: BigDecimal
+  longitude: BigDecimal
   name: String
+  placename: String
   profilePicUrl: String
   summary: String
   website: String
@@ -910,14 +1078,17 @@ type User implements Node {
   createdAt: DateTime
   email: String!
   experience: USER_EXPERIENCE!
+  friendships(filter: FriendshipFilter, orderBy: FriendshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendshipConnection
   handle: String!
   id: ID!
   influences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
-  location: String
+  invitations(filter: FriendRequestFilter, orderBy: FriendRequestOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendRequestConnection
+  latitude: BigDecimal
+  longitude: BigDecimal
   name: String!
-  party1(filter: TribeshipFilter, orderBy: TribeshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TribeshipConnection
-  party2(filter: TribeshipFilter, orderBy: TribeshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TribeshipConnection
+  placename: String
   profilePicUrl: String
+  sentrequests(filter: FriendRequestFilter, orderBy: FriendRequestOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendRequestConnection
   summary: String!
   updatedAt: DateTime
   website: String!
@@ -1024,20 +1195,22 @@ input UserFilter {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  location: String
-  location_not: String
-  location_in: [String!]
-  location_not_in: [String!]
-  location_lt: String
-  location_lte: String
-  location_gt: String
-  location_gte: String
-  location_contains: String
-  location_not_contains: String
-  location_starts_with: String
-  location_not_starts_with: String
-  location_ends_with: String
-  location_not_ends_with: String
+  latitude: BigDecimal
+  latitude_not: BigDecimal
+  latitude_in: [BigDecimal!]
+  latitude_not_in: [BigDecimal!]
+  latitude_lt: BigDecimal
+  latitude_lte: BigDecimal
+  latitude_gt: BigDecimal
+  latitude_gte: BigDecimal
+  longitude: BigDecimal
+  longitude_not: BigDecimal
+  longitude_in: [BigDecimal!]
+  longitude_not_in: [BigDecimal!]
+  longitude_lt: BigDecimal
+  longitude_lte: BigDecimal
+  longitude_gt: BigDecimal
+  longitude_gte: BigDecimal
   name: String
   name_not: String
   name_in: [String!]
@@ -1052,6 +1225,20 @@ input UserFilter {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  placename: String
+  placename_not: String
+  placename_in: [String!]
+  placename_not_in: [String!]
+  placename_lt: String
+  placename_lte: String
+  placename_gt: String
+  placename_gte: String
+  placename_contains: String
+  placename_not_contains: String
+  placename_starts_with: String
+  placename_not_starts_with: String
+  placename_ends_with: String
+  placename_not_ends_with: String
   profilePicUrl: String
   profilePicUrl_not: String
   profilePicUrl_in: [String!]
@@ -1117,10 +1304,14 @@ enum UserOrderBy {
   handle_DESC
   id_ASC
   id_DESC
-  location_ASC
-  location_DESC
+  latitude_ASC
+  latitude_DESC
+  longitude_ASC
+  longitude_DESC
   name_ASC
   name_DESC
+  placename_ASC
+  placename_DESC
   profilePicUrl_ASC
   profilePicUrl_DESC
   summary_ASC
@@ -1135,14 +1326,16 @@ enum UserOrderBy {
 type Viewer {
   allInfluences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection!
   allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  allTribeships(filter: TribeshipFilter, orderBy: TribeshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TribeshipConnection!
+  allFriendRequests(filter: FriendRequestFilter, orderBy: FriendRequestOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendRequestConnection!
   allArtists(filter: ArtistFilter, orderBy: ArtistOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArtistConnection!
   allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
+  allFriendships(filter: FriendshipFilter, orderBy: FriendshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendshipConnection!
   Influence(id: ID): Influence
   User(auth0UserId: String, email: String, handle: String, id: ID): User
-  Tribeship(id: ID): Tribeship
+  FriendRequest(id: ID): FriendRequest
   Artist(id: ID): Artist
   File(id: ID, secret: String, url: String): File
+  Friendship(id: ID): Friendship
   id: ID!
   user: User
 }
