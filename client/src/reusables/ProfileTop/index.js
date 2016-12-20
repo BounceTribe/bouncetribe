@@ -58,6 +58,56 @@ const UserScore = styled.li`
 
 class ProfileTop extends Component {
 
+
+  get showLocation () {
+    let {
+      user,
+      submitField,
+      ownProfile
+    } = this.props
+    if (user.longitude && user.latitude) {
+      return (
+        <ProfileField
+          field={'placename'}
+          label={'Location'}
+          text={user.placename }
+          submitField={submitField}
+          fontSize={.9}
+          icon={location}
+          fill={btMedium}
+          ownProfile={ownProfile}
+        />
+      )
+    } else if (("geolocation" in navigator) && !user.placename) {
+      const success = (position) => {
+        console.log(position)
+        let submission = {
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude
+        }
+        submitField(submission)
+      }
+      const error = () => {
+        console.log('error')
+      }
+      navigator.geolocation.getCurrentPosition(success, error)
+    } else {
+      return (
+        <ProfileField
+          field={'placename'}
+          label={'Location'}
+          text={user.placename }
+          submitField={submitField}
+          fontSize={.9}
+          icon={location}
+          fill={btMedium}
+          ownProfile={ownProfile}
+        />
+      )
+    }
+  }
+
+
   render() {
     let {
       user,
@@ -91,16 +141,9 @@ class ProfileTop extends Component {
             fontSize={1.2}
             ownProfile={ownProfile}
           />
-          <ProfileField
-            field={'location'}
-            label={'Location'}
-            text={(user.placename) ? user.placename : 'Share location'}
-            submitField={submitField}
-            fontSize={.9}
-            icon={location}
-            fill={btMedium}
-            ownProfile={ownProfile}
-          />
+
+          {this.showLocation}
+
           <UserScores>
             <UserScore>
               <Bolt
