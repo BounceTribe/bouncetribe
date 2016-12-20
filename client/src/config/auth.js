@@ -2,8 +2,7 @@ import Auth0Lock from 'auth0-lock'
 import {Err, Log} from 'utils'
 import {linkAccountsOptions} from 'apis/auth'
 import {btPurple} from 'styling/T'
-import {auth0} from 'config/urls'
-
+import {auth0, client} from 'config/urls'
 const clientId = 'cKacry8a5wk5N8HfYggEXJ1r7Izpnq8J'
 
 class AuthService {
@@ -11,7 +10,7 @@ class AuthService {
     // Configure Auth0
     this.lock = new Auth0Lock(clientId, domain, {
       auth: {
-        redirectUrl: 'http://localhost:3000/login/',
+        redirectUrl: `${client}/login/`,
         responseType: 'token'
       },
       container: 'auth',

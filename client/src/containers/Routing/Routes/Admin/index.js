@@ -50,7 +50,7 @@ class Admin extends Component {
   }
 
   get onlyShowInDevelopment() {
-    if (process.env.PRODUCTION) {
+    if (process.env.NODE_ENV === 'production') {
       return (
         <h2>Not allowed</h2>
       )

@@ -3,7 +3,7 @@ export const Err = (message) => {
 }
 
 export const Log = (message, label, data) => {
-  if (process.env.PRODUCTION) {
+  if (process.env.NODE_ENV === 'production') {
 
   } else {
     if (typeof data === Error) {
