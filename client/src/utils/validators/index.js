@@ -54,7 +54,7 @@ export const handleSanitizer = (handle) => {
   if (sanitized < 6) {
     let difference = 6 - sanitized.length
     let hash = Math.random().splice(2,difference)
-    let sanitized = sanitized.join(hash)
+    sanitized = sanitized.join(hash)
   }
   console.log(sanitized)
   return sanitized

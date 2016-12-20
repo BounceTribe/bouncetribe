@@ -9,7 +9,7 @@ import Bolt from 'imgs/icons/bolt'
 import Notes from 'imgs/icons/notes'
 import Tribe from 'imgs/icons/tribe'
 import {btMedium} from 'styling/T'
-
+import BTButton from 'reusables/BTButton'
 
 const ProfileDisplay = styled.div`
   display: flex;
@@ -102,13 +102,20 @@ class ProfileTop extends Component {
       const error = () => {
         console.log('error')
       }
-      navigator.geolocation.getCurrentPosition(success, error)
+      return (
+        <BTButton
+          text={'Share your location'}
+          onClick={()=>{
+            navigator.geolocation.getCurrentPosition(success, error)
+          }}
+        />
+      )
     } else {
       return (
         <ProfileField
           field={'placename'}
           label={'Location'}
-          text={user.placename }
+          text={user.placename}
           submitField={submitField}
           fontSize={.9}
           icon={location}
