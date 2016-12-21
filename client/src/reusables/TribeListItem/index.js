@@ -1,8 +1,13 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import BTButton from 'reusables/BTButton'
-import {subtleBorder} from 'styling/T'
 import {Link} from 'react-router'
+import {btMedium, btLight, btPurple} from 'styling/T'
+import Bolt from 'imgs/icons/bolt'
+import Notes from 'imgs/icons/notes'
+import Tribe from 'imgs/icons/tribe'
+import Location from 'imgs/icons/location'
+
 
 const TribeListItemDisplay = styled.div`
   display: flex;
@@ -11,12 +16,12 @@ const TribeListItemDisplay = styled.div`
   align-content: flex-start;
   justify-content: space-between;
   align-items: center;
-  max-height: 100px;
+  height: 100px;
   margin: 10px 1%;
   padding: 10px;
   max-width: 45.6%;
   min-width: 40%;
-  ${subtleBorder}
+  border: solid ${btLight} .5px;
 `
 
 const TribeListItemImage = styled.img`
@@ -28,10 +33,20 @@ const TribeListItemImage = styled.img`
 const TribeListItemInfoColumn = styled.div`
   display: flex;
   flex-direction: column;
-  align-content: center;
+  align-content: space-between;
   justify-content: flex-start;
   align-items: flex-start;
   margin-left: 10px;
+  height: 100px;
+`
+
+const TribeColumnTop = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-content: flex-start;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: auto;
 `
 
 const TribeListItemRow = styled.div`
@@ -45,11 +60,16 @@ const TribeListItemRow = styled.div`
 const UserName = styled.h2`
   font-size: 1.2em;
   font-weight: normal;
+  color: ${btPurple}
 `
 
-const UserLocation = styled.h4`
-  font-size: 1em;
+const UserLocation = styled.div`
+  font-size: .9em;
   font-weight: normal;
+  color: ${btMedium};
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
 `
 
 const UserScores = styled.ul`
@@ -57,11 +77,22 @@ const UserScores = styled.ul`
   flex-direction: row;
   align-content: center;
   justify-content: flex-start;
-  align-items: center;
+  align-items: baseline;
 `
 
 const UserScore = styled.li`
-  font-size: .8em;
+  font-size: 1em;
+  margin-right: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+`
+
+const IconContainer = styled.div`
+  display: flex;
+  margin-right: 5px;
+  height: 1em;
+  width: 1em;
 `
 
 const TribeButtonColumn = styled.div`
@@ -100,7 +131,7 @@ class TribeListItem extends Component {
           />
           <BTButton
             text={'Ignore'}
-            danger
+            grey
             flex
             onClick={()=>{
               let fields = {
@@ -137,7 +168,10 @@ class TribeListItem extends Component {
 
   render() {
     let {
-      handle
+      handle,
+      profilePicUrl,
+      profilePicThumb,
+      placename
     } = this.props.user
     return (
       <TribeListItemDisplay
@@ -145,25 +179,48 @@ class TribeListItem extends Component {
       >
         <TribeListItemRow>
           <TribeListItemImage
-            src={this.props.profilePicUrl}
+            src={profilePicThumb || profilePicUrl}
             alt={'TribeListItem'}
           />
 
           <TribeListItemInfoColumn>
-            <UserName>
-              <Link
-                to={`/${handle}`}
-              >
-                {handle}
-              </Link>
-            </UserName>
-            <UserLocation>Location</UserLocation>
+            <TribeColumnTop>
+              <UserName>
+                <Link
+                  to={`/${handle}`}
+                >
+                  {handle}
+                </Link>
+              </UserName>
+              <UserLocation>
+                {(placename) ? (
+                  <IconContainer>
+                    <Location/>
+                  </IconContainer>
+                ) : null}
+
+                {placename}
+              </UserLocation>
+            </TribeColumnTop>
             <UserScores>
-              <UserScore>Rank</UserScore>
-              <UserScore>Projects</UserScore>
-              <UserScore>Tribe</UserScore>
-
-
+              <UserScore>
+                <IconContainer>
+                  <Bolt/>
+                </IconContainer>
+                <span>0</span>
+              </UserScore>
+              <UserScore>
+                <IconContainer>
+                  <Notes/>
+                </IconContainer>
+                <span>0</span>
+              </UserScore>
+              <UserScore>
+                <IconContainer>
+                  <Tribe/>
+                </IconContainer>
+                <span>{this.props.user.friends.edges.length}</span>
+              </UserScore>
             </UserScores>
 
           </TribeListItemInfoColumn>

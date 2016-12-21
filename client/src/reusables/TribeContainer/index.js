@@ -2,11 +2,12 @@ import React, { Component } from 'react'
 import Relay from 'react-relay'
 import TribeListItem from 'reusables/TribeListItem'
 import styled from 'styled-components'
-import {btMedium, btBlack} from 'styling/T'
+import {btBlack, btLight} from 'styling/T'
 import {Link} from 'react-router'
 import EditFriendRequestMutation from 'mutations/EditFriendRequestMutation'
 import AddToFriendsMutation from 'mutations/AddToFriendsMutation'
-
+import Tribe from 'imgs/icons/tribe'
+import BTButton from 'reusables/BTButton'
 
 const TribeHeader = styled.ul`
   display: flex;
@@ -42,16 +43,37 @@ const TribeList = styled.div`
   flex-direction: row;
   align-content: flex-start;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: baseline;
   flex-wrap: wrap;
 
 `
 
 const TribeHeaderText = styled.li`
-  color: ${props=> props.active ? btBlack : btMedium };
-  text-decoration: ${props=> props.active ? 'underline' : 'none' };
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-content: flex-end;
+  align-items: baseline;
 `
+
+const MyTribeText = styled.h2`
+  color: ${props=> props.active ? btBlack : btLight };
+  font-weight: ${props=> props.active ? '400' : '200' };
+`
+const PendingText = styled.h4`
+  color: ${props=> props.active ? btBlack : btLight };
+  font-weight: ${props=> props.active ? '400' : '200' };
+  font-size: .9em;
+`
+
+const IconContainer = styled.div`
+  display: flex;
+  align-content: flex-end;
+  margin-right: 5px;
+  height: 25px;
+  width: 25px;
+`
+
 
 class TribeContainer extends Component {
 
@@ -158,40 +180,44 @@ class TribeContainer extends Component {
       router,
       user
     } = this.props
-    console.log(user.friends)
+    console.log(router)
     return (
       <section>
 
         <TribeHeader>
-          <TribeHeaderText
-            active={(router.params.list === ' ')}
-          >
             <Link
               to={`/${router.params.handle}/tribe`}
             >
-              <h2>My Tribe</h2>
+              <TribeHeaderText>
+                <IconContainer>
+                  <Tribe/>
+                </IconContainer>
+                <MyTribeText
+                  active={(router.location.pathname === `/${router.params.handle}/tribe`)}
+                >
+                  My Tribe
+                </MyTribeText>
+            </TribeHeaderText>
             </Link>
-          </TribeHeaderText>
           <TribeHeaderRight>
-            <TribeHeaderText
-              active={(router.params.list === 'requests')}
-            >
+
               <Link
                 to={`/${router.params.handle}/tribe/requests`}
               >
-                <h4>Requests</h4>
+                <PendingText
+                  active={(router.location.pathname === `/${router.params.handle}/tribe/requests`)}
+                >
+                  Pending Requests ({user.invitations.edges.length})
+                </PendingText>
               </Link>
-              <h4>Pending Requests</h4>
-            </TribeHeaderText>
-            <TribeHeaderText
-              active={(router.params.list === 'find')}
-            >
               <Link
                 to={`/${router.params.handle}/tribe/find`}
               >
-                <h4>Find</h4>
+                <BTButton
+                  text={'Add members'}
+                  flex
+                />
               </Link>
-            </TribeHeaderText>
           </TribeHeaderRight>
 
 
@@ -227,6 +253,13 @@ export default Relay.createContainer(
                 id
                 handle
                 profilePicThumb
+                profilePicUrl
+                placename
+                friends (first: 2147483647) {
+                  edges {
+                    node
+                  }
+                }
               }
             }
           }
@@ -245,6 +278,13 @@ export default Relay.createContainer(
                   handle
                   id
                   profilePicThumb
+                  profilePicUrl
+                  placename
+                  friends (first: 2147483647) {
+                    edges {
+                      node
+                    }
+                  }
                 }
               }
             }
@@ -256,10 +296,16 @@ export default Relay.createContainer(
           allUsers (first: 2147483647) {
             edges {
               node {
-                name
                 id
                 profilePicUrl
+                profilePicThumb
                 handle
+                placename
+                friends (first: 2147483647) {
+                  edges {
+                    node
+                  }
+                }
               }
             }
           }

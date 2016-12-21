@@ -45,7 +45,6 @@ const Button = styled.button`
   width: ${props => (props.flex) ? '100%' : '140px'};
   font-size: 1em;
   font-family: 'Helvetica Neue';
-  font-weight: bold;
   display: flex;
   flex-direction: row;
   align-content: center;

@@ -2,7 +2,7 @@ import React from 'react'
 
 const notes = (props) => {
   return (
-    <svg fill={props.fill} height="1em" width="1em" viewBox="0 0 18 18"  xmlns="http://www.w3.org/2000/svg">
+    <svg fill={props.fill} height="100%" width="100%" viewBox="0 0 18 18"  xmlns="http://www.w3.org/2000/svg">
     <g id="Layouts" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="MY-PROFILE-(D)" transform="translate(-513.000000, -304.000000)" fill="#9075F3">
             <g id="Body" transform="translate(256.000000, 202.000000)">

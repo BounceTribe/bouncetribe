@@ -148,7 +148,12 @@ export default Relay.createContainer(
           handle
           summary
           id
-          influences (first: 1000000) {
+          friends (first: 2147483647) {
+            edges {
+              node
+            }
+          }
+          influences (first: 2147483647) {
             edges {
               node {
                 artist {

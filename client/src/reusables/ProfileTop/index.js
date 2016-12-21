@@ -49,7 +49,7 @@ const UserScores = styled.ul`
   flex-direction: row;
   align-content: center;
   justify-content: flex-start;
-  align-items: center;
+  align-items: baseline;
 `
 
 const UserScore = styled.li`
@@ -58,11 +58,14 @@ const UserScore = styled.li`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: baseline;
 `
 
 const IconContainer = styled.div`
   display: flex;
   margin-right: 5px;
+  height: 1em;
+  width: 1em;
 `
 
 
@@ -182,7 +185,7 @@ class ProfileTop extends Component {
               <IconContainer>
                 <Tribe/>
               </IconContainer>
-              <span>0</span>
+              <span>{user.friends.edges.length}</span>
             </UserScore>
 
 

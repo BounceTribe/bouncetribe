@@ -18,6 +18,8 @@ const MenuItemRow =  styled.div`
 
 const IconSpan = styled.span`
   margin-right: 5px;
+  height: 1em;
+  width: 1em;
 `
 
 const DropdownColumn = styled.div`
@@ -60,8 +62,6 @@ class TopBarMenuItem extends Component {
       return (
         <IconSpan>
           <Icon
-            height={'18px'}
-            width={'18px'}
             fill={btPurple}
           />
         </IconSpan>
