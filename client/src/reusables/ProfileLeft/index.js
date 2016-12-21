@@ -17,10 +17,10 @@ const ProfileLeftContainer = styled.div`
 
 class ProfileLeft extends Component {
 
-  render() {
-    return (
-      <ProfileLeftContainer>
 
+  get showSummary () {
+    if (this.props.user.summary  || this.props.ownProfile) {
+      return (
         <ProfileField
           field={'summary'}
           label={'summary'}
@@ -28,7 +28,17 @@ class ProfileLeft extends Component {
           submitField={this.props.submitField}
           ownProfile={this.props.ownProfile}
         />
+      )
+    } else {
+      return (
+        null
+      )
+    }
+  }
 
+  get showInfluences () {
+    if (this.props.user.influences.edges.length > 0  || this.props.ownProfile) {
+      return (
         <InfluencesField
           influences={this.props.user.influences}
           user={this.props.user}
@@ -36,6 +46,22 @@ class ProfileLeft extends Component {
           deleteInfluence={this.props.deleteInfluence}
           ownProfile={this.props.ownProfile}
         />
+      )
+    } else {
+      return (
+        null
+      )
+    }
+  }
+
+  render() {
+    console.log(this.props.user)
+    return (
+      <ProfileLeftContainer>
+
+        {this.showSummary}
+
+        {this.showInfluences}
 
       </ProfileLeftContainer>
     )

@@ -4,8 +4,9 @@ import TribeListItem from 'reusables/TribeListItem'
 import styled from 'styled-components'
 import {btMedium, btBlack} from 'styling/T'
 import {Link} from 'react-router'
-// import EditFriendRequestMutation from 'mutations/EditFriendRequestMutation'
-// import CreateFriendshipMutation from 'mutations/CreateFriendshipMutation'
+import EditFriendRequestMutation from 'mutations/EditFriendRequestMutation'
+import AddToFriendsMutation from 'mutations/AddToFriendsMutation'
+
 
 const TribeHeader = styled.ul`
   display: flex;
@@ -87,7 +88,7 @@ class TribeContainer extends Component {
               key={edge.node.id}
               id={edge.node.id}
               user={edge.node.actor}
-              profilePicUrl={edge.node.actor.profilePicUrl}
+              profilePicUrl={edge.node.actor.profilePicThumb}
               makeTribeRequest={this.respondToFriendRequest}
               pending
             />
@@ -98,16 +99,17 @@ class TribeContainer extends Component {
       }
       default:
       case `/${router.params.handle}/tribe`: {
-        if (user.friendships.edges.length > 0) {
-          return user.friendships.edges.map(edge => edge.node.users.edges.map(edge => (
+        if (user.friends.edges.length > 0) {
+          return user.friends.edges.map(edge => (
             <TribeListItem
               key={edge.node.id}
+              id={edge.node.id}
               user={edge.node}
-              profilePicUrl={edge.node.profilePicUrl}
+              profilePicUrl={edge.node.profilePicThumb}
               makeTribeRequest={this.handleTribeshipInvitation}
               myTribe
             />
-          )))
+          ))
         } else {
           return <h4>Start building your tribe.</h4>
         }
@@ -116,70 +118,47 @@ class TribeContainer extends Component {
 
   }
 
-  // respondToFriendRequest = async (fields = {}) => {
-  //   try {
-  //     const createFriendship = async () => {
-  //         new Promise( (resolve, reject) => {
-  //           Relay.Store.commitUpdate(
-  //           new CreateFriendshipMutation({
-  //             selfId: this.props.user.id,
-  //             newFriendId: fields.newFriendId
-  //           }),
-  //           {
-  //             onSuccess: ()=>{
-  //               console.log('createFriendshipMutation succeeded')
-  //               resolve()
-  //             },
-  //             onFailure: (transaction) => {
-  //               console.log('createFriendship failed')
-  //               reject(transaction)
-  //             }
-  //           }
-  //         )
-  //       }).catch((reason)=>{
-  //         console.log('createFriendship promise reject reason', reason)
-  //         throw reason
-  //       })
-  //     }
-  //
-  //     const friendRequest = await new Promise( (resolve, reject) => {
-  //       Relay.Store.applyUpdate(
-  //         new EditFriendRequestMutation({
-  //           id: fields.id,
-  //           accepted: fields.accepted,
-  //           ignored: fields.ignored
-  //         }),
-  //         {
-  //           onSuccess: () => {
-  //             createFriendship()
-  //             console.log('createFriendship in friendReqest callback succeeded', friendship)
-  //             resolve()
-  //           },
-  //           onFailure: (transaction) => {
-  //             console.log('EditFriendRequestMutation failed')
-  //             throw transaction
-  //           },
-  //         }
-  //       ).catch( (reason) => {
-  //         throw reason
-  //       }
-  //
-  //       friendRequest.commit()
-  //
-  //     } catch (error) {
-  //
-  //     }
-  //   })
-  //
-  //
-  // }
+  respondToFriendRequest = async (fields = {}) => {
+    Relay.Store.commitUpdate(
+      new EditFriendRequestMutation({
+        id: fields.id,
+        accepted: fields.accepted,
+        ignored: fields.ignored
+      }),
+      {
+        onSuccess: (transaction) => {
+          console.log('EditFriendRequestMutation succeeded', transaction)
+          if (fields.accepted) {
+            Relay.Store.commitUpdate(
+              new AddToFriendsMutation({
+                selfId: this.props.user.id,
+                newFriendId: fields.newFriendId,
+              }),
+              {
+                onSuccess: ()=>{
+                },
+                onFailure: (transaction) => {
+                  console.log('AddToFriends failed', transaction)
+                },
+              }
+            )
+          }
+        },
+        onFailure: (transaction) => {
+          console.log('respondToFriendRequest failed', transaction)
+        }
+      }
+    )
+
+  }
+
 
   render() {
     let {
       router,
       user
     } = this.props
-    console.log(user.friendships)
+    console.log(user.friends)
     return (
       <section>
 
@@ -242,19 +221,12 @@ export default Relay.createContainer(
           handle
           summary
           id
-          friendships(first: 2147483647) {
+          friends (first: 2147483647) {
             edges {
               node {
-                users(first: 2147483647) {
-                  edges {
-                    node {
-                      email
-                      name
-                      id
-                      profilePicUrl
-                    }
-                  }
-                }
+                id
+                handle
+                profilePicThumb
               }
             }
           }
@@ -270,10 +242,9 @@ export default Relay.createContainer(
               node {
                 id
                 actor {
-                  email
-                  name
+                  handle
                   id
-                  profilePicUrl
+                  profilePicThumb
                 }
               }
             }

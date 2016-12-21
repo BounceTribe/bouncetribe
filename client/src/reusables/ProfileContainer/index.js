@@ -144,6 +144,7 @@ export default Relay.createContainer(
           email
           name
           profilePicUrl
+          profilePicThumb
           handle
           summary
           id

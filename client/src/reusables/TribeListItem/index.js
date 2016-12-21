@@ -87,6 +87,7 @@ class TribeListItem extends Component {
           <BTButton
             text={'Accept'}
             teal
+            flex
             onClick={()=>{
               let fields = {
                 id: this.props.id,
@@ -99,7 +100,8 @@ class TribeListItem extends Component {
           />
           <BTButton
             text={'Ignore'}
-            warn
+            danger
+            flex
             onClick={()=>{
               let fields = {
                 id: this.props.id,
@@ -135,7 +137,6 @@ class TribeListItem extends Component {
 
   render() {
     let {
-      name,
       handle
     } = this.props.user
     return (
@@ -153,7 +154,7 @@ class TribeListItem extends Component {
               <Link
                 to={`/${handle}`}
               >
-                {name}
+                {handle}
               </Link>
             </UserName>
             <UserLocation>Location</UserLocation>

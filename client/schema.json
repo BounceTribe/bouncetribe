@@ -252,7 +252,7 @@
         },
         {
           "inputFields": null,
-          "name": "AddToUserFriendshipsPayload",
+          "name": "AddToFriendsPayload",
           "description": null,
           "interfaces": [],
           "enumValues": null,
@@ -290,7 +290,7 @@
               }
             },
             {
-              "name": "usersUser",
+              "name": "friends2User",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -302,19 +302,19 @@
               }
             },
             {
-              "name": "friendshipsFriendship",
+              "name": "friends1User",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Friendship",
+                "name": "User",
                 "ofType": null
               }
             },
             {
-              "name": "usersUserEdge",
+              "name": "friends2UserEdge",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -326,14 +326,14 @@
               }
             },
             {
-              "name": "friendshipsFriendshipEdge",
+              "name": "friends1UserEdge",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "FriendshipEdge",
+                "name": "UserEdge",
                 "ofType": null
               }
             }
@@ -344,7 +344,7 @@
         {
           "inputFields": [
             {
-              "name": "friendshipsFriendshipId",
+              "name": "friends1UserId",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
@@ -358,7 +358,7 @@
               "defaultValue": null
             },
             {
-              "name": "usersUserId",
+              "name": "friends2UserId",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
@@ -386,7 +386,7 @@
               "defaultValue": null
             }
           ],
-          "name": "AddToUserFriendshipsUserInput",
+          "name": "AddToFriendsUserInput",
           "description": null,
           "interfaces": null,
           "enumValues": null,
@@ -1284,116 +1284,6 @@
         {
           "inputFields": [
             {
-              "name": "usersId",
-              "description": "",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "name": "CreateFriendshipInput",
-          "description": null,
-          "interfaces": null,
-          "enumValues": null,
-          "fields": null,
-          "kind": "INPUT_OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": null,
-          "name": "CreateFriendshipPayload",
-          "description": null,
-          "interfaces": [],
-          "enumValues": null,
-          "fields": [
-            {
-              "name": "viewer",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Viewer",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "friendship",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Friendship",
-                "ofType": null
-              }
-            },
-            {
-              "name": "edge",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "FriendshipEdge",
-                "ofType": null
-              }
-            }
-          ],
-          "kind": "OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": [
-            {
               "name": "artistId",
               "description": "",
               "type": {
@@ -2007,124 +1897,6 @@
               "defaultValue": null
             }
           ],
-          "name": "DeleteFriendshipInput",
-          "description": null,
-          "interfaces": null,
-          "enumValues": null,
-          "fields": null,
-          "kind": "INPUT_OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": null,
-          "name": "DeleteFriendshipPayload",
-          "description": null,
-          "interfaces": [],
-          "enumValues": null,
-          "fields": [
-            {
-              "name": "viewer",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Viewer",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "friendship",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Friendship",
-                "ofType": null
-              }
-            },
-            {
-              "name": "edge",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "FriendshipEdge",
-                "ofType": null
-              }
-            },
-            {
-              "name": "deletedId",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              }
-            }
-          ],
-          "kind": "OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": [
-            {
-              "name": "id",
-              "description": "",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
           "name": "DeleteInfluenceInput",
           "description": null,
           "interfaces": null,
@@ -2475,7 +2247,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendshipsId",
+              "name": "friendsId",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -2676,7 +2448,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendshipsId",
+              "name": "friendsId",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -2948,7 +2720,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendshipsId",
+              "name": "friendsId",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3144,33 +2916,6 @@
               }
             },
             {
-              "name": "createFriendship",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "CreateFriendshipInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "CreateFriendshipPayload",
-                "ofType": null
-              }
-            },
-            {
               "name": "updateInfluence",
               "description": null,
               "isDeprecated": false,
@@ -3302,33 +3047,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "UpdateFilePayload",
-                "ofType": null
-              }
-            },
-            {
-              "name": "updateFriendship",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "UpdateFriendshipInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UpdateFriendshipPayload",
                 "ofType": null
               }
             },
@@ -3468,60 +3186,6 @@
               }
             },
             {
-              "name": "deleteFriendship",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "DeleteFriendshipInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "DeleteFriendshipPayload",
-                "ofType": null
-              }
-            },
-            {
-              "name": "addToUserFriendships",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "AddToUserFriendshipsUserInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "AddToUserFriendshipsPayload",
-                "ofType": null
-              }
-            },
-            {
               "name": "addToUserInfluences",
               "description": null,
               "isDeprecated": false,
@@ -3545,6 +3209,33 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "AddToUserInfluencesPayload",
+                "ofType": null
+              }
+            },
+            {
+              "name": "addToFriends",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AddToFriendsUserInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "AddToFriendsPayload",
                 "ofType": null
               }
             },
@@ -3630,33 +3321,6 @@
               }
             },
             {
-              "name": "removeFromUserFriendships",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "RemoveFromUserFriendshipsUserInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "RemoveFromUserFriendshipsPayload",
-                "ofType": null
-              }
-            },
-            {
               "name": "removeFromUserInfluences",
               "description": null,
               "isDeprecated": false,
@@ -3680,6 +3344,33 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "RemoveFromUserInfluencesPayload",
+                "ofType": null
+              }
+            },
+            {
+              "name": "removeFromFriends",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "RemoveFromFriendsUserInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "RemoveFromFriendsPayload",
                 "ofType": null
               }
             },
@@ -3976,7 +3667,7 @@
         },
         {
           "inputFields": null,
-          "name": "RemoveFromUserFriendshipsPayload",
+          "name": "RemoveFromFriendsPayload",
           "description": null,
           "interfaces": [],
           "enumValues": null,
@@ -4014,7 +3705,7 @@
               }
             },
             {
-              "name": "usersUser",
+              "name": "friends2User",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -4026,19 +3717,19 @@
               }
             },
             {
-              "name": "friendshipsFriendship",
+              "name": "friends1User",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Friendship",
+                "name": "User",
                 "ofType": null
               }
             },
             {
-              "name": "usersUserEdge",
+              "name": "friends2UserEdge",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -4050,14 +3741,14 @@
               }
             },
             {
-              "name": "friendshipsFriendshipEdge",
+              "name": "friends1UserEdge",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "FriendshipEdge",
+                "name": "UserEdge",
                 "ofType": null
               }
             }
@@ -4068,7 +3759,7 @@
         {
           "inputFields": [
             {
-              "name": "friendshipsFriendshipId",
+              "name": "friends1UserId",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
@@ -4082,7 +3773,7 @@
               "defaultValue": null
             },
             {
-              "name": "usersUserId",
+              "name": "friends2UserId",
               "description": "",
               "type": {
                 "kind": "NON_NULL",
@@ -4110,7 +3801,7 @@
               "defaultValue": null
             }
           ],
-          "name": "RemoveFromUserFriendshipsUserInput",
+          "name": "RemoveFromFriendsUserInput",
           "description": null,
           "interfaces": null,
           "enumValues": null,
@@ -4769,7 +4460,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendshipsId",
+              "name": "friendsId",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -5334,130 +5025,6 @@
               "defaultValue": null
             },
             {
-              "name": "usersId",
-              "description": "",
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            }
-          ],
-          "name": "UpdateFriendshipInput",
-          "description": null,
-          "interfaces": null,
-          "enumValues": null,
-          "fields": null,
-          "kind": "INPUT_OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": null,
-          "name": "UpdateFriendshipPayload",
-          "description": null,
-          "interfaces": [],
-          "enumValues": null,
-          "fields": [
-            {
-              "name": "viewer",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Viewer",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "friendship",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Friendship",
-                "ofType": null
-              }
-            },
-            {
-              "name": "edge",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "FriendshipEdge",
-                "ofType": null
-              }
-            }
-          ],
-          "kind": "OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": [
-            {
-              "name": "id",
-              "description": "",
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
               "name": "artistId",
               "description": "",
               "type": {
@@ -5718,7 +5285,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendshipsId",
+              "name": "friendsId",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -9331,690 +8898,6 @@
         },
         {
           "inputFields": null,
-          "name": "Friendship",
-          "description": null,
-          "interfaces": [
-            {
-              "kind": "INTERFACE",
-              "name": "Node",
-              "ofType": null
-            }
-          ],
-          "enumValues": null,
-          "fields": [
-            {
-              "name": "createdAt",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              }
-            },
-            {
-              "name": "id",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "updatedAt",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              }
-            },
-            {
-              "name": "users",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "filter",
-                  "description": "",
-                  "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "UserFilter",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "orderBy",
-                  "description": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "UserOrderBy",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "skip",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "after",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "before",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "first",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "last",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "UserConnection",
-                "ofType": null
-              }
-            }
-          ],
-          "kind": "OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": null,
-          "name": "FriendshipConnection",
-          "description": "A connection to a list of items.",
-          "interfaces": [],
-          "enumValues": null,
-          "fields": [
-            {
-              "name": "pageInfo",
-              "description": "Information to aid in pagination.",
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "PageInfo",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "edges",
-              "description": "A list of edges.",
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "FriendshipEdge",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "count",
-              "description": "Count of filtered result set without considering pagination arguments",
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "Int",
-                  "ofType": null
-                }
-              }
-            }
-          ],
-          "kind": "OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": null,
-          "name": "FriendshipEdge",
-          "description": "An edge in a connection.",
-          "interfaces": [],
-          "enumValues": null,
-          "fields": [
-            {
-              "name": "node",
-              "description": "The item at the end of the edge.",
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "Friendship",
-                  "ofType": null
-                }
-              }
-            },
-            {
-              "name": "cursor",
-              "description": "A cursor for use in pagination.",
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
-              }
-            }
-          ],
-          "kind": "OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": [
-            {
-              "name": "AND",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "FriendshipFilter",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "OR",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "FriendshipFilter",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "createdAt",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "createdAt_not",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "createdAt_in",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "DateTime",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "createdAt_not_in",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "DateTime",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "createdAt_lt",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "createdAt_lte",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "createdAt_gt",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "createdAt_gte",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_not",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_in",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_not_in",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_lt",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_lte",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_gt",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_gte",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_contains",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_not_contains",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_starts_with",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_not_starts_with",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_ends_with",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id_not_ends_with",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedAt",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedAt_not",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedAt_in",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "DateTime",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedAt_not_in",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "SCALAR",
-                    "name": "DateTime",
-                    "ofType": null
-                  }
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedAt_lt",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedAt_lte",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedAt_gt",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "updatedAt_gte",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "DateTime",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "name": "FriendshipFilter",
-          "description": null,
-          "interfaces": null,
-          "enumValues": null,
-          "fields": null,
-          "kind": "INPUT_OBJECT",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": null,
-          "name": "FriendshipOrderBy",
-          "description": null,
-          "interfaces": null,
-          "enumValues": [
-            {
-              "name": "createdAt_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "createdAt_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "id_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedAt_ASC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "updatedAt_DESC",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "fields": null,
-          "kind": "ENUM",
-          "possibleTypes": null
-        },
-        {
-          "inputFields": null,
           "name": "Influence",
           "description": null,
           "interfaces": [
@@ -10703,11 +9586,6 @@
             },
             {
               "kind": "OBJECT",
-              "name": "Friendship",
-              "ofType": null
-            },
-            {
-              "kind": "OBJECT",
               "name": "Influence",
               "ofType": null
             },
@@ -10928,7 +9806,7 @@
               }
             },
             {
-              "name": "friendships",
+              "name": "friends",
               "description": null,
               "isDeprecated": false,
               "deprecationReason": null,
@@ -10938,7 +9816,7 @@
                   "description": "",
                   "type": {
                     "kind": "INPUT_OBJECT",
-                    "name": "FriendshipFilter",
+                    "name": "UserFilter",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -10948,7 +9826,7 @@
                   "description": null,
                   "type": {
                     "kind": "ENUM",
-                    "name": "FriendshipOrderBy",
+                    "name": "UserOrderBy",
                     "ofType": null
                   },
                   "defaultValue": null
@@ -11006,7 +9884,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "FriendshipConnection",
+                "name": "UserConnection",
                 "ofType": null
               }
             },
@@ -14186,93 +13064,6 @@
               }
             },
             {
-              "name": "allFriendships",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "filter",
-                  "description": "",
-                  "type": {
-                    "kind": "INPUT_OBJECT",
-                    "name": "FriendshipFilter",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "orderBy",
-                  "description": null,
-                  "type": {
-                    "kind": "ENUM",
-                    "name": "FriendshipOrderBy",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "skip",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "after",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "before",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "first",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                },
-                {
-                  "name": "last",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "Int",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "FriendshipConnection",
-                  "ofType": null
-                }
-              }
-            },
-            {
               "name": "Influence",
               "description": null,
               "isDeprecated": false,
@@ -14434,29 +13225,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "File",
-                "ofType": null
-              }
-            },
-            {
-              "name": "Friendship",
-              "description": null,
-              "isDeprecated": false,
-              "deprecationReason": null,
-              "args": [
-                {
-                  "name": "id",
-                  "description": "",
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "ID",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "Friendship",
                 "ofType": null
               }
             },

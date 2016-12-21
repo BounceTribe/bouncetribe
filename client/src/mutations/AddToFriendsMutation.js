@@ -1,6 +1,6 @@
 import Relay from 'react-relay'
 
-export default class CreateFriendshipMutation extends Relay.Mutation {
+export default class AddToFriendsMutation extends Relay.Mutation {
 
   // static fragments = {
   //   user: () => Relay.QL`
@@ -11,23 +11,23 @@ export default class CreateFriendshipMutation extends Relay.Mutation {
   // }
 
   getMutation () {
-    return Relay.QL`mutation{createFriendship}`
+    return Relay.QL`mutation{addToFriends}`
   }
 
   getFatQuery () {
     return Relay.QL`
-      fragment on CreateFriendshipPayload {
-
+      fragment on AddToFriendsPayload {
+        friends1User
       }
     `
   }
   getConfigs () {
     return [{
       type: 'RANGE_ADD',
-      parentName: 'user',
+      parentName: 'friends1User',
       parentID: this.props.selfId,
-      connectionName: 'friendships',
-      edgeName: 'edge',
+      connectionName: 'friends',
+      edgeName: 'friends1UserEdge',
       rangeBehaviors: {
         '': 'append',
       },
@@ -36,10 +36,8 @@ export default class CreateFriendshipMutation extends Relay.Mutation {
 
   getVariables () {
     return {
-      usersId: [
-        this.props.selfId,
-        this.props.newFriendId
-      ],
+      friends1UserId: this.props.selfId,
+      friends2UserId: this.props.newFriendId,
     }
   }
 

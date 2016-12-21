@@ -68,6 +68,9 @@ const IconContainer = styled.div`
 
 class ProfileTop extends Component {
 
+  state = {
+    locationMessage: 'add your location'
+  }
 
   get showLocation () {
     let {
@@ -75,7 +78,7 @@ class ProfileTop extends Component {
       submitField,
       ownProfile
     } = this.props
-    if (user.longitude && user.latitude) {
+    if (user.placename) {
       return (
         <ProfileField
           field={'placename'}
@@ -98,6 +101,9 @@ class ProfileTop extends Component {
           console.log('mapResult', mapResult)
           let placename = mapResult.results[0]['formatted_address']
           console.log('placename', placename)
+          this.setState({
+            locationMessage: placename
+          })
           let submission = {
             longitude,
             latitude,
@@ -115,23 +121,17 @@ class ProfileTop extends Component {
         <p
           onClick={()=>{
             navigator.geolocation.getCurrentPosition(success, error)
+            this.setState({
+              locationMessage: '...locating...'
+            })
           }}
         >
-          add your location
+          {this.state.locationMessage}
         </p>
       )
     } else {
       return (
-        <ProfileField
-          field={'placename'}
-          label={'location'}
-          text={user.placename}
-          submitField={submitField}
-          fontSize={.9}
-          icon={location}
-          fill={btMedium}
-          ownProfile={ownProfile}
-        />
+        null
       )
     }
   }
@@ -148,7 +148,7 @@ class ProfileTop extends Component {
 
       >
         <ProfileImage
-          src={user.profilePicUrl}
+          src={user.profilePicUrl || user.profilePicThumb}
           alt={'Profile'}
         />
 

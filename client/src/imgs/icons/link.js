@@ -2,7 +2,7 @@ import React from 'react'
 
 const link = (props) => {
   return (
-    <svg fill={props.fill} height="1em" width="1em" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg">
+    <svg fill={props.fill} height="1em" width="1em" viewBox="0 -3 20 20"  xmlns="http://www.w3.org/2000/svg">
     <g id="Layouts" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
         <g id="MY-PROFILE-(D)" transform="translate(-938.000000, -503.000000)">
             <g id="Body" transform="translate(256.000000, 202.000000)">

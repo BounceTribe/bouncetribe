@@ -64,6 +64,8 @@ class AuthContainer3 extends Component {
       fields.handle = handle
       if (profile.location) {
         fields.placename = profile.location.name
+      } else {
+        fields.placename = null
       }
 
       await new Promise ((resolve, reject) => {

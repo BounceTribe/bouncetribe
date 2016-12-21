@@ -20,22 +20,9 @@ const ProfileRightContainer = styled.div`
 
 class ProfileRight extends Component {
 
-  render() {
-    return (
-      <ProfileRightContainer>
-
-        <ProfileField
-          field={'experience'}
-          label={'experience'}
-          text={(this.props.user.experience) ? this.props.user.experience.toLowerCase() : this.props.user.experience}
-          submitField={this.props.submitField}
-          fontSize={.9}
-          icon={Clock}
-          ownProfile={this.props.ownProfile}
-        />
-
-        <br/>
-
+  get showEmail () {
+    if (this.props.ownProfile) {
+      return (
         <ProfileField
           field={'email'}
           label={'email'}
@@ -45,7 +32,37 @@ class ProfileRight extends Component {
           icon={Email}
           ownProfile={this.props.ownProfile}
         />
+      )
+    } else {
+      return (
+        null
+      )
+    }
+  }
 
+  get showExperience () {
+    if (this.props.user.experience || this.props.ownProfile) {
+      return (
+        <ProfileField
+          field={'experience'}
+          label={'experience'}
+          text={(this.props.user.experience) ? this.props.user.experience.toLowerCase() : this.props.user.experience}
+          submitField={this.props.submitField}
+          fontSize={.9}
+          icon={Clock}
+          ownProfile={this.props.ownProfile}
+        />
+      )
+    } else {
+      return (
+        null
+      )
+    }
+  }
+
+  get showWebsite () {
+    if (this.props.user.website  || this.props.ownProfile) {
+      return (
         <ProfileField
           field={'website'}
           label={'website'}
@@ -55,6 +72,23 @@ class ProfileRight extends Component {
           icon={Link}
           ownProfile={this.props.ownProfile}
         />
+      )
+    } else {
+      return (
+        null
+      )
+    }
+  }
+
+  render() {
+    return (
+      <ProfileRightContainer>
+
+        {this.showExperience}
+
+        {this.showEmail}
+
+        {this.showWebsite}
 
       </ProfileRightContainer>
     )

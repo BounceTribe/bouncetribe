@@ -13,18 +13,18 @@ type AddToArtistInfluencePayload {
   artistArtistEdge: ArtistEdge
 }
 
-type AddToUserFriendshipsPayload {
+type AddToFriendsPayload {
   viewer: Viewer!
   clientMutationId: String!
-  usersUser: User
-  friendshipsFriendship: Friendship
-  usersUserEdge: UserEdge
-  friendshipsFriendshipEdge: FriendshipEdge
+  friends2User: User
+  friends1User: User
+  friends2UserEdge: UserEdge
+  friends1UserEdge: UserEdge
 }
 
-input AddToUserFriendshipsUserInput {
-  friendshipsFriendshipId: ID!
-  usersUserId: ID!
+input AddToFriendsUserInput {
+  friends1UserId: ID!
+  friends2UserId: ID!
   clientMutationId: String!
 }
 
@@ -260,18 +260,6 @@ type CreateFriendRequestPayload {
   recipient: User
 }
 
-input CreateFriendshipInput {
-  usersId: [ID!]
-  clientMutationId: String!
-}
-
-type CreateFriendshipPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  friendship: Friendship
-  edge: FriendshipEdge
-}
-
 input CreateInfluenceInput {
   artistId: ID
   artist: InfluenceartistArtist
@@ -336,19 +324,6 @@ type DeleteFriendRequestPayload {
   edge: FriendRequestEdge
   actor: User
   recipient: User
-  deletedId: ID
-}
-
-input DeleteFriendshipInput {
-  id: ID!
-  clientMutationId: String!
-}
-
-type DeleteFriendshipPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  friendship: Friendship
-  edge: FriendshipEdge
   deletedId: ID
 }
 
@@ -552,7 +527,7 @@ input FriendRequestactorUser {
   profilePicUrl: String
   summary: String
   website: String
-  friendshipsId: [ID!]
+  friendsId: [ID!]
   influencesId: [ID!]
   invitationsId: [ID!]
   sentrequestsId: [ID!]
@@ -643,82 +618,10 @@ input FriendRequestrecipientUser {
   profilePicUrl: String
   summary: String
   website: String
-  friendshipsId: [ID!]
+  friendsId: [ID!]
   influencesId: [ID!]
   invitationsId: [ID!]
   sentrequestsId: [ID!]
-}
-
-type Friendship implements Node {
-  createdAt: DateTime
-  id: ID!
-  updatedAt: DateTime
-  users(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection
-}
-
-# A connection to a list of items.
-type FriendshipConnection {
-  # Information to aid in pagination.
-  pageInfo: PageInfo!
-
-  # A list of edges.
-  edges: [FriendshipEdge]
-
-  # Count of filtered result set without considering pagination arguments
-  count: Int!
-}
-
-# An edge in a connection.
-type FriendshipEdge {
-  # The item at the end of the edge.
-  node: Friendship!
-
-  # A cursor for use in pagination.
-  cursor: String!
-}
-
-input FriendshipFilter {
-  AND: [FriendshipFilter!]
-  OR: [FriendshipFilter!]
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-}
-
-enum FriendshipOrderBy {
-  createdAt_ASC
-  createdAt_DESC
-  id_ASC
-  id_DESC
-  updatedAt_ASC
-  updatedAt_DESC
 }
 
 type Influence implements Node {
@@ -813,7 +716,7 @@ input InfluenceuserUser {
   profilePicUrl: String
   summary: String
   website: String
-  friendshipsId: [ID!]
+  friendsId: [ID!]
   influencesId: [ID!]
   invitationsId: [ID!]
   sentrequestsId: [ID!]
@@ -828,26 +731,23 @@ type Mutation {
   createFriendRequest(input: CreateFriendRequestInput!): CreateFriendRequestPayload
   createArtist(input: CreateArtistInput!): CreateArtistPayload
   createFile(input: CreateFileInput!): CreateFilePayload
-  createFriendship(input: CreateFriendshipInput!): CreateFriendshipPayload
   updateInfluence(input: UpdateInfluenceInput!): UpdateInfluencePayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
   updateFriendRequest(input: UpdateFriendRequestInput!): UpdateFriendRequestPayload
   updateArtist(input: UpdateArtistInput!): UpdateArtistPayload
   updateFile(input: UpdateFileInput!): UpdateFilePayload
-  updateFriendship(input: UpdateFriendshipInput!): UpdateFriendshipPayload
   deleteInfluence(input: DeleteInfluenceInput!): DeleteInfluencePayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
   deleteFriendRequest(input: DeleteFriendRequestInput!): DeleteFriendRequestPayload
   deleteArtist(input: DeleteArtistInput!): DeleteArtistPayload
   deleteFile(input: DeleteFileInput!): DeleteFilePayload
-  deleteFriendship(input: DeleteFriendshipInput!): DeleteFriendshipPayload
-  addToUserFriendships(input: AddToUserFriendshipsUserInput!): AddToUserFriendshipsPayload
   addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
+  addToFriends(input: AddToFriendsUserInput!): AddToFriendsPayload
   addToArtistInfluence(input: AddToArtistInfluenceInfluenceInput!): AddToArtistInfluencePayload
   addToUserInvitations(input: AddToUserInvitationsUserInput!): AddToUserInvitationsPayload
   addToUserRequests(input: AddToUserRequestsUserInput!): AddToUserRequestsPayload
-  removeFromUserFriendships(input: RemoveFromUserFriendshipsUserInput!): RemoveFromUserFriendshipsPayload
   removeFromUserInfluences(input: RemoveFromUserInfluencesUserInput!): RemoveFromUserInfluencesPayload
+  removeFromFriends(input: RemoveFromFriendsUserInput!): RemoveFromFriendsPayload
   removeFromArtistInfluence(input: RemoveFromArtistInfluenceInfluenceInput!): RemoveFromArtistInfluencePayload
   removeFromUserInvitations(input: RemoveFromUserInvitationsUserInput!): RemoveFromUserInvitationsPayload
   removeFromUserRequests(input: RemoveFromUserRequestsUserInput!): RemoveFromUserRequestsPayload
@@ -901,18 +801,18 @@ type RemoveFromArtistInfluencePayload {
   artistArtistEdge: ArtistEdge
 }
 
-type RemoveFromUserFriendshipsPayload {
+type RemoveFromFriendsPayload {
   viewer: Viewer!
   clientMutationId: String!
-  usersUser: User
-  friendshipsFriendship: Friendship
-  usersUserEdge: UserEdge
-  friendshipsFriendshipEdge: FriendshipEdge
+  friends2User: User
+  friends1User: User
+  friends2UserEdge: UserEdge
+  friends1UserEdge: UserEdge
 }
 
-input RemoveFromUserFriendshipsUserInput {
-  friendshipsFriendshipId: ID!
-  usersUserId: ID!
+input RemoveFromFriendsUserInput {
+  friends1UserId: ID!
+  friends2UserId: ID!
   clientMutationId: String!
 }
 
@@ -986,7 +886,7 @@ input SignupUserInput {
   profilePicUrl: String
   summary: String
   website: String
-  friendshipsId: [ID!]
+  friendsId: [ID!]
   influencesId: [ID!]
   invitationsId: [ID!]
   sentrequestsId: [ID!]
@@ -1041,19 +941,6 @@ type UpdateFriendRequestPayload {
   recipient: User
 }
 
-input UpdateFriendshipInput {
-  id: ID!
-  usersId: [ID!]
-  clientMutationId: String!
-}
-
-type UpdateFriendshipPayload {
-  viewer: Viewer!
-  clientMutationId: String!
-  friendship: Friendship
-  edge: FriendshipEdge
-}
-
 input UpdateInfluenceInput {
   id: ID!
   artistId: ID
@@ -1083,7 +970,7 @@ input UpdateUserInput {
   profilePicUrl: String
   summary: String
   website: String
-  friendshipsId: [ID!]
+  friendsId: [ID!]
   influencesId: [ID!]
   invitationsId: [ID!]
   sentrequestsId: [ID!]
@@ -1102,7 +989,7 @@ type User implements Node {
   createdAt: DateTime
   email: String!
   experience: USER_EXPERIENCE
-  friendships(filter: FriendshipFilter, orderBy: FriendshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendshipConnection
+  friends(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection
   handle: String!
   id: ID!
   influences(filter: InfluenceFilter, orderBy: InfluenceOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): InfluenceConnection
@@ -1366,13 +1253,11 @@ type Viewer {
   allFriendRequests(filter: FriendRequestFilter, orderBy: FriendRequestOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendRequestConnection!
   allArtists(filter: ArtistFilter, orderBy: ArtistOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArtistConnection!
   allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
-  allFriendships(filter: FriendshipFilter, orderBy: FriendshipOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendshipConnection!
   Influence(id: ID): Influence
   User(auth0UserId: String, email: String, handle: String, id: ID): User
   FriendRequest(id: ID): FriendRequest
   Artist(id: ID): Artist
   File(id: ID, secret: String, url: String): File
-  Friendship(id: ID): Friendship
   id: ID!
   user: User
 }
