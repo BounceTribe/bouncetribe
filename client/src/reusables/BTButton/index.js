@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import logo from 'imgs/logo.svg'
 import styled from 'styled-components'
 import {btPurple, btWhite, btTeal, btWarn, btMedium, fbBlue, btLight, btDark, btTealActive, btPurpleActive} from 'styling/T'
 
@@ -41,7 +40,7 @@ const setActiveColor = (props) => {
 
 const Button = styled.button`
   border-radius: 5px;
-  height: ${props => (props.flex) ? '1.5em' : '45px'};
+  height: ${props => (props.flex) ? '2em' : '45px'};
   width: ${props => (props.flex) ? '100%' : '140px'};
   font-size: 1em;
   font-family: 'Helvetica Neue';
@@ -55,12 +54,13 @@ const Button = styled.button`
   transition: all .20s;
   box-shadow: 0px 2px #999;
   cursor: pointer;
+  flex-wrap: nowrap;
 
   &:after {
     content: '';
     display: block;
     width: 0;
-    height: ${props => (props.flex) ? '1.5em' : '45px'};
+    height: ${props => (props.flex) ? '2em' : '45px'};
     background: linear-gradient(to right, rgba(255,255,255,0) 30%, rgba(255,255,255,.08) 80%, rgba(255,255,255,0));
     border-right: solid rgba(255,255,255,0) 0px;
     position: absolute;
@@ -89,9 +89,11 @@ const Button = styled.button`
 
 `
 
-const ButtonImg = styled.img`
-  height: 40px;
+const IconContainer = styled.div`
+  height: ${props => (props.flex) ? '1.5em' : '35px'};
+  width: ${props => (props.flex) ? '1.5em' : '35px'};
   display: flex;
+  flex-wrap: nowrap;
   margin-left: 10px;
   margin-right: 10px;
 `
@@ -99,30 +101,22 @@ const ButtonImg = styled.img`
 
 const ButtonText = styled.span`
   display: flex;
+  flex-wrap: nowrap;
+  font-weight: 300;
+  margin: 0 10px; 
 `
 
 class BTButton extends Component {
 
-  get chooseIcon () {
-    switch (this.props.icon) {
-      case 'logo': {
-        return logo
-      }
-
-      default: {
-        return this.props.icon
-      }
-
-    }
-  }
-
   get useIcon () {
     if (this.props.icon) {
+      let Icon = this.props.icon
       return (
-        <ButtonImg
-          src={this.chooseIcon}
-          alt={'presentation'}
-        />
+        <IconContainer
+          flex={this.props.flex}
+        >
+          <Icon/>
+        </IconContainer>
       )
     }
   }

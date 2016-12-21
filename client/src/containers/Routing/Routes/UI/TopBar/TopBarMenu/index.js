@@ -46,7 +46,7 @@ class TopBarMenu extends Component {
             text={'Admin'}
           /> */}
           <TopBarMenuItem
-            text={'Projects'}
+            text={'Share Project'}
             to={`/${handle}/projects`}
             icon={notes}
           />

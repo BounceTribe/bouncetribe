@@ -1,12 +1,67 @@
-import React from 'react'
+import React, { Component } from 'react'
+import Relay from 'react-relay'
+import ProjectsContainer from 'reusables/ProjectsContainer'
 
-const Projects = () => {
-  return (
-    <section>
-      <h1>Projects</h1>
-      <h5>Here ur projects</h5>
-    </section>
-  )
+class Projects extends Component {
+
+  get ownProjects () {
+    let {
+      user,
+      User
+    } = this.props.viewer
+    if (user.id === User.id) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  render() {
+    let {
+      viewer,
+      router
+    } = this.props
+    return (
+      <section>
+        <ProjectsContainer
+          router={router}
+          user={viewer.User}
+          self={viewer.user}
+          ownProjects={this.ownProjects}
+        />
+      </section>
+    )
+  }
 }
 
-export default Projects
+export default Relay.createContainer(
+  Projects, {
+    initialVariables: {
+      handle: ''
+    },
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          User (handle: $handle) {
+            id
+            name
+            email
+            profilePicUrl
+            handle
+            summary
+            experience
+            website
+            placename
+            longitude
+            latitude
+            ${ProjectsContainer.getFragment('user')}
+
+          }
+          user {
+            id
+          }
+        }
+      `,
+    },
+  }
+)

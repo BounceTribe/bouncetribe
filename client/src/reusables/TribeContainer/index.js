@@ -7,6 +7,8 @@ import {Link} from 'react-router'
 import EditFriendRequestMutation from 'mutations/EditFriendRequestMutation'
 import AddToFriendsMutation from 'mutations/AddToFriendsMutation'
 import Tribe from 'imgs/icons/tribe'
+import AddToTribe from 'imgs/icons/AddToTribe'
+
 import BTButton from 'reusables/BTButton'
 
 const TribeHeader = styled.ul`
@@ -34,8 +36,7 @@ const TribeHeaderRight = styled.div`
   flex-direction: row;
   align-content: center;
   justify-content: space-between;
-  align-items: center;
-  width: 33%;
+  align-items: baseline;
 `
 
 const TribeList = styled.div`
@@ -64,6 +65,7 @@ const PendingText = styled.h4`
   color: ${props=> props.active ? btBlack : btLight };
   font-weight: ${props=> props.active ? '400' : '200' };
   font-size: .9em;
+  min-width: 150px;
 `
 
 const IconContainer = styled.div`
@@ -216,6 +218,7 @@ class TribeContainer extends Component {
                 <BTButton
                   text={'Add members'}
                   flex
+                  icon={AddToTribe}
                 />
               </Link>
           </TribeHeaderRight>
@@ -293,7 +296,9 @@ export default Relay.createContainer(
       `,
       viewer: () => Relay.QL`
         fragment on Viewer {
-          allUsers (first: 2147483647) {
+          allUsers (
+            first: 2147483647
+          ) {
             edges {
               node {
                 id

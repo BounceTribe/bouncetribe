@@ -98,11 +98,12 @@ const IconContainer = styled.div`
 const TribeButtonColumn = styled.div`
   display: flex;
   flex-direction: column;
-  align-content: center;
-  justify-content: center;
-  align-items: center;
+  align-content: flex-end;
+  justify-content: flex-end;
+  align-items: flex-end;
   margin-left: 20px;
   min-width: 100px;
+  height: 100px;
 `
 
 class TribeListItem extends Component {

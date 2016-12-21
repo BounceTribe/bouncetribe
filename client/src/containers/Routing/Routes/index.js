@@ -18,6 +18,13 @@ const ViewerQueries = {
   viewer: () => Relay.QL`query { viewer }`
 }
 
+const provideHandle = (params, {location}) => {
+  return {
+    ...params,
+    handle: params.handle
+  }
+}
+
 const requireAuth = async (nextState, replace) => {
   try {
     let reduxToken = store.getState().auth['id_token']
@@ -55,28 +62,6 @@ const requireAuth = async (nextState, replace) => {
   }
 }
 
-
-// const SelfHandle = {
-//   user: () => Relay.QL`
-//     query {
-//       viewer {
-//         user
-//       }
-//     }
-//   `
-// }
-//
-// const OtherHandle = {
-//   user: () => Relay.QL`
-//     query {
-//       viewer {
-//         User (handle: $handle)
-//       }
-//     }
-//   `
-// }
-
-
 const createRoutes = () => {
   return (
     <Route
@@ -107,6 +92,8 @@ const createRoutes = () => {
         path="/:handle/projects"
         component={Projects}
         onEnter={requireAuth}
+        queries={ViewerQueries}
+        prepareParams={provideHandle}
       />
       <Route
         path="/:handle/tribe"
@@ -127,12 +114,7 @@ const createRoutes = () => {
         component={Profile}
         onEnter={requireAuth}
         queries={ViewerQueries}
-        prepareParams={(params, {location}) => {
-          return {
-            ...params,
-            handle: params.handle
-          }
-        }}
+        prepareParams={provideHandle}
       />
 
     </Route>
