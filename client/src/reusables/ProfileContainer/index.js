@@ -37,7 +37,7 @@ class ProfileContainer extends Component {
 
 
   handleSubmitField = (fields = {}) => {
-    console.log(fields)
+    //console.log(fields)
     Relay.Store.commitUpdate(
       new EditPersonMutation({
         user: this.props.user,
@@ -65,7 +65,7 @@ class ProfileContainer extends Component {
     } else {
       artist = artist[0]
     }
-    console.log(artist)
+    //console.log(artist)
     Relay.Store.commitUpdate(
       new CreateInfluenceMutation({
         user: this.props.user,
@@ -160,6 +160,7 @@ export default Relay.createContainer(
                   name
                   id
                   imageUrl
+                  spotifyId
                 }
                 id
               }

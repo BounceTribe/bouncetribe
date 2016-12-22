@@ -148,7 +148,6 @@ class InfluencesField2 extends Component {
         <AsyncCreatable
           loadOptions={this.asyncOptions}
           name="form-field-name"
-          value="drake"
           onChange={(value)=>{
             console.log(value)
             this.submitInfluence(value)
