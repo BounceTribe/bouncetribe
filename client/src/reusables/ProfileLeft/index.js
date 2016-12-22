@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import ProfileField from 'reusables/ProfileField'
-import InfluencesField from 'reusables/InfluencesField'
-
 import InfluencesField3 from 'reusables/InfluencesField3'
 
 const ProfileLeftContainer = styled.div`

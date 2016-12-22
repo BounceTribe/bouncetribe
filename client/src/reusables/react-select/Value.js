@@ -1,5 +1,40 @@
+/* eslint-disable */
+
 import React from 'react';
 import classNames from 'classnames';
+import {btLight, btWhite, btTeal} from 'styling/T'
+import styled from 'styled-components'
+
+const ChipContainer = styled.div`
+  height: 30px;
+  background-color: ${btLight};
+  color: ${btWhite};
+  display: inline-flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 30px;
+  margin: 3px;
+	&:hover {
+  	box-shadow: 0 0 10px ${btTeal};
+	}
+`
+
+const ChipImage = styled.img`
+	width: 30px;
+	height: 100%;
+	display: flex;
+	border-radius: 30px;
+`
+
+const RemoveIcon = styled.button`
+	height: 30px;
+	width: 30px;
+	border-radius: 30px;
+	color: ${btWhite};
+	cursor: pointer;
+`
 
 const Value = React.createClass({
 
@@ -56,14 +91,13 @@ const Value = React.createClass({
 	renderRemoveIcon () {
 		if (this.props.disabled || !this.props.onRemove) return;
 		return (
-			<span className="Select-value-icon"
-				aria-hidden="true"
+			<RemoveIcon
 				onMouseDown={this.onRemove}
 				onTouchEnd={this.handleTouchEndRemove}
 				onTouchStart={this.handleTouchStart}
 				onTouchMove={this.handleTouchMove}>
 				&times;
-			</span>
+			</RemoveIcon>
 		);
 	},
 
@@ -81,14 +115,19 @@ const Value = React.createClass({
 	},
 
 	render () {
+		console.log('this.props.value', this.props.value)
 		return (
-			<div className={classNames('Select-value', this.props.value.className)}
-				style={this.props.value.style}
+			<ChipContainer
 				title={this.props.value.title}
-				>
-				{this.renderRemoveIcon()}
+			>
+				<ChipImage
+          src={this.props.value.value.imageUrl}
+          alt={this.props.label}
+        />
 				{this.renderLabel()}
-			</div>
+				{this.renderRemoveIcon()}
+			</ChipContainer>
+
 		);
 	}
 

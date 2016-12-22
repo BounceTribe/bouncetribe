@@ -8,12 +8,22 @@ import 'react-select/dist/react-select.css';
 // import 'react-select/dist/react-select.css';
 import styled from 'styled-components'
 // import InfluenceChip from 'reusables/InfluenceChip'
-// import {btTeal, btWhite} from 'styling/T'
+import {btTeal} from 'styling/T'
 // import Plus from 'imgs/icons/plus'
 
 
 const Container = styled.div`
   width: 400px;
+  &:hover {
+    box-shadow: ${props => (props.ownProfile) ? `0 0 10px ${btTeal}` : `none`};
+  }
+`
+
+const ProfileFieldLabel = styled.h3`
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 `
 
 class InfluencesField3 extends Component {
@@ -38,7 +48,7 @@ class InfluencesField3 extends Component {
         value: {
           name: edge.node.artist.name,
           spotifyId: edge.node.artist.spotifyId,
-          imageUrl: edge.node.artist.imagesUrl,
+          imageUrl: edge.node.artist.imageUrl,
           influenceId: edge.node.id
         },
         label: edge.node.artist.name
@@ -118,17 +128,30 @@ class InfluencesField3 extends Component {
   render() {
 
     return (
-      <Container>
+      <div>
 
-        <AsyncCreatable
-          value={this.state.influences}
-          loadOptions={this.asyncOptions}
-          multi={true}
-          onChange={this.handleChange}
-        />
+        <ProfileFieldLabel>
+          Influences
+        </ProfileFieldLabel>
 
 
-      </Container>
+        <Container
+          ownProfile={this.props.ownProfile}
+        >
+
+          <AsyncCreatable
+            value={this.state.influences}
+            loadOptions={this.asyncOptions}
+            multi={true}
+            onChange={this.handleChange}
+            clearable={false}
+            searchPromptText={'...search for an artist'}
+            placeholder={'add to your influences'}
+          />
+
+        </Container>
+      </div>
+
     )
   }
 }

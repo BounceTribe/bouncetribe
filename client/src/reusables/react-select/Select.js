@@ -8,7 +8,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AutosizeInput from 'react-input-autosize';
+import AutosizeInput from './AutosizeInput';
 import classNames from 'classnames';
 
 import defaultArrowRenderer from './utils/defaultArrowRenderer';
@@ -20,6 +20,34 @@ import AsyncCreatable from './AsyncCreatable';
 import Creatable from './Creatable';
 import Option from './Option';
 import Value from './Value';
+
+import styled from 'styled-components'
+import { btTeal, btLight} from 'styling/T'
+
+const SelectControl = styled.div`
+	width: 100%;
+	display: table;
+	min-height: 50px;
+	position: relative;
+`
+
+const SelectInput = styled.div`
+	display: inline-flex;
+	margin-left: 10px;
+`
+
+const SelectMultiValueWrapper = styled.span`
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+`
+
+const PlaceholderText = styled.div`
+	color: ${btLight};
+	font-size: .9em;
+	font-style: normal;
+	font-weight: normal;
+`
 
 function stringifyValue (value) {
 	const valueType = typeof value;
@@ -768,7 +796,7 @@ const Select = React.createClass({
 		let renderLabel = this.props.valueRenderer || this.getOptionLabel;
 		let ValueComponent = this.props.valueComponent;
 		if (!valueArray.length) {
-			return !this.state.inputValue ? <div className="Select-placeholder">{this.props.placeholder}</div> : null;
+			return !this.state.inputValue ? <PlaceholderText>{this.props.placeholder}</PlaceholderText> : null;
 		}
 		let onClick = this.props.onValueClick ? this.handleValueClick : null;
 		if (this.props.multi) {
@@ -841,19 +869,19 @@ const Select = React.createClass({
 			if (this.props.disabled || !this.props.searchable) {
 				const { inputClassName, ...divProps } = this.props.inputProps;
 				return (
-					<div
+					<SelectInput
 						{...divProps}
 						role="combobox"
 						aria-expanded={isOpen}
 						aria-owns={isOpen ? this._instancePrefix + '-list' : this._instancePrefix + '-value'}
 						aria-activedescendant={isOpen ? this._instancePrefix + '-option-' + focusedOptionIndex : this._instancePrefix + '-value'}
-						className={className}
+
 						tabIndex={this.props.tabIndex || 0}
 						onBlur={this.handleInputBlur}
 						onFocus={this.handleInputFocus}
 						ref={ref => this.input = ref}
 						aria-readonly={'' + !!this.props.disabled}
-						style={{ border: 0, width: 1, display:'inline-block' }}/>
+/>
 				);
 			}
 
@@ -863,9 +891,9 @@ const Select = React.createClass({
 				);
 			}
 			return (
-				<div className={ className }>
+				<SelectInput>
 					<input {...inputProps} />
-				</div>
+				</SelectInput>
 			);
 		}
 	},
@@ -888,14 +916,14 @@ const Select = React.createClass({
 	renderArrow () {
 		const onMouseDown = this.handleMouseDownOnArrow;
 		const arrow = this.props.arrowRenderer({ onMouseDown });
-
+		// <span
+		// 	className="Select-arrow-zone"
+		// 	onMouseDown={onMouseDown}
+		// >
+		// 	{arrow}
+		// </span>
 		return (
-			<span
-				className="Select-arrow-zone"
-				onMouseDown={onMouseDown}
-			>
-				{arrow}
-			</span>
+			null
 		);
 	},
 
@@ -1065,8 +1093,8 @@ const Select = React.createClass({
 				 className={className}
 				 style={this.props.wrapperStyle}>
 				{this.renderHiddenField(valueArray)}
-				<div ref={ref => this.control = ref}
-					className="Select-control"
+				<SelectControl ref={ref => this.control = ref}
+
 					style={this.props.style}
 					onKeyDown={this.handleKeyDown}
 					onMouseDown={this.handleMouseDown}
@@ -1074,15 +1102,15 @@ const Select = React.createClass({
 					onTouchStart={this.handleTouchStart}
 					onTouchMove={this.handleTouchMove}
 				>
-					<span className="Select-multi-value-wrapper" id={this._instancePrefix + '-value'}>
+					<SelectMultiValueWrapper>
 						{this.renderValue(valueArray, isOpen)}
 						{this.renderInput(valueArray, focusedOptionIndex)}
-					</span>
+					</SelectMultiValueWrapper>
 					{removeMessage}
 					{this.renderLoading()}
 					{this.renderClear()}
 					{this.renderArrow()}
-				</div>
+				</SelectControl>
 				{isOpen ? this.renderOuter(options, !this.props.multi ? valueArray : null, focusedOption) : null}
 			</div>
 		);
