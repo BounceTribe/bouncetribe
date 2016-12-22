@@ -6,6 +6,8 @@ import {Link} from 'react-router'
 import BTButton from 'reusables/BTButton'
 import Notes from 'imgs/icons/notes'
 import Upload from 'imgs/icons/Upload'
+import CreateProjectMutation from 'mutations/CreateProjectMutation'
+
 
 const TribeHeader = styled.ul`
   display: flex;
@@ -70,6 +72,30 @@ const IconContainer = styled.div`
 
 class ProjectsContainer extends Component {
 
+  createProject = async () => {
+    let {
+      router,
+      user
+    } = this.props
+    let hash = Math.random().toString(36).substring(7)
+    let title = user.handle + hash
+    let project = {
+      title
+    }
+    Relay.Store.commitUpdate(
+      new CreateProjectMutation({
+        user: this.props.user,
+        project
+      }), {
+        onSuccess: () => {
+          console.log('success', router)
+          router.push(`/${user.handle}/projects/${title}`)
+        }
+      }
+    )
+
+
+  }
 
   render() {
     let {
@@ -97,7 +123,7 @@ class ProjectsContainer extends Component {
 
 
                       <Link
-                        to={`/${router.params.handle}/projects/create`}
+                        onClick={this.createProject}
                       >
                         <BTButton
                           text={'New Project'}

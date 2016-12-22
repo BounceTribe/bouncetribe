@@ -1,15 +1,23 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
 // import styled from 'styled-components'
+import ProfileField from 'reusables/ProfileField'
 
-
-class ProjectsContainer extends Component {
+class ProjectContainer extends Component {
 
   render() {
 
     return (
       <div>
 
+        <ProfileField
+          field={'title'}
+          label={'title'}
+          text={''}
+          submitField={this.props.submitField}
+          fontSize={.9}
+          ownProfile={this.props.ownProfile}
+        />
 
       </div>
     )
@@ -17,7 +25,7 @@ class ProjectsContainer extends Component {
 }
 
 export default Relay.createContainer(
-  ProjectsContainer,
+  ProjectContainer,
   {
     fragments: {
       user: () => Relay.QL`
@@ -34,6 +42,13 @@ export default Relay.createContainer(
           handle
           summary
           id
+          projects (first: 2147483647) {
+            edges {
+              node {
+                title
+              }
+            }
+          }
         }
       `,
     },

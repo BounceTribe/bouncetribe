@@ -97,7 +97,7 @@ const createRoutes = () => {
       >
 
         <Route
-          path="/:handle/projects/create"
+          path="/:handle/projects/:title"
           component={Projects}
           onEnter={requireAuth}
           queries={ViewerQueries}

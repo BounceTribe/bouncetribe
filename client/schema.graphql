@@ -294,6 +294,7 @@ type CreateInfluencePayload {
 
 input CreateProjectInput {
   description: String
+  genre: [PROJECT_GENRE!]
   privacy: PROJECT_PRIVACY
   title: String!
   creatorId: ID
@@ -834,10 +835,16 @@ type Project implements Node {
   createdAt: DateTime
   creator(filter: UserFilter): User
   description: String
+  genre: [PROJECT_GENRE!]
   id: ID!
   privacy: PROJECT_PRIVACY!
   title: String!
   updatedAt: DateTime
+}
+
+enum PROJECT_GENRE {
+  ROCK
+  JAZZ
 }
 
 enum PROJECT_PRIVACY {
@@ -911,6 +918,10 @@ input ProjectFilter {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  genre: [PROJECT_GENRE!]
+  genre_not: [PROJECT_GENRE!]
+  genre_in: [[PROJECT_GENRE!]!]
+  genre_not_in: [[PROJECT_GENRE!]!]
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -1167,6 +1178,7 @@ type UpdateInfluencePayload {
 
 input UpdateProjectInput {
   description: String
+  genre: [PROJECT_GENRE!]
   id: ID!
   privacy: PROJECT_PRIVACY
   title: String
