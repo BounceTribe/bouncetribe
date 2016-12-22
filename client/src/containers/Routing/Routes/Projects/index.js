@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
 import ProjectsContainer from 'reusables/ProjectsContainer'
+import ProjectContainer from 'reusables/ProjectContainer'
 
 class Projects extends Component {
 
@@ -16,19 +17,38 @@ class Projects extends Component {
     }
   }
 
-  render() {
+  showListOrSingle = () => {
     let {
       viewer,
       router
     } = this.props
-    return (
-      <section>
+    console.log(router)
+    if (router.location.pathname === `/${router.params.handle}/projects`) {
+      return (
         <ProjectsContainer
           router={router}
           user={viewer.User}
           self={viewer.user}
           ownProjects={this.ownProjects}
         />
+      )
+    } else {
+      return (
+        <ProjectContainer
+          router={router}
+          user={viewer.User}
+          self={viewer.user}
+          ownProjects={this.ownProjects}
+        />
+      )
+    }
+  }
+
+  render() {
+    return (
+      <section>
+
+        {this.showListOrSingle()}
       </section>
     )
   }
@@ -55,7 +75,7 @@ export default Relay.createContainer(
             longitude
             latitude
             ${ProjectsContainer.getFragment('user')}
-
+            ${ProjectContainer.getFragment('user')}
           }
           user {
             id

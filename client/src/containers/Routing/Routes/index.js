@@ -94,7 +94,17 @@ const createRoutes = () => {
         onEnter={requireAuth}
         queries={ViewerQueries}
         prepareParams={provideHandle}
-      />
+      >
+
+        <Route
+          path="/:handle/projects/create"
+          component={Projects}
+          onEnter={requireAuth}
+          queries={ViewerQueries}
+          prepareParams={provideHandle}
+        />
+
+      </Route>
       <Route
         path="/:handle/tribe"
         component={Tribe}

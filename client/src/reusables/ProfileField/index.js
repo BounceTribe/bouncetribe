@@ -102,6 +102,15 @@ class ProfileField extends Component {
     valid: true
   }
 
+  componentWillReceiveProps (newProps) {
+    if (newProps.text) {
+      this.setState({
+        text: this.props.text || '',
+        displayText: this.props.text || `add your ${this.props.label}`,
+      })
+    }
+  }
+
   get inputOrDisplay() {
     const canEdit = this.state.canEdit
     if (canEdit && !this.props.fontSize && this.props.ownProfile) {

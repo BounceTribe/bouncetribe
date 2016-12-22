@@ -72,7 +72,7 @@ const IconContainer = styled.div`
 class ProfileTop extends Component {
 
   state = {
-    locationMessage: 'add your location'
+    locationMessage: '  add your location'
   }
 
   get showLocation () {
@@ -125,7 +125,7 @@ class ProfileTop extends Component {
           onClick={()=>{
             navigator.geolocation.getCurrentPosition(success, error)
             this.setState({
-              locationMessage: '...locating...'
+              locationMessage: '  ...locating...'
             })
           }}
         >
