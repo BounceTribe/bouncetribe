@@ -55,8 +55,8 @@ class ProfileContainer extends Component {
     const {
       spotifyId,
       name,
-      imageUrl,
-    } = fields
+      imageUrl
+    } = fields.value
     let options = searchArtistsOptions(spotifyId)
     let artist = await fetch(...options).then(resp=>resp.json()).then(json=>json.data.allArtists)
     if (artist.length < 1) {

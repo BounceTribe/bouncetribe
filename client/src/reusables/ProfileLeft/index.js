@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import ProfileField from 'reusables/ProfileField'
 import InfluencesField from 'reusables/InfluencesField'
 
+import InfluencesField2 from 'reusables/InfluencesField2'
+
 const ProfileLeftContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,6 +64,14 @@ class ProfileLeft extends Component {
         {this.showSummary}
 
         {this.showInfluences}
+
+        <InfluencesField2
+          influences={this.props.user.influences}
+          user={this.props.user}
+          submitInfluence={this.props.submitInfluence}
+          deleteInfluence={this.props.deleteInfluence}
+          ownProfile={this.props.ownProfile}
+        />
 
       </ProfileLeftContainer>
     )
