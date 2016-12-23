@@ -172,7 +172,8 @@ class ProfileField extends Component {
         this.validator(e.target.value)
       }
       this.setState({
-        text: e.target.value
+        text: e.target.value,
+        displayText: e.target.value
       })
     }
   }

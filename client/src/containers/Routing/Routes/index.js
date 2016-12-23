@@ -12,16 +12,24 @@ import auth from 'config/auth'
 import SigninUserMutation from 'mutations/SigninUserMutation'
 import {loginSuccess} from 'actions/auth'
 import {Err} from 'utils'
-
+// import {findProjectId} from 'apis/graphql'
 
 const ViewerQueries = {
   viewer: () => Relay.QL`query { viewer }`
 }
 
-const provideHandle = (params, {location}) => {
+const provideHandle = (params, router) => {
   return {
     ...params,
-    handle: params.handle
+    handle: params.handle,
+  }
+}
+
+const provideHandleAndProject = async (params, router) => {
+  return {
+    ...params,
+    handle: params.handle,
+    title: params.title
   }
 }
 
@@ -89,22 +97,23 @@ const createRoutes = () => {
 
 
       <Route
+        path="/:handle/projects/:title"
+        component={Projects}
+        onEnter={requireAuth}
+        queries={ViewerQueries}
+        prepareParams={provideHandleAndProject}
+      />
+
+      <Route
         path="/:handle/projects"
         component={Projects}
         onEnter={requireAuth}
         queries={ViewerQueries}
         prepareParams={provideHandle}
-      >
+      />
 
-        <Route
-          path="/:handle/projects/:title"
-          component={Projects}
-          onEnter={requireAuth}
-          queries={ViewerQueries}
-          prepareParams={provideHandle}
-        />
 
-      </Route>
+
       <Route
         path="/:handle/tribe"
         component={Tribe}
@@ -145,3 +154,10 @@ export default Routes
 //     return OtherHandle
 //   }
 // }}
+
+
+// try {
+
+// } catch (error) {
+//   console.log('provideHandleAndProject error', error)
+// }

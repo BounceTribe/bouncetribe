@@ -7,7 +7,7 @@ import BTButton from 'reusables/BTButton'
 import Notes from 'imgs/icons/notes'
 import Upload from 'imgs/icons/Upload'
 import CreateProjectMutation from 'mutations/CreateProjectMutation'
-
+import ProjectListItem from 'reusables/ProjectListItem'
 
 const TribeHeader = styled.ul`
   display: flex;
@@ -69,6 +69,16 @@ const IconContainer = styled.div`
   width: 25px;
 `
 
+const TribeList = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  justify-content: flex-start;
+  align-items: baseline;
+  flex-wrap: wrap;
+
+`
+
 
 class ProjectsContainer extends Component {
 
@@ -80,21 +90,32 @@ class ProjectsContainer extends Component {
     let hash = Math.random().toString(36).substring(7)
     let title = user.handle + hash
     let project = {
-      title
+      title,
     }
     Relay.Store.commitUpdate(
       new CreateProjectMutation({
         user: this.props.user,
         project
       }), {
-        onSuccess: () => {
-          console.log('success', router)
-          router.push(`/${user.handle}/projects/${title}`)
+        onSuccess: (result) => {
+          router.push({
+            pathname: `/${user.handle}/projects/${title}`
+          })
         }
       }
     )
+  }
 
-
+   get showProjectList () {
+    return this.props.user.projects.edges.map((edge) => {
+      return (
+        <ProjectListItem
+          key={edge.node.id}
+          project={edge.node}
+          user={this.props.user}
+        />
+      )
+    })
   }
 
   render() {
@@ -136,7 +157,9 @@ class ProjectsContainer extends Component {
 
                 </TribeHeader>
 
-
+                <TribeList>
+                  {this.showProjectList}
+                </TribeList>
       </div>
     )
   }
@@ -159,6 +182,14 @@ export default Relay.createContainer(
           profilePicThumb
           handle
           summary
+          projects (first: 2147483647) {
+            edges {
+              node {
+                title
+                id
+              }
+            }
+          }
           id
         }
       `,

@@ -99,3 +99,30 @@ export const checkIfUserEmailExists = (email) => {
     }
   ]
 }
+
+export const findProjectId = (userHandle, projectTitle) => {
+  return [
+    graphqlUrl,
+    {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `{
+          User (
+            handle: "${userHandle}"
+          ) {
+            projects (
+              filter: {
+                title: "${projectTitle}"
+              }
+            ) {
+              id
+            }
+          }
+        }`
+      }),
+    }
+  ]
+}
