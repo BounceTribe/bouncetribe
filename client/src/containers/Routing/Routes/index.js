@@ -6,6 +6,8 @@ import ReduxProvider from './ReduxProvider'
 import Home from './Home'
 import Profile from './Profile'
 import Projects from './Projects'
+import SingleProject from './SingleProject'
+
 import Tribe from './Tribe'
 // import Admin from './Admin'
 import auth from 'config/auth'
@@ -24,14 +26,15 @@ const provideHandle = (params, router) => {
     handle: params.handle,
   }
 }
-
-const provideHandleAndProject = async (params, router) => {
-  return {
-    ...params,
-    handle: params.handle,
-    title: params.title
-  }
-}
+// 
+// const provideHandleAndProject = async (params, router) => {
+//   console.log('provideHandleAndProject')
+//   return {
+//     ...params,
+//     handle: params.handle,
+//     title: params.title
+//   }
+// }
 
 const requireAuth = async (nextState, replace) => {
   try {
@@ -98,10 +101,10 @@ const createRoutes = () => {
 
       <Route
         path="/:handle/projects/:title"
-        component={Projects}
+        component={SingleProject}
         onEnter={requireAuth}
         queries={ViewerQueries}
-        prepareParams={provideHandleAndProject}
+        prepareParams={provideHandle}
       />
 
       <Route

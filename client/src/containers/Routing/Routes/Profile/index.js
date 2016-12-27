@@ -21,6 +21,7 @@ class Profile extends Component {
       viewer,
       router
     } = this.props
+    console.log('profile', this.props)
     return (
       <section>
         <ProfileContainer

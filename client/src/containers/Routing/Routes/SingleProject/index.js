@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
-import ProjectsContainer from 'reusables/ProjectsContainer'
+import SingleProjectContainer from 'reusables/SingleProjectContainer'
 
 
-class Projects extends Component {
+class SingleProject extends Component {
 
   get ownProjects () {
     let {
@@ -17,21 +17,31 @@ class Projects extends Component {
     }
   }
 
+  findProject = () => {
+    let {
+      title
+    } = this.props.params
+    const project = this.props.viewer.User.projects.edges.find( (edge)=> {
+      return edge.node.title === title
+    })
+    return project.node
+  }
 
 
   render() {
     let {
-      router,
-      viewer
+      viewer,
+      router
     } = this.props
+    this.findProject()
     return (
       <section>
 
-        <ProjectsContainer
+        <SingleProjectContainer
           router={router}
           user={viewer.User}
           self={viewer.user}
-          ownProjects={this.ownProjects}
+          project={this.findProject()}
         />
       </section>
     )
@@ -39,12 +49,9 @@ class Projects extends Component {
 }
 
 export default Relay.createContainer(
-  Projects, {
+  SingleProject, {
     initialVariables: {
-      handle: '',
-      title: false,
-      projectIdExists: false,
-      projectId: '',
+      handle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -61,7 +68,15 @@ export default Relay.createContainer(
             placename
             longitude
             latitude
-            ${ProjectsContainer.getFragment('user')}
+            ${SingleProjectContainer.getFragment('user')}
+            projects (first: 2147483647) {
+              edges {
+                node {
+                  title
+                  id
+                }
+              }
+            }
           }
           user {
             id
