@@ -1,45 +1,35 @@
 import React, { Component } from 'react'
 import Relay from 'react-relay'
 // import styled from 'styled-components'
-// import ProfileField from 'reusables/ProfileField'
-// import {findProjectId} from 'apis/graphql'
-
+import UpdateProjectMutation from 'mutations/UpdateProjectMutation'
 
 class SingleProjectContainer extends Component {
 
-  // getProjectId = async(newParams) => {
-  //   try {
-  //     let {
-  //       title,
-  //       handle
-  //     } = newParams
-  //     let options = findProjectId(handle, title)
-  //     const projectId = await fetch(...options).then(resp=>resp.json()).then(json=>json.data.User.projects[0].id)
-  //     console.log('projectId', projectId)
-  //     this.props.relay.setVariables({
-  //       projectId,
-  //       projectIdExists: true
-  //     })
-  //   } catch (error) {
-  //     console.log("hello")
-  //   }
-  // }
-  //
-  //
-  // componentWillReceiveProps (newProps) {
-  //   if (!this.props.params.title && newProps.params.title) {
-  //     console.log('componentWillReceiveProps')
-  //     this.getProjectId(newProps.params)
-  //   }
-  // }
-
+  submitField = () => {
+    Relay.Store.commitUpdate(
+      new UpdateProjectMutation({
+        project: this.props.project,
+        title: this.state.title,
+      })
+    )
+  }
 
   render() {
-    console.log('singleProjectContainer',this.props)
-
     return (
       <div>
-        {this.props.project.title}
+        <input
+          onChange={(e)=>{
+            this.setState({
+              title: e.target.value
+            })
+          }}
+        />
+
+        <button
+          onClick={this.submitField}
+        >
+          Submit
+        </button>
       </div>
     )
   }
