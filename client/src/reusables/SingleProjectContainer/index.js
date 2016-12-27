@@ -10,7 +10,17 @@ class SingleProjectContainer extends Component {
       new UpdateProjectMutation({
         project: this.props.project,
         title: this.state.title,
-      })
+        user: this.props.user
+      }),
+      {
+        onSuccess: (success) => {
+          console.log('success', success)
+          this.props.router.replace({
+            pathname: `/${this.props.user.handle}/projects/${success.updateProject.project.title}`
+          })
+        },
+        onFailure: (transaction) => console.log(transaction),
+      },
     )
   }
 

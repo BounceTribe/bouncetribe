@@ -26,6 +26,7 @@ export default class UpdateProjectMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on UpdateProjectPayload {
         project
+        creator
       }
     `
   }
@@ -33,7 +34,8 @@ export default class UpdateProjectMutation extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        project: this.props.project.id,
+        creator: this.props.user.id,
+        project: this.props.project.id
       },
     }]
   }

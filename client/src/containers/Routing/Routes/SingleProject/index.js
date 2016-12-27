@@ -41,6 +41,7 @@ class SingleProject extends Component {
           router={router}
           user={viewer.User}
           self={viewer.user}
+          viewer={viewer}
           project={this.findProject()}
         />
       </section>
@@ -81,6 +82,7 @@ export default Relay.createContainer(
           user {
             id
           }
+          id
         }
       `,
     },
