@@ -95,7 +95,6 @@ const IconContainer = styled.div`
   display: flex;
   flex-wrap: nowrap;
   margin-left: 10px;
-  margin-right: 10px;
 `
 
 
@@ -103,7 +102,7 @@ const ButtonText = styled.span`
   display: flex;
   flex-wrap: nowrap;
   font-weight: 300;
-  margin: 0 10px; 
+  margin: 0 10px;
 `
 
 class BTButton extends Component {
@@ -115,7 +114,9 @@ class BTButton extends Component {
         <IconContainer
           flex={this.props.flex}
         >
-          <Icon/>
+          <Icon
+            fill={this.props.iconFill}
+          />
         </IconContainer>
       )
     }
