@@ -75,6 +75,8 @@ export default Relay.createContainer(
                 node {
                   title
                   id
+                  description
+                  privacy
                 }
               }
             }

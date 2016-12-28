@@ -44,7 +44,8 @@ export default class UpdateProjectMutation extends Relay.Mutation {
     return {
       title: this.props.title,
       description: this.props.description,
-      id: this.props.project.id
+      id: this.props.project.id,
+      privacy: this.props.privacy
     }
   }
 

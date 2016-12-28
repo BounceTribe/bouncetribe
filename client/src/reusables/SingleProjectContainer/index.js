@@ -5,12 +5,16 @@ import UpdateProjectMutation from 'mutations/UpdateProjectMutation'
 import UploadLight from 'imgs/icons/UploadLight'
 import BTButton from 'reusables/BTButton'
 import notes from 'imgs/icons/notes'
-import {btWhite, btGhost, btLight} from 'styling/T'
+import {btWhite, btGhost, btLight, btMedium, btPurple} from 'styling/T'
 import UploadArtwork from 'imgs/icons/UploadArtwork'
+import PrivateButton from 'imgs/icons/PrivateButton'
+import TribeOnlyButton from 'imgs/icons/TribeOnlyButton'
+import FindSessionsButton from 'imgs/icons/FindSessionsButton'
+
 
 const UploadButton = styled.button`
   display: flex;
-  margin: auto;
+  margin: 10px auto;
 `
 
 const UploadRow = styled.div`
@@ -34,7 +38,7 @@ const UploadRight = styled.div`
 const LabelInputPair = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 10px 10px;
+  margin: 0px 10px 10px 10px;
 `
 
 const UploadButtonContainer = styled.div`
@@ -66,13 +70,55 @@ const Description = styled.textarea`
   min-height: 100px;
 `
 
+const PrivacyButtonRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 0 10px;
+`
+
+const ButtonLabelPair = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  margin: 10px 0px;
+  cursor: pointer;
+`
+
+const ButtonLabel = styled.span`
+  margin-top: 5px;
+  color: ${btMedium};
+  text-align: center;
+  font-size: .8em;
+`
+
+const Label = styled.label`
+  display: flex
+  margin-left: 20px;
+`
+
 class SingleProjectContainer extends Component {
+
+
+
+  state = {
+    description: this.props.project.description || '',
+    privacy: this.props.project.privacy || '',
+    title: this.props.project.title || '',
+    genre: this.props.project.genre || '',
+
+  }
 
   submitField = () => {
     Relay.Store.commitUpdate(
       new UpdateProjectMutation({
         project: this.props.project,
         title: this.state.title,
+        description: this.state.description,
+        privacy: this.state.privacy,
+        genre: this.state.genre,
         user: this.props.user
       }),
       {
@@ -94,15 +140,14 @@ class SingleProjectContainer extends Component {
           <UploadLight
           />
         </UploadButton>
-
+        <Label>Project Title</Label>
         <UploadRow>
           <UploadLeft>
-
             <EqualHeightContainer>
               <LabelInputPair>
-                <label>Project Title</label>
                 <input
                   type={'text'}
+                  value={this.state.title}
                   onChange={(e)=>{
                     this.setState({
                       title: e.target.value
@@ -114,6 +159,7 @@ class SingleProjectContainer extends Component {
               <LabelInputPair>
                 <label>Genre</label>
                 <input
+                  value={this.state.genre}
                   type={'text'}
                   onChange={(e)=>{
                     this.setState({
@@ -126,6 +172,7 @@ class SingleProjectContainer extends Component {
               <LabelInputPair>
                 <label>Description</label>
                 <Description
+                  value={this.state.description}
                   onChange={(e)=>{
                     this.setState({
                       description: e.target.value
@@ -158,6 +205,43 @@ class SingleProjectContainer extends Component {
               </ArtworkButton>
             </EqualHeightContainer>
 
+
+            <PrivacyButtonRow>
+              <ButtonLabelPair
+                onClick={()=>{
+                  this.setState({privacy: 'PRIVATE'})
+                }}
+              >
+                <PrivateButton
+                  fill={(this.state.privacy === 'PRIVATE') ? btPurple : btLight}
+                />
+                <ButtonLabel>Only Me</ButtonLabel>
+              </ButtonLabelPair>
+
+              <ButtonLabelPair
+                onClick={()=>{
+                  this.setState({privacy: 'TRIBE'})
+                }}
+              >
+                <TribeOnlyButton
+                  fill={(this.state.privacy === 'TRIBE') ? btPurple : btLight}
+                />
+                <ButtonLabel>Tribe Only</ButtonLabel>
+              </ButtonLabelPair>
+
+              <ButtonLabelPair
+                onClick={()=>{
+                  this.setState({privacy: 'PUBLIC'})
+                }}
+              >
+                <FindSessionsButton
+                  fill={(this.state.privacy === 'PUBLIC') ? btPurple : btLight}
+                />
+                <ButtonLabel>Find Session</ButtonLabel>
+              </ButtonLabelPair>
+
+
+            </PrivacyButtonRow>
 
           </UploadRight>
 

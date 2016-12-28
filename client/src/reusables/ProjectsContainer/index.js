@@ -88,7 +88,7 @@ class ProjectsContainer extends Component {
       user
     } = this.props
     let hash = Math.random().toString(36).substring(7)
-    let title = user.handle + hash
+    let title = 'untitled' + hash
     let project = {
       title,
     }
