@@ -10,11 +10,14 @@ import UploadArtwork from 'imgs/icons/UploadArtwork'
 import PrivateButton from 'imgs/icons/PrivateButton'
 import TribeOnlyButton from 'imgs/icons/TribeOnlyButton'
 import FindSessionsButton from 'imgs/icons/FindSessionsButton'
+import Dropzone from 'react-dropzone'
+import request from 'superagent'
 
 
 const UploadButton = styled.button`
   display: flex;
   margin: 10px auto;
+  height: 100%;
 `
 
 const UploadRow = styled.div`
@@ -38,7 +41,7 @@ const UploadRight = styled.div`
 const LabelInputPair = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0px 10px 10px 10px;
+  margin: 0px 10px 0px 10px;
 `
 
 const UploadButtonContainer = styled.div`
@@ -99,13 +102,18 @@ const Label = styled.label`
   margin-left: 20px;
 `
 
+const Artwork = styled.img`
+  height: 200px;
+  width: auto;
+`
+
 class SingleProjectContainer extends Component {
 
 
 
   state = {
     description: this.props.project.description || '',
-    privacy: this.props.project.privacy || '',
+    privacy: this.props.project.privacy || 'PRIVATE',
     title: this.props.project.title || '',
     genre: this.props.project.genre || '',
 
@@ -133,13 +141,60 @@ class SingleProjectContainer extends Component {
     )
   }
 
+
+  onDrop = (acceptedFiles, rejectedFiles) => {
+    if (acceptedFiles) {
+      console.log('acceptedFiles', acceptedFiles)
+
+      let url = 'https://api.graph.cool/file/v1/ciwdr6snu36fj01710o4ssheb'
+
+      let file = acceptedFiles[0]
+
+      console.log('file', file)
+
+      request
+        .post(url)
+        .attach('data', file)
+        .end( (error, response) => {
+          if (error || !response.ok ) {
+            console.log(error)
+          } else {
+            console.log(response)
+          }
+        })
+
+    }
+    if (rejectedFiles) {
+      console.log('rejectedFiles', rejectedFiles)
+    }
+  }
+
+  showArtwork = () => {
+    if (this.props.project.artwork) {
+      return (
+        <Artwork
+          src={this.props.project.artwork.url}
+          alt={'project artwork'}
+        />
+      )
+    } else {
+      return (
+        <UploadArtwork/>
+      )
+    }
+  }
+
   render() {
+    console.log(this.props.project)
     return (
       <div>
+
+
         <UploadButton>
           <UploadLight
           />
         </UploadButton>
+
         <Label>Project Title</Label>
         <UploadRow>
           <UploadLeft>
@@ -200,9 +255,14 @@ class SingleProjectContainer extends Component {
 
           <UploadRight>
             <EqualHeightContainer>
+              <Dropzone
+                onDrop={this.onDrop}
+              >
               <ArtworkButton>
-                <UploadArtwork/>
+                {this.showArtwork()}
+
               </ArtworkButton>
+            </Dropzone>
             </EqualHeightContainer>
 
 

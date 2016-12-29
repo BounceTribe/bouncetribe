@@ -28,6 +28,12 @@ input AddToFriendsUserInput {
   clientMutationId: String!
 }
 
+input AddToProjectArtProjectInput {
+  artworkFileId: ID!
+  projectProjectId: ID!
+  clientMutationId: String!
+}
+
 type AddToUserInfluencesPayload {
   viewer: Viewer!
   clientMutationId: String!
@@ -246,6 +252,8 @@ type CreateArtistPayload {
 
 input CreateFileInput {
   name: String!
+  projectId: ID
+  project: FileprojectProject
   clientMutationId: String!
 }
 
@@ -254,6 +262,7 @@ type CreateFilePayload {
   clientMutationId: String!
   file: File
   edge: FileEdge
+  project: Project
 }
 
 input CreateFriendRequestInput {
@@ -297,6 +306,8 @@ input CreateProjectInput {
   genre: [PROJECT_GENRE!]
   privacy: PROJECT_PRIVACY
   title: String!
+  artworkId: ID
+  artwork: ProjectartworkFile
   creatorId: ID
   creator: ProjectcreatorUser
   clientMutationId: String!
@@ -307,6 +318,7 @@ type CreateProjectPayload {
   clientMutationId: String!
   project: Project
   edge: ProjectEdge
+  artwork: File
   creator: User
 }
 
@@ -342,6 +354,7 @@ type DeleteFilePayload {
   clientMutationId: String!
   file: File
   edge: FileEdge
+  project: Project
   deletedId: ID
 }
 
@@ -385,6 +398,7 @@ type DeleteProjectPayload {
   clientMutationId: String!
   project: Project
   edge: ProjectEdge
+  artwork: File
   creator: User
   deletedId: ID
 }
@@ -407,6 +421,7 @@ type File implements Node {
   createdAt: DateTime
   id: ID!
   name: String!
+  project(filter: ProjectFilter): Project
   secret: String!
   size: Int!
   updatedAt: DateTime
@@ -550,6 +565,15 @@ enum FileOrderBy {
   updatedAt_DESC
   url_ASC
   url_DESC
+}
+
+input FileprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  privacy: PROJECT_PRIVACY
+  title: String!
+  creatorId: ID
+  creator: ProjectcreatorUser
 }
 
 type FriendRequest implements Node {
@@ -794,6 +818,8 @@ type Mutation {
   deleteFriendRequest(input: DeleteFriendRequestInput!): DeleteFriendRequestPayload
   deleteArtist(input: DeleteArtistInput!): DeleteArtistPayload
   deleteFile(input: DeleteFileInput!): DeleteFilePayload
+  setProjectArt(input: AddToProjectArtProjectInput!): SetProjectArtPayload
+  unsetProjectArt(input: UnsetProjectArtProjectInput!): UnsetProjectArtPayload
   addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
   addToFriends(input: AddToFriendsUserInput!): AddToFriendsPayload
   addToArtistInfluence(input: AddToArtistInfluenceInfluenceInput!): AddToArtistInfluencePayload
@@ -832,6 +858,7 @@ type PageInfo {
 }
 
 type Project implements Node {
+  artwork(filter: FileFilter): File
   createdAt: DateTime
   creator(filter: UserFilter): User
   description: String
@@ -851,6 +878,10 @@ enum PROJECT_PRIVACY {
   PUBLIC
   PRIVATE
   TRIBE
+}
+
+input ProjectartworkFile {
+  name: String!
 }
 
 # A connection to a list of items.
@@ -1079,6 +1110,15 @@ input RemoveFromUserRequestsUserInput {
   clientMutationId: String!
 }
 
+type SetProjectArtPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  projectProject: Project
+  artworkFile: File
+  projectProjectEdge: ProjectEdge
+  artworkFileEdge: FileEdge
+}
+
 # If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.
 type SigninPayload {
   token: String
@@ -1113,6 +1153,21 @@ input SignupUserInput {
   authProvider: AuthProviderSignupData!
 }
 
+type UnsetProjectArtPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  projectProject: Project
+  artworkFile: File
+  projectProjectEdge: ProjectEdge
+  artworkFileEdge: FileEdge
+}
+
+input UnsetProjectArtProjectInput {
+  artworkFileId: ID!
+  projectProjectId: ID!
+  clientMutationId: String!
+}
+
 input UpdateArtistInput {
   id: ID!
   imageUrl: String
@@ -1132,6 +1187,7 @@ type UpdateArtistPayload {
 input UpdateFileInput {
   id: ID!
   name: String
+  projectId: ID
   clientMutationId: String!
 }
 
@@ -1140,6 +1196,7 @@ type UpdateFilePayload {
   clientMutationId: String!
   file: File
   edge: FileEdge
+  project: Project
 }
 
 input UpdateFriendRequestInput {
@@ -1182,6 +1239,7 @@ input UpdateProjectInput {
   id: ID!
   privacy: PROJECT_PRIVACY
   title: String
+  artworkId: ID
   creatorId: ID
   clientMutationId: String!
 }
@@ -1191,6 +1249,7 @@ type UpdateProjectPayload {
   clientMutationId: String!
   project: Project
   edge: ProjectEdge
+  artwork: File
   creator: User
 }
 

@@ -395,6 +395,59 @@
           "possibleTypes": null
         },
         {
+          "inputFields": [
+            {
+              "name": "artworkFileId",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectProjectId",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "name": "AddToProjectArtProjectInput",
+          "description": null,
+          "interfaces": null,
+          "enumValues": null,
+          "fields": null,
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null
+        },
+        {
           "inputFields": null,
           "name": "AddToUserInfluencesPayload",
           "description": null,
@@ -1160,6 +1213,26 @@
               "defaultValue": null
             },
             {
+              "name": "projectId",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "project",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "FileprojectProject",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "clientMutationId",
               "description": null,
               "type": {
@@ -1242,6 +1315,18 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "FileEdge",
+                "ofType": null
+              }
+            },
+            {
+              "name": "project",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Project",
                 "ofType": null
               }
             }
@@ -1636,6 +1721,26 @@
               "defaultValue": null
             },
             {
+              "name": "artworkId",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "artwork",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProjectartworkFile",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "creatorId",
               "description": "",
               "type": {
@@ -1738,6 +1843,18 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "ProjectEdge",
+                "ofType": null
+              }
+            },
+            {
+              "name": "artwork",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "File",
                 "ofType": null
               }
             },
@@ -2025,6 +2142,18 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "FileEdge",
+                "ofType": null
+              }
+            },
+            {
+              "name": "project",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Project",
                 "ofType": null
               }
             },
@@ -2431,6 +2560,18 @@
               }
             },
             {
+              "name": "artwork",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "File",
+                "ofType": null
+              }
+            },
+            {
               "name": "creator",
               "description": null,
               "isDeprecated": false,
@@ -2574,6 +2715,89 @@
             }
           ],
           "kind": "OBJECT",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "description",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "genre",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PROJECT_GENRE",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "privacy",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "PROJECT_PRIVACY",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "creatorId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "creator",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProjectcreatorUser",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "name": "FileprojectProject",
+          "description": null,
+          "interfaces": null,
+          "enumValues": null,
+          "fields": null,
+          "kind": "INPUT_OBJECT",
           "possibleTypes": null
         },
         {
@@ -3771,6 +3995,60 @@
               }
             },
             {
+              "name": "setProjectArt",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "AddToProjectArtProjectInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "SetProjectArtPayload",
+                "ofType": null
+              }
+            },
+            {
+              "name": "unsetProjectArt",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "UnsetProjectArtProjectInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "UnsetProjectArtPayload",
+                "ofType": null
+              }
+            },
+            {
               "name": "addToUserInfluences",
               "description": null,
               "isDeprecated": false,
@@ -4158,6 +4436,31 @@
             }
           ],
           "kind": "OBJECT",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "name",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "name": "ProjectartworkFile",
+          "description": null,
+          "interfaces": null,
+          "enumValues": null,
+          "fields": null,
+          "kind": "INPUT_OBJECT",
           "possibleTypes": null
         },
         {
@@ -5245,6 +5548,97 @@
         },
         {
           "inputFields": null,
+          "name": "SetProjectArtPayload",
+          "description": null,
+          "interfaces": [],
+          "enumValues": null,
+          "fields": [
+            {
+              "name": "viewer",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Viewer",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "name": "projectProject",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Project",
+                "ofType": null
+              }
+            },
+            {
+              "name": "artworkFile",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "File",
+                "ofType": null
+              }
+            },
+            {
+              "name": "projectProjectEdge",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "ProjectEdge",
+                "ofType": null
+              }
+            },
+            {
+              "name": "artworkFileEdge",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "FileEdge",
+                "ofType": null
+              }
+            }
+          ],
+          "kind": "OBJECT",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": null,
           "name": "SigninPayload",
           "description": "If authentication was successful the payload contains the user and a token. If unsuccessful this payload is null.",
           "interfaces": [],
@@ -5589,6 +5983,150 @@
           "possibleTypes": null
         },
         {
+          "inputFields": null,
+          "name": "UnsetProjectArtPayload",
+          "description": null,
+          "interfaces": [],
+          "enumValues": null,
+          "fields": [
+            {
+              "name": "viewer",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "Viewer",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
+            },
+            {
+              "name": "projectProject",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Project",
+                "ofType": null
+              }
+            },
+            {
+              "name": "artworkFile",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "File",
+                "ofType": null
+              }
+            },
+            {
+              "name": "projectProjectEdge",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "ProjectEdge",
+                "ofType": null
+              }
+            },
+            {
+              "name": "artworkFileEdge",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "FileEdge",
+                "ofType": null
+              }
+            }
+          ],
+          "kind": "OBJECT",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "artworkFileId",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectProjectId",
+              "description": "",
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "name": "UnsetProjectArtProjectInput",
+          "description": null,
+          "interfaces": null,
+          "enumValues": null,
+          "fields": null,
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null
+        },
+        {
           "inputFields": [
             {
               "name": "id",
@@ -5769,6 +6307,16 @@
               "defaultValue": null
             },
             {
+              "name": "projectId",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "clientMutationId",
               "description": null,
               "type": {
@@ -5851,6 +6399,18 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "FileEdge",
+                "ofType": null
+              }
+            },
+            {
+              "name": "project",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Project",
                 "ofType": null
               }
             }
@@ -6243,6 +6803,16 @@
               "defaultValue": null
             },
             {
+              "name": "artworkId",
+              "description": "",
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "creatorId",
               "description": "",
               "type": {
@@ -6335,6 +6905,18 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "ProjectEdge",
+                "ofType": null
+              }
+            },
+            {
+              "name": "artwork",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "File",
                 "ofType": null
               }
             },
@@ -7977,6 +8559,29 @@
                   "name": "String",
                   "ofType": null
                 }
+              }
+            },
+            {
+              "name": "project",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [
+                {
+                  "name": "filter",
+                  "description": "",
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProjectFilter",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Project",
+                "ofType": null
               }
             },
             {
@@ -10947,6 +11552,29 @@
           ],
           "enumValues": null,
           "fields": [
+            {
+              "name": "artwork",
+              "description": null,
+              "isDeprecated": false,
+              "deprecationReason": null,
+              "args": [
+                {
+                  "name": "filter",
+                  "description": "",
+                  "type": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FileFilter",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "File",
+                "ofType": null
+              }
+            },
             {
               "name": "createdAt",
               "description": null,

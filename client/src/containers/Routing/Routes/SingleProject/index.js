@@ -77,6 +77,9 @@ export default Relay.createContainer(
                   id
                   description
                   privacy
+                  artwork {
+                    url
+                  }
                 }
               }
             }
