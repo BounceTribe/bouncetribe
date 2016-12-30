@@ -68,11 +68,9 @@ const TextArea = styled.textarea`
   padding: 0px;
   border: ${props => (props.valid) ? btTeal : '2px solid '+btWarn };
   outline: none;
-  font-style: ${props => (props.fontSize) ? 'normal' : 'italic'};
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
   box-shadow: 0 0 10px ${btTeal};
-  color: ${btMedium};
 `
 
 const TextInput = styled.input`
@@ -97,18 +95,36 @@ class ProfileField extends Component {
 
   state = {
     canEdit: false,
-    displayText: this.props.text || `add your ${this.props.label}`,
     text: this.props.text || '',
     valid: true
+  }
+
+  componentDidMount () {
+    if (this.props.text) {
+      this.setState({
+        displayText: this.prepareLinebreaks(this.props.text)
+      })
+    } else {
+      this.setState({
+        displayText: `add your ${this.props.label}`
+      })
+    }
+
   }
 
   componentWillReceiveProps (newProps) {
     if (newProps.text) {
       this.setState({
-        text: this.props.text || '',
-        displayText: this.props.text || `add your ${this.props.label}`,
+        text: newProps.text || '',
+        displayText: newProps.text ? this.prepareLinebreaks(newProps.text) : `add your ${this.props.label}`,
       })
     }
+  }
+
+  prepareLinebreaks = (text) => {
+    let displayText = text.replace(/^"(.+(?="$))"$/, '$1')
+    displayText = displayText.replace(/\r?\n/g, '<br />')
+    return displayText
   }
 
   get inputOrDisplay() {
