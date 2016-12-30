@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import {Link} from 'react-router'
-import { btLight, btPurple} from 'styling/T'
+import { btLight, btDark} from 'styling/T'
 import Bolt from 'imgs/icons/bolt'
 import Notes from 'imgs/icons/notes'
 import Tribe from 'imgs/icons/tribe'
@@ -16,10 +16,9 @@ const ProjectListItemDisplay = styled.div`
   align-items: center;
   height: 100px;
   margin: 10px 1%;
-  padding: 10px;
-  max-width: 45.6%;
-  min-width: 40%;
-  border: solid ${btLight} .5px;
+  padding: 1%;
+  width: 95%;
+  border: solid ${btLight} 1px;
 `
 
 const ProjectListItemImage = styled.img`
@@ -57,7 +56,7 @@ const ProjectListItemRow = styled.div`
 const ProjectName = styled.h2`
   font-size: 1.2em;
   font-weight: normal;
-  color: ${btPurple}
+  color: ${btDark}
 `
 
 // const ProjectLocation = styled.div`
@@ -120,10 +119,15 @@ class ProjectListItem extends Component {
 
       >
         <ProjectListItemRow>
-          <ProjectListItemImage
-            src={(artwork) ? artwork.url : burrito}
-            alt={'ProjectListItem'}
-          />
+          <Link
+            to={`/${handle}/projects/${title}`}
+          >
+            <ProjectListItemImage
+              src={(artwork) ? artwork.url : burrito}
+              alt={'ProjectListItem'}
+            />
+          </Link>
+
 
           <ProjectListItemInfoColumn>
             <ProjectColumnTop>

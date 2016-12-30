@@ -304,6 +304,7 @@ type CreateInfluencePayload {
 input CreateProjectInput {
   description: String
   genre: [PROJECT_GENRE!]
+  new: Boolean
   privacy: PROJECT_PRIVACY
   title: String!
   artworkId: ID
@@ -570,6 +571,7 @@ enum FileOrderBy {
 input FileprojectProject {
   description: String
   genre: [PROJECT_GENRE!]
+  new: Boolean
   privacy: PROJECT_PRIVACY
   title: String!
   creatorId: ID
@@ -864,6 +866,7 @@ type Project implements Node {
   description: String
   genre: [PROJECT_GENRE!]
   id: ID!
+  new: Boolean!
   privacy: PROJECT_PRIVACY!
   title: String!
   updatedAt: DateTime
@@ -967,6 +970,8 @@ input ProjectFilter {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
+  new: Boolean
+  new_not: Boolean
   privacy: PROJECT_PRIVACY
   privacy_not: PROJECT_PRIVACY
   privacy_in: [PROJECT_PRIVACY!]
@@ -1002,6 +1007,8 @@ enum ProjectOrderBy {
   description_DESC
   id_ASC
   id_DESC
+  new_ASC
+  new_DESC
   privacy_ASC
   privacy_DESC
   title_ASC
@@ -1237,6 +1244,7 @@ input UpdateProjectInput {
   description: String
   genre: [PROJECT_GENRE!]
   id: ID!
+  new: Boolean
   privacy: PROJECT_PRIVACY
   title: String
   artworkId: ID

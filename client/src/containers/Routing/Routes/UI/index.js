@@ -2,14 +2,27 @@ import React, {Component} from 'react'
 import TopBar from './TopBar'
 import {connect} from 'react-redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
+import injectTapEventPlugin from 'react-tap-event-plugin'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import {btTeal, btPurple} from 'styling/T'
+
+injectTapEventPlugin()
+
+const muiTheme = getMuiTheme({
+  textField: {
+    hintColor: btTeal,
+    borderColor: btTeal,
+    focusColor: btPurple
+  },
+});
 
 
 class UI extends Component {
   render() {
     return (
-        <MuiThemeProvider>
+        <MuiThemeProvider
+          muiTheme={muiTheme}
+        >
           <div>
             <TopBar
               isLoggedIn={this.props.isLoggedIn}

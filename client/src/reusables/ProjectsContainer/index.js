@@ -71,12 +71,10 @@ const IconContainer = styled.div`
 
 const TribeList = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-content: flex-start;
   justify-content: flex-start;
   align-items: baseline;
-  flex-wrap: wrap;
-
 `
 
 
