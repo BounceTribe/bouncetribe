@@ -97,25 +97,13 @@ const underlineFocusStyle = {
 
 class NewProjectCreator extends Component {
 
-  componentDidMount() {
-    this.setState({
-      title: this.untitledCheck(this.props.project.title)
-    })
-  }
 
   state = {
     description: this.props.project.description || '',
     privacy: this.props.project.privacy || 'PRIVATE',
     genre: this.props.project.genre || '',
-    new: true
-  }
-
-  untitledCheck = (title) => {
-    if (title.includes('untitled') && title.length > 20) {
-      return ''
-    } else {
-      return title
-    }
+    new: true,
+    title: this.props.title
   }
 
   submitField = () => {

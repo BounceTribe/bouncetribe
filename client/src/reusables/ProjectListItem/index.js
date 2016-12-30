@@ -5,7 +5,8 @@ import { btLight, btDark} from 'styling/T'
 import Bolt from 'imgs/icons/bolt'
 import Notes from 'imgs/icons/notes'
 import Tribe from 'imgs/icons/tribe'
-import burrito from 'styling/burritocat.png'
+
+const defaultPic= 'https://files.graph.cool/ciwdr6snu36fj01710o4ssheb/cixc6xvf91rmu0147xkmfqpin'
 
 const ProjectListItemDisplay = styled.div`
   display: flex;
@@ -123,7 +124,7 @@ class ProjectListItem extends Component {
             to={`/${handle}/projects/${title}`}
           >
             <ProjectListItemImage
-              src={(artwork) ? artwork.url : burrito}
+              src={(artwork) ? artwork.url : defaultPic}
               alt={'ProjectListItem'}
             />
           </Link>

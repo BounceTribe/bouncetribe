@@ -11,6 +11,7 @@ class SingleProjectContainer extends Component {
         <NewProjectCreator
           user={this.props.user}
           project={this.props.project}
+          router={this.props.router}
         />
       )
     } else {
@@ -18,6 +19,8 @@ class SingleProjectContainer extends Component {
         <Project
           user={this.props.user}
           project={this.props.project}
+          router={this.props.router}
+
         />
       )
     }
