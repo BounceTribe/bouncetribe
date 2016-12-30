@@ -12,6 +12,7 @@ import TribeOnlyButton from 'imgs/icons/TribeOnlyButton'
 import FindSessionsButton from 'imgs/icons/FindSessionsButton'
 import Dropzone from 'react-dropzone'
 import request from 'superagent'
+import TextField from 'material-ui/TextField'
 
 
 const UploadButton = styled.button`
@@ -41,7 +42,7 @@ const UploadRight = styled.div`
 const LabelInputPair = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 0px 10px 0px 10px;
+  margin: 0px 5px 0px 5px;
 `
 
 const UploadButtonContainer = styled.div`
@@ -50,16 +51,6 @@ const UploadButtonContainer = styled.div`
   margin: 10px 10px;
 `
 
-const ArtworkButton = styled.button`
-  background-color: ${btGhost};
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  border: 1px solid ${btLight};
-  margin: 0 10px;
-  height: 100%;
-`
 const EqualHeightContainer = styled.div`
   height: 250px;
   display: flex;
@@ -69,9 +60,6 @@ const EqualHeightContainer = styled.div`
   justify-content: space-between;
 `
 
-const Description = styled.textarea`
-  min-height: 100px;
-`
 
 const PrivacyButtonRow = styled.div`
   display: flex;
@@ -97,26 +85,32 @@ const ButtonLabel = styled.span`
   font-size: .8em;
 `
 
-const Label = styled.label`
-  display: flex
-  margin-left: 20px;
-`
 
 const Artwork = styled.img`
-  height: 200px;
+  height: 250px;
   width: auto;
 `
 
 class SingleProjectContainer extends Component {
 
-
+  componentDidMount() {
+    this.setState({
+      title: this.untitledCheck(this.props.project.title)
+    })
+  }
 
   state = {
     description: this.props.project.description || '',
     privacy: this.props.project.privacy || 'PRIVATE',
-    title: this.props.project.title || '',
     genre: this.props.project.genre || '',
+  }
 
+  untitledCheck = (title) => {
+    if (title.includes('untitled') && title.length > 20) {
+      return ''
+    } else {
+      return title
+    }
   }
 
   submitField = () => {
@@ -127,7 +121,8 @@ class SingleProjectContainer extends Component {
         description: this.state.description,
         privacy: this.state.privacy,
         genre: this.state.genre,
-        user: this.props.user
+        user: this.props.user,
+        artworkId: this.state.artworkId
       }),
       {
         onSuccess: (success) => {
@@ -160,6 +155,10 @@ class SingleProjectContainer extends Component {
             console.log(error)
           } else {
             console.log(response)
+            this.setState({
+              artworkId: response.body.id
+            })
+            this.submitField()
           }
         })
 
@@ -179,7 +178,24 @@ class SingleProjectContainer extends Component {
       )
     } else {
       return (
-        <UploadArtwork/>
+          <Dropzone
+            onDrop={this.onDrop}
+            multiple={false}
+            accept={'image/*'}
+            style={{
+              display: 'flex',
+              height: '250px',
+              width: '100%',
+              border: `2px dashed ${btLight} `,
+              backgroundColor: `${btGhost}`,
+              alignContent: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              cursor: 'pointer'
+            }}
+          >
+          <UploadArtwork/>
+        </Dropzone>
       )
     }
   }
@@ -195,12 +211,12 @@ class SingleProjectContainer extends Component {
           />
         </UploadButton>
 
-        <Label>Project Title</Label>
         <UploadRow>
           <UploadLeft>
             <EqualHeightContainer>
               <LabelInputPair>
-                <input
+                <TextField
+                  name={'title'}
                   type={'text'}
                   value={this.state.title}
                   onChange={(e)=>{
@@ -208,12 +224,13 @@ class SingleProjectContainer extends Component {
                       title: e.target.value
                     })
                   }}
+                  floatingLabelText={'Title'}
                 />
               </LabelInputPair>
 
               <LabelInputPair>
-                <label>Genre</label>
-                <input
+                <TextField
+                  name={'genre'}
                   value={this.state.genre}
                   type={'text'}
                   onChange={(e)=>{
@@ -221,12 +238,16 @@ class SingleProjectContainer extends Component {
                       genre: e.target.value
                     })
                   }}
+                  floatingLabelText={'Genre'}
                 />
               </LabelInputPair>
 
               <LabelInputPair>
-                <label>Description</label>
-                <Description
+                <TextField
+                  name={'Description'}
+                  floatingLabelText={'Description'}
+                  multiLine={true}
+                  rows={3}
                   value={this.state.description}
                   onChange={(e)=>{
                     this.setState({
@@ -254,16 +275,8 @@ class SingleProjectContainer extends Component {
           </UploadLeft>
 
           <UploadRight>
-            <EqualHeightContainer>
-              <Dropzone
-                onDrop={this.onDrop}
-              >
-              <ArtworkButton>
-                {this.showArtwork()}
 
-              </ArtworkButton>
-            </Dropzone>
-            </EqualHeightContainer>
+                {this.showArtwork()}
 
 
             <PrivacyButtonRow>

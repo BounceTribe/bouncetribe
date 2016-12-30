@@ -112,7 +112,8 @@ class ProjectListItem extends Component {
       handle,
     } = this.props.user
     let {
-      title
+      title,
+      artwork
     } = this.props.project
     return (
       <ProjectListItemDisplay
@@ -120,7 +121,7 @@ class ProjectListItem extends Component {
       >
         <ProjectListItemRow>
           <ProjectListItemImage
-            src={burrito}
+            src={(artwork) ? artwork.url : burrito}
             alt={'ProjectListItem'}
           />
 

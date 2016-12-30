@@ -187,6 +187,9 @@ export default Relay.createContainer(
               node {
                 title
                 id
+                artwork {
+                  url
+                }
               }
             }
           }
