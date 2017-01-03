@@ -6,6 +6,8 @@ import {btBlack, btLight} from 'styling/T'
 import {Link} from 'react-router'
 import EditFriendRequestMutation from 'mutations/EditFriendRequestMutation'
 import AddToFriendsMutation from 'mutations/AddToFriendsMutation'
+import CreateFriendRequestMutation from 'mutations/CreateFriendRequestMutation'
+
 import Tribe from 'imgs/icons/tribe'
 import AddToTribe from 'imgs/icons/AddToTribe'
 
@@ -101,7 +103,7 @@ class TribeContainer extends Component {
             key={edge.node.id}
             user={edge.node}
             profilePicUrl={edge.node.profilePicUrl}
-            makeTribeRequest={this.handleTribeshipInvitation}
+            makeTribeRequest={this.newFriendInvite}
           />
         ))
       }
@@ -130,7 +132,6 @@ class TribeContainer extends Component {
               id={edge.node.id}
               user={edge.node}
               profilePicUrl={edge.node.profilePicThumb}
-              makeTribeRequest={this.handleTribeshipInvitation}
               myTribe
             />
           ))
@@ -139,6 +140,24 @@ class TribeContainer extends Component {
         }
       }
     }
+
+  }
+
+  newFriendInvite = async (fields = {}) => {
+    Relay.Store.commitUpdate(
+      new CreateFriendRequestMutation({
+        actorId: this.props.user.id,
+        recipientId: fields.recipientId
+      }),
+      {
+        onSuccess: (transaction) => {
+          console.log('makeTribeRequest succeeded', transaction)
+        },
+        onFailure: (transaction) => {
+          console.log('makeTribeRequest failed', transaction)
+        }
+      }
+    )
 
   }
 
@@ -237,6 +256,7 @@ class TribeContainer extends Component {
     )
   }
 }
+
 
 export default Relay.createContainer(
   TribeContainer,

@@ -1,17 +1,37 @@
 import React, {Component} from 'react'
-import Spinner from 'reusables/Spinner'
+import Relay from 'react-relay'
+
+import FeedContainer from 'reusables/FeedContainer'
+
 class Feed extends Component {
 
   render() {
     return (
       <section>
-        <h1>Feed</h1>
-        <h4>Woah cool check out your feed</h4>
-        <Spinner/>
+
+        <FeedContainer
+          user={this.props.viewer.user}
+        />
 
       </section>
     )
   }
 }
 
-export default Feed
+
+export default Relay.createContainer(
+  Feed,
+  {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          user {
+            id
+            name
+            ${FeedContainer.getFragment('user')}
+          }
+        }
+      `,
+    },
+  }
+)

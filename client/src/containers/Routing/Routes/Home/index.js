@@ -13,6 +13,7 @@ class Home extends Component {
         <Feed
           logout={this.props.logout}
           isLoggedIn={this.props.isLoggedIn}
+          viewer={this.props.viewer}
         />
       )
     } else {
@@ -62,6 +63,7 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           ${AuthContainer3.getFragment('viewer')}
+          ${Feed.getFragment('viewer')}
         }
       `,
     },

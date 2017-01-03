@@ -155,7 +155,7 @@ class TribeListItem extends Component {
             text={'Invite'}
             onClick={()=>{
               let fields = {
-                otherId: this.props.user.id
+                recipientId: this.props.user.id
               }
               this.props.makeTribeRequest(fields)
             }}
