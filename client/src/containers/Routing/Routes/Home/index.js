@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import Feed from './Feed'
 import AuthContainer3 from 'reusables/AuthContainer3'
 import {logout} from 'actions/auth'
+import {FeedAuthSection} from 'styling/styled'
 
 class Home extends Component {
 
@@ -29,9 +30,9 @@ class Home extends Component {
 
   render() {
     return (
-      <section>
+      <FeedAuthSection>
         {this.showFeedOrAuth}
-      </section>
+      </FeedAuthSection>
     )
   }
 }

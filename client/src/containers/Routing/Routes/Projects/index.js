@@ -25,15 +25,12 @@ class Projects extends Component {
       viewer
     } = this.props
     return (
-      <section>
-
         <ProjectsContainer
           router={router}
           user={viewer.User}
           self={viewer.user}
           ownProjects={this.ownProjects}
         />
-      </section>
     )
   }
 }

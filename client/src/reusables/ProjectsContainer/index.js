@@ -8,6 +8,7 @@ import Notes from 'imgs/icons/notes'
 import Upload from 'imgs/icons/Upload'
 import CreateProjectMutation from 'mutations/CreateProjectMutation'
 import ProjectListItem from 'reusables/ProjectListItem'
+import {Section} from 'styling/styled'
 
 const TribeHeader = styled.ul`
   display: flex;
@@ -121,7 +122,7 @@ class ProjectsContainer extends Component {
       router
     } = this.props
     return (
-      <div>
+      <Section>
 
                 <TribeHeader>
                     <Link
@@ -158,7 +159,7 @@ class ProjectsContainer extends Component {
                 <TribeList>
                   {this.showProjectList}
                 </TribeList>
-      </div>
+      </Section>
     )
   }
 }

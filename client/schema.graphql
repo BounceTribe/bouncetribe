@@ -239,7 +239,8 @@ input CreateArtistInput {
   imageUrl: String!
   name: String!
   spotifyId: String!
-  influencesId: [ID!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
   clientMutationId: String!
 }
 
@@ -600,11 +601,16 @@ input FriendRequestactorUser {
   profilePicUrl: String
   summary: String
   website: String
-  friendsId: [ID!]
-  influencesId: [ID!]
-  invitationsId: [ID!]
-  projectsId: [ID!]
-  sentrequestsId: [ID!]
+  friendsIds: [ID!]
+  friends: [UserInput!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestInput!]
+  projectsIds: [ID!]
+  projects: [ProjectInput!]
+  sentrequestsIds: [ID!]
+  sentrequests: [FriendRequestInput!]
 }
 
 # A connection to a list of items.
@@ -667,6 +673,13 @@ input FriendRequestFilter {
   updatedAt_gte: DateTime
 }
 
+input FriendRequestInput {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
 enum FriendRequestOrderBy {
   accepted_ASC
   accepted_DESC
@@ -692,11 +705,16 @@ input FriendRequestrecipientUser {
   profilePicUrl: String
   summary: String
   website: String
-  friendsId: [ID!]
-  influencesId: [ID!]
-  invitationsId: [ID!]
-  projectsId: [ID!]
-  sentrequestsId: [ID!]
+  friendsIds: [ID!]
+  friends: [UserInput!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestInput!]
+  projectsIds: [ID!]
+  projects: [ProjectInput!]
+  sentrequestsIds: [ID!]
+  sentrequests: [FriendRequestInput!]
 }
 
 type Influence implements Node {
@@ -711,7 +729,8 @@ input InfluenceartistArtist {
   imageUrl: String!
   name: String!
   spotifyId: String!
-  influencesId: [ID!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
 }
 
 # A connection to a list of items.
@@ -770,6 +789,11 @@ input InfluenceFilter {
   updatedAt_gte: DateTime
 }
 
+input InfluenceInput {
+  artistId: ID
+  userId: ID
+}
+
 enum InfluenceOrderBy {
   createdAt_ASC
   createdAt_DESC
@@ -791,11 +815,16 @@ input InfluenceuserUser {
   profilePicUrl: String
   summary: String
   website: String
-  friendsId: [ID!]
-  influencesId: [ID!]
-  invitationsId: [ID!]
-  projectsId: [ID!]
-  sentrequestsId: [ID!]
+  friendsIds: [ID!]
+  friends: [UserInput!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestInput!]
+  projectsIds: [ID!]
+  projects: [ProjectInput!]
+  sentrequestsIds: [ID!]
+  sentrequests: [FriendRequestInput!]
 }
 
 # The `Long` scalar type represents non-fractional signed whole numeric values.
@@ -911,11 +940,16 @@ input ProjectcreatorUser {
   profilePicUrl: String
   summary: String
   website: String
-  friendsId: [ID!]
-  influencesId: [ID!]
-  invitationsId: [ID!]
-  projectsId: [ID!]
-  sentrequestsId: [ID!]
+  friendsIds: [ID!]
+  friends: [UserInput!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestInput!]
+  projectsIds: [ID!]
+  projects: [ProjectInput!]
+  sentrequestsIds: [ID!]
+  sentrequests: [FriendRequestInput!]
 }
 
 # An edge in a connection.
@@ -998,6 +1032,16 @@ input ProjectFilter {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+}
+
+input ProjectInput {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
 }
 
 enum ProjectOrderBy {
@@ -1151,11 +1195,16 @@ input SignupUserInput {
   profilePicUrl: String
   summary: String
   website: String
-  friendsId: [ID!]
-  influencesId: [ID!]
-  invitationsId: [ID!]
-  projectsId: [ID!]
-  sentrequestsId: [ID!]
+  friendsIds: [ID!]
+  friends: [UserInput!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestInput!]
+  projectsIds: [ID!]
+  projects: [ProjectInput!]
+  sentrequestsIds: [ID!]
+  sentrequests: [FriendRequestInput!]
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
 }
@@ -1180,7 +1229,8 @@ input UpdateArtistInput {
   imageUrl: String
   name: String
   spotifyId: String
-  influencesId: [ID!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
   clientMutationId: String!
 }
 
@@ -1195,6 +1245,7 @@ input UpdateFileInput {
   id: ID!
   name: String
   projectId: ID
+  project: FileprojectProject
   clientMutationId: String!
 }
 
@@ -1211,7 +1262,9 @@ input UpdateFriendRequestInput {
   id: ID!
   ignored: Boolean
   actorId: ID
+  actor: FriendRequestactorUser
   recipientId: ID
+  recipient: FriendRequestrecipientUser
   clientMutationId: String!
 }
 
@@ -1227,7 +1280,9 @@ type UpdateFriendRequestPayload {
 input UpdateInfluenceInput {
   id: ID!
   artistId: ID
+  artist: InfluenceartistArtist
   userId: ID
+  user: InfluenceuserUser
   clientMutationId: String!
 }
 
@@ -1248,7 +1303,9 @@ input UpdateProjectInput {
   privacy: PROJECT_PRIVACY
   title: String
   artworkId: ID
+  artwork: ProjectartworkFile
   creatorId: ID
+  creator: ProjectcreatorUser
   clientMutationId: String!
 }
 
@@ -1274,11 +1331,16 @@ input UpdateUserInput {
   profilePicUrl: String
   summary: String
   website: String
-  friendsId: [ID!]
-  influencesId: [ID!]
-  invitationsId: [ID!]
-  projectsId: [ID!]
-  sentrequestsId: [ID!]
+  friendsIds: [ID!]
+  friends: [UserInput!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestInput!]
+  projectsIds: [ID!]
+  projects: [ProjectInput!]
+  sentrequestsIds: [ID!]
+  sentrequests: [FriendRequestInput!]
   clientMutationId: String!
 }
 
@@ -1517,6 +1579,30 @@ input UserFilter {
   website_not_starts_with: String
   website_ends_with: String
   website_not_ends_with: String
+}
+
+input UserInput {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  friendsIds: [ID!]
+  friends: [UserInput!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestInput!]
+  projectsIds: [ID!]
+  projects: [ProjectInput!]
+  sentrequestsIds: [ID!]
+  sentrequests: [FriendRequestInput!]
 }
 
 enum UserOrderBy {

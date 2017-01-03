@@ -7,13 +7,11 @@ class Feed extends Component {
 
   render() {
     return (
-      <section>
 
         <FeedContainer
           user={this.props.viewer.user}
         />
 
-      </section>
     )
   }
 }

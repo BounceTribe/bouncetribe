@@ -1089,7 +1089,7 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "influencesIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -1100,6 +1100,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influences",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
                     "ofType": null
                   }
                 }
@@ -2823,6 +2841,57 @@
         {
           "inputFields": [
             {
+              "name": "accepted",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "ignored",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "actorId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "recipientId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "name": "FriendRequestInput",
+          "description": null,
+          "interfaces": null,
+          "enumValues": null,
+          "fields": null,
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": [
+            {
               "name": "email",
               "description": null,
               "type": {
@@ -2941,7 +3010,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendsId",
+              "name": "friendsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -2959,7 +3028,25 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "friends",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influencesIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -2977,7 +3064,25 @@
               "defaultValue": null
             },
             {
-              "name": "invitationsId",
+              "name": "influences",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitationsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -2995,7 +3100,25 @@
               "defaultValue": null
             },
             {
-              "name": "projectsId",
+              "name": "invitations",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3013,7 +3136,25 @@
               "defaultValue": null
             },
             {
-              "name": "sentrequestsId",
+              "name": "projects",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProjectInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequestsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3024,6 +3165,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequests",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
                     "ofType": null
                   }
                 }
@@ -3160,7 +3319,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendsId",
+              "name": "friendsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3178,7 +3337,25 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "friends",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influencesIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3196,7 +3373,25 @@
               "defaultValue": null
             },
             {
-              "name": "invitationsId",
+              "name": "influences",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitationsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3214,7 +3409,25 @@
               "defaultValue": null
             },
             {
-              "name": "projectsId",
+              "name": "invitations",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3232,7 +3445,25 @@
               "defaultValue": null
             },
             {
-              "name": "sentrequestsId",
+              "name": "projects",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProjectInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequestsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3243,6 +3474,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequests",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
                     "ofType": null
                   }
                 }
@@ -3251,6 +3500,37 @@
             }
           ],
           "name": "FriendRequestrecipientUser",
+          "description": null,
+          "interfaces": null,
+          "enumValues": null,
+          "fields": null,
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "artistId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "userId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "name": "InfluenceInput",
           "description": null,
           "interfaces": null,
           "enumValues": null,
@@ -3303,7 +3583,7 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "influencesIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3314,6 +3594,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influences",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
                     "ofType": null
                   }
                 }
@@ -3450,7 +3748,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendsId",
+              "name": "friendsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3468,7 +3766,25 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "friends",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influencesIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3486,7 +3802,25 @@
               "defaultValue": null
             },
             {
-              "name": "invitationsId",
+              "name": "influences",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitationsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3504,7 +3838,25 @@
               "defaultValue": null
             },
             {
-              "name": "projectsId",
+              "name": "invitations",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3522,7 +3874,25 @@
               "defaultValue": null
             },
             {
-              "name": "sentrequestsId",
+              "name": "projects",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProjectInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequestsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -3533,6 +3903,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequests",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
                     "ofType": null
                   }
                 }
@@ -4461,6 +4849,99 @@
         {
           "inputFields": [
             {
+              "name": "description",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "genre",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "ENUM",
+                    "name": "PROJECT_GENRE",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "new",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "privacy",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "PROJECT_PRIVACY",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "artworkId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "creatorId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "name": "ProjectInput",
+          "description": null,
+          "interfaces": null,
+          "enumValues": null,
+          "fields": null,
+          "kind": "INPUT_OBJECT",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": [
+            {
               "name": "name",
               "description": null,
               "type": {
@@ -4604,7 +5085,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendsId",
+              "name": "friendsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -4622,7 +5103,25 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "friends",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influencesIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -4640,7 +5139,25 @@
               "defaultValue": null
             },
             {
-              "name": "invitationsId",
+              "name": "influences",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitationsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -4658,7 +5175,25 @@
               "defaultValue": null
             },
             {
-              "name": "projectsId",
+              "name": "invitations",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -4676,7 +5211,25 @@
               "defaultValue": null
             },
             {
-              "name": "sentrequestsId",
+              "name": "projects",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProjectInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequestsIds",
               "description": null,
               "type": {
                 "kind": "LIST",
@@ -4687,6 +5240,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequests",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
                     "ofType": null
                   }
                 }
@@ -5876,7 +6447,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendsId",
+              "name": "friendsIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -5894,7 +6465,25 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "friends",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influencesIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -5912,7 +6501,25 @@
               "defaultValue": null
             },
             {
-              "name": "invitationsId",
+              "name": "influences",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitationsIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -5930,7 +6537,25 @@
               "defaultValue": null
             },
             {
-              "name": "projectsId",
+              "name": "invitations",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectsIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -5948,7 +6573,25 @@
               "defaultValue": null
             },
             {
-              "name": "sentrequestsId",
+              "name": "projects",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProjectInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequestsIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -5959,6 +6602,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequests",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
                     "ofType": null
                   }
                 }
@@ -6193,7 +6854,7 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "influencesIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -6204,6 +6865,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influences",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
                     "ofType": null
                   }
                 }
@@ -6332,6 +7011,16 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "project",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "FileprojectProject",
                 "ofType": null
               },
               "defaultValue": null
@@ -6485,11 +7174,31 @@
               "defaultValue": null
             },
             {
+              "name": "actor",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "FriendRequestactorUser",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "recipientId",
               "description": "",
               "type": {
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "recipient",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "FriendRequestrecipientUser",
                 "ofType": null
               },
               "defaultValue": null
@@ -6635,11 +7344,31 @@
               "defaultValue": null
             },
             {
+              "name": "artist",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "InfluenceartistArtist",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "userId",
               "description": "",
               "type": {
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "user",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "InfluenceuserUser",
                 "ofType": null
               },
               "defaultValue": null
@@ -6843,11 +7572,31 @@
               "defaultValue": null
             },
             {
+              "name": "artwork",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProjectartworkFile",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "creatorId",
               "description": "",
               "type": {
                 "kind": "SCALAR",
                 "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "creator",
+              "description": "",
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "ProjectcreatorUser",
                 "ofType": null
               },
               "defaultValue": null
@@ -7093,7 +7842,7 @@
               "defaultValue": null
             },
             {
-              "name": "friendsId",
+              "name": "friendsIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -7111,7 +7860,25 @@
               "defaultValue": null
             },
             {
-              "name": "influencesId",
+              "name": "friends",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influencesIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -7129,7 +7896,25 @@
               "defaultValue": null
             },
             {
-              "name": "invitationsId",
+              "name": "influences",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitationsIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -7147,7 +7932,25 @@
               "defaultValue": null
             },
             {
-              "name": "projectsId",
+              "name": "invitations",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectsIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -7165,7 +7968,25 @@
               "defaultValue": null
             },
             {
-              "name": "sentrequestsId",
+              "name": "projects",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProjectInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequestsIds",
               "description": "",
               "type": {
                 "kind": "LIST",
@@ -7176,6 +7997,24 @@
                   "ofType": {
                     "kind": "SCALAR",
                     "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequests",
+              "description": "",
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
                     "ofType": null
                   }
                 }
@@ -7270,6 +8109,315 @@
             }
           ],
           "kind": "OBJECT",
+          "possibleTypes": null
+        },
+        {
+          "inputFields": [
+            {
+              "name": "email",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "experience",
+              "description": null,
+              "type": {
+                "kind": "ENUM",
+                "name": "USER_EXPERIENCE",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "handle",
+              "description": null,
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "latitude",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "BigDecimal",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "longitude",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "BigDecimal",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "placename",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "profilePicThumb",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "profilePicUrl",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "summary",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "website",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "friendsIds",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "friends",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "UserInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influencesIds",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "influences",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "InfluenceInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitationsIds",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "invitations",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projectsIds",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "projects",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "ProjectInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequestsIds",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "SCALAR",
+                    "name": "ID",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "sentrequests",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INPUT_OBJECT",
+                    "name": "FriendRequestInput",
+                    "ofType": null
+                  }
+                }
+              },
+              "defaultValue": null
+            }
+          ],
+          "name": "UserInput",
+          "description": null,
+          "interfaces": null,
+          "enumValues": null,
+          "fields": null,
+          "kind": "INPUT_OBJECT",
           "possibleTypes": null
         },
         {
