@@ -26,7 +26,7 @@ const provideHandle = (params, router) => {
     handle: params.handle,
   }
 }
-// 
+//
 // const provideHandleAndProject = async (params, router) => {
 //   console.log('provideHandleAndProject')
 //   return {
@@ -98,25 +98,6 @@ const createRoutes = () => {
         component={Admin}
       /> */}
 
-
-      <Route
-        path="/:handle/projects/:title"
-        component={SingleProject}
-        onEnter={requireAuth}
-        queries={ViewerQueries}
-        prepareParams={provideHandle}
-      />
-
-      <Route
-        path="/:handle/projects"
-        component={Projects}
-        onEnter={requireAuth}
-        queries={ViewerQueries}
-        prepareParams={provideHandle}
-      />
-
-
-
       <Route
         path="/:handle/tribe"
         component={Tribe}
@@ -130,6 +111,25 @@ const createRoutes = () => {
           onEnter={requireAuth}
         />
       </Route>
+
+
+      <Route
+        path="/:handle/projects"
+        component={Projects}
+        onEnter={requireAuth}
+        queries={ViewerQueries}
+        prepareParams={provideHandle}
+      />
+
+      <Route
+        path="/:handle/:title"
+        component={SingleProject}
+        onEnter={requireAuth}
+        queries={ViewerQueries}
+        prepareParams={provideHandle}
+      />
+
+
 
       <Route
         path="/:handle"

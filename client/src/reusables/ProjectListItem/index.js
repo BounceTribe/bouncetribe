@@ -121,7 +121,7 @@ class ProjectListItem extends Component {
       >
         <ProjectListItemRow>
           <Link
-            to={`/${handle}/projects/${title}`}
+            to={`/${handle}/${title}`}
           >
             <ProjectListItemImage
               src={(artwork) ? artwork.url : defaultPic}
@@ -134,7 +134,7 @@ class ProjectListItem extends Component {
             <ProjectColumnTop>
               <ProjectName>
                 <Link
-                  to={`/${handle}/projects/${title}`}
+                  to={`/${handle}/${title}`}
                 >
                   {title}
                 </Link>

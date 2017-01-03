@@ -102,7 +102,7 @@ class NewProjectCreator extends Component {
     description: this.props.project.description || '',
     privacy: this.props.project.privacy || 'PRIVATE',
     genre: this.props.project.genre || '',
-    new: true,
+    new: false,
     title: this.props.title
   }
 
@@ -122,7 +122,7 @@ class NewProjectCreator extends Component {
         onSuccess: (success) => {
           console.log('success', success)
           this.props.router.replace({
-            pathname: `/${this.props.user.handle}/projects/${success.updateProject.project.title}`
+            pathname: `/${this.props.user.handle}/${success.updateProject.project.title}`
           })
         },
         onFailure: (transaction) => console.log(transaction),
@@ -261,9 +261,6 @@ class NewProjectCreator extends Component {
             <UploadButtonContainer>
               <BTButton
                 onClick={ () => {
-                  this.setState({
-                    new: false
-                  })
                   this.submitField()
                 }}
                 text={'Submit'}

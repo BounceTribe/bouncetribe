@@ -86,8 +86,8 @@ class ProjectsContainer extends Component {
       router,
       user
     } = this.props
-    let hash = Math.random().toString(36).substring(7)
-    let title = 'untitled' + hash
+    let hash = Math.random().toString(36).substring(7,17)
+    let title = 'untitled~|h|~' + hash
     let project = {
       title,
     }
@@ -98,7 +98,7 @@ class ProjectsContainer extends Component {
       }), {
         onSuccess: (result) => {
           router.push({
-            pathname: `/${user.handle}/projects/${title}`
+            pathname: `/${user.handle}/${title}`
           })
         }
       }

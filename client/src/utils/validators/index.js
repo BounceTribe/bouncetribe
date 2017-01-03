@@ -39,23 +39,33 @@ export const handleValidator = (handle) => {
 }
 
 export const handleSanitizer = (handle) => {
-  console.log('beginning sanitization')
   let sanitized = handle.replace(nonAlphanumeric, '')
-  console.log(sanitized)
   restricted.forEach((word)=>{
     sanitized = sanitized.replace(word, '')
   })
-  console.log(sanitized)
   if (sanitized > 20) {
     let difference = sanitized.length - 20
     sanitized.splice(sanitized.length - difference, difference, '')
   }
-  console.log(sanitized)
   if (sanitized < 6) {
     let difference = 6 - sanitized.length
     let hash = Math.random().splice(2,difference)
     sanitized = sanitized.join(hash)
   }
-  console.log(sanitized)
+  return sanitized
+}
+
+export const titleSanitizer = (title) => {
+  let sanitized = title
+  restricted.forEach( (word) => {
+    let match = sanitized.search(word)
+    if (match === 0) {
+      sanitized = sanitized.concat('-')
+    }
+  })
+  if (sanitized.length < 6) {
+    let hash = `~|h|~${Math.random().toString(36).substring(7,17)}`
+    sanitized = sanitized.concat(hash)
+  }
   return sanitized
 }
