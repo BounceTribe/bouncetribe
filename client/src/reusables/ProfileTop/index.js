@@ -191,6 +191,7 @@ class ProfileTop extends Component {
 
           </UserScores>
 
+
         </ProfileInfoColumn>
 
       </ProfileDisplay>
