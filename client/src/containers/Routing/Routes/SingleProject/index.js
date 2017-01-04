@@ -81,6 +81,13 @@ export default Relay.createContainer(
                   artwork {
                     url
                   }
+                  tracks (first: 2147483647) {
+                    edges {
+                      node {
+                        url
+                      }
+                    }
+                  }
                 }
               }
             }

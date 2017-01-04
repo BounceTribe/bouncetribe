@@ -7,3 +7,5 @@ export const api = (process.env.NODE_ENV === 'production') ? 'https://www.bt-car
 export const auth0 = (process.env.NODE_ENV === 'production') ? 'carlpeaslee.auth0.com' : 'carlpeaslee.auth0.com'
 
 export const graphqlUrl = 'https://api.graph.cool/simple/v1/ciwdr6snu36fj01710o4ssheb'
+
+export const fileUploadUrl = 'https://api.graph.cool/file/v1/ciwdr6snu36fj01710o4ssheb'

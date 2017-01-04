@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import Relay from 'react-relay'
 import styled from 'styled-components'
 import UpdateProjectMutation from 'mutations/UpdateProjectMutation'
-import UploadLight from 'imgs/icons/UploadLight'
 import BTButton from 'reusables/BTButton'
 import notes from 'imgs/icons/notes'
 import {btWhite, btGhost, btLight, btMedium, btPurple} from 'styling/T'
 import UploadArtwork from 'imgs/icons/UploadArtwork'
+import UploadTrack from 'imgs/icons/UploadTrack'
 import PrivateButton from 'imgs/icons/PrivateButton'
 import TribeOnlyButton from 'imgs/icons/TribeOnlyButton'
 import FindSessionsButton from 'imgs/icons/FindSessionsButton'
@@ -14,7 +14,9 @@ import Dropzone from 'react-dropzone'
 import request from 'superagent'
 import TextField from 'material-ui/TextField'
 import {titleSanitizer} from 'utils/validators'
+import {fileUploadUrl} from 'config/urls'
 
+import AddToProjectTracksMutation from 'mutations/AddToProjectTracksMutation'
 
 const UploadButton = styled.button`
   display: flex;
@@ -103,9 +105,10 @@ class NewProjectCreator extends Component {
     description: this.props.project.description || '',
     privacy: this.props.project.privacy || 'PRIVATE',
     genre: this.props.project.genre || '',
-    new: false,
+    new: true,
     title: this.props.project.title,
-    displayTitle: this.props.project.title
+    displayTitle: this.props.project.title,
+    tracksIds: []
   }
 
   componentWillMount() {
@@ -140,7 +143,8 @@ class NewProjectCreator extends Component {
         genre: this.state.genre,
         user: this.props.user,
         artworkId: this.state.artworkId,
-        new: this.state.new
+        new: this.state.new,
+        tracksIds: this.state.tracksIds
       }),
       {
         onSuccess: (success) => {
@@ -155,18 +159,32 @@ class NewProjectCreator extends Component {
   }
 
 
-  onDrop = (acceptedFiles, rejectedFiles) => {
+  submitProjectTracks = (fields) => {
+    Relay.Store.commitUpdate(
+      new AddToProjectTracksMutation({
+        tracksFileId: fields.tracksFileId,
+        trackProjectProjectId: fields.trackProjectProjectId
+      }),
+      {
+        onSuccess: (success) => {
+          console.log('success', success)
+        },
+        onFailure: (transaction) => console.log(transaction),
+      },
+    )
+  }
+
+  onDropArt = (acceptedFiles, rejectedFiles) => {
     if (acceptedFiles) {
       console.log('acceptedFiles', acceptedFiles)
 
-      let url = 'https://api.graph.cool/file/v1/ciwdr6snu36fj01710o4ssheb'
 
       let file = acceptedFiles[0]
 
       console.log('file', file)
 
       request
-        .post(url)
+        .post(fileUploadUrl)
         .attach('data', file)
         .end( (error, response) => {
           if (error || !response.ok ) {
@@ -177,6 +195,36 @@ class NewProjectCreator extends Component {
               artworkId: response.body.id
             })
             this.submitField()
+          }
+        })
+
+    }
+    if (rejectedFiles) {
+      console.log('rejectedFiles', rejectedFiles)
+    }
+  }
+
+  onDropTrack = (acceptedFiles, rejectedFiles) => {
+    if (acceptedFiles) {
+      console.log('acceptedFiles', acceptedFiles)
+
+
+      let file = acceptedFiles[0]
+
+      console.log('file', file)
+
+      request
+        .post(fileUploadUrl)
+        .attach('data', file)
+        .end( (error, response) => {
+          if (error || !response.ok ) {
+            console.log(error)
+          } else {
+            this.submitProjectTracks({
+              tracksFileId: response.body.id,
+              trackProjectProjectId: this.props.project.id
+            })
+
           }
         })
 
@@ -197,7 +245,7 @@ class NewProjectCreator extends Component {
     } else {
       return (
           <Dropzone
-            onDrop={this.onDrop}
+            onDrop={this.onDropArt}
             multiple={false}
             accept={'image/*'}
             style={{
@@ -218,14 +266,42 @@ class NewProjectCreator extends Component {
     }
   }
 
+  showTrack = () => {
+    if (this.props.project.tracks) {
+      return (
+        <span>{this.props.project.tracks.edges[0].node.url}</span>
+      )
+    } else {
+      return (
+          <Dropzone
+            onDrop={this.onDropTrack}
+            multiple={false}
+            accept={'audio/*'}
+            style={{
+              display: 'flex',
+              height: '250px',
+              width: '250px',
+              border: `2px dashed ${btLight} `,
+              backgroundColor: `${btGhost}`,
+              alignContent: 'center',
+              justifyContent: 'center',
+              alignItems: 'center',
+              cursor: 'pointer'
+            }}
+          >
+          <UploadTrack/>
+        </Dropzone>
+      )
+    }
+  }
+
   render() {
     return (
       <div>
 
 
         <UploadButton>
-          <UploadLight
-          />
+          {this.showTrack()}
         </UploadButton>
 
         <UploadRow>
@@ -285,6 +361,9 @@ class NewProjectCreator extends Component {
             <UploadButtonContainer>
               <BTButton
                 onClick={ () => {
+                  this.setState({
+                    new: false
+                  })
                   this.submitField()
                 }}
                 text={'Submit'}

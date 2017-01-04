@@ -45,7 +45,7 @@ input AddToFriendsUserInput {
 
 input AddToProjectArtProjectInput {
   artworkFileId: ID!
-  projectProjectId: ID!
+  artworkProjectProjectId: ID!
   clientMutationId: String!
 }
 
@@ -64,6 +64,21 @@ input AddToProjectCommentsProjectInput {
   clientMutationId: String!
 }
 
+type AddToProjectTracksPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  trackProjectProject: Project
+  tracksFile: File
+  trackProjectProjectEdge: ProjectEdge
+  tracksFileEdge: FileEdge
+}
+
+input AddToProjectTracksProjectInput {
+  tracksFileId: ID!
+  trackProjectProjectId: ID!
+  clientMutationId: String!
+}
+
 input AddToUserCommentsCommentInput {
   authorUserId: ID!
   commentsCommentId: ID!
@@ -77,6 +92,21 @@ type AddToUserCommentsPayload {
   authorUser: User
   commentsCommentEdge: CommentEdge
   authorUserEdge: UserEdge
+}
+
+input AddToUserFilesFileInput {
+  uploaderUserId: ID!
+  filesFileId: ID!
+  clientMutationId: String!
+}
+
+type AddToUserFilesPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  filesFile: File
+  uploaderUser: User
+  filesFileEdge: FileEdge
+  uploaderUserEdge: UserEdge
 }
 
 type AddToUserInfluencesPayload {
@@ -288,6 +318,8 @@ type Comment implements Node {
   parent(filter: CommentFilter): Comment
   project(filter: ProjectFilter): Project
   text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
   updatedAt: DateTime
 }
 
@@ -305,6 +337,8 @@ input CommentauthorUser {
   website: String
   commentsIds: [ID!]
   comments: [CommentInput!]
+  filesIds: [ID!]
+  files: [FileInput!]
   friendsIds: [ID!]
   friends: [UserInput!]
   influencesIds: [ID!]
@@ -377,6 +411,22 @@ input CommentFilter {
   text_not_starts_with: String
   text_ends_with: String
   text_not_ends_with: String
+  timestampEnd: BigDecimal
+  timestampEnd_not: BigDecimal
+  timestampEnd_in: [BigDecimal!]
+  timestampEnd_not_in: [BigDecimal!]
+  timestampEnd_lt: BigDecimal
+  timestampEnd_lte: BigDecimal
+  timestampEnd_gt: BigDecimal
+  timestampEnd_gte: BigDecimal
+  timestampStart: BigDecimal
+  timestampStart_not: BigDecimal
+  timestampStart_in: [BigDecimal!]
+  timestampStart_not_in: [BigDecimal!]
+  timestampStart_lt: BigDecimal
+  timestampStart_lte: BigDecimal
+  timestampStart_gt: BigDecimal
+  timestampStart_gte: BigDecimal
   updatedAt: DateTime
   updatedAt_not: DateTime
   updatedAt_in: [DateTime!]
@@ -389,12 +439,12 @@ input CommentFilter {
 
 input CommentInput {
   text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
   parentId: ID
-  parent: CommentparentComment
   projectId: ID
-  project: CommentprojectProject
   childrenIds: [ID!]
-  children: [CommentInput!]
 }
 
 enum CommentOrderBy {
@@ -404,16 +454,24 @@ enum CommentOrderBy {
   id_DESC
   text_ASC
   text_DESC
+  timestampEnd_ASC
+  timestampEnd_DESC
+  timestampStart_ASC
+  timestampStart_DESC
   updatedAt_ASC
   updatedAt_DESC
 }
 
 input CommentparentComment {
   text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
   authorId: ID
-  parentId: ID
+  author: CommentauthorUser
   projectId: ID
+  project: CommentprojectProject
   childrenIds: [ID!]
+  children: [CommentInput!]
 }
 
 input CommentprojectProject {
@@ -423,8 +481,13 @@ input CommentprojectProject {
   privacy: PROJECT_PRIVACY
   title: String!
   artworkId: ID
+  artwork: ProjectartworkFile
   creatorId: ID
+  creator: ProjectcreatorUser
   commentsIds: [ID!]
+  comments: [CommentInput!]
+  tracksIds: [ID!]
+  tracks: [FileInput!]
 }
 
 input CreateArtistInput {
@@ -445,6 +508,8 @@ type CreateArtistPayload {
 
 input CreateCommentInput {
   text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
   authorId: ID
   author: CommentauthorUser
   parentId: ID
@@ -468,8 +533,12 @@ type CreateCommentPayload {
 
 input CreateFileInput {
   name: String!
-  projectId: ID
-  project: FileprojectProject
+  artworkProjectId: ID
+  artworkProject: FileartworkProjectProject
+  trackProjectId: ID
+  trackProject: FiletrackProjectProject
+  uploaderId: ID
+  uploader: FileuploaderUser
   clientMutationId: String!
 }
 
@@ -478,7 +547,9 @@ type CreateFilePayload {
   clientMutationId: String!
   file: File
   edge: FileEdge
-  project: Project
+  artworkProject: Project
+  trackProject: Project
+  uploader: User
 }
 
 input CreateFriendRequestInput {
@@ -529,6 +600,8 @@ input CreateProjectInput {
   creator: ProjectcreatorUser
   commentsIds: [ID!]
   comments: [CommentInput!]
+  tracksIds: [ID!]
+  tracks: [FileInput!]
   clientMutationId: String!
 }
 
@@ -600,7 +673,9 @@ type DeleteFilePayload {
   clientMutationId: String!
   file: File
   edge: FileEdge
-  project: Project
+  artworkProject: Project
+  trackProject: Project
+  uploader: User
   deletedId: ID
 }
 
@@ -676,15 +751,31 @@ type DeleteUserPayload {
 }
 
 type File implements Node {
+  artworkProject(filter: ProjectFilter): Project
   contentType: String!
   createdAt: DateTime
   id: ID!
   name: String!
-  project(filter: ProjectFilter): Project
   secret: String!
   size: Int!
+  trackProject(filter: ProjectFilter): Project
   updatedAt: DateTime
+  uploader(filter: UserFilter): User
   url: String!
+}
+
+input FileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  creatorId: ID
+  creator: ProjectcreatorUser
+  commentsIds: [ID!]
+  comments: [CommentInput!]
+  tracksIds: [ID!]
+  tracks: [FileInput!]
 }
 
 # A connection to a list of items.
@@ -807,6 +898,13 @@ input FileFilter {
   url_not_ends_with: String
 }
 
+input FileInput {
+  name: String!
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
 enum FileOrderBy {
   contentType_ASC
   contentType_DESC
@@ -826,7 +924,7 @@ enum FileOrderBy {
   url_DESC
 }
 
-input FileprojectProject {
+input FiletrackProjectProject {
   description: String
   genre: [PROJECT_GENRE!]
   new: Boolean
@@ -836,6 +934,36 @@ input FileprojectProject {
   creator: ProjectcreatorUser
   commentsIds: [ID!]
   comments: [CommentInput!]
+  tracksIds: [ID!]
+  tracks: [FileInput!]
+}
+
+input FileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [CommentInput!]
+  filesIds: [ID!]
+  files: [FileInput!]
+  friendsIds: [ID!]
+  friends: [UserInput!]
+  influencesIds: [ID!]
+  influences: [InfluenceInput!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestInput!]
+  projectsIds: [ID!]
+  projects: [ProjectInput!]
+  sentRequestsIds: [ID!]
+  sentRequests: [FriendRequestInput!]
 }
 
 type FriendRequest implements Node {
@@ -862,6 +990,8 @@ input FriendRequestactorUser {
   website: String
   commentsIds: [ID!]
   comments: [CommentInput!]
+  filesIds: [ID!]
+  files: [FileInput!]
   friendsIds: [ID!]
   friends: [UserInput!]
   influencesIds: [ID!]
@@ -968,6 +1098,8 @@ input FriendRequestrecipientUser {
   website: String
   commentsIds: [ID!]
   comments: [CommentInput!]
+  filesIds: [ID!]
+  files: [FileInput!]
   friendsIds: [ID!]
   friends: [UserInput!]
   influencesIds: [ID!]
@@ -1080,6 +1212,8 @@ input InfluenceuserUser {
   website: String
   commentsIds: [ID!]
   comments: [CommentInput!]
+  filesIds: [ID!]
+  files: [FileInput!]
   friendsIds: [ID!]
   friends: [UserInput!]
   influencesIds: [ID!]
@@ -1125,7 +1259,9 @@ type Mutation {
   addToUserComments(input: AddToUserCommentsCommentInput!): AddToUserCommentsPayload
   addToProjectComments(input: AddToProjectCommentsProjectInput!): AddToProjectCommentsPayload
   addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
+  addToProjectTracks(input: AddToProjectTracksProjectInput!): AddToProjectTracksPayload
   addToFriends(input: AddToFriendsUserInput!): AddToFriendsPayload
+  addToUserFiles(input: AddToUserFilesFileInput!): AddToUserFilesPayload
   addToArtistInfluence(input: AddToArtistInfluenceInfluenceInput!): AddToArtistInfluencePayload
   addToUserInvitations(input: AddToUserInvitationsUserInput!): AddToUserInvitationsPayload
   addToUserProjects(input: AddToUserProjectsUserInput!): AddToUserProjectsPayload
@@ -1134,7 +1270,9 @@ type Mutation {
   removeFromUserComments(input: RemoveFromUserCommentsCommentInput!): RemoveFromUserCommentsPayload
   removeFromProjectComments(input: RemoveFromProjectCommentsProjectInput!): RemoveFromProjectCommentsPayload
   removeFromUserInfluences(input: RemoveFromUserInfluencesUserInput!): RemoveFromUserInfluencesPayload
+  removeFromProjectTracks(input: RemoveFromProjectTracksProjectInput!): RemoveFromProjectTracksPayload
   removeFromFriends(input: RemoveFromFriendsUserInput!): RemoveFromFriendsPayload
+  removeFromUserFiles(input: RemoveFromUserFilesFileInput!): RemoveFromUserFilesPayload
   removeFromArtistInfluence(input: RemoveFromArtistInfluenceInfluenceInput!): RemoveFromArtistInfluencePayload
   removeFromUserInvitations(input: RemoveFromUserInvitationsUserInput!): RemoveFromUserInvitationsPayload
   removeFromUserProjects(input: RemoveFromUserProjectsUserInput!): RemoveFromUserProjectsPayload
@@ -1176,6 +1314,7 @@ type Project implements Node {
   new: Boolean!
   privacy: PROJECT_PRIVACY!
   title: String!
+  tracks(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection
   updatedAt: DateTime
 }
 
@@ -1192,6 +1331,10 @@ enum PROJECT_PRIVACY {
 
 input ProjectartworkFile {
   name: String!
+  trackProjectId: ID
+  trackProject: FiletrackProjectProject
+  uploaderId: ID
+  uploader: FileuploaderUser
 }
 
 # A connection to a list of items.
@@ -1219,17 +1362,12 @@ input ProjectcreatorUser {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  filesIds: [ID!]
   friendsIds: [ID!]
-  friends: [UserInput!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
 }
 
 # An edge in a connection.
@@ -1323,6 +1461,7 @@ input ProjectInput {
   artworkId: ID
   creatorId: ID
   commentsIds: [ID!]
+  tracksIds: [ID!]
 }
 
 enum ProjectOrderBy {
@@ -1412,6 +1551,21 @@ input RemoveFromProjectCommentsProjectInput {
   clientMutationId: String!
 }
 
+type RemoveFromProjectTracksPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  trackProjectProject: Project
+  tracksFile: File
+  trackProjectProjectEdge: ProjectEdge
+  tracksFileEdge: FileEdge
+}
+
+input RemoveFromProjectTracksProjectInput {
+  tracksFileId: ID!
+  trackProjectProjectId: ID!
+  clientMutationId: String!
+}
+
 input RemoveFromUserCommentsCommentInput {
   authorUserId: ID!
   commentsCommentId: ID!
@@ -1425,6 +1579,21 @@ type RemoveFromUserCommentsPayload {
   authorUser: User
   commentsCommentEdge: CommentEdge
   authorUserEdge: UserEdge
+}
+
+input RemoveFromUserFilesFileInput {
+  uploaderUserId: ID!
+  filesFileId: ID!
+  clientMutationId: String!
+}
+
+type RemoveFromUserFilesPayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  filesFile: File
+  uploaderUser: User
+  filesFileEdge: FileEdge
+  uploaderUserEdge: UserEdge
 }
 
 type RemoveFromUserInfluencesPayload {
@@ -1490,9 +1659,9 @@ input RemoveFromUserRequestsUserInput {
 type SetProjectArtPayload {
   viewer: Viewer!
   clientMutationId: String!
-  projectProject: Project
+  artworkProjectProject: Project
   artworkFile: File
-  projectProjectEdge: ProjectEdge
+  artworkProjectProjectEdge: ProjectEdge
   artworkFileEdge: FileEdge
 }
 
@@ -1523,6 +1692,8 @@ input SignupUserInput {
   website: String
   commentsIds: [ID!]
   comments: [CommentInput!]
+  filesIds: [ID!]
+  files: [FileInput!]
   friendsIds: [ID!]
   friends: [UserInput!]
   influencesIds: [ID!]
@@ -1611,15 +1782,15 @@ enum TagOrderBy {
 type UnsetProjectArtPayload {
   viewer: Viewer!
   clientMutationId: String!
-  projectProject: Project
+  artworkProjectProject: Project
   artworkFile: File
-  projectProjectEdge: ProjectEdge
+  artworkProjectProjectEdge: ProjectEdge
   artworkFileEdge: FileEdge
 }
 
 input UnsetProjectArtProjectInput {
   artworkFileId: ID!
-  projectProjectId: ID!
+  artworkProjectProjectId: ID!
   clientMutationId: String!
 }
 
@@ -1643,6 +1814,8 @@ type UpdateArtistPayload {
 input UpdateCommentInput {
   id: ID!
   text: String
+  timestampEnd: BigDecimal
+  timestampStart: BigDecimal
   authorId: ID
   author: CommentauthorUser
   parentId: ID
@@ -1667,8 +1840,12 @@ type UpdateCommentPayload {
 input UpdateFileInput {
   id: ID!
   name: String
-  projectId: ID
-  project: FileprojectProject
+  artworkProjectId: ID
+  artworkProject: FileartworkProjectProject
+  trackProjectId: ID
+  trackProject: FiletrackProjectProject
+  uploaderId: ID
+  uploader: FileuploaderUser
   clientMutationId: String!
 }
 
@@ -1677,7 +1854,9 @@ type UpdateFilePayload {
   clientMutationId: String!
   file: File
   edge: FileEdge
-  project: Project
+  artworkProject: Project
+  trackProject: Project
+  uploader: User
 }
 
 input UpdateFriendRequestInput {
@@ -1731,6 +1910,8 @@ input UpdateProjectInput {
   creator: ProjectcreatorUser
   commentsIds: [ID!]
   comments: [CommentInput!]
+  tracksIds: [ID!]
+  tracks: [FileInput!]
   clientMutationId: String!
 }
 
@@ -1770,6 +1951,8 @@ input UpdateUserInput {
   website: String
   commentsIds: [ID!]
   comments: [CommentInput!]
+  filesIds: [ID!]
+  files: [FileInput!]
   friendsIds: [ID!]
   friends: [UserInput!]
   influencesIds: [ID!]
@@ -1796,6 +1979,7 @@ type User implements Node {
   createdAt: DateTime
   email: String!
   experience: USER_EXPERIENCE
+  files(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection
   friends(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection
   handle: String!
   id: ID!
@@ -2034,17 +2218,12 @@ input UserInput {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  filesIds: [ID!]
   friendsIds: [ID!]
-  friends: [UserInput!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
 }
 
 enum UserOrderBy {
