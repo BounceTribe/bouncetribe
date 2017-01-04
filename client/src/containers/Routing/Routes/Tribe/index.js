@@ -14,15 +14,11 @@ class Tribe extends Component {
       router
     } = this.props
     return (
-      <section>
-
         <TribeContainer
           user={viewer.user}
           viewer={viewer}
           router={router}
         />
-
-      </section>
     )
   }
 }

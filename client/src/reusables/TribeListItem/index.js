@@ -112,7 +112,9 @@ class TribeListItem extends Component {
 
     if (this.props.myTribe) {
       return null
-    } else if (this.props.pending) {
+    }
+
+    if (this.props.request) {
       return (
         <TribeButtonColumn>
 
@@ -147,24 +149,46 @@ class TribeListItem extends Component {
 
         </TribeButtonColumn>
       )
-    } else {
+    }
+
+    if (this.props.friend) {
       return (
-        <TribeButtonColumn>
-
-          <BTButton
-            text={'Invite'}
-            onClick={()=>{
-              let fields = {
-                recipientId: this.props.user.id
-              }
-              this.props.makeTribeRequest(fields)
-            }}
-            flex
-          />
-
-        </TribeButtonColumn>
+        <BTButton
+          text={'Tribemember'}
+          teal
+          flex
+        />
       )
     }
+
+    if (this.props.pending) {
+      return (
+        <BTButton
+          text={'Pending'}
+          grey
+          disabled
+          flex
+        />
+      )
+    }
+
+    return (
+      <TribeButtonColumn>
+
+        <BTButton
+          text={'Invite'}
+          onClick={()=>{
+            let fields = {
+              recipientId: this.props.user.id
+            }
+            this.props.makeTribeRequest(fields)
+          }}
+          flex
+        />
+
+      </TribeButtonColumn>
+    )
+
   }
 
   render() {

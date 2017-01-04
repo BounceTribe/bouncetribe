@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import {btWarn, btTeal, btPurple, btLight, btMedium, btBlack} from 'styling/T'
+import {btWarn, btTeal, btPurple, btLight, btBlack, btDark} from 'styling/T'
 import EditIcon from 'imgs/icons/edit'
 
 
@@ -49,6 +49,7 @@ const ProfileFieldContents = styled.div`
   transition: all .2s;
   width: ${props => (props.fontSize) ? 'auto' : '100%'};
   min-height: ${props => (props.fontSize) ? 'auto' : '50px'};
+  margin-right: ${props => (props.fontSize) ? '2px' : null};
 `
 
 const ProfileFieldP = styled.p`
@@ -70,6 +71,7 @@ const TextArea = styled.textarea`
   outline: none;
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
+  color: ${btDark};
 
   &:focus {
     box-shadow: 0 0 10px ${btTeal};
@@ -84,7 +86,7 @@ const TextInput = styled.input`
   font-style: normal;
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
-  color: ${btBlack};
+  color: ${btDark};
   border: ${props => (props.valid) ? btTeal : '2px solid '+btWarn };
   min-width: 100px;
   transition: all .25s;
@@ -137,8 +139,7 @@ class ProfileField extends Component {
   }
 
   get inputOrDisplay() {
-    const canEdit = this.state.canEdit
-    if (!this.props.fontSize && this.props.ownProfile) {
+      if (!this.props.fontSize && this.props.ownProfile) {
       return (
         <TextArea
           type="text"

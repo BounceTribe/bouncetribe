@@ -7,6 +7,7 @@ import {Link} from 'react-router'
 import EditFriendRequestMutation from 'mutations/EditFriendRequestMutation'
 import AddToFriendsMutation from 'mutations/AddToFriendsMutation'
 import CreateFriendRequestMutation from 'mutations/CreateFriendRequestMutation'
+import {Section} from 'styling/styled'
 
 import Tribe from 'imgs/icons/tribe'
 import AddToTribe from 'imgs/icons/AddToTribe'
@@ -94,16 +95,48 @@ class TribeContainer extends Component {
   get userList () {
     let {
       router,
-      user
+      user,
+      viewer
     } =  this.props
     switch (router.location.pathname) {
       case `/${router.params.handle}/tribe/find`:{
-        return this.props.viewer.allUsers.edges.map(edge => (
+
+        let allUsers = viewer.allUsers.edges.map(edge=>edge.node)
+
+        let pendingRequests = user.sentRequests.edges.map(edge=>edge.node.recipient)
+
+        let friends = user.friends.edges.map(edge=>edge.node)
+
+        friends.forEach( (friend) => {
+          let match = allUsers.findIndex( (person) => {
+            return person.id === friend.id
+          })
+          if (match !== -1) {
+            allUsers[match].friend = true
+          }
+        })
+
+        console.log('pendingRequests', pendingRequests)
+
+        pendingRequests.forEach( (pending) => {
+          let match = allUsers.findIndex( (person)=> {
+            return person.id === pending.id
+          })
+          if (match !== -1) {
+            allUsers[match].pending = true
+          }
+        })
+
+        console.log('allUsers', allUsers)
+
+        return allUsers.map(user => (
           <TribeListItem
-            key={edge.node.id}
-            user={edge.node}
-            profilePicUrl={edge.node.profilePicUrl}
+            key={user.id}
+            user={user}
+            profilePicUrl={user.profilePicUrl}
             makeTribeRequest={this.newFriendInvite}
+            pending={user.pending}
+            friend={user.friend}
           />
         ))
       }
@@ -116,7 +149,7 @@ class TribeContainer extends Component {
               user={edge.node.actor}
               profilePicUrl={edge.node.actor.profilePicThumb}
               makeTribeRequest={this.respondToFriendRequest}
-              pending
+              request
             />
           ))
         } else {
@@ -201,9 +234,8 @@ class TribeContainer extends Component {
       router,
       user
     } = this.props
-    console.log(router)
     return (
-      <section>
+      <Section>
 
         <TribeHeader>
             <Link
@@ -252,7 +284,7 @@ class TribeContainer extends Component {
         <TribeList>
           {this.userList}
         </TribeList>
-      </section>
+      </Section>
     )
   }
 }
@@ -282,6 +314,21 @@ export default Relay.createContainer(
                   edges {
                     node
                   }
+                }
+              }
+            }
+          }
+          sentRequests (
+            filter: {
+              accepted: false
+              ignored: false
+            }
+            first: 2147483647
+          ) {
+            edges {
+              node {
+                recipient {
+                  id
                 }
               }
             }

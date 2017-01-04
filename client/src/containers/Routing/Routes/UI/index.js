@@ -32,7 +32,7 @@ const Main = styled.main`
   justify-content: center;
   align-items: flex-start;
   width: ${props=> props.feed ? '50%' : null};
-  max-width: ${props=> props.feed ? '700px' : null}; 
+  max-width: ${props=> props.feed ? '700px' : null};
 `
 
 class UI extends Component {
@@ -42,7 +42,6 @@ class UI extends Component {
       router,
       children
     } = this.props
-    console.log(router)
     return (
         <MuiThemeProvider
           muiTheme={muiTheme}
