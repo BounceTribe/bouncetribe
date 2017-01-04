@@ -31,7 +31,8 @@ const Main = styled.main`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  width: ${props=> props.feed ? '50%' : null}; 
+  width: ${props=> props.feed ? '50%' : null};
+  max-width: ${props=> props.feed ? '700px' : null}; 
 `
 
 class UI extends Component {

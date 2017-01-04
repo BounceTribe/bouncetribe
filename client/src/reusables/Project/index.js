@@ -47,6 +47,17 @@ const Description = styled.p`
 class Project extends Component {
 
 
+  get displayTitle () {
+    let title = this.props.project.title
+    let index = title.search('~')
+    if (index === -1) {
+      return title
+    } else {
+      return title.split('~')[0]
+
+    }
+  }
+
   render() {
     return (
       <div>
@@ -58,7 +69,7 @@ class Project extends Component {
 
           <ProjectTextColumn>
             <ProjectTitle>
-              {this.props.project.title}
+              {this.displayTitle}
             </ProjectTitle>
 
             <Description>

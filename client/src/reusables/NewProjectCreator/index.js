@@ -13,6 +13,7 @@ import FindSessionsButton from 'imgs/icons/FindSessionsButton'
 import Dropzone from 'react-dropzone'
 import request from 'superagent'
 import TextField from 'material-ui/TextField'
+import {titleSanitizer} from 'utils/validators'
 
 
 const UploadButton = styled.button`
@@ -103,14 +104,37 @@ class NewProjectCreator extends Component {
     privacy: this.props.project.privacy || 'PRIVATE',
     genre: this.props.project.genre || '',
     new: false,
-    title: this.props.title
+    title: this.props.project.title,
+    displayTitle: this.props.project.title
+  }
+
+  componentWillMount() {
+    let title = this.state.title
+    let index = title.search('~')
+    if (index === -1) {
+      return
+    } else {
+      let displayTitle = title.split('~')[0]
+      this.setState({
+        displayTitle: displayTitle
+      })
+    }
   }
 
   submitField = () => {
+    let title = this.state.title
+    let displayTitle = this.state.displayTitle
+
+    if (displayTitle.search('untitled') === -1) {
+      title = displayTitle
+      title = titleSanitizer(displayTitle)
+    }
+
+
     Relay.Store.commitUpdate(
       new UpdateProjectMutation({
         project: this.props.project,
-        title: this.state.title,
+        title: title,
         description: this.state.description,
         privacy: this.state.privacy,
         genre: this.state.genre,
@@ -121,7 +145,7 @@ class NewProjectCreator extends Component {
       {
         onSuccess: (success) => {
           console.log('success', success)
-          this.props.router.replace({
+          this.props.router.push({
             pathname: `/${this.props.user.handle}/${success.updateProject.project.title}`
           })
         },
@@ -211,10 +235,10 @@ class NewProjectCreator extends Component {
                 <TextField
                   name={'title'}
                   type={'text'}
-                  value={this.state.title}
+                  value={this.state.displayTitle}
                   onChange={(e)=>{
                     this.setState({
-                      title: e.target.value
+                      displayTitle: e.target.value
                     })
                   }}
                   floatingLabelText={'Title'}

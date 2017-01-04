@@ -63,8 +63,9 @@ export const titleSanitizer = (title) => {
       sanitized = sanitized.concat('-')
     }
   })
-  if (sanitized.length < 6) {
-    let hash = `~|h|~${Math.random().toString(36).substring(7,17)}`
+  if (sanitized.length < 8) {
+    let difference = 8 - sanitized.length
+    let hash = `~${Math.random().toString(36).substring(7, 7 + difference)}`
     sanitized = sanitized.concat(hash)
   }
   return sanitized

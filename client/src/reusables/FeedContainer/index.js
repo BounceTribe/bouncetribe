@@ -67,7 +67,6 @@ class FeedContainer extends Component {
 
 
   feedList = () => {
-    console.log(this.projects())
     return this.projects().map(project=>{
       return (
         <FeedItem
