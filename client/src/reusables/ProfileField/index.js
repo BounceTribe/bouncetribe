@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import {btWarn, btTeal, btPurple, btLight, btMedium, btBlack} from 'styling/T'
 import EditIcon from 'imgs/icons/edit'
 
+
 const singleLine = (props) => {
   if (props.fontSize) {
     return props.fontSize
@@ -45,7 +46,6 @@ const ProfileErrorMessage = styled.span`
 `
 
 const ProfileFieldContents = styled.div`
-  box-shadow: ${props=>(props.hover && !props.canEdit && props.ownProfile)? '0 0 5px '+ btTeal : 'none'};
   transition: all .2s;
   width: ${props => (props.fontSize) ? 'auto' : '100%'};
   min-height: ${props => (props.fontSize) ? 'auto' : '50px'};
@@ -70,20 +70,29 @@ const TextArea = styled.textarea`
   outline: none;
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
-  box-shadow: 0 0 10px ${btTeal};
+
+  &:focus {
+    box-shadow: 0 0 10px ${btTeal};
+  }
 `
 
 const TextInput = styled.input`
   height: 100%;
   box-sizing: border-box;
   padding: 0px;
-  border: ${props => (props.valid) ? btTeal : '2px solid '+btWarn };
   outline: none;
   font-style: normal;
   font-size: ${props => singleLine(props)}em;
   line-height: 1.15;
-  box-shadow: 0 0 10px ${btTeal};
-  color: ${btMedium};
+  color: ${btBlack};
+  border: ${props => (props.valid) ? btTeal : '2px solid '+btWarn };
+  min-width: 100px;
+  transition: all .25s;
+
+  &:focus {
+    box-shadow: 0 0 10px ${btTeal};
+
+  }
 `
 
 const IconContainer = styled.div`
@@ -129,7 +138,7 @@ class ProfileField extends Component {
 
   get inputOrDisplay() {
     const canEdit = this.state.canEdit
-    if (canEdit && !this.props.fontSize && this.props.ownProfile) {
+    if (!this.props.fontSize && this.props.ownProfile) {
       return (
         <TextArea
           type="text"
@@ -147,9 +156,10 @@ class ProfileField extends Component {
               this.submitEdits()
             }
           }}
+          id={this.props.label}
         />
       )
-    } else if (canEdit && this.props.fontSize && this.props.ownProfile) {
+    } else if (this.props.fontSize && this.props.ownProfile) {
       return (
         <TextInput
           type="text"
@@ -169,6 +179,9 @@ class ProfileField extends Component {
             }
           }}
           message={this.state.message}
+          size={(this.state.text) ? this.state.text.length : 10}
+          id={this.props.label}
+
         />
       )
     } else {
@@ -211,6 +224,7 @@ class ProfileField extends Component {
       let submission = {}
       submission[this.props.field] = this.state.text
       this.props.submitField(submission)
+      document.getElementById(this.props.label).blur()
     }
   }
 
@@ -288,7 +302,7 @@ class ProfileField extends Component {
   }
 
   get normalEditIcon () {
-    if (!this.props.fontSize && this.props.ownProfile && this.props.text) {
+    if (!this.props.fontSize && this.props.ownProfile) {
       return (
         <EditIcon
           fill={(this.state.hover) ? btPurple : 'rgba(160,160,160, .5)'}
@@ -351,5 +365,7 @@ class ProfileField extends Component {
   }
 
 }
+
+
 
 export default ProfileField

@@ -9,6 +9,7 @@ import Bolt from 'imgs/icons/bolt'
 import Notes from 'imgs/icons/notes'
 import Tribe from 'imgs/icons/tribe'
 import {btMedium} from 'styling/T'
+import Spinner from 'reusables/Spinner'
 
 const ProfileDisplay = styled.div`
   display: flex;
@@ -102,7 +103,9 @@ class ProfileTop extends Component {
           let options = placenameOptions(latitude, longitude)
           const mapResult = await fetch(...options).then(resp=>resp.json()).then(json=>json)
           console.log('mapResult', mapResult)
-          let placename = mapResult.results[0]['formatted_address']
+          let placeResult = mapResult.results[0]['formatted_address']
+
+          let placename = placeResult.split(',')[0].concat(placeResult.split(',')[1])
           console.log('placename', placename)
           this.setState({
             locationMessage: placename
@@ -121,22 +124,31 @@ class ProfileTop extends Component {
         console.log('error')
       }
       return (
-        <p
+        <div
           onClick={()=>{
             navigator.geolocation.getCurrentPosition(success, error)
             this.setState({
-              locationMessage: '  ...locating...'
+              fetchingLocation: true
             })
           }}
+          style={{
+            marginLeft: '6px'
+          }}
         >
-          {this.state.locationMessage}
-        </p>
+          {(this.state.fetchingLocation) ? this.showSpinner() : this.state.locationMessage}
+        </div>
       )
     } else {
       return (
         null
       )
     }
+  }
+
+  showSpinner() {
+    return (
+      <Spinner/>
+    )
   }
 
 
