@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 const TopBarContainer = styled.div`
   max-width: 100%;
-  height: 25px;
+  height: 50px;
   background-color: ${btBlack};
   padding-left: 15%;
   padding-right: 15%;
@@ -15,11 +15,19 @@ const TopBarContainer = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: baseline;
-  padding-top: 10px;
   color: ${btWhite};
 `
 
+const Bounce = styled.span`
+  font-size: 15px;
+  font-weight: 400;
+`
 
+const Tribe = styled.span`
+  font-size: 15px;
+  font-weight: 300;
+  margin-left: .5px;
+`
 
 const TopBar = (props) => {
   return (
@@ -27,7 +35,8 @@ const TopBar = (props) => {
       <TopBarMenuItem
         to={'/'}
       >
-        <span><b>BOUNCE</b>TRIBE</span>
+        <Bounce>BOUNCE</Bounce>
+        <Tribe>TRIBE</Tribe>
       </TopBarMenuItem>
 
       <TopBarMenu

@@ -9,14 +9,14 @@ const DropdownContainer = styled.ul`
   color: ${btBlack};
   flex-direction: column;
   border-radius: 5px;
-  margin: 2px 0;
+  margin: 10px 0;
 
   :before {
     content: "";
     position: absolute;
     top: 0%;
     margin-top: -15px;
-    left:60px;
+    left:100px;
     border: solid 10px transparent;
     border-bottom-color: white;
     z-index: 1;

@@ -7,8 +7,8 @@ const DropdownItem = styled.li`
   display: flex;
   background-color: ${btWhite};
   color: ${btBlack};
-  margin-left: 20px;
-  margin-right: 30px;
+  margin-left: 30px;
+  margin-right: 50px;
   margin-top: 8px;
   margin-bottom: 8px;
 `

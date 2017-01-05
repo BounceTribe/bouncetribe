@@ -6,10 +6,12 @@ import {logout} from 'actions/auth'
 import styled from 'styled-components'
 import notes from 'imgs/icons/notes'
 import notification from 'imgs/icons/notification'
+import {btMedium} from 'styling/T'
 
 const MenuRow = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 15px;
 `
 const DropHr = styled.hr`
   color: rgb(220,220,240);
@@ -18,18 +20,35 @@ const DropHr = styled.hr`
   border: 0px;
 `
 
-const ProfilePic = (props) => {
-  return (
-    <img
-      src={props.profilePicUrl}
-      role='presentation'
-      style={{
-        height: '18px',
-        borderRadius: '18px',
-      }}
-    />
-  )
-}
+const ProfilePic = styled.img`
+  display: flex;
+  height: 40px;
+  width: 40px;
+  border-radius: 40px;
+  position: absolute;
+  margin-top: -10px;
+`
+
+const ProfileInfoRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const ProfileName = styled.span`
+  display: flex;
+  margin-left: 45px;
+`
+
+const DownTriangle = styled.div`
+  display: flex;
+  width: 0;
+  height: 0;
+  margin-top: 5px;
+  margin-left: 4px;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid ${btMedium};
+`
 
 class TopBarMenu extends Component {
   get showMenu() {
@@ -37,7 +56,8 @@ class TopBarMenu extends Component {
       let {
         handle,
         name,
-        profilePicUrl
+        profilePicUrl,
+        profilePicThumb
       } = this.props.user
       return (
         <MenuRow>
@@ -54,14 +74,6 @@ class TopBarMenu extends Component {
             icon={notification}
           />
           <TopBarMenuItem
-            text={`${name}`}
-            icon={()=>{
-              return (
-                <ProfilePic
-                  profilePicUrl={profilePicUrl}
-                />
-              )
-            }}
             dropdown={(
               <div>
                 <DropdownMenuItem
@@ -87,7 +99,20 @@ class TopBarMenu extends Component {
                 />
               </div>
             )}
-          />
+          >
+            <ProfileInfoRow>
+
+              <ProfilePic
+                src={profilePicThumb || profilePicUrl}
+                role='presentation'
+              />
+
+              <ProfileName>
+                {name}
+              </ProfileName>
+              <DownTriangle/>
+            </ProfileInfoRow>
+          </TopBarMenuItem>
         </MenuRow>
       )
     }

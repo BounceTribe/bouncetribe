@@ -33,6 +33,7 @@ export default class SigninUserMutation extends Relay.Mutation {
                   name
                   handle
                   profilePicUrl
+                  profilePicThumb
                 }
               }
             }

@@ -7,19 +7,21 @@ import {btPurple} from 'styling/T'
 
 const MenuItemContainer = styled.li`
   display: flex;
-  margin-left: 25px;
+  margin-left: 20px;
 `
 
 const MenuItemRow =  styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  font-size: 14px;
+  font-weight: 500;
 `
 
 const IconSpan = styled.span`
   margin-right: 5px;
-  height: 1em;
-  width: 1em;
+  height: 14px;
+  width: 14px;
 `
 
 const DropdownColumn = styled.div`
@@ -87,10 +89,8 @@ class TopBarMenuItem extends Component {
             >
               <MenuItemRow>
                 {this.showIcon}
-                <span>
-                  {this.props.text}
-                  {this.props.children}
-                </span>
+                {this.props.children}
+                {this.props.text}
               </MenuItemRow>
             </Link>
 

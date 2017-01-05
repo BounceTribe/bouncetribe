@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 import PlayButton from 'imgs/icons/PlayButton'
 import PauseButton from 'imgs/icons/PauseButton'
-import {btLight, btTeal} from 'styling/T'
+import {btLight, btTeal, btPurple} from 'styling/T'
 import Draggable from 'react-draggable'
 
 const Container = styled.div`
@@ -45,7 +45,6 @@ const TrackColumn = styled.div`
   align-content: flex-start;
   width: 100%;
   height: 100px;
-  border: 1px solid salmon;
 `
 
 const Waveform = styled.div`
@@ -57,15 +56,22 @@ const Waveform = styled.div`
   height: 65px;
   width: 400px;
   position: absolute;
+  box-sizing: border-box;
 `
 
 const Wave = styled.div`
   display: flex;
-  height: 50%;
-  width: .7%;
   box-sizing: border-box;
-  padding: 0 .15%;
-  background-color: ${btLight};
+  height: 50%;
+  width: 2px;
+  padding: 0 1px;
+  background-color: ${(props) => {
+    if ((props.progress / 4) > props.index) {
+      return btTeal
+    } else {
+      return btLight
+    }
+  }};
 `
 
 const Timer = styled.span`
@@ -76,8 +82,9 @@ const Timer = styled.span`
 const Cursor = styled.div`
   height: 100%;
   width: 1%;
-  background-color: ${btTeal};
+  background-color: ${btPurple};
   display: flex;
+  position: absolute;
 `
 
 class AudioPlayer extends Component {
@@ -85,7 +92,11 @@ class AudioPlayer extends Component {
   state = {
     playing: false,
     width: 400,
-    currentTime: 0
+    currentTime: 0,
+    position: {
+      x: 0,
+      y: 0
+    }
   }
 
   componentDidMount () {
@@ -115,6 +126,34 @@ class AudioPlayer extends Component {
       this.setState({
         duration: Math.ceil(audioEl.seekable.end(0))
       })
+
+      // var ctx = new (window.AudioContext || window.webkitAudioContext)(); // define audio context
+      //
+      // var audioSrc = ctx.createMediaElementSource(audioEl);
+      //
+      // console.log(audioSrc)
+      //
+      // var analyser = ctx.createAnalyser();
+      //
+      // console.log(analyser)
+      //
+      // audioSrc.connect(analyser);
+      //
+      // var frequencyData = new Uint8Array(analyser.frequencyBinCount);
+      //
+      // console.log(frequencyData)
+      //
+      // function renderFrame() {
+      //    requestAnimationFrame(renderFrame);
+      //    // update data in frequencyData
+      //    analyser.getByteFrequencyData(frequencyData);
+      //    // render frame based on values in frequencyData
+      //    console.log(frequencyData)
+      // }
+      // audioEl.start();
+      // renderFrame();
+
+
     })
 
     audioEl.addEventListener('timeupdate', (e) => {
@@ -125,7 +164,6 @@ class AudioPlayer extends Component {
           y: 0
         }
       })
-      console.log('timeupdate', this.state)
     })
 
   }
@@ -221,9 +259,12 @@ class AudioPlayer extends Component {
       waveform.push(
         <Wave
           key={i}
+          index={i}
           onClick={()=>{
+            console.log(i)
             this.seekClick(i)
           }}
+          progress={this.state.position.x}
         />
       )
     }
