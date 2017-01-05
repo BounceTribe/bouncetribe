@@ -8,15 +8,13 @@ import 'react-select/dist/react-select.css';
 // import 'react-select/dist/react-select.css';
 import styled from 'styled-components'
 // import InfluenceChip from 'reusables/InfluenceChip'
-import {btTeal} from 'styling/T'
+// import {btTeal} from 'styling/T'
 // import Plus from 'imgs/icons/plus'
 
 
 const Container = styled.div`
   width: 400px;
-  &:hover {
-    box-shadow: ${props => (props.ownProfile) ? `0 0 10px ${btTeal}` : `none`};
-  }
+  cursor: ${props=>props.ownProfile ? 'pointer' : 'default'}
 `
 
 const ProfileFieldLabel = styled.h3`

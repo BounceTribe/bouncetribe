@@ -62,7 +62,7 @@ const Waveform = styled.div`
 const Wave = styled.div`
   display: flex;
   box-sizing: border-box;
-  height: 50%;
+  height: ${props=>props.height * 1.3}px;
   width: 2px;
   padding: 0 1px;
   background-color: ${(props) => {
@@ -96,75 +96,140 @@ class AudioPlayer extends Component {
     position: {
       x: 0,
       y: 0
-    }
+    },
+    visualArray: []
   }
 
   componentDidMount () {
-    const audioEl = this.audioEl
 
-    audioEl.addEventListener('play', (e) => {
-      console.log('play event')
-      this.setState({
-        playing: true
-      })
+    // const audioEl = this.audioEl
+
+
+    let element = this.audioEl
+    element.crossOrigin = "anonymous"
+    console.log('audio', element);
+
+    let context = new AudioContext()
+    console.log('context', context)
+
+    let analyser = context.createAnalyser()
+    console.log('analyser', analyser)
+
+    const audioEl = context.createMediaElementSource(element)
+    console.log('source', audioEl)
+
+    audioEl.connect(analyser)
+    console.log('source connect', audioEl)
+
+    analyser.connect(context.destination)
+    console.log('analyser connect', analyser)
+
+    let frequencyData = new Uint8Array(analyser.frequencyBinCount);
+    console.log('frequencyData', frequencyData)
+
+    analyser.getByteFrequencyData(frequencyData);
+    console.log('frequencyData', frequencyData)
+
+
+    element.addEventListener('canplaythrough', (e) => {
+
+      console.log(element)
+
+      if (this.state.visualArray.length < 100) {
+
+        let visualArray = []
+        let multiplier = this.state.duration / 100
+
+        const collectData = (e) => {
+          if (this.state.visualArray.length < 100) {
+            console.log('collectData')
+            analyser.getByteFrequencyData(frequencyData)
+            let sum = frequencyData.reduce((a,b)=>a+b, 0)
+            let average = sum/frequencyData.length
+            visualArray.push(average)
+            element.currentTime = visualArray.length * multiplier
+          }
+        }
+
+        const giveDataToState = (e) => {
+          console.log('giveDataToState')
+          if (this.state.visualArray.length < 100) {
+            if (visualArray.length === 100) {
+              this.setState({
+                visualArray: visualArray
+              })
+              element.pause()
+              element.removeEventListener('play', collectData)
+            }
+          }
+        }
+
+        element.addEventListener('play', collectData)
+
+
+        element.addEventListener('timeupdate', giveDataToState)
+
+        element.addEventListener('pause', (e) => {
+          console.log('play thing', this.state.visualArray)
+          if (this.state.visualArray.length === 100) {
+            element.removeEventListener('timeupdate', giveDataToState)
+          }
+        })
+
+
+        // element.pause()
+        // element.play()
+
+
+
+      }
     })
 
-    audioEl.addEventListener('pause', (e) => {
-      console.log('pause event')
-      this.setState({
-        playing: false
-      })
-    })
+    if (this.state.visualArray.length === 100) {
 
-    audioEl.addEventListener('canplay', (e) => {
+
+      element.addEventListener('play', (e) => {
+        console.log('play event')
+        this.setState({
+          playing: true
+        })
+      })
+
+      element.addEventListener('pause', (e) => {
+        console.log('pause event')
+        this.setState({
+          playing: false
+        })
+      })
+
+      element.addEventListener('timeupdate', (e) => {
+        this.setState({
+          currentTime: element.currentTime,
+          position: {
+            x: this.position(element.currentTime),
+            y: 0
+          }
+        })
+      })
+    }
+
+    element.addEventListener('canplay', (e) => {
       this.setState({
         canPlay: true
       })
     })
 
-    audioEl.addEventListener('durationchange', (e) => {
-      this.setState({
-        duration: Math.ceil(audioEl.seekable.end(0))
-      })
 
-      // var ctx = new (window.AudioContext || window.webkitAudioContext)(); // define audio context
-      //
-      // var audioSrc = ctx.createMediaElementSource(audioEl);
-      //
-      // console.log(audioSrc)
-      //
-      // var analyser = ctx.createAnalyser();
-      //
-      // console.log(analyser)
-      //
-      // audioSrc.connect(analyser);
-      //
-      // var frequencyData = new Uint8Array(analyser.frequencyBinCount);
-      //
-      // console.log(frequencyData)
-      //
-      // function renderFrame() {
-      //    requestAnimationFrame(renderFrame);
-      //    // update data in frequencyData
-      //    analyser.getByteFrequencyData(frequencyData);
-      //    // render frame based on values in frequencyData
-      //    console.log(frequencyData)
-      // }
-      // audioEl.start();
-      // renderFrame();
+
+
+    element.addEventListener('durationchange', (e) => {
+      this.setState({
+        duration: Math.ceil(element.seekable.end(0))
+      })
 
 
     })
 
-    audioEl.addEventListener('timeupdate', (e) => {
-      this.setState({
-        currentTime: audioEl.currentTime,
-        position: {
-          x: this.position(audioEl.currentTime),
-          y: 0
-        }
-      })
-    })
 
   }
 
@@ -265,6 +330,7 @@ class AudioPlayer extends Component {
             this.seekClick(i)
           }}
           progress={this.state.position.x}
+          height={this.state.visualArray[i]}
         />
       )
     }
@@ -299,6 +365,35 @@ class AudioPlayer extends Component {
   }
 
 
+
+  visualizer = () => {
+    // let audio = this.audioEl
+    // audio.crossOrigin = "anonymous"
+    // console.log('audio', audio);
+    //
+    // let context = new AudioContext()
+    // console.log('context', context)
+    //
+    // let analyser = context.createAnalyser()
+    // console.log('analyser', analyser)
+    //
+    // let source = context.createMediaElementSource(audio)
+    // console.log('source', source)
+    //
+    // source.connect(analyser)
+    // console.log('source connect', source)
+    //
+    // analyser.connect(context.destination)
+    // console.log('analyser connect', analyser)
+    //
+    // let frequencyData = new Uint8Array(200);
+    // console.log('frequencyData', frequencyData)
+    //
+    // analyser.getByteFrequencyData(frequencyData);
+    // console.log('frequencyData', frequencyData)
+    //
+
+  }
 
   render () {
     return (
@@ -343,6 +438,7 @@ class AudioPlayer extends Component {
           ref={(ref) => {
             this.audioEl = ref
           }}
+          id={this.props.id}
         >
           <source
             src={this.props.src}
