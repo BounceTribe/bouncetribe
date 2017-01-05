@@ -15,13 +15,15 @@ import request from 'superagent'
 import TextField from 'material-ui/TextField'
 import {titleSanitizer} from 'utils/validators'
 import {fileUploadUrl} from 'config/urls'
+import AudioPlayer from 'reusables/AudioPlayer'
 
 import AddToProjectTracksMutation from 'mutations/AddToProjectTracksMutation'
 
-const UploadButton = styled.button`
+const AudioContainer = styled.div`
   display: flex;
   margin: 10px auto;
   height: 100%;
+  justify-content: center;
 `
 
 const UploadRow = styled.div`
@@ -267,9 +269,12 @@ class NewProjectCreator extends Component {
   }
 
   showTrack = () => {
-    if (this.props.project.tracks) {
+    if (this.props.project.tracks.edges.length > 0) {
       return (
-        <span>{this.props.project.tracks.edges[0].node.url}</span>
+        <AudioPlayer
+          id={this.props.project.tracks.edges[0].node.id}
+          src={this.props.project.tracks.edges[0].node.url}
+        />
       )
     } else {
       return (
@@ -300,9 +305,9 @@ class NewProjectCreator extends Component {
       <div>
 
 
-        <UploadButton>
+        <AudioContainer>
           {this.showTrack()}
-        </UploadButton>
+        </AudioContainer>
 
         <UploadRow>
           <UploadLeft>

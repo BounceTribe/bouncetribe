@@ -1,6 +1,6 @@
 import React from 'react'
 
-const UploadLight = (props) => {
+const UploadTrack = (props) => {
   return (
 
   <svg width="118px" height="130px" viewBox="661 177 118 130" version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -14,4 +14,4 @@ const UploadLight = (props) => {
   )
 }
 
-export default UploadLight
+export default UploadTrack
