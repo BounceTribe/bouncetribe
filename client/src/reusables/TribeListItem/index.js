@@ -19,7 +19,7 @@ const TribeListItemDisplay = styled.div`
   height: 100px;
   margin: 10px 1%;
   padding: 10px;
-  max-width: 45.6%;
+  max-width: 98%;
   min-width: 40%;
   border: solid ${btLight} .5px;
 `

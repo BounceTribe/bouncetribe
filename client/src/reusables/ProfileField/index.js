@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import {btWarn, btTeal, btPurple, btLight, btBlack, btDark} from 'styling/T'
 import EditIcon from 'imgs/icons/edit'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
+
 
 const singleLine = (props) => {
   if (props.fontSize) {
@@ -51,6 +50,9 @@ const ProfileFieldContents = styled.div`
   width: ${props => (props.fontSize) ? 'auto' : '100%'};
   min-height: ${props => (props.fontSize) ? 'auto' : '50px'};
   margin-right: ${props => (props.fontSize) ? '2px' : null};
+  &:first-letter {
+    text-transform: ${props => (props.options) ? 'uppercase' : 'none'}
+  }
 `
 
 const ProfileFieldP = styled.p`
@@ -61,6 +63,9 @@ const ProfileFieldP = styled.p`
   cursor: ${props => (props.ownProfile) ? 'pointer' : 'default'};
   color: ${props => (props.text) ? btBlack : btLight};
   margin-right: 5px;
+  text-transform: ${props => (props.options) ? 'lowercase' : 'none'}
+
+
 `
 
 const TextArea = styled.textarea`
@@ -101,6 +106,14 @@ const TextInput = styled.input`
 const IconContainer = styled.div`
   display: flex;
   margin-right: 5px;
+`
+
+const SelectField = styled.select`
+  background: none;
+  border: none;
+  outline: none;
+  box-shadow: 0 0 10px ${btTeal};
+
 `
 
 class ProfileField extends Component {
@@ -164,30 +177,30 @@ class ProfileField extends Component {
 
         />
       )
-    } else if (this.props.options && this.props.ownProfile) {
+    } else if (this.props.options && this.props.ownProfile && this.state.canEdit) {
       return (
         <SelectField
-          floatingLabelText={this.props.label.charAt(0).toUpperCase() + this.props.label.slice(1)}
-          underlineStyle={{
-            borderColor: 'white',
-          }}
           value={this.state.text}
-          onChange={(e, key, payload)=> {
-            this.editText({target: {value: payload}})
-            this.submitEdits(payload)
+          onChange={(e)=> {
+            this.editText(e)
           }}
+          onBlur={(e)=>{
+            console.log('blur')
+            this.submitEdits()
+          }}
+          id={this.props.label}
         >
           {this.props.options.map(option=>(
-            <MenuItem
+            <option
               value={option}
-              primaryText={option.charAt(0) + option.slice(1).toLowerCase()}
+              label={option.charAt(0) + option.slice(1).toLowerCase()}
               key={option}
             />
           ))}
 
         </SelectField>
       )
-    } else if (this.props.fontSize && this.props.ownProfile) {
+    } else if (this.props.fontSize && this.props.ownProfile && !this.props.options) {
       return (
         <TextInput
           type="text"
@@ -218,6 +231,7 @@ class ProfileField extends Component {
           fontSize={this.props.fontSize}
           ownProfile={this.props.ownProfile}
           text={this.props.text}
+          options={this.props.options}
         >{this.state.displayText}</ProfileFieldP>
       )
     }
@@ -245,13 +259,6 @@ class ProfileField extends Component {
   }
 
   submitEdits = (newValue) => {
-
-    if (this.state.valid && this.props.ownProfile && this.props.options) {
-      let submission = {}
-      submission[this.props.field] = newValue
-      this.props.submitField(submission)
-      return
-    }
 
     if (this.state.valid && this.props.ownProfile) {
       this.setState({
@@ -333,6 +340,7 @@ class ProfileField extends Component {
       return (
         <EditIcon
           fill={(this.state.hover) ? btPurple : 'rgba(160,160,160, .5)'}
+          onClick={this.iconClick}
         />
       )
     }
@@ -343,6 +351,7 @@ class ProfileField extends Component {
       return (
         <EditIcon
           fill={(this.state.hover) ? btPurple : 'rgba(160,160,160, .5)'}
+          onClick={this.iconClick}
         />
       )
     }
