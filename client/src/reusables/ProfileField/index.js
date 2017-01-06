@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 import {btWarn, btTeal, btPurple, btLight, btBlack, btDark} from 'styling/T'
 import EditIcon from 'imgs/icons/edit'
-
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
 
 const singleLine = (props) => {
   if (props.fontSize) {
@@ -107,7 +108,8 @@ class ProfileField extends Component {
   state = {
     canEdit: false,
     text: this.props.text || '',
-    valid: true
+    valid: true,
+    displayText: ''
   }
 
   componentDidMount () {
@@ -158,7 +160,32 @@ class ProfileField extends Component {
             }
           }}
           id={this.props.label}
+          placeholder={this.state.displayText}
+
         />
+      )
+    } else if (this.props.options && this.props.ownProfile) {
+      return (
+        <SelectField
+          floatingLabelText={this.props.label.charAt(0).toUpperCase() + this.props.label.slice(1)}
+          underlineStyle={{
+            borderColor: 'white',
+          }}
+          value={this.state.text}
+          onChange={(e, key, payload)=> {
+            this.editText({target: {value: payload}})
+            this.submitEdits(payload)
+          }}
+        >
+          {this.props.options.map(option=>(
+            <MenuItem
+              value={option}
+              primaryText={option.charAt(0) + option.slice(1).toLowerCase()}
+              key={option}
+            />
+          ))}
+
+        </SelectField>
       )
     } else if (this.props.fontSize && this.props.ownProfile) {
       return (
@@ -180,9 +207,9 @@ class ProfileField extends Component {
             }
           }}
           message={this.state.message}
-          size={(this.state.text) ? this.state.text.length : 10}
+          size={(this.state.text) ? this.state.text.length : this.state.displayText.length}
           id={this.props.label}
-
+          placeholder={this.state.displayText}
         />
       )
     } else {
@@ -201,6 +228,7 @@ class ProfileField extends Component {
       if (this.props.validate) {
         this.validator(e.target.value)
       }
+      console.log(e.target.value)
       this.setState({
         text: e.target.value,
         displayText: e.target.value
@@ -216,7 +244,14 @@ class ProfileField extends Component {
     }
   }
 
-  submitEdits = () => {
+  submitEdits = (newValue) => {
+
+    if (this.state.valid && this.props.ownProfile && this.props.options) {
+      let submission = {}
+      submission[this.props.field] = newValue
+      this.props.submitField(submission)
+      return
+    }
 
     if (this.state.valid && this.props.ownProfile) {
       this.setState({
@@ -224,6 +259,7 @@ class ProfileField extends Component {
       })
       let submission = {}
       submission[this.props.field] = this.state.text
+      console.log('state', this.state.text)
       this.props.submitField(submission)
       document.getElementById(this.props.label).blur()
     }

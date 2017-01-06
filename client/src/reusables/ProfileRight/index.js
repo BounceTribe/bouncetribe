@@ -46,11 +46,12 @@ class ProfileRight extends Component {
         <ProfileField
           field={'experience'}
           label={'experience'}
-          text={(this.props.user.experience) ? this.props.user.experience.toLowerCase() : this.props.user.experience}
+          text={this.props.user.experience}
           submitField={this.props.submitField}
           fontSize={.9}
           icon={Clock}
           ownProfile={this.props.ownProfile}
+          options={['PROFESSIONAL', 'NOVICE']}
         />
       )
     } else {
