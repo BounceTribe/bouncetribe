@@ -27,3 +27,40 @@ export const Log = (message, label, data) => {
     }
   }
 }
+
+
+export const narrate = (message, colorOrFlag) => {
+  if (colorOrFlag === 'flag') {
+    console.log(`%c \n ...${message}... \n`, `color: grey; font-size: 12px; font-style: italic; font-weight: bold; background-color: lightgreen;`)
+  } else {
+    console.log(`%c ...${message}...`, `color: ${(colorOrFlag) ? colorOrFlag : 'grey'}; font-size: 10px; font-style: italic;`)
+  }
+}
+
+export const show = (label, data, show) => {
+  if (show) {
+    console.group(`%c ${label}`, `color: black`)
+    console.log(data)
+    console.groupEnd()
+  } else {
+    console.groupCollapsed(`%c ${label}`, `color: grey`)
+    console.log(data)
+    console.groupEnd()
+  }
+}
+
+export const warn = (message) => {
+  console.warn(`%c ${message}`, `color: black; font-size: 11px; background-color: salmon;`)
+}
+
+export const showWarn = (label, data, hide) => {
+  if (hide) {
+    console.groupCollapsed(`%c ${label}`, `color: grey; font-size: 11px; background-color: salmon;`)
+    console.log(data)
+    console.groupEnd()
+  } else {
+    console.group(`%c ${label}`, `color: black; font-size: 11px; background-color: salmon;`)
+    console.log(data)
+    console.groupEnd()
+  }
+}

@@ -4,6 +4,7 @@ import PlayButton from 'imgs/icons/PlayButton'
 import PauseButton from 'imgs/icons/PauseButton'
 import {btLight, btTeal, btPurple} from 'styling/T'
 import Draggable from 'react-draggable'
+// import {narrate, show, warn, showWarn} from 'utils'
 
 const Container = styled.div`
   display: flex;
@@ -62,7 +63,7 @@ const Waveform = styled.div`
 const Wave = styled.div`
   display: flex;
   box-sizing: border-box;
-  height: ${props=>props.height * 1.3}px;
+  height: ${props=> props.height ? props.height * 1.3 : 20}px;
   width: 2px;
   padding: 0 1px;
   background-color: ${(props) => {
@@ -102,116 +103,32 @@ class AudioPlayer extends Component {
 
   componentDidMount () {
 
-    // const audioEl = this.audioEl
-
-
     let element = this.audioEl
-    element.crossOrigin = "anonymous"
-    console.log('audio', element);
 
-    let context = new AudioContext()
-    console.log('context', context)
-
-    let analyser = context.createAnalyser()
-    console.log('analyser', analyser)
-
-    const audioEl = context.createMediaElementSource(element)
-    console.log('source', audioEl)
-
-    audioEl.connect(analyser)
-    console.log('source connect', audioEl)
-
-    analyser.connect(context.destination)
-    console.log('analyser connect', analyser)
-
-    let frequencyData = new Uint8Array(analyser.frequencyBinCount);
-    console.log('frequencyData', frequencyData)
-
-    analyser.getByteFrequencyData(frequencyData);
-    console.log('frequencyData', frequencyData)
-
-
-    element.addEventListener('canplaythrough', (e) => {
-
-      console.log(element)
-
-      if (this.state.visualArray.length < 100) {
-
-        let visualArray = []
-        let multiplier = this.state.duration / 100
-
-        const collectData = (e) => {
-          if (this.state.visualArray.length < 100) {
-            console.log('collectData')
-            analyser.getByteFrequencyData(frequencyData)
-            let sum = frequencyData.reduce((a,b)=>a+b, 0)
-            let average = sum/frequencyData.length
-            visualArray.push(average)
-            element.currentTime = visualArray.length * multiplier
-          }
-        }
-
-        const giveDataToState = (e) => {
-          console.log('giveDataToState')
-          if (this.state.visualArray.length < 100) {
-            if (visualArray.length === 100) {
-              this.setState({
-                visualArray: visualArray
-              })
-              element.pause()
-              element.removeEventListener('play', collectData)
-            }
-          }
-        }
-
-        element.addEventListener('play', collectData)
-
-
-        element.addEventListener('timeupdate', giveDataToState)
-
-        element.addEventListener('pause', (e) => {
-          console.log('play thing', this.state.visualArray)
-          if (this.state.visualArray.length === 100) {
-            element.removeEventListener('timeupdate', giveDataToState)
-          }
-        })
-
-
-        // element.pause()
-        // element.play()
-
-
-
-      }
+    element.addEventListener('play', (e) => {
+      console.log('play event')
+      this.setState({
+        playing: true
+      })
     })
 
-    if (this.state.visualArray.length === 100) {
-
-
-      element.addEventListener('play', (e) => {
-        console.log('play event')
-        this.setState({
-          playing: true
-        })
+    element.addEventListener('pause', (e) => {
+      console.log('pause event')
+      this.setState({
+        playing: false
       })
+    })
 
-      element.addEventListener('pause', (e) => {
-        console.log('pause event')
-        this.setState({
-          playing: false
-        })
+    element.addEventListener('timeupdate', (e) => {
+      this.setState({
+        currentTime: element.currentTime,
+        position: {
+          x: this.position(element.currentTime),
+          y: 0
+        }
       })
+    })
 
-      element.addEventListener('timeupdate', (e) => {
-        this.setState({
-          currentTime: element.currentTime,
-          position: {
-            x: this.position(element.currentTime),
-            y: 0
-          }
-        })
-      })
-    }
 
     element.addEventListener('canplay', (e) => {
       this.setState({
@@ -220,18 +137,13 @@ class AudioPlayer extends Component {
     })
 
 
-
-
     element.addEventListener('durationchange', (e) => {
       this.setState({
         duration: Math.ceil(element.seekable.end(0))
       })
-
-
     })
-
-
   }
+
 
   position = (currentTime) => {
     let {
@@ -329,7 +241,7 @@ class AudioPlayer extends Component {
             console.log(i)
             this.seekClick(i)
           }}
-          progress={this.state.position.x}
+          progress={(this.state.position) ? this.state.position.x : false}
           height={this.state.visualArray[i]}
         />
       )
@@ -364,36 +276,6 @@ class AudioPlayer extends Component {
     })
   }
 
-
-
-  visualizer = () => {
-    // let audio = this.audioEl
-    // audio.crossOrigin = "anonymous"
-    // console.log('audio', audio);
-    //
-    // let context = new AudioContext()
-    // console.log('context', context)
-    //
-    // let analyser = context.createAnalyser()
-    // console.log('analyser', analyser)
-    //
-    // let source = context.createMediaElementSource(audio)
-    // console.log('source', source)
-    //
-    // source.connect(analyser)
-    // console.log('source connect', source)
-    //
-    // analyser.connect(context.destination)
-    // console.log('analyser connect', analyser)
-    //
-    // let frequencyData = new Uint8Array(200);
-    // console.log('frequencyData', frequencyData)
-    //
-    // analyser.getByteFrequencyData(frequencyData);
-    // console.log('frequencyData', frequencyData)
-    //
-
-  }
 
   render () {
     return (
@@ -430,6 +312,12 @@ class AudioPlayer extends Component {
             {this.createWaveform()}
 
           </Waveform>
+
+          <div
+            id="surfer"
+          >
+
+          </div>
 
         </TrackColumn>
 
