@@ -4,7 +4,7 @@ import PlayButton from 'imgs/icons/PlayButton'
 import PauseButton from 'imgs/icons/PauseButton'
 import {btLight, btTeal, btPurple} from 'styling/T'
 import Draggable from 'react-draggable'
-// import {narrate, show, warn, showWarn} from 'utils'
+import {narrate, show} from 'utils'
 
 const Container = styled.div`
   display: flex;
@@ -103,7 +103,31 @@ class AudioPlayer extends Component {
 
   componentDidMount () {
 
+    let visualization = this.props.track.visualization
+    narrate('finding min and max values of visualization')
+    show('visualization', visualization)
+    let max = Math.max(...visualization)
+    let min = Math.min(...visualization)
+    show('max', max)
+    show('min', min)
+
+    let zeroDif = min * -1
+
+    narrate('generating display data')
+    let displayData = visualization.map((value)=>{
+      let positive = value + zeroDif
+      let scaled = positive * 100
+      return scaled
+    })
+    show('displayData', displayData)
+
+    this.setState({
+      visualArray: displayData
+    })
+
     let element = this.audioEl
+
+
 
     element.addEventListener('play', (e) => {
       console.log('play event')

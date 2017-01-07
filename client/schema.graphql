@@ -43,6 +43,21 @@ input AddToFriendsUserInput {
   clientMutationId: String!
 }
 
+input AddToGenreGenreGenreInput {
+  subgenresGenreId: ID!
+  parentGenreGenreId: ID!
+  clientMutationId: String!
+}
+
+type AddToGenreGenrePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  parentGenreGenre: Genre
+  subgenresGenre: Genre
+  parentGenreGenreEdge: GenreEdge
+  subgenresGenreEdge: GenreEdge
+}
+
 input AddToProjectArtProjectInput {
   artworkFileId: ID!
   artworkProjectProjectId: ID!
@@ -533,6 +548,7 @@ type CreateCommentPayload {
 
 input CreateFileInput {
   name: String!
+  visualization: [BigDecimal!]
   artworkProjectId: ID
   artworkProject: FileartworkProjectProject
   trackProjectId: ID
@@ -569,6 +585,22 @@ type CreateFriendRequestPayload {
   edge: FriendRequestEdge
   actor: User
   recipient: User
+}
+
+input CreateGenreInput {
+  name: String!
+  parentGenreIds: [ID!]
+  parentGenre: [GenreInput!]
+  subgenresIds: [ID!]
+  subgenres: [GenreInput!]
+  clientMutationId: String!
+}
+
+type CreateGenrePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  genre: Genre
+  edge: GenreEdge
 }
 
 input CreateInfluenceInput {
@@ -694,6 +726,19 @@ type DeleteFriendRequestPayload {
   deletedId: ID
 }
 
+input DeleteGenreInput {
+  id: ID!
+  clientMutationId: String!
+}
+
+type DeleteGenrePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  genre: Genre
+  edge: GenreEdge
+  deletedId: ID
+}
+
 input DeleteInfluenceInput {
   id: ID!
   clientMutationId: String!
@@ -762,6 +807,7 @@ type File implements Node {
   updatedAt: DateTime
   uploader(filter: UserFilter): User
   url: String!
+  visualization: [BigDecimal!]
 }
 
 input FileartworkProjectProject {
@@ -896,10 +942,19 @@ input FileFilter {
   url_not_starts_with: String
   url_ends_with: String
   url_not_ends_with: String
+  visualization: [BigDecimal!]
+  visualization_not: [BigDecimal!]
+  visualization_in: [[BigDecimal!]!]
+  visualization_not_in: [[BigDecimal!]!]
+  visualization_lt: [BigDecimal!]
+  visualization_lte: [BigDecimal!]
+  visualization_gt: [BigDecimal!]
+  visualization_gte: [BigDecimal!]
 }
 
 input FileInput {
   name: String!
+  visualization: [BigDecimal!]
   artworkProjectId: ID
   trackProjectId: ID
   uploaderId: ID
@@ -1112,6 +1167,104 @@ input FriendRequestrecipientUser {
   sentRequests: [FriendRequestInput!]
 }
 
+type Genre implements Node {
+  createdAt: DateTime
+  id: ID!
+  name: String!
+  parentGenre(filter: GenreFilter, orderBy: GenreOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): GenreConnection
+  subgenres(filter: GenreFilter, orderBy: GenreOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): GenreConnection
+  updatedAt: DateTime
+}
+
+# A connection to a list of items.
+type GenreConnection {
+  # Information to aid in pagination.
+  pageInfo: PageInfo!
+
+  # A list of edges.
+  edges: [GenreEdge]
+
+  # Count of filtered result set without considering pagination arguments
+  count: Int!
+}
+
+# An edge in a connection.
+type GenreEdge {
+  # The item at the end of the edge.
+  node: Genre!
+
+  # A cursor for use in pagination.
+  cursor: String!
+}
+
+input GenreFilter {
+  AND: [GenreFilter!]
+  OR: [GenreFilter!]
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+}
+
+input GenreInput {
+  name: String!
+  parentGenreIds: [ID!]
+  parentGenre: [GenreInput!]
+  subgenresIds: [ID!]
+  subgenres: [GenreInput!]
+}
+
+enum GenreOrderBy {
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
 type Influence implements Node {
   artist(filter: ArtistFilter): Artist
   createdAt: DateTime
@@ -1235,6 +1388,7 @@ type Mutation {
   createInfluence(input: CreateInfluenceInput!): CreateInfluencePayload
   createComment(input: CreateCommentInput!): CreateCommentPayload
   createFriendRequest(input: CreateFriendRequestInput!): CreateFriendRequestPayload
+  createGenre(input: CreateGenreInput!): CreateGenrePayload
   createArtist(input: CreateArtistInput!): CreateArtistPayload
   createTag(input: CreateTagInput!): CreateTagPayload
   createFile(input: CreateFileInput!): CreateFilePayload
@@ -1243,6 +1397,7 @@ type Mutation {
   updateComment(input: UpdateCommentInput!): UpdateCommentPayload
   updateUser(input: UpdateUserInput!): UpdateUserPayload
   updateFriendRequest(input: UpdateFriendRequestInput!): UpdateFriendRequestPayload
+  updateGenre(input: UpdateGenreInput!): UpdateGenrePayload
   updateArtist(input: UpdateArtistInput!): UpdateArtistPayload
   updateTag(input: UpdateTagInput!): UpdateTagPayload
   updateFile(input: UpdateFileInput!): UpdateFilePayload
@@ -1251,12 +1406,14 @@ type Mutation {
   deleteComment(input: DeleteCommentInput!): DeleteCommentPayload
   deleteUser(input: DeleteUserInput!): DeleteUserPayload
   deleteFriendRequest(input: DeleteFriendRequestInput!): DeleteFriendRequestPayload
+  deleteGenre(input: DeleteGenreInput!): DeleteGenrePayload
   deleteArtist(input: DeleteArtistInput!): DeleteArtistPayload
   deleteTag(input: DeleteTagInput!): DeleteTagPayload
   deleteFile(input: DeleteFileInput!): DeleteFilePayload
   setProjectArt(input: AddToProjectArtProjectInput!): SetProjectArtPayload
   unsetProjectArt(input: UnsetProjectArtProjectInput!): UnsetProjectArtPayload
   addToUserComments(input: AddToUserCommentsCommentInput!): AddToUserCommentsPayload
+  addToGenreGenre(input: AddToGenreGenreGenreInput!): AddToGenreGenrePayload
   addToProjectComments(input: AddToProjectCommentsProjectInput!): AddToProjectCommentsPayload
   addToUserInfluences(input: AddToUserInfluencesUserInput!): AddToUserInfluencesPayload
   addToProjectTracks(input: AddToProjectTracksProjectInput!): AddToProjectTracksPayload
@@ -1268,6 +1425,7 @@ type Mutation {
   addToCommentParentChildren(input: AddToCommentParentChildrenCommentInput!): AddToCommentParentChildrenPayload
   addToUserRequests(input: AddToUserRequestsUserInput!): AddToUserRequestsPayload
   removeFromUserComments(input: RemoveFromUserCommentsCommentInput!): RemoveFromUserCommentsPayload
+  removeFromGenreGenre(input: RemoveFromGenreGenreGenreInput!): RemoveFromGenreGenrePayload
   removeFromProjectComments(input: RemoveFromProjectCommentsProjectInput!): RemoveFromProjectCommentsPayload
   removeFromUserInfluences(input: RemoveFromUserInfluencesUserInput!): RemoveFromUserInfluencesPayload
   removeFromProjectTracks(input: RemoveFromProjectTracksProjectInput!): RemoveFromProjectTracksPayload
@@ -1331,6 +1489,7 @@ enum PROJECT_PRIVACY {
 
 input ProjectartworkFile {
   name: String!
+  visualization: [BigDecimal!]
   trackProjectId: ID
   trackProject: FiletrackProjectProject
   uploaderId: ID
@@ -1534,6 +1693,21 @@ input RemoveFromFriendsUserInput {
   friends1UserId: ID!
   friends2UserId: ID!
   clientMutationId: String!
+}
+
+input RemoveFromGenreGenreGenreInput {
+  subgenresGenreId: ID!
+  parentGenreGenreId: ID!
+  clientMutationId: String!
+}
+
+type RemoveFromGenreGenrePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  parentGenreGenre: Genre
+  subgenresGenre: Genre
+  parentGenreGenreEdge: GenreEdge
+  subgenresGenreEdge: GenreEdge
 }
 
 type RemoveFromProjectCommentsPayload {
@@ -1840,6 +2014,7 @@ type UpdateCommentPayload {
 input UpdateFileInput {
   id: ID!
   name: String
+  visualization: [BigDecimal!]
   artworkProjectId: ID
   artworkProject: FileartworkProjectProject
   trackProjectId: ID
@@ -1877,6 +2052,23 @@ type UpdateFriendRequestPayload {
   edge: FriendRequestEdge
   actor: User
   recipient: User
+}
+
+input UpdateGenreInput {
+  id: ID!
+  name: String
+  parentGenreIds: [ID!]
+  parentGenre: [GenreInput!]
+  subgenresIds: [ID!]
+  subgenres: [GenreInput!]
+  clientMutationId: String!
+}
+
+type UpdateGenrePayload {
+  viewer: Viewer!
+  clientMutationId: String!
+  genre: Genre
+  edge: GenreEdge
 }
 
 input UpdateInfluenceInput {
@@ -2266,6 +2458,7 @@ type Viewer {
   allComments(filter: CommentFilter, orderBy: CommentOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
   allUsers(filter: UserFilter, orderBy: UserOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   allFriendRequests(filter: FriendRequestFilter, orderBy: FriendRequestOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FriendRequestConnection!
+  allGenres(filter: GenreFilter, orderBy: GenreOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): GenreConnection!
   allArtists(filter: ArtistFilter, orderBy: ArtistOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): ArtistConnection!
   allTags(filter: TagFilter, orderBy: TagOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): TagConnection!
   allFiles(filter: FileFilter, orderBy: FileOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): FileConnection!
@@ -2274,6 +2467,7 @@ type Viewer {
   Comment(id: ID): Comment
   User(auth0UserId: String, email: String, handle: String, id: ID): User
   FriendRequest(id: ID): FriendRequest
+  Genre(id: ID): Genre
   Artist(id: ID): Artist
   Tag(id: ID): Tag
   File(id: ID, secret: String, url: String): File

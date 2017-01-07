@@ -16,8 +16,10 @@ import TextField from 'material-ui/TextField'
 import {titleSanitizer} from 'utils/validators'
 import {fileUploadUrl} from 'config/urls'
 import AudioPlayer from 'reusables/AudioPlayer'
-
+import {narrate, show} from 'utils'
 import AddToProjectTracksMutation from 'mutations/AddToProjectTracksMutation'
+import UpdateFileMutation from 'mutations/UpdateFileMutation'
+
 
 const AudioContainer = styled.div`
   display: flex;
@@ -215,26 +217,107 @@ class NewProjectCreator extends Component {
 
       console.log('file', file)
 
-      request
-        .post(fileUploadUrl)
-        .attach('data', file)
-        .end( (error, response) => {
-          if (error || !response.ok ) {
-            console.log(error)
-          } else {
-            this.submitProjectTracks({
-              tracksFileId: response.body.id,
-              trackProjectProjectId: this.props.project.id
-            })
 
-          }
-        })
+      request
+      .post(fileUploadUrl)
+      .attach('data', file)
+      .end( (error, response) => {
+        if (error || !response.ok ) {
+          console.log(error)
+        } else {
+          let fileId = response.body.id
+
+          this.submitProjectTracks({
+            tracksFileId: fileId,
+            trackProjectProjectId: this.props.project.id
+          })
+
+          this.createVisualization(file, fileId)
+
+        }
+      })
+
+
 
     }
     if (rejectedFiles) {
       console.log('rejectedFiles', rejectedFiles)
     }
   }
+
+  createVisualization = (file, fileId) => {
+    narrate('creating visualization')
+    show('file', file)
+
+    narrate('creating OfflineAudioContext')
+    let ctx = new OfflineAudioContext(2,44100*40,44100)
+
+    // narrate('creating BufferSource')
+    // let source = ctx.createBufferSource()
+
+    narrate('creating a FileReader')
+    let reader = new FileReader()
+    show('reader', reader)
+
+    narrate('creating an onload callback for the reader')
+    reader.onload = (event) => {
+      narrate('reader onload callback')
+      show('reader', reader)
+
+      narrate('initializing buffer')
+      let buffer = reader.result
+
+      narrate('decoding audio data')
+      ctx.decodeAudioData(buffer).then( (decodedData)=> {
+        narrate('succesfully decoded audio data')
+        show('decodedData', decodedData)
+
+        narrate('getting channel data')
+        let channelData = decodedData.getChannelData(0)
+        show('channelData', channelData)
+
+        narrate('looping through channel data to sampel')
+        let visualization = []
+        let interval = Math.floor(channelData.length / 100)
+        show('interval', interval)
+        for (let i = 0; visualization.length < 100; i += interval) {
+          visualization.push(channelData[i])
+        }
+        show('visualization', visualization)
+
+        narrate('addVisualizationToFile')
+        this.addVisualizationToFile(fileId, visualization)
+
+      })
+    }
+
+
+    narrate('creating a buffer from the file')
+    let myBuffer = reader.readAsArrayBuffer(file)
+    show('buffer', myBuffer)
+
+
+  }
+
+  addVisualizationToFile = (fileId, visualization) => {
+    narrate('committing update')
+    Relay.Store.commitUpdate(
+      new UpdateFileMutation({
+        fileId: fileId,
+        visualization: visualization
+      }),
+      {
+        onSuccess: (transaction) => {
+          narrate('UpdateFileMutation succeeded')
+          show('success', transaction)
+        },
+        onFailure: (transaction) => {
+          narrate('UpdateFileMutation failed')
+          show('transaction', transaction)        },
+      },
+    )
+  }
+
 
   showArtwork = () => {
     if (this.props.project.artwork) {
@@ -274,6 +357,7 @@ class NewProjectCreator extends Component {
         <AudioPlayer
           id={this.props.project.tracks.edges[0].node.id}
           src={this.props.project.tracks.edges[0].node.url}
+          track={this.props.project.tracks.edges[0].node}
         />
       )
     } else {

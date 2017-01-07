@@ -86,6 +86,7 @@ export default Relay.createContainer(
                       node {
                         url
                         id
+                        visualization
                       }
                     }
                   }
