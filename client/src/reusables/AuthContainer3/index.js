@@ -101,12 +101,11 @@ class AuthContainer3 extends Component {
         this.props.relay.commitUpdate(
           new SigninUserMutation({
             authToken: token,
-            viewer: this.props.viewer
           }), {
             onSuccess: (response) => {
               Log('signed in to BT', response)
               let idToken = response.signinUser.token
-              let user = response.signinUser.viewer.user
+              let user = response.signinUser.user
               this.props.loginSuccess(idToken, user)
               this.props.router.push({
                 pathname: '/'

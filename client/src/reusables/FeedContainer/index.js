@@ -106,7 +106,7 @@ class FeedContainer extends Component {
   }
 
   render() {
-    console.log(this.props.user)
+    console.log(this.props)
     return (
       <FeedList>
         {this.feedList()}

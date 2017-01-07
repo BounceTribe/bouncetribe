@@ -191,7 +191,7 @@ class ProfileTop extends Component {
               <IconContainer>
                 <Notes/>
               </IconContainer>
-              <span>0</span>
+              <span>{user.projects.edges.length}</span>
             </UserScore>
             <UserScore>
               <IconContainer>

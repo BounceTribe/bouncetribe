@@ -166,6 +166,13 @@ export default Relay.createContainer(
               }
             }
           }
+          projects (first: 2147483647)  {
+            edges {
+              node {
+                id
+              }
+            }
+          }
           ${EditPersonMutation.getFragment('user')}
           ${CreateInfluenceMutation.getFragment('user')}
           ${DeleteInfluenceMutation.getFragment('user')}

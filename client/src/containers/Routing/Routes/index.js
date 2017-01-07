@@ -13,7 +13,7 @@ import Tribe from './Tribe'
 import auth from 'config/auth'
 import SigninUserMutation from 'mutations/SigninUserMutation'
 import {loginSuccess} from 'actions/auth'
-import {Err} from 'utils'
+import {Err, narrate, show} from 'utils'
 // import {findProjectId} from 'apis/graphql'
 
 const ViewerQueries = {
@@ -21,6 +21,9 @@ const ViewerQueries = {
 }
 
 const provideHandle = (params, router) => {
+  narrate('providingHandle for prepareParams')
+  show('params', params)
+  show('router', router)
   return {
     ...params,
     handle: params.handle,
@@ -37,6 +40,9 @@ const provideHandle = (params, router) => {
 // }
 
 const requireAuth = async (nextState, replace) => {
+  narrate('onEnter using requireAuth')
+  show('nextState', nextState)
+  show('replace', replace)
   try {
     let reduxToken = store.getState().auth['id_token']
     let localToken = auth.getToken()
@@ -45,12 +51,11 @@ const requireAuth = async (nextState, replace) => {
       await new Promise ( (resolve, reject) => {
         Relay.Store.commitUpdate(
           new SigninUserMutation({
-            authToken: localToken,
-            viewer: {id: "viewer-fixed"}
+            authToken: localToken
           }), {
             onSuccess: (response) => {
               let idToken = response.signinUser.token
-              let user = response.signinUser.viewer.user
+              let user = response.signinUser.user
               store.dispatch(loginSuccess(idToken, user))
               resolve()
             },

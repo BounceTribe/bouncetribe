@@ -8,7 +8,9 @@ export default class SigninUserMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`fragment on SigninPayload {
       token
-      viewer
+      viewer {
+        user
+      }
       user
     }`
   }
@@ -18,8 +20,8 @@ export default class SigninUserMutation extends Relay.Mutation {
       {
         type: 'FIELDS_CHANGE',
         fieldIDs: {
-          viewer: this.props.viewer.id
-        },
+          viewer: "viewer-fixed"
+         },
       },
       {
         type: 'REQUIRED_CHILDREN',
@@ -30,11 +32,15 @@ export default class SigninUserMutation extends Relay.Mutation {
               viewer {
                 user {
                   id
-                  name
-                  handle
-                  profilePicUrl
-                  profilePicThumb
                 }
+                id
+              }
+              user {
+                id
+                handle
+                profilePicUrl
+                profilePicThumb
+                name
               }
             }
           `,
