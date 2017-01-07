@@ -10,6 +10,7 @@ class Projects extends Component {
       user,
       User
     } = this.props.viewer
+    console.log('ownProjects', this.props.viewer)
     if (user.id === User.id) {
       return true
     } else {
@@ -39,9 +40,6 @@ export default Relay.createContainer(
   Projects, {
     initialVariables: {
       handle: '',
-      title: false,
-      projectIdExists: false,
-      projectId: '',
     },
     fragments: {
       viewer: () => Relay.QL`

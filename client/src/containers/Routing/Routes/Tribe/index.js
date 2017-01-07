@@ -8,6 +8,20 @@ class Tribe extends Component {
   //
   // }
 
+  get ownProjects () {
+    let {
+      user,
+      User
+    } = this.props.viewer
+    console.log('ownProjects', this.props.viewer)
+    if (user.id === User.id) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+
   render() {
     const {
       viewer,
@@ -15,7 +29,9 @@ class Tribe extends Component {
     } = this.props
     return (
         <TribeContainer
-          user={viewer.user}
+          user={viewer.User}
+          self={viewer.user}
+          ownProfile={this.ownProfile}
           viewer={viewer}
           router={router}
         />
@@ -26,11 +42,28 @@ class Tribe extends Component {
 export default Relay.createContainer(
   Tribe,
   {
+    initialVariables: {
+      handle: '',
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user {
+          User (handle: $handle) {
+            id
+            name
+            email
+            profilePicUrl
+            handle
+            summary
+            experience
+            website
+            placename
+            longitude
+            latitude
             ${TribeContainer.getFragment('user')}
+          }
+          user {
+            id
           }
           ${TribeContainer.getFragment('viewer')}
         }
