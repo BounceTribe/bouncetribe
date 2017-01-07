@@ -101,9 +101,14 @@ class AudioPlayer extends Component {
     visualArray: []
   }
 
-  componentDidMount () {
+  componentWillReceiveProps = (newProps) => {
+    if (newProps.track.visualization) {
+      let visualization = newProps.track.visualization
+      this.prepareVisualArray(visualization)
+    }
+  }
 
-    let visualization = this.props.track.visualization
+  prepareVisualArray = (visualization) => {
     narrate('finding min and max values of visualization')
     show('visualization', visualization)
     let max = Math.max(...visualization)
@@ -124,6 +129,14 @@ class AudioPlayer extends Component {
     this.setState({
       visualArray: displayData
     })
+  }
+
+  componentDidMount () {
+    let visualization = this.props.track.visualization
+    if (visualization) {
+      this.prepareVisualArray(visualization)
+    }
+
 
     let element = this.audioEl
 
