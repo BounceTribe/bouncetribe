@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import TopBar from './TopBar'
-import {connect} from 'react-redux'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {btMedium, btPurple, btWhite, btLight} from 'styling/T'
 import styled from 'styled-components'
-
+import Relay from 'react-relay'
 
 injectTapEventPlugin()
 
@@ -38,9 +37,9 @@ const Main = styled.main`
 class UI extends Component {
   render() {
     let {
-      isLoggedIn,
       router,
-      children
+      children,
+      viewer
     } = this.props
     return (
         <MuiThemeProvider
@@ -48,11 +47,11 @@ class UI extends Component {
         >
           <div>
             <TopBar
-              isLoggedIn={isLoggedIn}
               router={router}
+              viewer={viewer}
             />
             <Main
-              feed={(isLoggedIn && (router.location.pathname === '/')) ? true : false}
+              feed={(viewer.user && (router.location.pathname === '/')) ? true : false}
             >
               {children}
             </Main>
@@ -62,21 +61,24 @@ class UI extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    isLoggedIn: state.auth['id_token'],
+
+export default Relay.createContainer(
+  UI,
+  {
+    fragments: {
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          id
+          user {
+            id
+            email
+            name
+            handle
+            profilePicUrl
+            profilePicThumb
+          }
+        }
+      `,
+    },
   }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-
-  }
-}
-
-UI = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UI)
-
-export default UI
+)

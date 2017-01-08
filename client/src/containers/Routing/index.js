@@ -17,10 +17,6 @@ const createHeaders = (localToken) => {
     return {}
   }
 }
-//
-// let headers = createHeaders()
-//
-// console.log('headers', headers)
 
 Relay.injectNetworkLayer(
   new RelayNetworkLayer([

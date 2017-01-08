@@ -1,19 +1,16 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {connect} from 'react-redux'
 import Feed from './Feed'
 import AuthContainer3 from 'reusables/AuthContainer3'
-import {logout} from 'actions/auth'
 import {FeedAuthSection} from 'styling/styled'
 
 class Home extends Component {
 
   get showFeedOrAuth() {
-    if (this.props.isLoggedIn) {
+    if (this.props.viewer.user) {
       return (
         <Feed
           logout={this.props.logout}
-          isLoggedIn={this.props.isLoggedIn}
           viewer={this.props.viewer}
         />
       )
@@ -37,32 +34,15 @@ class Home extends Component {
   }
 }
 
-
-const mapStateToProps = (state) => {
-  return {
-    isLoggedIn: state.auth['id_token'],
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    logout: () => {
-      dispatch(logout())
-    },
-  }
-}
-
-Home = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home)
-
 export default Relay.createContainer(
   Home,
   {
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
+          user {
+            id
+          }
           ${AuthContainer3.getFragment('viewer')}
           ${Feed.getFragment('viewer')}
         }

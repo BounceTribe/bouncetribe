@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {connect} from 'react-redux'
 import styled from 'styled-components'
 import SigninUserMutation from 'mutations/SigninUserMutation'
 import CreateUserMutation from 'mutations/CreateUserMutation'
-import {Err, Log} from 'utils'
-import {loginSuccess} from 'actions/auth'
+import {Err, narrate, show} from 'utils'
 import {checkIfUserEmailExists} from 'apis/graphql'
 import {handleSanitizer} from 'utils/validators'
+import auth from 'config/auth'
+import Loading from 'reusables/Loading'
 
 const AuthDiv = styled.div`
   margin: auto;
@@ -32,18 +32,21 @@ class AuthContainer3 extends Component {
     let options = checkIfUserEmailExists(email)
     try {
       const btAccount = await fetch(...options).then(data => data.json()).then((json) => {
-        Log('btAccount', json)
+        show('btAccount', json)
         if (json.data.allUsers.length < 1) {
           throw json
         } else {
           return json.data.allUsers[0]
         }
       })
-      Log('A BT accounts already exists with that email', btAccount)
+      narrate('A BT accounts already exists with that email')
+      show('btAccount', btAccount)
       return btAccount
 
     } catch (noUser) {
-      Log('No user with that email exists', noUser)
+      narrate('No user with that email exists')
+      show('noUser', noUser)
+
     }
   }
 
@@ -74,12 +77,13 @@ class AuthContainer3 extends Component {
             ...fields
           }), {
             onSuccess: (response) => {
-              Log('Succesfully created a BT user.', response)
+              narrate('Succesfully created a BT user.')
+              show('response', response)
               this.signInMutation()
               resolve()
             },
             onFailure: (response) => {
-              Log('Failed to create a BT user.')
+              narrate('Failed to create a BT user.')
               reject(response.getError())
             }
           }
@@ -88,7 +92,7 @@ class AuthContainer3 extends Component {
         throw reason
       })
     } catch (error){
-      Log('CreateUserMutation error')
+      narrate('CreateUserMutation error')
       throw error
     }
   }
@@ -103,17 +107,17 @@ class AuthContainer3 extends Component {
             authToken: token,
           }), {
             onSuccess: (response) => {
-              Log('signed in to BT', response)
+              narrate('signed in to BT', response)
+              show('response', response)
               let idToken = response.signinUser.token
-              let user = response.signinUser.user
-              this.props.loginSuccess(idToken, user)
+              auth.login({'id_token': idToken})
               this.props.router.push({
                 pathname: '/'
               })
               resolve()
             },
             onFailure: (response) => {
-              Log('Failed to signin to BT')
+              narrate('Failed to signin to BT')
               reject(response.getError())
             }
           }
@@ -127,27 +131,36 @@ class AuthContainer3 extends Component {
   }
 
   init = async() => {
-    if (this.props.auth.getToken() && !this.props.isLoggedIn) {
-      Log('...found a token in local storage...', 'this.props', this.props)
+    if (this.props.auth.getToken() && !this.props.viewer.user) {
+      this.setState({
+        loading: true
+      })
+      narrate('...found a token in local storage...')
+      show('this.props', this.props)
+
       try {
-        Log('...attempting to login to BT...')
+        narrate('...attempting to login to BT...')
         await this.signInMutation()
       } catch (error) {
-        Log("Couldn't login to BT with the token currently in storage ", error)
+        narrate("Couldn't login to BT with the token currently in storage ")
+        show("error", error)
+
         try {
-          Log('...fetching auth0Profile using token...')
+          narrate('...fetching auth0Profile using token...')
           const auth0Profile = await this.props.auth.getUserInfo()
-          Log('Found a profile: ', 'auth0Profile', auth0Profile)
-          Log('Attempting to create a BT user with that auth0Profile')
+          narrate('Found a profile: ')
+          show('auth0Profile', auth0Profile)
+          narrate('Attempting to create a BT user with that auth0Profile')
           try {
             await this.createUserMutation(auth0Profile)
           } catch (error) {
-            Log('Encountered an error creating that user.', error)
+            narrate('Encountered an error creating that user.')
+            show('error', error)
             try {
-              Log('...checking to see if there is already a user with that email... ')
+              narrate('...checking to see if there is already a user with that email... ')
               const primaryUser = await this.checkBtForEmail(auth0Profile.email)
 
-              Log('primaryUser', 'primaryUser', primaryUser)
+              show('primaryUser', primaryUser)
               let auth0UserId = primaryUser.auth0UserId
 
               let provider = auth0UserId.split('|')[0]
@@ -165,15 +178,24 @@ class AuthContainer3 extends Component {
                 provider
               })
             } catch (error) {
-              Log("That user doesn't exist in BT's database", error)
+              narrate("That user doesn't exist in BT's database")
+              show("error", error)
             }
           }
         } catch (error) {
-          Log("Couldn't find an auth0Profile with that token.")
+          narrate("Couldn't find an auth0Profile with that token.")
         }
       }
     } else{
       this.props.auth.login()
+    }
+  }
+
+  showLoading = () => {
+    if (this.state.loading) {
+      return (
+        <Loading/>
+      )
     }
   }
 
@@ -186,30 +208,12 @@ class AuthContainer3 extends Component {
         >
 
         </div>
+        {this.showLoading()}
       </AuthDiv>
     )
   }
 }
 
-
-const mapStateToProps = (state) => {
-  return {
-    isLoggedIn: state.auth['id_token'],
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    loginSuccess: (idToken, user) => {
-      dispatch(loginSuccess(idToken, user))
-    },
-  }
-}
-
-AuthContainer3 = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AuthContainer3)
 
 export default Relay.createContainer(
   AuthContainer3,
@@ -218,6 +222,9 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           id
+          user {
+            id
+          }
         }
       `,
     },

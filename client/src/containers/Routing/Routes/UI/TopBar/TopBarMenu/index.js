@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import TopBarMenuItem from 'reusables/TopBarMenuItem'
 import DropdownMenuItem from 'reusables/DropdownMenuItem'
-import {connect} from 'react-redux'
-import {logout} from 'actions/auth'
+// import {connect} from 'react-redux'
+import auth from 'config/auth'
 import styled from 'styled-components'
 import notes from 'imgs/icons/notes'
 import notification from 'imgs/icons/notification'
@@ -52,13 +52,14 @@ const DownTriangle = styled.div`
 
 class TopBarMenu extends Component {
   get showMenu() {
-    if (this.props.isLoggedIn) {
+    console.log('showMenu', this.props)
+    if (this.props.viewer.user) {
       let {
         handle,
         name,
         profilePicUrl,
         profilePicThumb
-      } = this.props.user
+      } = this.props.viewer.user
       return (
         <MenuRow>
           {/* <TopBarMenuItem
@@ -87,7 +88,6 @@ class TopBarMenu extends Component {
                 <DropHr/>
                 <DropdownMenuItem
                   text={'Settings'}
-                  to={`/settings`}
                 />
                 <DropdownMenuItem
                   text={'Help'}
@@ -95,7 +95,7 @@ class TopBarMenu extends Component {
                 <DropHr/>
                 <DropdownMenuItem
                   text={'Logout'}
-                  onClick={this.props.logout}
+                  onClick={auth.logout}
                 />
               </div>
             )}
@@ -128,24 +128,24 @@ class TopBarMenu extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    isLoggedIn: state.auth['id_token'],
-    user: state.auth.user
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    logout: () => {
-      dispatch(logout())
-    },
-  }
-}
-
-TopBarMenu = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TopBarMenu)
+// const mapStateToProps = (state) => {
+//   return {
+//     isLoggedIn: state.auth['id_token'],
+//     user: state.auth.user
+//   }
+// }
+//
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     logout: () => {
+//       dispatch(logout())
+//     },
+//   }
+// }
+//
+// TopBarMenu = connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(TopBarMenu)
 
 export default TopBarMenu

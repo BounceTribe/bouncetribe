@@ -1,20 +1,16 @@
 import React from 'react'
 import {Route, IndexRoute} from 'react-router'
 import Relay from 'react-relay'
-import store from 'store'
-import ReduxProvider from './ReduxProvider'
+import UI from './UI'
 import Home from './Home'
 import Profile from './Profile'
 import Projects from './Projects'
 import SingleProject from './SingleProject'
-
 import Tribe from './Tribe'
-// import Admin from './Admin'
 import auth from 'config/auth'
 import SigninUserMutation from 'mutations/SigninUserMutation'
-import {loginSuccess} from 'actions/auth'
 import {Err, narrate, show} from 'utils'
-// import {findProjectId} from 'apis/graphql'
+import Loading from 'reusables/Loading'
 
 const ViewerQueries = {
   viewer: () => Relay.QL`query { viewer }`
@@ -29,34 +25,21 @@ const provideHandle = (params, router) => {
     handle: params.handle,
   }
 }
-//
-// const provideHandleAndProject = async (params, router) => {
-//   console.log('provideHandleAndProject')
-//   return {
-//     ...params,
-//     handle: params.handle,
-//     title: params.title
-//   }
-// }
 
 const requireAuth = async (nextState, replace) => {
   narrate('onEnter using requireAuth')
   show('nextState', nextState)
   show('replace', replace)
   try {
-    let reduxToken = store.getState().auth['id_token']
     let localToken = auth.getToken()
-    if (reduxToken) {
-    } else if (localToken && !reduxToken) {
+    if (localToken) {
       await new Promise ( (resolve, reject) => {
         Relay.Store.commitUpdate(
           new SigninUserMutation({
             authToken: localToken
           }), {
             onSuccess: (response) => {
-              let idToken = response.signinUser.token
-              let user = response.signinUser.user
-              store.dispatch(loginSuccess(idToken, user))
+              console.log('login success')
               resolve()
             },
             onFailure: (response) => {
@@ -74,6 +57,7 @@ const requireAuth = async (nextState, replace) => {
       throw Err('Couldnt login')
     }
   } catch (error) {
+    auth.logout()
     replace({ pathname: '/' })
   }
 }
@@ -82,12 +66,14 @@ const createRoutes = () => {
   return (
     <Route
       path="/"
-      component={ReduxProvider}
+      component={UI}
+      queries={ViewerQueries}
     >
       <IndexRoute
         component={Home}
         queries={ViewerQueries}
         auth={auth}
+        render={({ props }) => props ? <Home {...props} /> : <Loading />}
       />
 
       <Route
@@ -95,6 +81,7 @@ const createRoutes = () => {
         queries={ViewerQueries}
         component={Home}
         auth={auth}
+        render={({ props }) => props ? <Home {...props} /> : <Loading />}
       />
 
       {/* <Route
@@ -108,12 +95,14 @@ const createRoutes = () => {
         component={Tribe}
         queries={ViewerQueries}
         onEnter={requireAuth}
+        render={({ props }) => props ? <Tribe {...props} /> : <Loading />}
       >
         <Route
           path="/:handle/tribe/:list"
           component={Tribe}
           queries={ViewerQueries}
           onEnter={requireAuth}
+          render={({ props }) => props ? <Tribe {...props} /> : <Loading />}
         />
       </Route>
 
@@ -124,6 +113,7 @@ const createRoutes = () => {
         onEnter={requireAuth}
         queries={ViewerQueries}
         prepareParams={provideHandle}
+        render={({ props }) => props ? <Projects {...props} /> : <Loading />}
       />
 
       <Route
@@ -132,6 +122,7 @@ const createRoutes = () => {
         onEnter={requireAuth}
         queries={ViewerQueries}
         prepareParams={provideHandle}
+        render={({ props }) => props ? <SingleProject {...props} /> : <Loading />}
       />
 
 
@@ -142,6 +133,7 @@ const createRoutes = () => {
         onEnter={requireAuth}
         queries={ViewerQueries}
         prepareParams={provideHandle}
+        render={({ props }) => props ? <Profile {...props} /> : <Loading />}
       />
 
     </Route>
@@ -151,21 +143,3 @@ const createRoutes = () => {
 const Routes = createRoutes()
 
 export default Routes
-
-//
-// getQueries={({location, params}) => {
-//   const userHandle = store.getState().auth.user.handle
-//   const queryHandle = params.handle
-//   if (userHandle === queryHandle ) {
-//     return SelfHandle
-//   } else {
-//     return OtherHandle
-//   }
-// }}
-
-
-// try {
-
-// } catch (error) {
-//   console.log('provideHandleAndProject error', error)
-// }

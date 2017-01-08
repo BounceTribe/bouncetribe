@@ -110,6 +110,7 @@ class AuthService {
     // Clear user token and profile data from local storage
     localStorage.removeItem('id_token')
     localStorage.removeItem('access_token')
+    location.reload()
   }
 
   getUserInfo = async () => {
