@@ -28,7 +28,10 @@ export default class SigninUserMutation extends Relay.Mutation {
           Relay.QL`
             fragment on SigninPayload {
               viewer {
-                user
+                user {
+                  id
+                  handle
+                }
               }
             }
           `,

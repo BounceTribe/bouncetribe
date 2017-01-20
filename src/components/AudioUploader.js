@@ -23,6 +23,9 @@ class AudioUploader extends Component {
         }), {
           onSuccess: (transaction) => {
             this.props.fileSuccess(fileId)
+          },
+          onFailure: (response) => {
+            console.log('updateFile failure', response)
           }
         }
       )
@@ -51,6 +54,7 @@ class AudioUploader extends Component {
     )
   }
 }
+
 
 export default Relay.createContainer(
   AudioUploader, {

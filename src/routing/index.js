@@ -12,15 +12,34 @@ import Tribe from 'containers/Tribe'
 import TribeAll from 'containers/TribeAll'
 import TribeInvites from 'containers/TribeInvites'
 import TribeFind from 'containers/TribeFind'
-
+import AudioPlayer from 'components/AudioPlayer'
 
 const ViewerQuery = {
-  viewer: () => Relay.QL`
+  viewer: (Component, variables) => Relay.QL`
     query {
-      viewer
+      viewer {
+        ${Component.getFragment('viewer', variables)}
+      }
     }
-  `
+  `,
 }
+
+// const NodeQuery = {
+//   node: (Component, variables) => Relay.QL`
+//     query {
+//       node: node(id: $id) {
+//         ${Component.getFragment('node', variables)}
+//       }
+//     }
+//   `,
+// }
+//
+// const NodeParams = (params,router) => {
+//   return {
+//     ...params,
+//     id: ''
+//   }
+// }
 
 const userOnly = (nextState, replace) => {
   if (!auth.getToken() && !nextState.location.hash.includes('id_token')) {
@@ -87,7 +106,13 @@ const createRoutes = () => {
           path={'/:ownHandle/projects/new'}
           component={ProjectNew}
           queries={ViewerQuery}
-        />
+        >
+          <Route
+            path={'/:ownHandle/projects/new/:trackId'}
+            component={AudioPlayer}
+            queries={ViewerQuery}
+          />
+        </Route>
         <Route
           path={'/:userHandle/:projectTitle'}
         >

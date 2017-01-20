@@ -10,15 +10,25 @@ import TopNav from 'components/TopNav'
 injectTapEventPlugin()
 
 class Template extends Component {
+
+  get userOnly () {
+    if (this.props.viewer.user) {
+      return (
+        <TopNav
+          handle={this.props.viewer.user.handle}
+        />
+      )
+    }
+  }
+
   render () {
     return (
       <MuiThemeProvider>
         <Main>
-          <TopNav
-            handle={this.props.viewer.user.handle}
-          />
+          {this.userOnly}
           {this.props.children}
         </Main>
+
       </MuiThemeProvider>
     )
   }

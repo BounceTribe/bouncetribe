@@ -11,16 +11,19 @@ export default class UpdateFileMutation extends Relay.Mutation {
     return Relay.QL`
       fragment on UpdateFilePayload {
         file
+        uploader
       }
     `
   }
   getConfigs () {
-    return [{
-      type: 'FIELDS_CHANGE',
-      fieldIDs: {
-        file: this.props.fileId,
+    return [
+      {
+        type: 'FIELDS_CHANGE',
+        fieldIDs: {
+          file: this.props.fileId,
+        },
       },
-    }]
+    ]
   }
 
   getVariables () {
