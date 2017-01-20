@@ -1,4 +1,4 @@
-import {file} from 'config'
+import {fileUrl} from 'config'
 
 const uploadImageFromUrl = (imageUrl) => {
   return new Promise((resolve,reject)=>{
@@ -12,7 +12,7 @@ const uploadImageFromUrl = (imageUrl) => {
         let formData = new FormData()
         formData.append('data', myBlob, 'portrait.jpg')
         console.log('formData', formData)
-        fetch(file, {
+        fetch(fileUrl, {
           method: 'POST',
           body: formData
         }).then(resp=>resp.json()).then(data=>{

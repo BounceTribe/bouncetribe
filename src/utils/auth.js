@@ -1,7 +1,7 @@
 import Auth0Lock from 'auth0-lock'
 import Relay from 'react-relay'
 import {clientId, domain} from 'config/auth0'
-import {purple} from 'styling'
+import {purple} from 'theme'
 import CreateUser from 'mutations/CreateUser'
 import SigninUser from 'mutations/SigninUser'
 import UpdateUser from 'mutations/UpdateUser'

@@ -1,27 +1,34 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FeedView} from 'styled'
+import {List} from 'styled'
 
-class Feed extends Component {
+class TribeInvites extends Component {
   render () {
     return (
-      <FeedView>
-        <h1>Feed</h1>
-      </FeedView>
+      <List>
+
+      </List>
     )
   }
 }
 
 export default Relay.createContainer(
-  Feed, {
+  TribeInvites, {
+    initialVariables: {
+      userHandle: ''
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
             id
           }
+          User (handle: $userHandle) {
+            id
+            email
+          }
         }
       `,
-    },
+    }
   }
 )

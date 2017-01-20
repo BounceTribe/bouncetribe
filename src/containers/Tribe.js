@@ -1,20 +1,32 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View} from 'styled'
+import {Container, Header, HeaderOptions, Title} from 'styled/list'
 
-class Profile extends Component {
+class Tribe extends Component {
   render () {
     return (
       <View>
-        <h1>Profile</h1>
-        {this.props.children}
+        <Container>
+          <Header>
+            <Title
+              to={`/${this.props.viewer.User.handle}/tribe`}
+            >
+              Tribe
+            </Title>
+            <HeaderOptions>
+
+            </HeaderOptions>
+          </Header>
+          {this.props.children}
+        </Container>
       </View>
     )
   }
 }
 
 export default Relay.createContainer(
-  Profile, {
+  Tribe, {
     initialVariables: {
       userHandle: ''
     },
@@ -25,6 +37,7 @@ export default Relay.createContainer(
             id
           }
           User (handle: $userHandle) {
+            handle
             id
             email
           }
