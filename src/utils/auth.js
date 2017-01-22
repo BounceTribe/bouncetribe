@@ -31,6 +31,7 @@ class AuthService {
         'facebook'
       ],
       closable: false,
+      container: 'lock'
     })
 
     this.lock.on('authenticated', this.authFlow)
@@ -48,7 +49,8 @@ class AuthService {
       return false
     }
     let now = new Date()
-    let exp =  new Date(expString)
+    let exp =  new Date(parseInt(expString, 10)) //10 = radix
+
     if (exp < now) {
       this.logout()
       return false

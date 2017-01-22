@@ -12,3 +12,5 @@ const formatTime = (duration) => {
 
   return `${minutes}:${seconds}`
 }
+
+export default formatTime

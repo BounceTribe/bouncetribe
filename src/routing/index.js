@@ -12,6 +12,7 @@ import Tribe from 'containers/Tribe'
 import TribeAll from 'containers/TribeAll'
 import TribeInvites from 'containers/TribeInvites'
 import TribeFind from 'containers/TribeFind'
+import Login from 'containers/Login'
 import AudioPlayer from 'components/AudioPlayer'
 
 const ViewerQuery = {
@@ -42,8 +43,10 @@ const ViewerQuery = {
 // }
 
 const userOnly = (nextState, replace) => {
-  if (!auth.getToken() && !nextState.location.hash.includes('id_token')) {
-    auth.showLock()
+  if (!auth.getToken()) {
+    replace({
+      pathname: '/login'
+    })
   }
 }
 
@@ -52,16 +55,24 @@ const createRoutes = () => {
     <Route
       path='/'
       component={Template}
-      auth={auth}
-      onEnter={userOnly}
       queries={ViewerQuery}
     >
       <IndexRoute
         component={Feed}
         queries={ViewerQuery}
+        onEnter={userOnly}
       />
+
+      <Route
+        path={'/login'}
+        component={Login}
+        queries={ViewerQuery}
+        auth={auth}
+      />
+
       <Route
         path={'/:userHandle'}
+        onEnter={userOnly}
       >
         <IndexRoute
           component={Profile}
@@ -89,6 +100,7 @@ const createRoutes = () => {
         </Route>
         <Route
           path={'/:ownHandle/sessions'}
+          onEnter={userOnly}
         >
           <IndexRoute
 
@@ -101,11 +113,13 @@ const createRoutes = () => {
           path={'/:userHandle/projects'}
           component={ProjectList}
           queries={ViewerQuery}
+          onEnter={userOnly}
         />
         <Route
           path={'/:ownHandle/projects/new'}
           component={ProjectNew}
           queries={ViewerQuery}
+          onEnter={userOnly}
         >
           <Route
             path={'/:ownHandle/projects/new/:trackId'}
@@ -115,6 +129,7 @@ const createRoutes = () => {
         </Route>
         <Route
           path={'/:userHandle/:projectTitle'}
+          onEnter={userOnly}
         >
           <IndexRoute
             component={Project}
