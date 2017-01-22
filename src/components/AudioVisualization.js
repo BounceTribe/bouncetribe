@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import {teal, grey150} from 'theme'
 
 class AudioVisualization extends Component {
 
@@ -8,6 +9,13 @@ class AudioVisualization extends Component {
   }
 
   draw = () => {
+    console.log('drawing')
+    let {duration, time} = this.props
+    let progress = 0
+    if (duration && time) {
+      progress = time / duration
+    }
+
     let {visualization} = this.props
     let {
       width,
@@ -21,12 +29,21 @@ class AudioVisualization extends Component {
       val += zeroDif
       return val * 100
     })
-    for (let i = 0; i < width; i++) {
-      let top = (height - data[i]) / 2
-      let step = i * 3
+    for (let i = 0; i < width; i+=3) {
+
+      let position = i / width
+      let sample = Math.floor(position * data.length)
+
+      let top = (height - data[sample]) / 2
       c.beginPath()
-      c.moveTo(step,top)
-      c.lineTo(step, top+data[i])
+      if (position < progress && c.strokeStyle !== teal) {
+        c.strokeStyle = teal
+      }
+      if (position >= progress && c.strokeStyle !== grey150){
+        c.strokeStyle = grey150
+      }
+      c.moveTo(i,top)
+      c.lineTo(i, top+data[sample])
       c.stroke()
     }
   }
@@ -42,7 +59,15 @@ class AudioVisualization extends Component {
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (prevState.width === 0) {
+    if (prevState.width === 0 ) {
+      this.draw()
+    }
+  }
+
+  componentWillReceiveProps (prevProps) {
+    if (prevProps.time !== this.props.time) {
+      let c = this.canvas.getContext('2d')
+      c.clearRect(0, 0, this.state.width, this.state.height)
       this.draw()
     }
   }
@@ -55,6 +80,7 @@ class AudioVisualization extends Component {
         }}
         width={this.state.width}
         height={this.state.height}
+        onClick={(e)=>this.props.scrub(e)}
       />
     )
   }

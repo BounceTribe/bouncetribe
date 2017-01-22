@@ -6,6 +6,10 @@ import formatTime from 'utils/formatTime'
 
 class AudioPlayer extends Component {
 
+  state = {
+    time: 0,
+  }
+
   componentDidMount () {
     let audio = this.audio
 
@@ -20,6 +24,15 @@ class AudioPlayer extends Component {
         canPlay: true
       })
     })
+
+    audio.addEventListener('timeupdate', (e) => {
+      console.log('timeupdate')
+      this.setState( (prevState,props) => {
+        return {
+          time: audio.currentTime
+        }
+      })
+    })
   }
 
   play = () => {
@@ -32,23 +45,48 @@ class AudioPlayer extends Component {
     console.log(this.audio.currentTime)
   }
 
+  time = () => {
+    let {time, duration} = this.state
+    if (duration) {
+      return (
+        <span>{formatTime(time)} / {formatTime(duration)}</span>
+      )
+    }
+  }
+
+  scrub = (e) => {
+
+    let width = e.target.clientWidth
+    let click = e.nativeEvent.offsetX
+
+    let newPosition = click / width
+    let newTime = this.state.duration * newPosition
+
+    this.setState((prevState, props)=>{
+      this.audio.currentTime = newTime
+      return {
+        time: newTime
+      }
+    })
+
+  }
+
   render () {
     return (
       <Container>
         <AudioVisualization
           visualization={this.props.viewer.File.visualization}
+          scrub={this.scrub}
+          duration={this.state.duration}
+          time={this.state.time}
         />
         <button
-          onClick={()=>{
-
-          }}
+          onClick={this.play}
         >
           Play
         </button>
         <button
-          onClick={()=>{
-
-          }}
+          onClick={this.pause}
         >
           Pause
         </button>
@@ -59,6 +97,8 @@ class AudioPlayer extends Component {
             src={this.props.viewer.File.url}
           />
         </audio>
+
+        {this.time()}
       </Container>
     )
   }
