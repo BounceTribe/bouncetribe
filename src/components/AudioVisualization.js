@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {teal, grey150} from 'theme'
+import {purple, grey150} from 'theme'
 
 class AudioVisualization extends Component {
 
@@ -35,8 +35,8 @@ class AudioVisualization extends Component {
 
       let top = (height - data[sample]) / 2
       c.beginPath()
-      if (position < progress && c.strokeStyle !== teal) {
-        c.strokeStyle = teal
+      if (position < progress && c.strokeStyle !== purple) {
+        c.strokeStyle = purple
       }
       if (position >= progress && c.strokeStyle !== grey150){
         c.strokeStyle = grey150
@@ -52,7 +52,7 @@ class AudioVisualization extends Component {
     this.setState((prevState,props)=>{
       return {
         width: parentWidth * .8,
-        height: 200
+        height: 100
       }
     })
   }

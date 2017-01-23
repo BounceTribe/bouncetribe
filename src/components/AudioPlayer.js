@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
 import AudioVisualization from 'components/AudioVisualization'
-import {Container} from 'styled/AudioPlayer'
+import {Container, ButtonProgress, Progress} from 'styled/AudioPlayer'
+import {RoundButton} from 'styled'
 import formatTime from 'utils/formatTime'
+import PlayArrow from 'material-ui/svg-icons/av/play-arrow'
+import Pause from 'material-ui/svg-icons/av/pause'
+
 
 class AudioPlayer extends Component {
 
@@ -17,6 +20,7 @@ class AudioPlayer extends Component {
       this.setState({
         duration: Math.ceil(audio.seekable.end(0))
       })
+      this.props.getDuration(audio.seekable.end(0))
     })
 
     audio.addEventListener('canplay', (e) => {
@@ -26,8 +30,8 @@ class AudioPlayer extends Component {
     })
 
     audio.addEventListener('timeupdate', (e) => {
-      console.log('timeupdate')
       this.setState( (prevState,props) => {
+        this.props.currentTime(audio.currentTime)
         return {
           time: audio.currentTime
         }
@@ -37,17 +41,47 @@ class AudioPlayer extends Component {
 
   play = () => {
     this.audio.play()
+    this.setState({
+      playing: true
+    })
   }
 
   pause = () => {
     this.audio.pause()
+    this.setState({
+      playing: false
+    })
+  }
+
+  toggle = () => {
+    if (this.state.playing) {
+      this.pause()
+    } else {
+      this.play()
+    }
+  }
+
+  get buttonIcon () {
+    if (this.state.playing) {
+      return (
+        <Pause
+          viewBox={'4 5 15 15'}
+        />
+      )
+    } else {
+      return (
+        <PlayArrow
+          viewBox={'4 5 15 15'}
+        />
+      )
+    }
   }
 
   time = () => {
     let {time, duration} = this.state
     if (duration) {
       return (
-        <span>{formatTime(time)} / {formatTime(duration)}</span>
+        <span>{formatTime(time)}</span>
       )
     }
   }
@@ -70,52 +104,39 @@ class AudioPlayer extends Component {
   }
 
   render () {
+    let {track} = this.props
     return (
       <Container>
+
+        <ButtonProgress>
+          <RoundButton
+            onClick={this.toggle}
+            icon={this.buttonIcon}
+          />
+          <Progress>{this.time()}</Progress>
+        </ButtonProgress>
+
         <AudioVisualization
-          visualization={this.props.viewer.File.visualization}
+          visualization={track.visualization}
           scrub={this.scrub}
           duration={this.state.duration}
           time={this.state.time}
+          project={this.props.project}
         />
-        <button
-          onClick={this.play}
-        >
-          Play
-        </button>
-        <button
-          onClick={this.pause}
-        >
-          Pause
-        </button>
+
+
+
         <audio
           ref={(audio)=>{this.audio = audio}}
         >
           <source
-            src={this.props.viewer.File.url}
+            src={track.url}
           />
         </audio>
 
-        {this.time()}
       </Container>
     )
   }
 }
 
-export default Relay.createContainer(
-  AudioPlayer, {
-    initialVariables: {
-      trackId: ''
-    },
-    fragments: {
-      viewer: () => Relay.QL`
-        fragment on Viewer {
-          File(id: $trackId) {
-            url
-            visualization
-          }
-        }
-      `,
-    },
-  }
-)
+export default AudioPlayer

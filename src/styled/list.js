@@ -28,7 +28,7 @@ export const HeaderOptions = styled.span`
 export const List = styled.div`
   display: flex;
   flex-direction: row;
-  flew-wrap: wrap;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
   padding: 40px ${xPadding}px;

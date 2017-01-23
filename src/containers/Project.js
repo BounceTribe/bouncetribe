@@ -1,13 +1,72 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View} from 'styled'
+import {Top, Art, Info, TitleGenre, Summary, TrackContainer} from 'styled/Project'
+import AudioPlayer from 'components/AudioPlayer'
+import Comments from 'containers/Comments'
+import CommentMarkers from 'components/CommentMarkers'
 
 class Project extends Component {
+
+  state = {
+    time: 0
+  }
+
+  componentWillMount () {
+    this.props.relay.setVariables({
+      projectId: this.props.viewer.allProjects.edges[0].node.id
+    })
+  }
+
+  currentTime = (time) => {
+    this.setState({
+      time
+    })
+  }
+
+  getDuration = (duration) => {
+    this.setState({
+      duration
+    })
+  }
+
   render () {
-    console.log(this.props.viewer)
+    let {
+      node: project
+    } = this.props.viewer.allProjects.edges[0]
     return (
       <View>
-        <h1>Project</h1>
+        <Top>
+          <Art
+            src={project.artwork.url}
+            alt={'Project Art'}
+          />
+          <Info>
+            <TitleGenre>
+              {project.title}
+            </TitleGenre>
+            <Summary>
+              {project.description}
+            </Summary>
+          </Info>
+        </Top>
+        <TrackContainer>
+          <AudioPlayer
+            track={project.tracks.edges[0].node}
+            currentTime={this.currentTime}
+            project={project}
+            getDuration={this.getDuration}
+          />
+          <CommentMarkers
+            project={project}
+            duration={this.state.duration}
+          />
+        </TrackContainer>
+        <Comments
+          project={project}
+          self={this.props.viewer.user}
+          time={this.state.time}
+        />
       </View>
     )
   }
@@ -18,7 +77,8 @@ export default Relay.createContainer(
     initialVariables: {
       userHandle: '',
       projectTitle: '',
-      projectFilter: {}
+      projectFilter: {},
+      projectId: ''
     },
     prepareVariables: (prevVar)=>{
       return {
@@ -36,6 +96,7 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            ${Comments.getFragment('self')}
           }
           User (handle: $userHandle) {
             id
@@ -47,6 +108,8 @@ export default Relay.createContainer(
           ) {
             edges {
               node {
+                ${Comments.getFragment('project')}
+                id
                 title
                 description
                 privacy
@@ -61,7 +124,20 @@ export default Relay.createContainer(
                 ) {
                   edges {
                     node {
+                      id
                       url
+                      visualization
+                    }
+                  }
+                }
+                comments (
+                  first: 1000
+                ) {
+                  edges {
+                    node {
+                      id
+                      text
+                      timestamp
                     }
                   }
                 }

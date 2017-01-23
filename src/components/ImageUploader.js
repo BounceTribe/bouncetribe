@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ImageDropContainer} from 'styled'
+import {ImageDropContainer, CroppedImage} from 'styled'
 import Dropzone from 'react-dropzone'
 import uploadFile from 'utils/uploadFile'
 import UpdateFile from 'mutations/UpdateFile'
@@ -41,7 +41,6 @@ class ImageUploader extends Component {
         let canvas = document.createElement('canvas')
         canvas.width = pixel.width
         canvas.height = pixel.height
-        document.body.appendChild(canvas)
 
         let c = canvas.getContext('2d')
 
@@ -57,7 +56,11 @@ class ImageUploader extends Component {
                 fileId: fileId,
               }), {
                 onSuccess: (transaction) => {
-
+                  let file = transaction.updateFile.file
+                  this.setState({
+                    croppedImage: file.url
+                  })
+                  this.props.fileSuccess(file)
                 },
                 onFailure: (response) => {
                   console.log('updateFile failure', response)
@@ -77,7 +80,14 @@ class ImageUploader extends Component {
 
 
   get dropzoneOrCropper () {
-    if (this.state.image) {
+    if (this.state.croppedImage) {
+      return (
+        <CroppedImage
+          src={this.state.croppedImage}
+          alt={'project art'}
+        />
+      )
+    } else if (this.state.image) {
       return (
         <div>
           <ReactCrop

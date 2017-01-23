@@ -23,6 +23,19 @@ export default class UpdateFileMutation extends Relay.Mutation {
           file: this.props.fileId,
         },
       },
+      {
+        type: 'REQUIRED_CHILDREN',
+        children: [
+          Relay.QL`
+            fragment on UpdateFilePayload {
+              file {
+                url
+                visualization
+              }
+            }
+          `,
+        ],
+      },
     ]
   }
 

@@ -22,7 +22,8 @@ class AudioUploader extends Component {
           visualization: visualization
         }), {
           onSuccess: (transaction) => {
-            this.props.fileSuccess(fileId)
+            let {file} = transaction.updateFile
+            this.props.audioSuccess(file)
           },
           onFailure: (response) => {
             console.log('updateFile failure', response)

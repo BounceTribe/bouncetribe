@@ -57,15 +57,19 @@ export const DropContainer = styled.div`
 
 export const ImageDropContainer = styled.div`
   display: flex;
-  min-width: 30%;
+  align-items: center;
+  min-width: 200px;
   max-width: 400px;
   min-height: 200px;
+  max-height: 400px;
   border-radius: 10px;
   border: 2px dashed ${grey215};
   cursor: pointer;
 `
 
-
+export const CroppedImage = styled.img`
+  max-width: 100%;
+`
 
 export const Button = (props) => {
   return (
@@ -90,7 +94,7 @@ export const RoundButton = (props) => {
       <FloatingActionButton
         {...props}
       >
-        {props.children}
+        {props.icon}
       </FloatingActionButton>
 
     </ButtonLink>

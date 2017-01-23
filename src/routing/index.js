@@ -13,7 +13,6 @@ import TribeAll from 'containers/TribeAll'
 import TribeRequests from 'containers/TribeRequests'
 import TribeFind from 'containers/TribeFind'
 import Login from 'containers/Login'
-import AudioPlayer from 'components/AudioPlayer'
 
 const ViewerQuery = {
   viewer: (Component, variables) => Relay.QL`
@@ -104,13 +103,7 @@ const createRoutes = () => {
           component={ProjectNew}
           queries={ViewerQuery}
           onEnter={userOnly}
-        >
-          <Route
-            path={'/:ownHandle/projects/new/:trackId'}
-            component={AudioPlayer}
-            queries={ViewerQuery}
-          />
-        </Route>
+        />
         <Route
           path={'/:userHandle/:projectTitle'}
           onEnter={userOnly}

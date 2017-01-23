@@ -7,13 +7,18 @@ import Music from 'icons/Music'
 class ProjectList extends Component {
 
   get projects () {
+    let {User: owner} = this.props.viewer
     return this.props.viewer.User.projects.edges.map(edge=>{
       let {node:project} = edge
       return (
         <Item
           key={project.id}
         >
-          {project.title}
+          <Title
+            to={`/${owner.handle}/${project.title}`}
+          >
+            {project.title}
+          </Title>
         </Item>
       )
     })

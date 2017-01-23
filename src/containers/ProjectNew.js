@@ -7,6 +7,7 @@ import ImageUploader from 'components/ImageUploader'
 import TextField from 'material-ui/TextField'
 import CreateProject from 'mutations/CreateProject'
 import Music from 'icons/Music'
+import AudioPlayer from 'components/AudioPlayer'
 
 class ProjectNew extends Component {
 
@@ -16,7 +17,6 @@ class ProjectNew extends Component {
 
   createProject = () => {
     let project = this.state
-    project.tracksIds = [this.props.router.params.trackId]
     this.props.relay.commitUpdate(
       new CreateProject({
         project,
@@ -26,25 +26,33 @@ class ProjectNew extends Component {
   }
 
 
-  fileSuccess = (fileId) => {
-    let {
-      push,
-      location
-    } = this.props.router
-    push(`${location.pathname}/${fileId}`)
+  audioSuccess = (file) => {
+    this.setState({
+      track: file,
+      tracksIds: [file.id]
+    })
+  }
+
+  imageSuccess = (file) => {
+    this.setState({
+      artworkId: file.id
+    })
   }
 
   get uploader () {
-    let {params} = this.props.router
-    if (!params.trackId) {
+    if (!this.state.track) {
       return (
         <AudioUploader
-          fileSuccess={this.fileSuccess}
+          audioSuccess={this.audioSuccess}
           self={this.props.viewer.user}
         />
       )
     } else {
-      return this.props.children
+      return (
+        <AudioPlayer
+          track={this.state.track}
+        />
+      )
     }
   }
 
@@ -84,6 +92,7 @@ class ProjectNew extends Component {
           <Right>
             <ImageUploader
               self={this.props.viewer.user}
+              fileSuccess={this.imageSuccess}
             />
             <Sharing>
               <Choice>
