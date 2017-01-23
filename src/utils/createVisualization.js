@@ -14,8 +14,15 @@ const createVisualization = (file) => {
 
         let visualization = []
         let interval = Math.floor(channelData.length / 500)
+
         for (let i = 0; visualization.length < 500; i += interval) {
-          visualization.push(channelData[i])
+
+          let sample = channelData.slice(i, i+interval)
+          let max = Math.max(...sample)
+          let min = Math.min(...sample)
+          max += (min * -1)
+          visualization.push(max)
+
         }
 
         resolve(visualization)

@@ -21,12 +21,11 @@ class AudioVisualization extends Component {
       height
     } = this.state
     let c = this.canvas.getContext('2d')
-    let min = Math.min(...visualization)
-    let zeroDif = min * -1
 
+    console.log(Math.max(...visualization))
     let data = visualization.map(val=>{
-      val += zeroDif
-      return val * 100
+
+      return val * 60
     })
     for (let i = 0; i < width; i+=3) {
 

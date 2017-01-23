@@ -20,7 +20,9 @@ class AudioPlayer extends Component {
       this.setState({
         duration: Math.ceil(audio.seekable.end(0))
       })
-      this.props.getDuration(audio.seekable.end(0))
+      if (this.props.getDuration) {
+        this.props.getDuration(audio.seekable.end(0))
+      }
     })
 
     audio.addEventListener('canplay', (e) => {
@@ -31,7 +33,9 @@ class AudioPlayer extends Component {
 
     audio.addEventListener('timeupdate', (e) => {
       this.setState( (prevState,props) => {
-        this.props.currentTime(audio.currentTime)
+        if (this.props.currentTime) {
+          this.props.currentTime(audio.currentTime)          
+        }
         return {
           time: audio.currentTime
         }
