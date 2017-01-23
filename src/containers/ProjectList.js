@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View, Button} from 'styled'
 import {Container, Header, HeaderOptions, Title, List, Item} from 'styled/list'
+import Music from 'icons/Music'
 
 class ProjectList extends Component {
 
@@ -31,9 +32,11 @@ class ProjectList extends Component {
             <HeaderOptions>
               <Button
                 to={`/${this.props.viewer.user.handle}/projects/new`}
-              >
-                New Project
-              </Button>
+                icon={<Music/>}
+                label={'Create'}
+                primary
+              />
+
             </HeaderOptions>
           </Header>
           <List>

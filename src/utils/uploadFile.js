@@ -1,13 +1,19 @@
 import {fileUrl} from 'config'
 
-const uploadFile = (file) => {
+const uploadFile = (file, name) => {
   return new Promise ((resolve, reject) => {
 
     console.log(file)
+    console.log(file.type)
+
 
     let formData = new FormData()
 
-    formData.append('data', file)
+    if (name) {
+      formData.append('data', file, name)
+    } else {
+      formData.append('data', file)
+    }
 
     console.log(formData)
 

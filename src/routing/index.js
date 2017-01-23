@@ -10,7 +10,7 @@ import ProjectList from 'containers/ProjectList'
 import ProjectNew from 'containers/ProjectNew'
 import Tribe from 'containers/Tribe'
 import TribeAll from 'containers/TribeAll'
-import TribeInvites from 'containers/TribeInvites'
+import TribeRequests from 'containers/TribeRequests'
 import TribeFind from 'containers/TribeFind'
 import Login from 'containers/Login'
 import AudioPlayer from 'components/AudioPlayer'
@@ -25,22 +25,6 @@ const ViewerQuery = {
   `,
 }
 
-// const NodeQuery = {
-//   node: (Component, variables) => Relay.QL`
-//     query {
-//       node: node(id: $id) {
-//         ${Component.getFragment('node', variables)}
-//       }
-//     }
-//   `,
-// }
-//
-// const NodeParams = (params,router) => {
-//   return {
-//     ...params,
-//     id: ''
-//   }
-// }
 
 const userOnly = (nextState, replace) => {
   if (!auth.getToken()) {
@@ -88,8 +72,8 @@ const createRoutes = () => {
             queries={ViewerQuery}
           />
           <Route
-            path={'/:ownHandle/tribe/invites'}
-            component={TribeInvites}
+            path={'/:ownHandle/tribe/requests'}
+            component={TribeRequests}
             queries={ViewerQuery}
           />
           <Route

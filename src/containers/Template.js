@@ -5,7 +5,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import {Main} from 'styled'
 import 'theme/global.css'
 import TopNav from 'components/TopNav'
-
+import {btTheme} from 'theme'
 
 injectTapEventPlugin()
 
@@ -23,7 +23,9 @@ class Template extends Component {
 
   render () {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider
+        muiTheme={btTheme}
+      >
         <Main>
           {this.userOnly}
           {this.props.children}

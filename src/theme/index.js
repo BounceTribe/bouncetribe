@@ -1,4 +1,16 @@
 import {css} from 'styled-components'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import {deepPurple300, grey50, grey100, grey200, grey300, grey400, grey500, grey600, grey700, grey800, grey900, white, black} from 'material-ui/styles/colors'
+
+
+export const btTheme = getMuiTheme({
+  fontFamily: 'Helvetica, san-serif',
+  palette: {
+    primary1Color: deepPurple300,
+  }
+})
+
+
 
 
 export const size = {
@@ -17,4 +29,4 @@ export const grey150 = 'rgb(150,150,150)'
 export const grey215 = 'rgb(215,215,215)'
 export const grey230 = 'rgb(230,230,230)'
 export const grey250 = 'rgb(250,250,250)'
-export const white = 'rgb(255,255,255)'
+export {deepPurple300, grey50, grey100, grey200, grey300, grey400, grey500, grey600, grey700, grey800, grey900, white, black}

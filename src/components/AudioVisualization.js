@@ -9,7 +9,6 @@ class AudioVisualization extends Component {
   }
 
   draw = () => {
-    console.log('drawing')
     let {duration, time} = this.props
     let progress = 0
     if (duration && time) {

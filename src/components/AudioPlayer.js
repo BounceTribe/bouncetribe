@@ -37,12 +37,10 @@ class AudioPlayer extends Component {
 
   play = () => {
     this.audio.play()
-    console.log(this.audio.currentTime)
   }
 
   pause = () => {
     this.audio.pause()
-    console.log(this.audio.currentTime)
   }
 
   time = () => {

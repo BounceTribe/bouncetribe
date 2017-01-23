@@ -1,7 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
-import {white, grey230, purple} from 'theme'
+import {white, grey230, grey215} from 'theme'
 import {Link} from 'react-router'
+import RaisedButton from 'material-ui/RaisedButton'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+
 
 export const Main = styled.main`
   display: flex;
@@ -22,6 +25,11 @@ export const FeedView = styled(View)`
   width: 65%;
 `
 
+export const ProjectNewView = styled(View)`
+  width: 800px;
+  padding: 80px;
+`
+
 export const IconTextContainer = styled.span`
   display: flex;
   flex-direction: row;
@@ -31,26 +39,60 @@ export const IconTextContainer = styled.span`
 export const IconText = styled.span`
   margin-left: 3px;
 `
-export const BtButton = styled.button`
-  background-color: ${purple};
-  color: ${white};
-  border: none;
-  outline: none;
-`
 
 export const ButtonLink = styled(Link)`
   color: none;
   text-decoration: none;
 `
 
-export const Button = ({to, children}) => {
+export const DropContainer = styled.div`
+  display: flex;
+  min-width: 30%;
+  max-width: 400px;
+  height: 200px;
+  border-radius: 10px;
+  border: 2px dashed ${grey215};
+  cursor: pointer;
+`
+
+export const ImageDropContainer = styled.div`
+  display: flex;
+  min-width: 30%;
+  max-width: 400px;
+  min-height: 200px;
+  border-radius: 10px;
+  border: 2px dashed ${grey215};
+  cursor: pointer;
+`
+
+
+
+export const Button = (props) => {
   return (
     <ButtonLink
-      to={to}
+      to={props.to}
     >
-      <BtButton>
-        {children}
-      </BtButton>
+      <RaisedButton
+        {...props}
+      >
+        {props.children}
+      </RaisedButton>
+
+    </ButtonLink>
+  )
+}
+
+export const RoundButton = (props) => {
+  return (
+    <ButtonLink
+      to={props.to}
+    >
+      <FloatingActionButton
+        {...props}
+      >
+        {props.children}
+      </FloatingActionButton>
+
     </ButtonLink>
   )
 }

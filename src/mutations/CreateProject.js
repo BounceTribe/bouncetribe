@@ -6,7 +6,6 @@ export default class CreateProjectMutation extends Relay.Mutation {
     let {
       description,
       genre,
-      new,
       privacy,
       title,
       artworkId,
@@ -16,7 +15,7 @@ export default class CreateProjectMutation extends Relay.Mutation {
       creatorId: this.props.user.id,
       description,
       genre,
-      new,
+      new: this.props.project.new,
       privacy,
       title,
       artworkId,

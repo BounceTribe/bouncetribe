@@ -1,8 +1,13 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {List} from 'styled'
+import {List} from 'styled/list'
 
 class TribeFind extends Component {
+
+  get userList () {
+    //let allUsers = this.props.viewer.allUsers.edges.map
+  }
+
   render () {
     return (
       <List>
@@ -15,7 +20,7 @@ class TribeFind extends Component {
 export default Relay.createContainer(
   TribeFind, {
     initialVariables: {
-      userHandle: ''
+      ownHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -23,7 +28,7 @@ export default Relay.createContainer(
           user {
             id
           }
-          User (handle: $userHandle) {
+          User (handle: $ownHandle) {
             id
             email
           }

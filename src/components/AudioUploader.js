@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Container} from 'styled/AudioUploader'
+import {DropContainer} from 'styled'
 import Dropzone from 'react-dropzone'
 import uploadFile from 'utils/uploadFile'
 import createVisualization from 'utils/createVisualization'
@@ -36,7 +36,7 @@ class AudioUploader extends Component {
 
   render () {
     return (
-      <Container>
+      <DropContainer>
         <Dropzone
           style={{
             display: 'flex',
@@ -50,7 +50,7 @@ class AudioUploader extends Component {
         >
 
         </Dropzone>
-      </Container>
+      </DropContainer>
     )
   }
 }
