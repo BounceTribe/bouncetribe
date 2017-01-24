@@ -17,11 +17,17 @@ class ProjectNew extends Component {
 
   createProject = () => {
     let project = this.state
+    let {user} = this.props.viewer
     this.props.relay.commitUpdate(
       new CreateProject({
         project,
-        user: this.props.viewer.user
-      })
+        user
+      }), {
+        onSuccess: success => {
+          console.log('success', this.props.router)
+          this.props.router.push(`/${user.handle}/${project.title}`)
+        }
+      }
     )
   }
 
@@ -136,6 +142,7 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            handle
             ${AudioUploader.getFragment('self')}
             ${ImageUploader.getFragment('self')}
           }
