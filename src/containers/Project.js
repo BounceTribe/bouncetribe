@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View} from 'styled'
-import {Top, Art, Info, TitleGenre, Summary, TrackContainer} from 'styled/Project'
+import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title} from 'styled/Project'
 import AudioPlayer from 'components/AudioPlayer'
 import Comments from 'containers/Comments'
 import CommentMarkers from 'components/CommentMarkers'
@@ -43,7 +43,9 @@ class Project extends Component {
           />
           <Info>
             <TitleGenre>
-              {project.title}
+              <Title>
+                {project.title}                
+              </Title>
             </TitleGenre>
             <Summary>
               {project.description}

@@ -34,11 +34,12 @@ export const IconTextContainer = styled.span`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: baseline;
+  align-items: center;
 `
 export const IconText = styled.span`
-  margin-left: 3px;
+  margin-left: 12px;
 `
+
 
 export const ButtonLink = styled(Link)`
   color: none;
@@ -58,10 +59,8 @@ export const DropContainer = styled.div`
 export const ImageDropContainer = styled.div`
   display: flex;
   align-items: center;
-  min-width: 200px;
-  max-width: 400px;
-  min-height: 200px;
-  max-height: 400px;
+  width: 250px;
+  height: 250px;
   border-radius: 10px;
   border: 2px dashed ${grey215};
   cursor: pointer;

@@ -1,8 +1,13 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {View, Button} from 'styled'
-import {Container, Header, HeaderOptions, Title, List, Item} from 'styled/list'
+import {View, Button, RoundButton} from 'styled'
+import {Container, Header, HeaderOptions, Title, List} from 'styled/list'
+import {ProjectItem, Left, Artwork, Info, ProjectTitle, Trio, TrioItem} from 'styled/ProjectList'
+import {IconTextContainer, IconText} from 'styled'
 import Music from 'icons/Music'
+import Upload from 'icons/Upload'
+import Logo from 'icons/Logo'
+import {purple, white} from 'theme'
 
 class ProjectList extends Component {
 
@@ -11,15 +16,47 @@ class ProjectList extends Component {
     return this.props.viewer.User.projects.edges.map(edge=>{
       let {node:project} = edge
       return (
-        <Item
+        <ProjectItem
           key={project.id}
         >
-          <Title
-            to={`/${owner.handle}/${project.title}`}
-          >
-            {project.title}
-          </Title>
-        </Item>
+          <Left>
+            <Artwork
+              src={project.artwork.url}
+              alt={'Project Artwork'}
+            />
+            <Info>
+              <ProjectTitle
+                to={`/${owner.handle}/${project.title}`}
+              >
+                {project.title}
+              </ProjectTitle>
+              <Trio>
+                <TrioItem>
+                  One
+                </TrioItem>
+                <TrioItem>
+                  Two
+                </TrioItem>
+                <TrioItem>
+                  Three
+                </TrioItem>
+              </Trio>
+            </Info>
+
+          </Left>
+          <RoundButton
+            icon={
+              <Logo
+                fill={white}
+                style={{
+                  display: 'inline-block',
+                  lineHeight: '56px',
+                  height: '56px'
+                }}
+              />
+            }
+          />
+        </ProjectItem>
       )
     })
   }
@@ -32,12 +69,27 @@ class ProjectList extends Component {
             <Title
               to={`/${this.props.viewer.User.handle}`}
             >
-              Projects
+              <IconTextContainer>
+                <Music
+                  style={{
+                    display: 'flex',
+                    marginBottom: '5px'
+                  }}
+                  fill={purple}
+                />
+                <IconText>
+                  My Projects
+                </IconText>
+              </IconTextContainer>
             </Title>
             <HeaderOptions>
               <Button
                 to={`/${this.props.viewer.user.handle}/projects/new`}
-                icon={<Music/>}
+                icon={
+                  <Upload
+                    fill={white}
+                  />
+                }
                 label={'Create'}
                 primary
               />
@@ -74,6 +126,10 @@ export default Relay.createContainer(
                 node {
                   id
                   title
+                  artwork {
+                    url
+                  }
+                  privacy
                 }
               }
             }

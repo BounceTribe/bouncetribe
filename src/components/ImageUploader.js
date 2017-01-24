@@ -113,7 +113,7 @@ class ImageUploader extends Component {
         <Dropzone
           style={{
             display: 'flex',
-            width: '100%',
+            width: '200px',
             height: '200px',
           }}
           multiple={false}

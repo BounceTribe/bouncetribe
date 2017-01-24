@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {ProjectNewView, Button, RoundButton} from 'styled'
-import {Row, Left, Right, Sharing, Choice} from 'styled/ProjectNew'
+import {Row, Left, Right, Sharing, Choice, ChoiceText} from 'styled/ProjectNew'
 import AudioUploader from 'components/AudioUploader'
 import ImageUploader from 'components/ImageUploader'
 import TextField from 'material-ui/TextField'
@@ -99,19 +99,25 @@ class ProjectNew extends Component {
                 <RoundButton
 
                 />
-                Private
+                  <ChoiceText>
+                    Private
+                  </ChoiceText>
               </Choice>
               <Choice>
                 <RoundButton
 
                 />
-                Tribe Only
+                <ChoiceText>
+                  Tribe Only
+                </ChoiceText>
               </Choice>
               <Choice>
                 <RoundButton
 
                 />
-                Find Sessions
+                <ChoiceText>
+                  Find Sessions
+                </ChoiceText>
               </Choice>
             </Sharing>
           </Right>

@@ -57,4 +57,6 @@ export const Title = styled(Link)`
   text-decoration: none;
   color: ${grey40};
   cursor: pointer;
+  font-size: 25px;
+  font-weight: 200;
 `

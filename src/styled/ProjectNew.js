@@ -19,13 +19,13 @@ export const Right = styled.div`
   flex-direction: column;
   justify-content: stretch;
   margin-top: 20px;
-  width: 38%;
 `
 
 export const Sharing = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
+  margin-top: 20px;
 `
 
 export const Choice = styled.div`
@@ -33,4 +33,9 @@ export const Choice = styled.div`
   flex-direction: column;
   align-items: center;
   font-size: 10px;
+`
+
+export const ChoiceText = styled.span`
+  display: flex;
+  margin-top: 7px;
 `

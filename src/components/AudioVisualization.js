@@ -22,7 +22,6 @@ class AudioVisualization extends Component {
     } = this.state
     let c = this.canvas.getContext('2d')
 
-    console.log(Math.max(...visualization))
     let data = visualization.map(val=>{
 
       return val * 60

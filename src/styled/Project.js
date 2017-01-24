@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {purple} from 'theme'
 
 export const Top = styled.div`
   display: flex;
@@ -25,10 +26,18 @@ export const Info = styled.div`
 export const TitleGenre = styled.div`
   display: flex;
   flex-direction: row;
+  margin-top: 30px;
+`
+
+export const Title = styled.div`
+  display: flex;
+  font-size: 25px;
 `
 
 export const Summary = styled.p`
   display: flex;
+  font-size: 15px;
+  margin-top: 30px;
 `
 
 export const TrackContainer = styled.div`
@@ -45,7 +54,7 @@ export const MarkerContainer = styled.div`
   top: ${props => props.top}px;
   width: ${props => props.wide}px;
   height: 20px;
-  border-top: 1px solid black;
+  border-top: 1px solid lightgrey;
   padding-top: 5px;
 `
 
@@ -56,5 +65,5 @@ export const Marker = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 20px;
-  background-color: salmon;
+  background-color: ${purple};
 `
