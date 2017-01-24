@@ -147,7 +147,7 @@ class NewProjectCreator extends Component {
         genre: this.state.genre,
         user: this.props.user,
         artworkId: this.state.artworkId,
-        new: this.state.new,
+        new: false,
         tracksIds: this.state.tracksIds
       }),
       {
@@ -450,9 +450,6 @@ class NewProjectCreator extends Component {
             <UploadButtonContainer>
               <BTButton
                 onClick={ () => {
-                  this.setState({
-                    new: false
-                  })
                   this.submitField()
                 }}
                 text={'Submit'}

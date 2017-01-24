@@ -20,7 +20,6 @@ class SingleProjectContainer extends Component {
           user={this.props.user}
           project={this.props.project}
           router={this.props.router}
-
         />
       )
     }
@@ -37,8 +36,7 @@ class SingleProjectContainer extends Component {
 }
 
 export default Relay.createContainer(
-  SingleProjectContainer,
-  {
+  SingleProjectContainer, {
     fragments: {
       user: () => Relay.QL`
         fragment on User {
@@ -54,6 +52,27 @@ export default Relay.createContainer(
           handle
           summary
           id
+        }
+      `,
+      project: () => Relay.QL`
+        fragment on Project {
+          title
+          id
+          description
+          privacy
+          new
+          artwork {
+            url
+          }
+          tracks (first: 2147483647) {
+            edges {
+              node {
+                url
+                id
+                visualization
+              }
+            }
+          }
         }
       `,
     },

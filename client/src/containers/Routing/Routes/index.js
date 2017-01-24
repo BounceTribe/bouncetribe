@@ -26,6 +26,14 @@ const provideHandle = (params, router) => {
   }
 }
 
+const provideHandleTitle = (params, router) => {
+  return {
+    ...params,
+    handle: params.handle,
+    title: params.title
+  }
+}
+
 const requireAuth = async (nextState, replace) => {
   narrate('onEnter using requireAuth')
   show('nextState', nextState)
@@ -121,7 +129,7 @@ const createRoutes = () => {
         component={SingleProject}
         onEnter={requireAuth}
         queries={ViewerQueries}
-        prepareParams={provideHandle}
+        prepareParams={provideHandleTitle}
         render={({ props }) => props ? <SingleProject {...props} /> : <Loading />}
       />
 

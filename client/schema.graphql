@@ -290,6 +290,112 @@ input ArtistFilter {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
+  influences_every: InfluenceFilter
+  influences_some: InfluenceFilter
+  influences_none: InfluenceFilter
+}
+
+input ArtistinfluencesInfluence {
+  userId: ID
+  user: ArtistinfluencesInfluenceuserUser
+}
+
+input ArtistinfluencesInfluenceuserUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [ArtistinfluencesInfluenceuserUsercommentsComment!]
+  filesIds: [ID!]
+  files: [ArtistinfluencesInfluenceuserUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [ArtistinfluencesInfluenceuserUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [ArtistinfluencesInfluenceuserUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [ArtistinfluencesInfluenceuserUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [ArtistinfluencesInfluenceuserUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [ArtistinfluencesInfluenceuserUsersentRequestsFriendRequest!]
+}
+
+input ArtistinfluencesInfluenceuserUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ArtistinfluencesInfluenceuserUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ArtistinfluencesInfluenceuserUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ArtistinfluencesInfluenceuserUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input ArtistinfluencesInfluenceuserUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input ArtistinfluencesInfluenceuserUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input ArtistinfluencesInfluenceuserUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
 }
 
 enum ArtistOrderBy {
@@ -351,19 +457,530 @@ input CommentauthorUser {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [CommentauthorUsercommentsComment!]
   filesIds: [ID!]
-  files: [FileInput!]
+  files: [CommentauthorUserfilesFile!]
   friendsIds: [ID!]
-  friends: [UserInput!]
+  friends: [CommentauthorUserfriendsUser!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [CommentauthorUserinfluencesInfluence!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
+  invitations: [CommentauthorUserinvitationsFriendRequest!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
+  projects: [CommentauthorUserprojectsProject!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
+  sentRequests: [CommentauthorUsersentRequestsFriendRequest!]
+}
+
+input CommentauthorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  parentId: ID
+  parent: CommentauthorUsercommentsCommentparentComment
+  projectId: ID
+  project: CommentauthorUsercommentsCommentprojectProject
+  childrenIds: [ID!]
+  children: [CommentauthorUsercommentsCommentchildrenComment!]
+}
+
+input CommentauthorUsercommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentauthorUsercommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentauthorUsercommentsCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentauthorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: CommentauthorUserfilesFileartworkProjectProject
+  trackProjectId: ID
+  trackProject: CommentauthorUserfilesFiletrackProjectProject
+}
+
+input CommentauthorUserfilesFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentauthorUserfilesFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentauthorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [CommentauthorUserfriendsUsercommentsComment!]
+  filesIds: [ID!]
+  files: [CommentauthorUserfriendsUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [CommentauthorUserfriendsUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [CommentauthorUserfriendsUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [CommentauthorUserfriendsUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [CommentauthorUserfriendsUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [CommentauthorUserfriendsUsersentRequestsFriendRequest!]
+}
+
+input CommentauthorUserfriendsUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentauthorUserfriendsUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input CommentauthorUserfriendsUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentauthorUserfriendsUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input CommentauthorUserfriendsUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input CommentauthorUserfriendsUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentauthorUserfriendsUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input CommentauthorUserinfluencesInfluence {
+  artistId: ID
+  artist: CommentauthorUserinfluencesInfluenceartistArtist
+}
+
+input CommentauthorUserinfluencesInfluenceartistArtist {
+  imageUrl: String!
+  name: String!
+  spotifyId: String!
+  influencesIds: [ID!]
+}
+
+input CommentauthorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  actor: CommentauthorUserinvitationsFriendRequestactorUser
+}
+
+input CommentauthorUserinvitationsFriendRequestactorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentauthorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: CommentauthorUserprojectsProjectartworkFile
+  commentsIds: [ID!]
+  comments: [CommentauthorUserprojectsProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [CommentauthorUserprojectsProjecttracksFile!]
+}
+
+input CommentauthorUserprojectsProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input CommentauthorUserprojectsProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentauthorUserprojectsProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input CommentauthorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  recipientId: ID
+  recipient: CommentauthorUsersentRequestsFriendRequestrecipientUser
+}
+
+input CommentauthorUsersentRequestsFriendRequestrecipientUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: CommentchildrenCommentauthorUser
+  projectId: ID
+  project: CommentchildrenCommentprojectProject
+  childrenIds: [ID!]
+  children: [CommentchildrenCommentchildrenComment!]
+}
+
+input CommentchildrenCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [CommentchildrenCommentauthorUsercommentsComment!]
+  filesIds: [ID!]
+  files: [CommentchildrenCommentauthorUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [CommentchildrenCommentauthorUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [CommentchildrenCommentauthorUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [CommentchildrenCommentauthorUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [CommentchildrenCommentauthorUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [CommentchildrenCommentauthorUsersentRequestsFriendRequest!]
+}
+
+input CommentchildrenCommentauthorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentchildrenCommentauthorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input CommentchildrenCommentauthorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentchildrenCommentauthorUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input CommentchildrenCommentauthorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input CommentchildrenCommentauthorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentchildrenCommentauthorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input CommentchildrenCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: CommentchildrenCommentchildrenCommentauthorUser
+  projectId: ID
+  project: CommentchildrenCommentchildrenCommentprojectProject
+  childrenIds: [ID!]
+  children: [CommentchildrenCommentchildrenCommentchildrenComment!]
+}
+
+input CommentchildrenCommentchildrenCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentchildrenCommentchildrenCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentchildrenCommentchildrenCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentchildrenCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: CommentchildrenCommentprojectProjectartworkFile
+  creatorId: ID
+  creator: CommentchildrenCommentprojectProjectcreatorUser
+  commentsIds: [ID!]
+  comments: [CommentchildrenCommentprojectProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [CommentchildrenCommentprojectProjecttracksFile!]
+}
+
+input CommentchildrenCommentprojectProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input CommentchildrenCommentprojectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentchildrenCommentprojectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentchildrenCommentprojectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
 }
 
 # A connection to a list of items.
@@ -450,16 +1067,12 @@ input CommentFilter {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-}
-
-input CommentInput {
-  text: String!
-  timestampEnd: BigDecimal!
-  timestampStart: BigDecimal!
-  authorId: ID
-  parentId: ID
-  projectId: ID
-  childrenIds: [ID!]
+  author: UserFilter
+  children_every: CommentFilter
+  children_some: CommentFilter
+  children_none: CommentFilter
+  parent: CommentFilter
+  project: ProjectFilter
 }
 
 enum CommentOrderBy {
@@ -482,11 +1095,227 @@ input CommentparentComment {
   timestampEnd: BigDecimal!
   timestampStart: BigDecimal!
   authorId: ID
-  author: CommentauthorUser
+  author: CommentparentCommentauthorUser
   projectId: ID
-  project: CommentprojectProject
+  project: CommentparentCommentprojectProject
   childrenIds: [ID!]
-  children: [CommentInput!]
+  children: [CommentparentCommentchildrenComment!]
+}
+
+input CommentparentCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [CommentparentCommentauthorUsercommentsComment!]
+  filesIds: [ID!]
+  files: [CommentparentCommentauthorUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [CommentparentCommentauthorUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [CommentparentCommentauthorUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [CommentparentCommentauthorUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [CommentparentCommentauthorUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [CommentparentCommentauthorUsersentRequestsFriendRequest!]
+}
+
+input CommentparentCommentauthorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentparentCommentauthorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input CommentparentCommentauthorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentparentCommentauthorUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input CommentparentCommentauthorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input CommentparentCommentauthorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentparentCommentauthorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input CommentparentCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: CommentparentCommentchildrenCommentauthorUser
+  projectId: ID
+  project: CommentparentCommentchildrenCommentprojectProject
+  childrenIds: [ID!]
+  children: [CommentparentCommentchildrenCommentchildrenComment!]
+}
+
+input CommentparentCommentchildrenCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentparentCommentchildrenCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentparentCommentchildrenCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentparentCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: CommentparentCommentprojectProjectartworkFile
+  creatorId: ID
+  creator: CommentparentCommentprojectProjectcreatorUser
+  commentsIds: [ID!]
+  comments: [CommentparentCommentprojectProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [CommentparentCommentprojectProjecttracksFile!]
+}
+
+input CommentparentCommentprojectProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input CommentparentCommentprojectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentparentCommentprojectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentparentCommentprojectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
 }
 
 input CommentprojectProject {
@@ -496,13 +1325,248 @@ input CommentprojectProject {
   privacy: PROJECT_PRIVACY
   title: String!
   artworkId: ID
-  artwork: ProjectartworkFile
+  artwork: CommentprojectProjectartworkFile
   creatorId: ID
-  creator: ProjectcreatorUser
+  creator: CommentprojectProjectcreatorUser
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [CommentprojectProjectcommentsComment!]
   tracksIds: [ID!]
-  tracks: [FileInput!]
+  tracks: [CommentprojectProjecttracksFile!]
+}
+
+input CommentprojectProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  trackProjectId: ID
+  trackProject: CommentprojectProjectartworkFiletrackProjectProject
+  uploaderId: ID
+  uploader: CommentprojectProjectartworkFileuploaderUser
+}
+
+input CommentprojectProjectartworkFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentprojectProjectartworkFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentprojectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: CommentprojectProjectcommentsCommentauthorUser
+  parentId: ID
+  parent: CommentprojectProjectcommentsCommentparentComment
+  childrenIds: [ID!]
+  children: [CommentprojectProjectcommentsCommentchildrenComment!]
+}
+
+input CommentprojectProjectcommentsCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentprojectProjectcommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentprojectProjectcommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentprojectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [CommentprojectProjectcreatorUsercommentsComment!]
+  filesIds: [ID!]
+  files: [CommentprojectProjectcreatorUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [CommentprojectProjectcreatorUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [CommentprojectProjectcreatorUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [CommentprojectProjectcreatorUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [CommentprojectProjectcreatorUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [CommentprojectProjectcreatorUsersentRequestsFriendRequest!]
+}
+
+input CommentprojectProjectcreatorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input CommentprojectProjectcreatorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input CommentprojectProjectcreatorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input CommentprojectProjectcreatorUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input CommentprojectProjectcreatorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input CommentprojectProjectcreatorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentprojectProjectcreatorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input CommentprojectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: CommentprojectProjecttracksFileartworkProjectProject
+  uploaderId: ID
+  uploader: CommentprojectProjecttracksFileuploaderUser
+}
+
+input CommentprojectProjecttracksFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input CommentprojectProjecttracksFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
 }
 
 input CreateArtistInput {
@@ -510,7 +1574,7 @@ input CreateArtistInput {
   name: String!
   spotifyId: String!
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [ArtistinfluencesInfluence!]
   clientMutationId: String!
 }
 
@@ -532,7 +1596,7 @@ input CreateCommentInput {
   projectId: ID
   project: CommentprojectProject
   childrenIds: [ID!]
-  children: [CommentInput!]
+  children: [CommentchildrenComment!]
   clientMutationId: String!
 }
 
@@ -590,9 +1654,9 @@ type CreateFriendRequestPayload {
 input CreateGenreInput {
   name: String!
   parentGenreIds: [ID!]
-  parentGenre: [GenreInput!]
+  parentGenre: [GenreparentGenreGenre!]
   subgenresIds: [ID!]
-  subgenres: [GenreInput!]
+  subgenres: [GenresubgenresGenre!]
   clientMutationId: String!
 }
 
@@ -631,9 +1695,9 @@ input CreateProjectInput {
   creatorId: ID
   creator: ProjectcreatorUser
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [ProjectcommentsComment!]
   tracksIds: [ID!]
-  tracks: [FileInput!]
+  tracks: [ProjecttracksFile!]
   clientMutationId: String!
 }
 
@@ -817,11 +1881,190 @@ input FileartworkProjectProject {
   privacy: PROJECT_PRIVACY
   title: String!
   creatorId: ID
-  creator: ProjectcreatorUser
+  creator: FileartworkProjectProjectcreatorUser
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [FileartworkProjectProjectcommentsComment!]
   tracksIds: [ID!]
-  tracks: [FileInput!]
+  tracks: [FileartworkProjectProjecttracksFile!]
+}
+
+input FileartworkProjectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: FileartworkProjectProjectcommentsCommentauthorUser
+  parentId: ID
+  parent: FileartworkProjectProjectcommentsCommentparentComment
+  childrenIds: [ID!]
+  children: [FileartworkProjectProjectcommentsCommentchildrenComment!]
+}
+
+input FileartworkProjectProjectcommentsCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FileartworkProjectProjectcommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FileartworkProjectProjectcommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FileartworkProjectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [FileartworkProjectProjectcreatorUsercommentsComment!]
+  filesIds: [ID!]
+  files: [FileartworkProjectProjectcreatorUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [FileartworkProjectProjectcreatorUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [FileartworkProjectProjectcreatorUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [FileartworkProjectProjectcreatorUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [FileartworkProjectProjectcreatorUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [FileartworkProjectProjectcreatorUsersentRequestsFriendRequest!]
+}
+
+input FileartworkProjectProjectcreatorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FileartworkProjectProjectcreatorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FileartworkProjectProjectcreatorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FileartworkProjectProjectcreatorUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input FileartworkProjectProjectcreatorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FileartworkProjectProjectcreatorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FileartworkProjectProjectcreatorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FileartworkProjectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  uploaderId: ID
+  uploader: FileartworkProjectProjecttracksFileuploaderUser
+}
+
+input FileartworkProjectProjecttracksFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
 }
 
 # A connection to a list of items.
@@ -942,22 +2185,9 @@ input FileFilter {
   url_not_starts_with: String
   url_ends_with: String
   url_not_ends_with: String
-  visualization: [BigDecimal!]
-  visualization_not: [BigDecimal!]
-  visualization_in: [[BigDecimal!]!]
-  visualization_not_in: [[BigDecimal!]!]
-  visualization_lt: [BigDecimal!]
-  visualization_lte: [BigDecimal!]
-  visualization_gt: [BigDecimal!]
-  visualization_gte: [BigDecimal!]
-}
-
-input FileInput {
-  name: String!
-  visualization: [BigDecimal!]
-  artworkProjectId: ID
-  trackProjectId: ID
-  uploaderId: ID
+  artworkProject: ProjectFilter
+  trackProject: ProjectFilter
+  uploader: UserFilter
 }
 
 enum FileOrderBy {
@@ -985,12 +2215,235 @@ input FiletrackProjectProject {
   new: Boolean
   privacy: PROJECT_PRIVACY
   title: String!
+  artworkId: ID
+  artwork: FiletrackProjectProjectartworkFile
   creatorId: ID
-  creator: ProjectcreatorUser
+  creator: FiletrackProjectProjectcreatorUser
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [FiletrackProjectProjectcommentsComment!]
   tracksIds: [ID!]
-  tracks: [FileInput!]
+  tracks: [FiletrackProjectProjecttracksFile!]
+}
+
+input FiletrackProjectProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  uploaderId: ID
+  uploader: FiletrackProjectProjectartworkFileuploaderUser
+}
+
+input FiletrackProjectProjectartworkFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FiletrackProjectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: FiletrackProjectProjectcommentsCommentauthorUser
+  parentId: ID
+  parent: FiletrackProjectProjectcommentsCommentparentComment
+  childrenIds: [ID!]
+  children: [FiletrackProjectProjectcommentsCommentchildrenComment!]
+}
+
+input FiletrackProjectProjectcommentsCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FiletrackProjectProjectcommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FiletrackProjectProjectcommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FiletrackProjectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [FiletrackProjectProjectcreatorUsercommentsComment!]
+  filesIds: [ID!]
+  files: [FiletrackProjectProjectcreatorUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [FiletrackProjectProjectcreatorUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [FiletrackProjectProjectcreatorUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [FiletrackProjectProjectcreatorUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [FiletrackProjectProjectcreatorUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [FiletrackProjectProjectcreatorUsersentRequestsFriendRequest!]
+}
+
+input FiletrackProjectProjectcreatorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FiletrackProjectProjectcreatorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FiletrackProjectProjectcreatorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FiletrackProjectProjectcreatorUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input FiletrackProjectProjectcreatorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FiletrackProjectProjectcreatorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FiletrackProjectProjectcreatorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FiletrackProjectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: FiletrackProjectProjecttracksFileartworkProjectProject
+  uploaderId: ID
+  uploader: FiletrackProjectProjecttracksFileuploaderUser
+}
+
+input FiletrackProjectProjecttracksFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FiletrackProjectProjecttracksFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
 }
 
 input FileuploaderUser {
@@ -1006,19 +2459,302 @@ input FileuploaderUser {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [FileuploaderUsercommentsComment!]
   filesIds: [ID!]
-  files: [FileInput!]
+  files: [FileuploaderUserfilesFile!]
   friendsIds: [ID!]
-  friends: [UserInput!]
+  friends: [FileuploaderUserfriendsUser!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [FileuploaderUserinfluencesInfluence!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
+  invitations: [FileuploaderUserinvitationsFriendRequest!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
+  projects: [FileuploaderUserprojectsProject!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
+  sentRequests: [FileuploaderUsersentRequestsFriendRequest!]
+}
+
+input FileuploaderUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  parentId: ID
+  parent: FileuploaderUsercommentsCommentparentComment
+  projectId: ID
+  project: FileuploaderUsercommentsCommentprojectProject
+  childrenIds: [ID!]
+  children: [FileuploaderUsercommentsCommentchildrenComment!]
+}
+
+input FileuploaderUsercommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FileuploaderUsercommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FileuploaderUsercommentsCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FileuploaderUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: FileuploaderUserfilesFileartworkProjectProject
+  trackProjectId: ID
+  trackProject: FileuploaderUserfilesFiletrackProjectProject
+}
+
+input FileuploaderUserfilesFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FileuploaderUserfilesFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FileuploaderUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [FileuploaderUserfriendsUsercommentsComment!]
+  filesIds: [ID!]
+  files: [FileuploaderUserfriendsUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [FileuploaderUserfriendsUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [FileuploaderUserfriendsUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [FileuploaderUserfriendsUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [FileuploaderUserfriendsUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [FileuploaderUserfriendsUsersentRequestsFriendRequest!]
+}
+
+input FileuploaderUserfriendsUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FileuploaderUserfriendsUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FileuploaderUserfriendsUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FileuploaderUserfriendsUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input FileuploaderUserfriendsUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FileuploaderUserfriendsUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FileuploaderUserfriendsUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FileuploaderUserinfluencesInfluence {
+  artistId: ID
+  artist: FileuploaderUserinfluencesInfluenceartistArtist
+}
+
+input FileuploaderUserinfluencesInfluenceartistArtist {
+  imageUrl: String!
+  name: String!
+  spotifyId: String!
+  influencesIds: [ID!]
+}
+
+input FileuploaderUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  actor: FileuploaderUserinvitationsFriendRequestactorUser
+}
+
+input FileuploaderUserinvitationsFriendRequestactorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FileuploaderUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: FileuploaderUserprojectsProjectartworkFile
+  commentsIds: [ID!]
+  comments: [FileuploaderUserprojectsProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [FileuploaderUserprojectsProjecttracksFile!]
+}
+
+input FileuploaderUserprojectsProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FileuploaderUserprojectsProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FileuploaderUserprojectsProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FileuploaderUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  recipientId: ID
+  recipient: FileuploaderUsersentRequestsFriendRequestrecipientUser
+}
+
+input FileuploaderUsersentRequestsFriendRequestrecipientUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
 }
 
 type FriendRequest implements Node {
@@ -1044,19 +2780,279 @@ input FriendRequestactorUser {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [FriendRequestactorUsercommentsComment!]
   filesIds: [ID!]
-  files: [FileInput!]
+  files: [FriendRequestactorUserfilesFile!]
   friendsIds: [ID!]
-  friends: [UserInput!]
+  friends: [FriendRequestactorUserfriendsUser!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [FriendRequestactorUserinfluencesInfluence!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
+  invitations: [FriendRequestactorUserinvitationsFriendRequest!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
+  projects: [FriendRequestactorUserprojectsProject!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
+  sentRequests: [FriendRequestactorUsersentRequestsFriendRequest!]
+}
+
+input FriendRequestactorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  parentId: ID
+  parent: FriendRequestactorUsercommentsCommentparentComment
+  projectId: ID
+  project: FriendRequestactorUsercommentsCommentprojectProject
+  childrenIds: [ID!]
+  children: [FriendRequestactorUsercommentsCommentchildrenComment!]
+}
+
+input FriendRequestactorUsercommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FriendRequestactorUsercommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FriendRequestactorUsercommentsCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FriendRequestactorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: FriendRequestactorUserfilesFileartworkProjectProject
+  trackProjectId: ID
+  trackProject: FriendRequestactorUserfilesFiletrackProjectProject
+}
+
+input FriendRequestactorUserfilesFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FriendRequestactorUserfilesFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FriendRequestactorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [FriendRequestactorUserfriendsUsercommentsComment!]
+  filesIds: [ID!]
+  files: [FriendRequestactorUserfriendsUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [FriendRequestactorUserfriendsUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [FriendRequestactorUserfriendsUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestactorUserfriendsUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [FriendRequestactorUserfriendsUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [FriendRequestactorUserfriendsUsersentRequestsFriendRequest!]
+}
+
+input FriendRequestactorUserfriendsUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FriendRequestactorUserfriendsUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FriendRequestactorUserfriendsUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FriendRequestactorUserfriendsUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input FriendRequestactorUserfriendsUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FriendRequestactorUserfriendsUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FriendRequestactorUserfriendsUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FriendRequestactorUserinfluencesInfluence {
+  artistId: ID
+  artist: FriendRequestactorUserinfluencesInfluenceartistArtist
+}
+
+input FriendRequestactorUserinfluencesInfluenceartistArtist {
+  imageUrl: String!
+  name: String!
+  spotifyId: String!
+  influencesIds: [ID!]
+}
+
+input FriendRequestactorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+}
+
+input FriendRequestactorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: FriendRequestactorUserprojectsProjectartworkFile
+  commentsIds: [ID!]
+  comments: [FriendRequestactorUserprojectsProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [FriendRequestactorUserprojectsProjecttracksFile!]
+}
+
+input FriendRequestactorUserprojectsProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FriendRequestactorUserprojectsProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FriendRequestactorUserprojectsProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FriendRequestactorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  recipientId: ID
+  recipient: FriendRequestactorUsersentRequestsFriendRequestrecipientUser
+}
+
+input FriendRequestactorUsersentRequestsFriendRequestrecipientUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
 }
 
 # A connection to a list of items.
@@ -1117,13 +3113,8 @@ input FriendRequestFilter {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-}
-
-input FriendRequestInput {
-  accepted: Boolean
-  ignored: Boolean
-  actorId: ID
-  recipientId: ID
+  actor: UserFilter
+  recipient: UserFilter
 }
 
 enum FriendRequestOrderBy {
@@ -1152,19 +3143,279 @@ input FriendRequestrecipientUser {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [FriendRequestrecipientUsercommentsComment!]
   filesIds: [ID!]
-  files: [FileInput!]
+  files: [FriendRequestrecipientUserfilesFile!]
   friendsIds: [ID!]
-  friends: [UserInput!]
+  friends: [FriendRequestrecipientUserfriendsUser!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [FriendRequestrecipientUserinfluencesInfluence!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
+  invitations: [FriendRequestrecipientUserinvitationsFriendRequest!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
+  projects: [FriendRequestrecipientUserprojectsProject!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
+  sentRequests: [FriendRequestrecipientUsersentRequestsFriendRequest!]
+}
+
+input FriendRequestrecipientUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  parentId: ID
+  parent: FriendRequestrecipientUsercommentsCommentparentComment
+  projectId: ID
+  project: FriendRequestrecipientUsercommentsCommentprojectProject
+  childrenIds: [ID!]
+  children: [FriendRequestrecipientUsercommentsCommentchildrenComment!]
+}
+
+input FriendRequestrecipientUsercommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FriendRequestrecipientUsercommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FriendRequestrecipientUsercommentsCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FriendRequestrecipientUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: FriendRequestrecipientUserfilesFileartworkProjectProject
+  trackProjectId: ID
+  trackProject: FriendRequestrecipientUserfilesFiletrackProjectProject
+}
+
+input FriendRequestrecipientUserfilesFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FriendRequestrecipientUserfilesFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FriendRequestrecipientUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [FriendRequestrecipientUserfriendsUsercommentsComment!]
+  filesIds: [ID!]
+  files: [FriendRequestrecipientUserfriendsUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [FriendRequestrecipientUserfriendsUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [FriendRequestrecipientUserfriendsUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [FriendRequestrecipientUserfriendsUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [FriendRequestrecipientUserfriendsUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [FriendRequestrecipientUserfriendsUsersentRequestsFriendRequest!]
+}
+
+input FriendRequestrecipientUserfriendsUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FriendRequestrecipientUserfriendsUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FriendRequestrecipientUserfriendsUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FriendRequestrecipientUserfriendsUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input FriendRequestrecipientUserfriendsUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FriendRequestrecipientUserfriendsUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input FriendRequestrecipientUserfriendsUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input FriendRequestrecipientUserinfluencesInfluence {
+  artistId: ID
+  artist: FriendRequestrecipientUserinfluencesInfluenceartistArtist
+}
+
+input FriendRequestrecipientUserinfluencesInfluenceartistArtist {
+  imageUrl: String!
+  name: String!
+  spotifyId: String!
+  influencesIds: [ID!]
+}
+
+input FriendRequestrecipientUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  actor: FriendRequestrecipientUserinvitationsFriendRequestactorUser
+}
+
+input FriendRequestrecipientUserinvitationsFriendRequestactorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input FriendRequestrecipientUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: FriendRequestrecipientUserprojectsProjectartworkFile
+  commentsIds: [ID!]
+  comments: [FriendRequestrecipientUserprojectsProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [FriendRequestrecipientUserprojectsProjecttracksFile!]
+}
+
+input FriendRequestrecipientUserprojectsProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FriendRequestrecipientUserprojectsProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input FriendRequestrecipientUserprojectsProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input FriendRequestrecipientUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
 }
 
 type Genre implements Node {
@@ -1244,14 +3495,12 @@ input GenreFilter {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-}
-
-input GenreInput {
-  name: String!
-  parentGenreIds: [ID!]
-  parentGenre: [GenreInput!]
-  subgenresIds: [ID!]
-  subgenres: [GenreInput!]
+  parentGenre_every: GenreFilter
+  parentGenre_some: GenreFilter
+  parentGenre_none: GenreFilter
+  subgenres_every: GenreFilter
+  subgenres_some: GenreFilter
+  subgenres_none: GenreFilter
 }
 
 enum GenreOrderBy {
@@ -1263,6 +3512,102 @@ enum GenreOrderBy {
   name_DESC
   updatedAt_ASC
   updatedAt_DESC
+}
+
+input GenreparentGenreGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  parentGenre: [GenreparentGenreGenreparentGenreGenre!]
+  subgenresIds: [ID!]
+  subgenres: [GenreparentGenreGenresubgenresGenre!]
+}
+
+input GenreparentGenreGenreparentGenreGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  parentGenre: [GenreparentGenreGenreparentGenreGenreparentGenreGenre!]
+  subgenresIds: [ID!]
+  subgenres: [GenreparentGenreGenreparentGenreGenresubgenresGenre!]
+}
+
+input GenreparentGenreGenreparentGenreGenreparentGenreGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  subgenresIds: [ID!]
+}
+
+input GenreparentGenreGenreparentGenreGenresubgenresGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  subgenresIds: [ID!]
+}
+
+input GenreparentGenreGenresubgenresGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  parentGenre: [GenreparentGenreGenresubgenresGenreparentGenreGenre!]
+  subgenresIds: [ID!]
+  subgenres: [GenreparentGenreGenresubgenresGenresubgenresGenre!]
+}
+
+input GenreparentGenreGenresubgenresGenreparentGenreGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  subgenresIds: [ID!]
+}
+
+input GenreparentGenreGenresubgenresGenresubgenresGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  subgenresIds: [ID!]
+}
+
+input GenresubgenresGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  parentGenre: [GenresubgenresGenreparentGenreGenre!]
+  subgenresIds: [ID!]
+  subgenres: [GenresubgenresGenresubgenresGenre!]
+}
+
+input GenresubgenresGenreparentGenreGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  parentGenre: [GenresubgenresGenreparentGenreGenreparentGenreGenre!]
+  subgenresIds: [ID!]
+  subgenres: [GenresubgenresGenreparentGenreGenresubgenresGenre!]
+}
+
+input GenresubgenresGenreparentGenreGenreparentGenreGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  subgenresIds: [ID!]
+}
+
+input GenresubgenresGenreparentGenreGenresubgenresGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  subgenresIds: [ID!]
+}
+
+input GenresubgenresGenresubgenresGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  parentGenre: [GenresubgenresGenresubgenresGenreparentGenreGenre!]
+  subgenresIds: [ID!]
+  subgenres: [GenresubgenresGenresubgenresGenresubgenresGenre!]
+}
+
+input GenresubgenresGenresubgenresGenreparentGenreGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  subgenresIds: [ID!]
+}
+
+input GenresubgenresGenresubgenresGenresubgenresGenre {
+  name: String!
+  parentGenreIds: [ID!]
+  subgenresIds: [ID!]
 }
 
 type Influence implements Node {
@@ -1278,7 +3623,33 @@ input InfluenceartistArtist {
   name: String!
   spotifyId: String!
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [InfluenceartistArtistinfluencesInfluence!]
+}
+
+input InfluenceartistArtistinfluencesInfluence {
+  userId: ID
+  user: InfluenceartistArtistinfluencesInfluenceuserUser
+}
+
+input InfluenceartistArtistinfluencesInfluenceuserUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
 }
 
 # A connection to a list of items.
@@ -1335,11 +3706,8 @@ input InfluenceFilter {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-}
-
-input InfluenceInput {
-  artistId: ID
-  userId: ID
+  artist: ArtistFilter
+  user: UserFilter
 }
 
 enum InfluenceOrderBy {
@@ -1364,19 +3732,302 @@ input InfluenceuserUser {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [InfluenceuserUsercommentsComment!]
   filesIds: [ID!]
-  files: [FileInput!]
+  files: [InfluenceuserUserfilesFile!]
   friendsIds: [ID!]
-  friends: [UserInput!]
+  friends: [InfluenceuserUserfriendsUser!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [InfluenceuserUserinfluencesInfluence!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
+  invitations: [InfluenceuserUserinvitationsFriendRequest!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
+  projects: [InfluenceuserUserprojectsProject!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
+  sentRequests: [InfluenceuserUsersentRequestsFriendRequest!]
+}
+
+input InfluenceuserUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  parentId: ID
+  parent: InfluenceuserUsercommentsCommentparentComment
+  projectId: ID
+  project: InfluenceuserUsercommentsCommentprojectProject
+  childrenIds: [ID!]
+  children: [InfluenceuserUsercommentsCommentchildrenComment!]
+}
+
+input InfluenceuserUsercommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input InfluenceuserUsercommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input InfluenceuserUsercommentsCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input InfluenceuserUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: InfluenceuserUserfilesFileartworkProjectProject
+  trackProjectId: ID
+  trackProject: InfluenceuserUserfilesFiletrackProjectProject
+}
+
+input InfluenceuserUserfilesFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input InfluenceuserUserfilesFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input InfluenceuserUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [InfluenceuserUserfriendsUsercommentsComment!]
+  filesIds: [ID!]
+  files: [InfluenceuserUserfriendsUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [InfluenceuserUserfriendsUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [InfluenceuserUserfriendsUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [InfluenceuserUserfriendsUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [InfluenceuserUserfriendsUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [InfluenceuserUserfriendsUsersentRequestsFriendRequest!]
+}
+
+input InfluenceuserUserfriendsUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input InfluenceuserUserfriendsUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input InfluenceuserUserfriendsUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input InfluenceuserUserfriendsUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input InfluenceuserUserfriendsUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input InfluenceuserUserfriendsUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input InfluenceuserUserfriendsUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input InfluenceuserUserinfluencesInfluence {
+  artistId: ID
+  artist: InfluenceuserUserinfluencesInfluenceartistArtist
+}
+
+input InfluenceuserUserinfluencesInfluenceartistArtist {
+  imageUrl: String!
+  name: String!
+  spotifyId: String!
+  influencesIds: [ID!]
+}
+
+input InfluenceuserUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  actor: InfluenceuserUserinvitationsFriendRequestactorUser
+}
+
+input InfluenceuserUserinvitationsFriendRequestactorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input InfluenceuserUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: InfluenceuserUserprojectsProjectartworkFile
+  commentsIds: [ID!]
+  comments: [InfluenceuserUserprojectsProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [InfluenceuserUserprojectsProjecttracksFile!]
+}
+
+input InfluenceuserUserprojectsProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input InfluenceuserUserprojectsProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input InfluenceuserUserprojectsProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input InfluenceuserUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  recipientId: ID
+  recipient: InfluenceuserUsersentRequestsFriendRequestrecipientUser
+}
+
+input InfluenceuserUsersentRequestsFriendRequestrecipientUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
 }
 
 # The `Long` scalar type represents non-fractional signed whole numeric values.
@@ -1491,9 +4142,352 @@ input ProjectartworkFile {
   name: String!
   visualization: [BigDecimal!]
   trackProjectId: ID
-  trackProject: FiletrackProjectProject
+  trackProject: ProjectartworkFiletrackProjectProject
   uploaderId: ID
-  uploader: FileuploaderUser
+  uploader: ProjectartworkFileuploaderUser
+}
+
+input ProjectartworkFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  creatorId: ID
+  creator: ProjectartworkFiletrackProjectProjectcreatorUser
+  commentsIds: [ID!]
+  comments: [ProjectartworkFiletrackProjectProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [ProjectartworkFiletrackProjectProjecttracksFile!]
+}
+
+input ProjectartworkFiletrackProjectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjectartworkFiletrackProjectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjectartworkFiletrackProjectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ProjectartworkFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [ProjectartworkFileuploaderUsercommentsComment!]
+  filesIds: [ID!]
+  files: [ProjectartworkFileuploaderUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [ProjectartworkFileuploaderUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [ProjectartworkFileuploaderUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [ProjectartworkFileuploaderUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [ProjectartworkFileuploaderUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [ProjectartworkFileuploaderUsersentRequestsFriendRequest!]
+}
+
+input ProjectartworkFileuploaderUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjectartworkFileuploaderUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ProjectartworkFileuploaderUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjectartworkFileuploaderUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input ProjectartworkFileuploaderUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input ProjectartworkFileuploaderUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input ProjectartworkFileuploaderUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input ProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: ProjectcommentsCommentauthorUser
+  parentId: ID
+  parent: ProjectcommentsCommentparentComment
+  childrenIds: [ID!]
+  children: [ProjectcommentsCommentchildrenComment!]
+}
+
+input ProjectcommentsCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [ProjectcommentsCommentauthorUsercommentsComment!]
+  filesIds: [ID!]
+  files: [ProjectcommentsCommentauthorUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [ProjectcommentsCommentauthorUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [ProjectcommentsCommentauthorUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [ProjectcommentsCommentauthorUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [ProjectcommentsCommentauthorUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [ProjectcommentsCommentauthorUsersentRequestsFriendRequest!]
+}
+
+input ProjectcommentsCommentauthorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjectcommentsCommentauthorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ProjectcommentsCommentauthorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjectcommentsCommentauthorUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input ProjectcommentsCommentauthorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input ProjectcommentsCommentauthorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input ProjectcommentsCommentauthorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input ProjectcommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: ProjectcommentsCommentchildrenCommentauthorUser
+  childrenIds: [ID!]
+  children: [ProjectcommentsCommentchildrenCommentchildrenComment!]
+}
+
+input ProjectcommentsCommentchildrenCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjectcommentsCommentchildrenCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjectcommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: ProjectcommentsCommentparentCommentauthorUser
+  childrenIds: [ID!]
+  children: [ProjectcommentsCommentparentCommentchildrenComment!]
+}
+
+input ProjectcommentsCommentparentCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjectcommentsCommentparentCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
 }
 
 # A connection to a list of items.
@@ -1509,6 +4503,296 @@ type ProjectConnection {
 }
 
 input ProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [ProjectcreatorUsercommentsComment!]
+  filesIds: [ID!]
+  files: [ProjectcreatorUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [ProjectcreatorUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [ProjectcreatorUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [ProjectcreatorUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [ProjectcreatorUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [ProjectcreatorUsersentRequestsFriendRequest!]
+}
+
+input ProjectcreatorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  parentId: ID
+  parent: ProjectcreatorUsercommentsCommentparentComment
+  projectId: ID
+  project: ProjectcreatorUsercommentsCommentprojectProject
+  childrenIds: [ID!]
+  children: [ProjectcreatorUsercommentsCommentchildrenComment!]
+}
+
+input ProjectcreatorUsercommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjectcreatorUsercommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjectcreatorUsercommentsCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input ProjectcreatorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: ProjectcreatorUserfilesFileartworkProjectProject
+  trackProjectId: ID
+  trackProject: ProjectcreatorUserfilesFiletrackProjectProject
+}
+
+input ProjectcreatorUserfilesFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input ProjectcreatorUserfilesFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input ProjectcreatorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [ProjectcreatorUserfriendsUsercommentsComment!]
+  filesIds: [ID!]
+  files: [ProjectcreatorUserfriendsUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [ProjectcreatorUserfriendsUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [ProjectcreatorUserfriendsUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [ProjectcreatorUserfriendsUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [ProjectcreatorUserfriendsUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [ProjectcreatorUserfriendsUsersentRequestsFriendRequest!]
+}
+
+input ProjectcreatorUserfriendsUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjectcreatorUserfriendsUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ProjectcreatorUserfriendsUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjectcreatorUserfriendsUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input ProjectcreatorUserfriendsUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input ProjectcreatorUserfriendsUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input ProjectcreatorUserfriendsUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input ProjectcreatorUserinfluencesInfluence {
+  artistId: ID
+  artist: ProjectcreatorUserinfluencesInfluenceartistArtist
+}
+
+input ProjectcreatorUserinfluencesInfluenceartistArtist {
+  imageUrl: String!
+  name: String!
+  spotifyId: String!
+  influencesIds: [ID!]
+}
+
+input ProjectcreatorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  actor: ProjectcreatorUserinvitationsFriendRequestactorUser
+}
+
+input ProjectcreatorUserinvitationsFriendRequestactorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjectcreatorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: ProjectcreatorUserprojectsProjectartworkFile
+  commentsIds: [ID!]
+  comments: [ProjectcreatorUserprojectsProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [ProjectcreatorUserprojectsProjecttracksFile!]
+}
+
+input ProjectcreatorUserprojectsProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ProjectcreatorUserprojectsProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjectcreatorUserprojectsProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ProjectcreatorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  recipientId: ID
+  recipient: ProjectcreatorUsersentRequestsFriendRequestrecipientUser
+}
+
+input ProjectcreatorUsersentRequestsFriendRequestrecipientUser {
   email: String!
   experience: USER_EXPERIENCE
   handle: String!
@@ -1563,10 +4847,6 @@ input ProjectFilter {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
-  genre: [PROJECT_GENRE!]
-  genre_not: [PROJECT_GENRE!]
-  genre_in: [[PROJECT_GENRE!]!]
-  genre_not_in: [[PROJECT_GENRE!]!]
   id: ID
   id_not: ID
   id_in: [ID!]
@@ -1609,18 +4889,14 @@ input ProjectFilter {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-}
-
-input ProjectInput {
-  description: String
-  genre: [PROJECT_GENRE!]
-  new: Boolean
-  privacy: PROJECT_PRIVACY
-  title: String!
-  artworkId: ID
-  creatorId: ID
-  commentsIds: [ID!]
-  tracksIds: [ID!]
+  artwork: FileFilter
+  comments_every: CommentFilter
+  comments_some: CommentFilter
+  comments_none: CommentFilter
+  creator: UserFilter
+  tracks_every: FileFilter
+  tracks_some: FileFilter
+  tracks_none: FileFilter
 }
 
 enum ProjectOrderBy {
@@ -1638,6 +4914,166 @@ enum ProjectOrderBy {
   title_DESC
   updatedAt_ASC
   updatedAt_DESC
+}
+
+input ProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: ProjecttracksFileartworkProjectProject
+  uploaderId: ID
+  uploader: ProjecttracksFileuploaderUser
+}
+
+input ProjecttracksFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  creatorId: ID
+  creator: ProjecttracksFileartworkProjectProjectcreatorUser
+  commentsIds: [ID!]
+  comments: [ProjecttracksFileartworkProjectProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [ProjecttracksFileartworkProjectProjecttracksFile!]
+}
+
+input ProjecttracksFileartworkProjectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjecttracksFileartworkProjectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjecttracksFileartworkProjectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ProjecttracksFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [ProjecttracksFileuploaderUsercommentsComment!]
+  filesIds: [ID!]
+  files: [ProjecttracksFileuploaderUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [ProjecttracksFileuploaderUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [ProjecttracksFileuploaderUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [ProjecttracksFileuploaderUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [ProjecttracksFileuploaderUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [ProjecttracksFileuploaderUsersentRequestsFriendRequest!]
+}
+
+input ProjecttracksFileuploaderUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input ProjecttracksFileuploaderUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input ProjecttracksFileuploaderUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input ProjecttracksFileuploaderUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input ProjecttracksFileuploaderUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input ProjecttracksFileuploaderUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input ProjecttracksFileuploaderUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
 }
 
 type Query {
@@ -1865,19 +5301,19 @@ input SignupUserInput {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [UsercommentsComment!]
   filesIds: [ID!]
-  files: [FileInput!]
+  files: [UserfilesFile!]
   friendsIds: [ID!]
-  friends: [UserInput!]
+  friends: [UserfriendsUser!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [UserinfluencesInfluence!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
+  invitations: [UserinvitationsFriendRequest!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
+  projects: [UserprojectsProject!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
+  sentRequests: [UsersentRequestsFriendRequest!]
   clientMutationId: String!
   authProvider: AuthProviderSignupData!
 }
@@ -1974,7 +5410,7 @@ input UpdateArtistInput {
   name: String
   spotifyId: String
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [ArtistinfluencesInfluence!]
   clientMutationId: String!
 }
 
@@ -1997,7 +5433,7 @@ input UpdateCommentInput {
   projectId: ID
   project: CommentprojectProject
   childrenIds: [ID!]
-  children: [CommentInput!]
+  children: [CommentchildrenComment!]
   clientMutationId: String!
 }
 
@@ -2058,9 +5494,9 @@ input UpdateGenreInput {
   id: ID!
   name: String
   parentGenreIds: [ID!]
-  parentGenre: [GenreInput!]
+  parentGenre: [GenreparentGenreGenre!]
   subgenresIds: [ID!]
-  subgenres: [GenreInput!]
+  subgenres: [GenresubgenresGenre!]
   clientMutationId: String!
 }
 
@@ -2101,9 +5537,9 @@ input UpdateProjectInput {
   creatorId: ID
   creator: ProjectcreatorUser
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [ProjectcommentsComment!]
   tracksIds: [ID!]
-  tracks: [FileInput!]
+  tracks: [ProjecttracksFile!]
   clientMutationId: String!
 }
 
@@ -2142,19 +5578,19 @@ input UpdateUserInput {
   summary: String
   website: String
   commentsIds: [ID!]
-  comments: [CommentInput!]
+  comments: [UsercommentsComment!]
   filesIds: [ID!]
-  files: [FileInput!]
+  files: [UserfilesFile!]
   friendsIds: [ID!]
-  friends: [UserInput!]
+  friends: [UserfriendsUser!]
   influencesIds: [ID!]
-  influences: [InfluenceInput!]
+  influences: [UserinfluencesInfluence!]
   invitationsIds: [ID!]
-  invitations: [FriendRequestInput!]
+  invitations: [UserinvitationsFriendRequest!]
   projectsIds: [ID!]
-  projects: [ProjectInput!]
+  projects: [UserprojectsProject!]
   sentRequestsIds: [ID!]
-  sentRequests: [FriendRequestInput!]
+  sentRequests: [UsersentRequestsFriendRequest!]
   clientMutationId: String!
 }
 
@@ -2195,6 +5631,145 @@ enum USER_EXPERIENCE {
   PROFESSIONAL
 }
 
+input UsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  parentId: ID
+  parent: UsercommentsCommentparentComment
+  projectId: ID
+  project: UsercommentsCommentprojectProject
+  childrenIds: [ID!]
+  children: [UsercommentsCommentchildrenComment!]
+}
+
+input UsercommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  projectId: ID
+  project: UsercommentsCommentchildrenCommentprojectProject
+  childrenIds: [ID!]
+  children: [UsercommentsCommentchildrenCommentchildrenComment!]
+}
+
+input UsercommentsCommentchildrenCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UsercommentsCommentchildrenCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UsercommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  projectId: ID
+  project: UsercommentsCommentparentCommentprojectProject
+  childrenIds: [ID!]
+  children: [UsercommentsCommentparentCommentchildrenComment!]
+}
+
+input UsercommentsCommentparentCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UsercommentsCommentparentCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UsercommentsCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: UsercommentsCommentprojectProjectartworkFile
+  creatorId: ID
+  creator: UsercommentsCommentprojectProjectcreatorUser
+  commentsIds: [ID!]
+  comments: [UsercommentsCommentprojectProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [UsercommentsCommentprojectProjecttracksFile!]
+}
+
+input UsercommentsCommentprojectProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input UsercommentsCommentprojectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UsercommentsCommentprojectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UsercommentsCommentprojectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
 # A connection to a list of items.
 type UserConnection {
   # Information to aid in pagination.
@@ -2214,6 +5789,131 @@ type UserEdge {
 
   # A cursor for use in pagination.
   cursor: String!
+}
+
+input UserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: UserfilesFileartworkProjectProject
+  trackProjectId: ID
+  trackProject: UserfilesFiletrackProjectProject
+}
+
+input UserfilesFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  creatorId: ID
+  creator: UserfilesFileartworkProjectProjectcreatorUser
+  commentsIds: [ID!]
+  comments: [UserfilesFileartworkProjectProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [UserfilesFileartworkProjectProjecttracksFile!]
+}
+
+input UserfilesFileartworkProjectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserfilesFileartworkProjectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UserfilesFileartworkProjectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input UserfilesFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: UserfilesFiletrackProjectProjectartworkFile
+  creatorId: ID
+  creator: UserfilesFiletrackProjectProjectcreatorUser
+  commentsIds: [ID!]
+  comments: [UserfilesFiletrackProjectProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [UserfilesFiletrackProjectProjecttracksFile!]
+}
+
+input UserfilesFiletrackProjectProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input UserfilesFiletrackProjectProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserfilesFiletrackProjectProjectcreatorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UserfilesFiletrackProjectProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
 }
 
 input UserFilter {
@@ -2395,9 +6095,181 @@ input UserFilter {
   website_not_starts_with: String
   website_ends_with: String
   website_not_ends_with: String
+  comments_every: CommentFilter
+  comments_some: CommentFilter
+  comments_none: CommentFilter
+  files_every: FileFilter
+  files_some: FileFilter
+  files_none: FileFilter
+  friends_every: UserFilter
+  friends_some: UserFilter
+  friends_none: UserFilter
+  influences_every: InfluenceFilter
+  influences_some: InfluenceFilter
+  influences_none: InfluenceFilter
+  invitations_every: FriendRequestFilter
+  invitations_some: FriendRequestFilter
+  invitations_none: FriendRequestFilter
+  projects_every: ProjectFilter
+  projects_some: ProjectFilter
+  projects_none: ProjectFilter
+  sentRequests_every: FriendRequestFilter
+  sentRequests_some: FriendRequestFilter
+  sentRequests_none: FriendRequestFilter
 }
 
-input UserInput {
+input UserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [UserfriendsUsercommentsComment!]
+  filesIds: [ID!]
+  files: [UserfriendsUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [UserfriendsUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [UserfriendsUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [UserfriendsUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [UserfriendsUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [UserfriendsUsersentRequestsFriendRequest!]
+}
+
+input UserfriendsUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  parentId: ID
+  parent: UserfriendsUsercommentsCommentparentComment
+  projectId: ID
+  project: UserfriendsUsercommentsCommentprojectProject
+  childrenIds: [ID!]
+  children: [UserfriendsUsercommentsCommentchildrenComment!]
+}
+
+input UserfriendsUsercommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserfriendsUsercommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserfriendsUsercommentsCommentprojectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UserfriendsUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: UserfriendsUserfilesFileartworkProjectProject
+  trackProjectId: ID
+  trackProject: UserfriendsUserfilesFiletrackProjectProject
+}
+
+input UserfriendsUserfilesFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UserfriendsUserfilesFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UserfriendsUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [UserfriendsUserfriendsUsercommentsComment!]
+  filesIds: [ID!]
+  files: [UserfriendsUserfriendsUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [UserfriendsUserfriendsUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [UserfriendsUserfriendsUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [UserfriendsUserfriendsUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [UserfriendsUserfriendsUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [UserfriendsUserfriendsUsersentRequestsFriendRequest!]
+}
+
+input UserfriendsUserfriendsUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserfriendsUserfriendsUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input UserfriendsUserfriendsUserfriendsUser {
   email: String!
   experience: USER_EXPERIENCE
   handle: String!
@@ -2416,6 +6288,268 @@ input UserInput {
   invitationsIds: [ID!]
   projectsIds: [ID!]
   sentRequestsIds: [ID!]
+}
+
+input UserfriendsUserfriendsUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input UserfriendsUserfriendsUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input UserfriendsUserfriendsUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UserfriendsUserfriendsUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input UserfriendsUserinfluencesInfluence {
+  artistId: ID
+  artist: UserfriendsUserinfluencesInfluenceartistArtist
+}
+
+input UserfriendsUserinfluencesInfluenceartistArtist {
+  imageUrl: String!
+  name: String!
+  spotifyId: String!
+  influencesIds: [ID!]
+}
+
+input UserfriendsUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  actor: UserfriendsUserinvitationsFriendRequestactorUser
+}
+
+input UserfriendsUserinvitationsFriendRequestactorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UserfriendsUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: UserfriendsUserprojectsProjectartworkFile
+  commentsIds: [ID!]
+  comments: [UserfriendsUserprojectsProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [UserfriendsUserprojectsProjecttracksFile!]
+}
+
+input UserfriendsUserprojectsProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input UserfriendsUserprojectsProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserfriendsUserprojectsProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input UserfriendsUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  recipientId: ID
+  recipient: UserfriendsUsersentRequestsFriendRequestrecipientUser
+}
+
+input UserfriendsUsersentRequestsFriendRequestrecipientUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UserinfluencesInfluence {
+  artistId: ID
+  artist: UserinfluencesInfluenceartistArtist
+}
+
+input UserinfluencesInfluenceartistArtist {
+  imageUrl: String!
+  name: String!
+  spotifyId: String!
+  influencesIds: [ID!]
+  influences: [UserinfluencesInfluenceartistArtistinfluencesInfluence!]
+}
+
+input UserinfluencesInfluenceartistArtistinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input UserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  actor: UserinvitationsFriendRequestactorUser
+}
+
+input UserinvitationsFriendRequestactorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [UserinvitationsFriendRequestactorUsercommentsComment!]
+  filesIds: [ID!]
+  files: [UserinvitationsFriendRequestactorUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [UserinvitationsFriendRequestactorUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [UserinvitationsFriendRequestactorUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [UserinvitationsFriendRequestactorUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [UserinvitationsFriendRequestactorUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [UserinvitationsFriendRequestactorUsersentRequestsFriendRequest!]
+}
+
+input UserinvitationsFriendRequestactorUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserinvitationsFriendRequestactorUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input UserinvitationsFriendRequestactorUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UserinvitationsFriendRequestactorUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input UserinvitationsFriendRequestactorUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input UserinvitationsFriendRequestactorUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UserinvitationsFriendRequestactorUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
 }
 
 enum UserOrderBy {
@@ -2449,6 +6583,262 @@ enum UserOrderBy {
   updatedAt_DESC
   website_ASC
   website_DESC
+}
+
+input UserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  artwork: UserprojectsProjectartworkFile
+  commentsIds: [ID!]
+  comments: [UserprojectsProjectcommentsComment!]
+  tracksIds: [ID!]
+  tracks: [UserprojectsProjecttracksFile!]
+}
+
+input UserprojectsProjectartworkFile {
+  name: String!
+  visualization: [BigDecimal!]
+  trackProjectId: ID
+  trackProject: UserprojectsProjectartworkFiletrackProjectProject
+  uploaderId: ID
+  uploader: UserprojectsProjectartworkFileuploaderUser
+}
+
+input UserprojectsProjectartworkFiletrackProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UserprojectsProjectartworkFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UserprojectsProjectcommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  author: UserprojectsProjectcommentsCommentauthorUser
+  parentId: ID
+  parent: UserprojectsProjectcommentsCommentparentComment
+  childrenIds: [ID!]
+  children: [UserprojectsProjectcommentsCommentchildrenComment!]
+}
+
+input UserprojectsProjectcommentsCommentauthorUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UserprojectsProjectcommentsCommentchildrenComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserprojectsProjectcommentsCommentparentComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UserprojectsProjecttracksFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  artworkProject: UserprojectsProjecttracksFileartworkProjectProject
+  uploaderId: ID
+  uploader: UserprojectsProjecttracksFileuploaderUser
+}
+
+input UserprojectsProjecttracksFileartworkProjectProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UserprojectsProjecttracksFileuploaderUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  recipientId: ID
+  recipient: UsersentRequestsFriendRequestrecipientUser
+}
+
+input UsersentRequestsFriendRequestrecipientUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  comments: [UsersentRequestsFriendRequestrecipientUsercommentsComment!]
+  filesIds: [ID!]
+  files: [UsersentRequestsFriendRequestrecipientUserfilesFile!]
+  friendsIds: [ID!]
+  friends: [UsersentRequestsFriendRequestrecipientUserfriendsUser!]
+  influencesIds: [ID!]
+  influences: [UsersentRequestsFriendRequestrecipientUserinfluencesInfluence!]
+  invitationsIds: [ID!]
+  invitations: [UsersentRequestsFriendRequestrecipientUserinvitationsFriendRequest!]
+  projectsIds: [ID!]
+  projects: [UsersentRequestsFriendRequestrecipientUserprojectsProject!]
+  sentRequestsIds: [ID!]
+  sentRequests: [UsersentRequestsFriendRequestrecipientUsersentRequestsFriendRequest!]
+}
+
+input UsersentRequestsFriendRequestrecipientUsercommentsComment {
+  text: String!
+  timestampEnd: BigDecimal!
+  timestampStart: BigDecimal!
+  authorId: ID
+  parentId: ID
+  projectId: ID
+  childrenIds: [ID!]
+}
+
+input UsersentRequestsFriendRequestrecipientUserfilesFile {
+  name: String!
+  visualization: [BigDecimal!]
+  artworkProjectId: ID
+  trackProjectId: ID
+  uploaderId: ID
+}
+
+input UsersentRequestsFriendRequestrecipientUserfriendsUser {
+  email: String!
+  experience: USER_EXPERIENCE
+  handle: String!
+  latitude: BigDecimal
+  longitude: BigDecimal
+  name: String
+  placename: String
+  profilePicThumb: String
+  profilePicUrl: String
+  summary: String
+  website: String
+  commentsIds: [ID!]
+  filesIds: [ID!]
+  friendsIds: [ID!]
+  influencesIds: [ID!]
+  invitationsIds: [ID!]
+  projectsIds: [ID!]
+  sentRequestsIds: [ID!]
+}
+
+input UsersentRequestsFriendRequestrecipientUserinfluencesInfluence {
+  artistId: ID
+  userId: ID
+}
+
+input UsersentRequestsFriendRequestrecipientUserinvitationsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
+}
+
+input UsersentRequestsFriendRequestrecipientUserprojectsProject {
+  description: String
+  genre: [PROJECT_GENRE!]
+  new: Boolean
+  privacy: PROJECT_PRIVACY
+  title: String!
+  artworkId: ID
+  creatorId: ID
+  commentsIds: [ID!]
+  tracksIds: [ID!]
+}
+
+input UsersentRequestsFriendRequestrecipientUsersentRequestsFriendRequest {
+  accepted: Boolean
+  ignored: Boolean
+  actorId: ID
+  recipientId: ID
 }
 
 # This is the famous Relay viewer object

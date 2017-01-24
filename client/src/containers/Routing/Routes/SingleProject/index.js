@@ -17,15 +17,15 @@ class SingleProject extends Component {
     }
   }
 
-  findProject = () => {
-    let {
-      title
-    } = this.props.params
-    const project = this.props.viewer.User.projects.edges.find( (edge)=> {
-      return edge.node.title === title
-    })
-    return project.node
-  }
+  // findProject = () => {
+  //   let {
+  //     title
+  //   } = this.props.params
+  //   const project = this.props.viewer.User.projects.edges.find( (edge)=> {
+  //     return edge.node.title === title
+  //   })
+  //   return project.node
+  // }
 
 
   render() {
@@ -33,7 +33,7 @@ class SingleProject extends Component {
       viewer,
       router
     } = this.props
-    this.findProject()
+    // this.findProject()
     return (
       <section>
 
@@ -42,7 +42,7 @@ class SingleProject extends Component {
           user={viewer.User}
           self={viewer.user}
           viewer={viewer}
-          project={this.findProject()}
+          project={viewer.allProjects.edges[0].node}
         />
       </section>
     )
@@ -52,47 +52,38 @@ class SingleProject extends Component {
 export default Relay.createContainer(
   SingleProject, {
     initialVariables: {
-      handle: ''
+      handle: '',
+      title: '',
+      projectFilter: {}
+    },
+    prepareVariables: (prevVariables) => {
+      console.log(prevVariables)
+      return {
+        ...prevVariables,
+        projectFilter: {
+          title: prevVariables.title
+        }
+      }
     },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          User (handle: $handle) {
-            id
-            name
-            email
-            profilePicUrl
-            handle
-            summary
-            experience
-            website
-            placename
-            longitude
-            latitude
-            ${SingleProjectContainer.getFragment('user')}
-            projects (first: 2147483647) {
-              edges {
-                node {
-                  title
-                  id
-                  description
-                  privacy
-                  new
-                  artwork {
-                    url
-                  }
-                  tracks (first: 2147483647) {
-                    edges {
-                      node {
-                        url
-                        id
-                        visualization
-                      }
-                    }
-                  }
-                }
+          allProjects (
+            filter: $projectFilter
+            first: 1
+          ) {
+            edges {
+              node {
+                title
+                id
+                ${SingleProjectContainer.getFragment('project')}
               }
             }
+          }
+          User (handle: $handle) {
+            ${SingleProjectContainer.getFragment('user')}
+            id
+            handle
           }
           user {
             id

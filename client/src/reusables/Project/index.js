@@ -62,7 +62,11 @@ class Project extends Component {
     return (
       <div>
 
-        <ProjectTop>
+        <ProjectTop
+          onClick={(e)=>{console.log(
+            e.offsetX,
+          )}}
+        >
           <ProjectArt
             src={(this.props.project.artwork) ? this.props.project.artwork.url : 'https://files.graph.cool/ciwdr6snu36fj01710o4ssheb/cixc6xvf91rmu0147xkmfqpin' }
           />
