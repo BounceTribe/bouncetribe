@@ -63,6 +63,7 @@ class ProjectNew extends Component {
   }
 
   render () {
+    let {titleValid, description, tracksIds, artworkId} = this.state
     return (
       <ProjectNewView>
 
@@ -89,8 +90,9 @@ class ProjectNew extends Component {
 
             />
             <Button
-              primary
-              label={'Hello'}
+              primary={true}
+              disabled={(!titleValid || !description || !tracksIds || !artworkId)}
+              label={'Create'}
               onClick={this.createProject}
               icon={<Music/>}
             />

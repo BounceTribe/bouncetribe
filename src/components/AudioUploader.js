@@ -46,7 +46,7 @@ class AudioUploader extends Component {
           }}
           multiple={false}
           accept={'audio/*'}
-          maxSize={10000000}
+          maxSize={15000000}
           onDrop={this.onAudioDrop}
         >
 

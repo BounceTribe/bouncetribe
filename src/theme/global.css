@@ -8,3 +8,7 @@ body {
 #root {
   min-height: 100vh;
 }
+
+.auth0-lock.auth0-lock .auth0-lock-header {
+  display: none;
+}

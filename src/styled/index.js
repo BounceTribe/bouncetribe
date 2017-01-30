@@ -77,6 +77,9 @@ export const Button = (props) => {
     >
       <RaisedButton
         {...props}
+        labelStyle={{
+          textTransform: 'none',
+        }}
       >
         {props.children}
       </RaisedButton>

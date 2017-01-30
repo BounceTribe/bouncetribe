@@ -13,6 +13,7 @@ import TribeAll from 'containers/TribeAll'
 import TribeRequests from 'containers/TribeRequests'
 import TribeFind from 'containers/TribeFind'
 import Login from 'containers/Login'
+import {Loading} from 'styled/Spinner'
 
 const ViewerQuery = {
   viewer: (Component, variables) => Relay.QL`
@@ -44,6 +45,7 @@ const createRoutes = () => {
         component={Feed}
         queries={ViewerQuery}
         onEnter={userOnly}
+        render={({ props }) => props ? <Feed {...props} /> : <Loading />}
       />
 
       <Route
@@ -60,25 +62,30 @@ const createRoutes = () => {
         <IndexRoute
           component={Profile}
           queries={ViewerQuery}
+          render={({ props }) => props ? <Profile {...props} /> : <Loading />}
         />
         <Route
           path={'/:userHandle/tribe'}
           component={Tribe}
           queries={ViewerQuery}
+          render={({ props }) => props ? <Tribe {...props} /> : <Loading />}
         >
           <IndexRoute
             component={TribeAll}
             queries={ViewerQuery}
+            render={({ props }) => props ? <TribeAll {...props} /> : <Loading />}
           />
           <Route
             path={'/:ownHandle/tribe/requests'}
             component={TribeRequests}
             queries={ViewerQuery}
+            render={({ props }) => props ? <TribeRequests {...props} /> : <Loading />}
           />
           <Route
             path={'/:ownHandle/tribe/find'}
             component={TribeFind}
             queries={ViewerQuery}
+            render={({ props }) => props ? <ViewerQuery {...props} /> : <Loading />}
           />
         </Route>
         <Route
@@ -97,12 +104,14 @@ const createRoutes = () => {
           component={ProjectList}
           queries={ViewerQuery}
           onEnter={userOnly}
+          render={({ props }) => props ? <ProjectList {...props} /> : <Loading />}
         />
         <Route
           path={'/:ownHandle/projects/new'}
           component={ProjectNew}
           queries={ViewerQuery}
           onEnter={userOnly}
+          render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />}
         />
         <Route
           path={'/:userHandle/:projectTitle'}
@@ -111,6 +120,7 @@ const createRoutes = () => {
           <IndexRoute
             component={Project}
             queries={ViewerQuery}
+            render={({ props }) => props ? <Project {...props} /> : <Loading />}
           />
 
           <Route

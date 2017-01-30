@@ -1,5 +1,6 @@
 const createVisualization = (file) => {
   return new Promise((resolve,reject) => {
+    console.log('visualization start')
     let ctx = new OfflineAudioContext(2,44100*40,44100)
 
     let reader = new FileReader()
@@ -24,6 +25,8 @@ const createVisualization = (file) => {
           visualization.push(max)
 
         }
+
+        console.log('visualization done')
 
         resolve(visualization)
 
