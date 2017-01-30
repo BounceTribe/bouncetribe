@@ -1,6 +1,7 @@
 import Auth0Lock from 'auth0-lock'
 import Relay from 'react-relay'
 import {clientId, domain} from 'config/auth0'
+import {url} from 'config'
 import {purple} from 'theme'
 import CreateUser from 'mutations/CreateUser'
 import SigninUser from 'mutations/SigninUser'
@@ -17,6 +18,8 @@ class AuthService {
         params: {
           scope: 'openid email update:current_user_identities'
         },
+        redirectUrl: `${url}/login`,
+        responseType: 'token',
       },
       theme: {
         logo: `${window.location.origin}/logo.png`,
@@ -31,7 +34,7 @@ class AuthService {
         'facebook'
       ],
       closable: false,
-      container: 'lock'
+      container: 'lock',
     })
 
     this.lock.on('authenticated', this.authFlow)
