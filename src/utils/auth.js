@@ -6,8 +6,10 @@ import {purple} from 'theme'
 import CreateUser from 'mutations/CreateUser'
 import SigninUser from 'mutations/SigninUser'
 import UpdateUser from 'mutations/UpdateUser'
+import AddToFriends from 'mutations/AddToFriends'
 import {generateHandle} from 'utils/handles'
 import uploadImageFromUrl from 'utils/uploadImageFromUrl'
+import {findUserIds} from 'utils/graphql'
 
 class AuthService {
 
@@ -64,6 +66,7 @@ class AuthService {
 
   logout() {
     localStorage.removeItem('idToken')
+    localStorage.removeItem('accessToken')
     localStorage.removeItem('exp')
     location.reload()
   }
@@ -75,11 +78,13 @@ class AuthService {
     } else {
       localStorage.removeItem('idToken')
       localStorage.removeItem('exp')
+      localStorage.removeItem('accessToken')
       return false
     }
   }
 
   authFlow = (result) => {
+    console.log(result)
     let {
       exp,
       email,
@@ -90,6 +95,7 @@ class AuthService {
     } = result
     this.signinUser({
       idToken,
+      accessToken,
       email,
       exp
     }).then(
@@ -102,7 +108,8 @@ class AuthService {
               idToken,
               email,
               handle,
-              exp
+              exp,
+              accessToken
             }).then(
               userId => {
                 this.getUserInfo(accessToken).then(profile=>{
@@ -122,9 +129,11 @@ class AuthService {
   setToken = (authFields) => {
     let {
       idToken,
-      exp
+      exp,
+      accessToken
     } = authFields
     localStorage.setItem('idToken', idToken)
+    localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('exp', exp * 1000)
   }
 
@@ -159,6 +168,7 @@ class AuthService {
           onSuccess: (response) => {
             this.setToken(authFields)
             let userId = response.signinUser.viewer.user.id
+            this.addFriends()
             resolve(userId)
           },
           onFailure: (response) => {
@@ -169,10 +179,12 @@ class AuthService {
     })
   }
 
-  getUserInfo = (accessToken) => {
+  getUserInfo = () => {
+    let accessToken = localStorage.getItem('accessToken')
     return new Promise((resolve, reject)=>{
       this.lock.getUserInfo(accessToken, (error, profile) => {
         if (profile) {
+          console.log(profile)
           resolve(profile)
         }
       })
@@ -200,6 +212,40 @@ class AuthService {
       })
     }
   }
+
+
+  addFriends = () => {
+    this.getUserInfo().then((info, error) => {
+      let friends = info.context.mutualFriends.data
+      let {userId} = info
+      let socialIds = []
+      for (let index in friends) {
+        if (index) {
+          socialIds.push(`"facebook|${friends[index].id}"`)
+        }
+      }
+      Promise.all([
+        findUserIds(socialIds),
+        findUserIds(`"${userId}"`)
+      ])
+      .then((result)=>{
+        let newFriends = result[0]
+        let selfId = result[1][0]
+        console.log(newFriends, selfId)
+        newFriends.forEach( (newFriendId)=>{
+          Relay.Store.commitUpdate(
+            new AddToFriends({
+              newFriendId,
+              selfId
+            })
+          )
+        })
+
+      })
+    })
+  }
+
+
 }
 
 const auth = new AuthService()

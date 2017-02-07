@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField'
 import CreateProject from 'mutations/CreateProject'
 import Music from 'icons/Music'
 import AudioPlayer from 'components/AudioPlayer'
+import {Spinner} from 'styled/Spinner'
 
 class ProjectNew extends Component {
 
@@ -31,6 +32,19 @@ class ProjectNew extends Component {
     )
   }
 
+  audioDropped = ({audioProgress, title}) => {
+
+    if (title) {
+      this.setState({
+        audioProgress,
+        title
+      })
+    } else {
+      this.setState({
+        audioProgress
+      })
+    }
+  }
 
   audioSuccess = (file) => {
     this.setState({
@@ -46,11 +60,17 @@ class ProjectNew extends Component {
   }
 
   get uploader () {
-    if (!this.state.track) {
+    let {track, audioProgress} = this.state
+    if (!track && audioProgress && audioProgress !== 'COMPLETE' ) {
+      return (
+        <Spinner/>
+      )
+    } else if (!this.state.track) {
       return (
         <AudioUploader
           audioSuccess={this.audioSuccess}
           self={this.props.viewer.user}
+          audioDropped={this.audioDropped}
         />
       )
     } else {
@@ -62,13 +82,10 @@ class ProjectNew extends Component {
     }
   }
 
-  render () {
-    let {titleValid, description, tracksIds, artworkId} = this.state
-    return (
-      <ProjectNewView>
-
-        {this.uploader}
-
+   get form () {
+    let {titleValid, description, tracksIds, artworkId, audioProgress} = this.state
+    if (audioProgress  && audioProgress !== 'GENERATING') {
+      return (
         <Row>
           <Left>
             <TextField
@@ -130,6 +147,42 @@ class ProjectNew extends Component {
             </Sharing>
           </Right>
         </Row>
+      )
+    }
+  }
+
+
+  get message () {
+    let {audioProgress} = this.state
+    console.log(audioProgress)
+    switch (audioProgress) {
+      case 'GENERATING': {
+        return (
+          <span>Generating Waveform</span>
+        )
+      }
+      case 'UPLOADING': {
+        return (
+          <span>Uploading Audio File</span>
+        )
+      }
+      default: {
+        return null
+      }
+    }
+
+  }
+
+  render () {
+    console.log(this.state)
+    return (
+      <ProjectNewView>
+
+        {this.uploader}
+
+        {this.message}
+
+        {this.form}
 
       </ProjectNewView>
     )
