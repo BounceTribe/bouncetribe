@@ -2,17 +2,32 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {List} from 'styled/list'
 import {SearchUser} from 'styled/Tribe'
+import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
 class TribeSearchResults extends Component {
 
 
+  createFriendRequest = (recipientId) => {
+    let {id: actorId} = this.props.viewer.user
+    this.props.relay.commitUpdate(
+      new CreateFriendRequest({
+        actorId,
+        recipientId
+      })
+    )
+  }
+
   get results () {
-    return this.props.viewer.allUsers.edges.map(edge => (
-      <SearchUser
-        key={edge.node.id}
-        user={edge.node}
-      />
-    ))
+    return this.props.viewer.allUsers.edges.map(edge => {
+      let {node: user} = edge
+      return (
+        <SearchUser
+          key={user.id}
+          user={user}
+          createFriendRequest={()=>this.createFriendRequest(user.id)}
+        />
+      )
+    })
   }
 
   render () {
@@ -53,7 +68,6 @@ export default Relay.createContainer(
                 portrait {
                   url
                 }
-                placename
               }
             }
           }

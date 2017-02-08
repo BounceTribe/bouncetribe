@@ -61,12 +61,22 @@ class Tribe extends Component {
             <Tab
               label={'Members'}
               value={0}
-              onActive={()=>router.push(`/${handle}/tribe`)}
+              onActive={()=>{
+                router.push(`/${handle}/tribe`)
+                this.setState({
+                  tab: 0
+                })
+              }}
             />
             <Tab
               label={'Requests'}
               value={1}
-              onActive={()=>router.push(`/${handle}/tribe/requests`)}
+              onActive={()=>{
+                router.push(`/${handle}/tribe/requests`)
+                this.setState({
+                  tab: 1
+                })
+              }}
             />
             <Tab
               label={'Messages'}

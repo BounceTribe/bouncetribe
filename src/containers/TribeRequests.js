@@ -2,8 +2,38 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {List} from 'styled/list'
 import {RequestUser} from 'styled/Tribe'
+import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
+import AddToFriends from 'mutations/AddToFriends'
 
 class TribeRequests extends Component {
+
+  accept = (inviteId, newFriendId) => {
+    let {id: selfId} = this.props.viewer.user
+    this.props.relay.commitUpdate(
+      new UpdateFriendRequest({
+        id: inviteId,
+        accepted: true
+      }), {
+        onSuccess: (response) => {
+          this.props.relay.commitUpdate(
+            new AddToFriends({
+              selfId,
+              newFriendId
+            })
+          )
+        }
+      }
+    )
+  }
+
+  ignore = (id) => {
+    this.props.relay.commitUpdate(
+      new UpdateFriendRequest({
+        id,
+        ignored: true
+      })
+    )
+  }
 
   get requests() {
     if (this.props.viewer.user.invitations.edges.length < 1) {
@@ -12,11 +42,13 @@ class TribeRequests extends Component {
       )
     } else {
       return this.props.viewer.user.invitations.edges.map(edge => {
-        let {node:user} = edge
+        let {actor:user, id} = edge.node
         return (
           <RequestUser
             key={user.id}
             user={user}
+            accept={()=>this.accept(id, user.id)}
+            ignore={()=>this.ignore(id)}
           />
         )
       })
@@ -56,7 +88,9 @@ export default Relay.createContainer(
                   actor {
                     handle
                     id
-                    portrait
+                    portrait {
+                      url
+                    }
                     placename
                     friends (first: 2147483647) {
                       edges {

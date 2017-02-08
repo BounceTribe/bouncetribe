@@ -33,7 +33,7 @@ export const Handle = styled(BtLink)`
   font-weight: 400;
 `
 
-export const SearchUser = ({user}) => {
+export const SearchUser = ({user, createFriendRequest}) => {
   return (
     <SearchUserContainer>
       <Left>
@@ -52,13 +52,14 @@ export const SearchUser = ({user}) => {
       <Right>
         <Button
           label={'Add to Tribe'}
+          onClick={createFriendRequest}
         />
       </Right>
     </SearchUserContainer>
   )
 }
 
-export const RequestUser = ({user}) => {
+export const RequestUser = ({user, accept, ignore}) => {
   return (
     <SearchUserContainer>
       <Left>
@@ -76,7 +77,12 @@ export const RequestUser = ({user}) => {
 
       <Right>
         <Button
-          label={'Add to Tribe'}
+          label={'Add'}
+          onClick={accept}
+        />
+        <Button
+          label={'Ignore'}
+          onClick={ignore}
         />
       </Right>
     </SearchUserContainer>
