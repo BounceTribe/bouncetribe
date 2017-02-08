@@ -103,7 +103,6 @@ class AuthService {
       rejected => {
         generateHandle(email).then(
           handle => {
-            console.log(handle)
             this.createUser({
               idToken,
               email,
@@ -179,12 +178,10 @@ class AuthService {
     })
   }
 
-  getUserInfo = () => {
-    let accessToken = localStorage.getItem('accessToken')
+  getUserInfo = (accessToken) => {
     return new Promise((resolve, reject)=>{
       this.lock.getUserInfo(accessToken, (error, profile) => {
         if (profile) {
-          console.log(profile)
           resolve(profile)
         }
       })
@@ -215,7 +212,8 @@ class AuthService {
 
 
   addFriends = () => {
-    this.getUserInfo().then((info, error) => {
+    let accessToken = localStorage.getItem('accessToken')
+    this.getUserInfo(accessToken).then((info, error) => {
       let friends = info.context.mutualFriends.data
       let {userId} = info
       let socialIds = []
@@ -231,7 +229,6 @@ class AuthService {
       .then((result)=>{
         let newFriends = result[0]
         let selfId = result[1][0]
-        console.log(newFriends, selfId)
         newFriends.forEach( (newFriendId)=>{
           Relay.Store.commitUpdate(
             new AddToFriends({

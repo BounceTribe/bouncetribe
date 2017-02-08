@@ -1,20 +1,26 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {List, Item2} from 'styled/list'
+import {List} from 'styled/list'
+import {RequestUser} from 'styled/Tribe'
 
 class TribeRequests extends Component {
 
   get requests() {
-    return this.props.viewer.user.invitations.edges.map(edge => {
-      let {node:request} = edge
+    if (this.props.viewer.user.invitations.edges.length < 1) {
       return (
-        <Item2
-          key={request.id}
-        >
-          {request.name}
-        </Item2>
+        <h3>No New Requests!</h3>
       )
-    })
+    } else {
+      return this.props.viewer.user.invitations.edges.map(edge => {
+        let {node:user} = edge
+        return (
+          <RequestUser
+            key={user.id}
+            user={user}
+          />
+        )
+      })
+    }
   }
 
   render () {
@@ -29,7 +35,7 @@ class TribeRequests extends Component {
 export default Relay.createContainer(
   TribeRequests, {
     initialVariables: {
-      ownHandle: ''
+      userHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -62,7 +68,7 @@ export default Relay.createContainer(
               }
             }
           }
-          User (handle: $ownHandle) {
+          User (handle: $userHandle) {
             id
             email
           }

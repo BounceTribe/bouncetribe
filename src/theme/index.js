@@ -1,7 +1,7 @@
 import {css} from 'styled-components'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {deepPurple300, grey50, grey100, grey200, grey300, grey400, grey500, grey600, grey700, grey800, grey900, white, black} from 'material-ui/styles/colors'
-
+import {fade} from 'material-ui/utils/colorManipulator'
 
 
 
@@ -21,6 +21,11 @@ export const btTheme = getMuiTheme({
   fontFamily: 'Helvetica, san-serif',
   palette: {
     primary1Color: purple,
+  },
+  tabs: {
+    backgroundColor: white,
+    textColor: fade(grey800, 0.7),
+    selectedTextColor: grey800,
   }
 })
 

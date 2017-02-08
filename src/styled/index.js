@@ -5,6 +5,12 @@ import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 
+export const BtLink = styled(Link)`
+  display: flex;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+`
 
 export const Main = styled.main`
   display: flex;

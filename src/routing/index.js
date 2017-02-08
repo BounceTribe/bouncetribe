@@ -12,6 +12,7 @@ import Tribe from 'containers/Tribe'
 import TribeAll from 'containers/TribeAll'
 import TribeRequests from 'containers/TribeRequests'
 import TribeFind from 'containers/TribeFind'
+import TribeSearchResults from 'containers/TribeSearchResults'
 import Login from 'containers/Login'
 import {Loading} from 'styled/Spinner'
 
@@ -25,6 +26,17 @@ const ViewerQuery = {
   `,
 }
 
+
+const tribeSearch = (params, {location})=>{
+  let {query} = location
+  return {
+    ...params,
+    tribeFilter: {
+      handle_contains: query.handle,
+      id_not: query.ownId
+    }
+  }
+}
 
 const userOnly = (nextState, replace) => {
   if (!auth.getToken()) {
@@ -76,27 +88,35 @@ const createRoutes = () => {
             render={({ props }) => props ? <TribeAll {...props} /> : <Loading />}
           />
           <Route
-            path={'/:ownHandle/tribe/requests'}
+            path={'/:userHandle/tribe/requests'}
             component={TribeRequests}
             queries={ViewerQuery}
             render={({ props }) => props ? <TribeRequests {...props} /> : <Loading />}
           />
-          <Route
-            path={'/:ownHandle/tribe/find'}
-            component={TribeFind}
+
+        </Route>
+        <Route
+          path={'/:userHandle/tribe/find/*'}
+          component={TribeFind}
+          queries={ViewerQuery}
+          render={({ props }) => props ? <TribeFind {...props} /> : <Loading />}
+        >
+          <IndexRoute
+            component={TribeSearchResults}
             queries={ViewerQuery}
-            render={({ props }) => props ? <ViewerQuery {...props} /> : <Loading />}
+            render={({ props }) => props ? <TribeSearchResults {...props} /> : <Loading />}
+            prepareParams={tribeSearch}
           />
         </Route>
         <Route
-          path={'/:ownHandle/sessions'}
+          path={'/:userHandle/sessions'}
           onEnter={userOnly}
         >
           <IndexRoute
 
           />
           <Route
-            path={'/:ownHandle/sessions/find'}
+            path={'/:userHandle/sessions/find'}
           />
         </Route>
         <Route

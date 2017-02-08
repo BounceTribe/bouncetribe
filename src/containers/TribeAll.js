@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {List, Item2} from 'styled/list'
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
+import {SmallPic} from 'styled/Tribe'
 
 class TribeAll extends Component {
 
@@ -8,20 +9,46 @@ class TribeAll extends Component {
     return this.props.viewer.User.friends.edges.map(edge=>{
       let {node:friend} = edge
       return (
-        <Item2
+        <TableRow
           key={friend.id}
         >
-          {friend.name}
-        </Item2>
+          <TableRowColumn>
+            <SmallPic
+              src={friend.portrait.url}
+            />
+          </TableRowColumn>
+          <TableRowColumn>{friend.name}</TableRowColumn>
+          <TableRowColumn></TableRowColumn>
+          <TableRowColumn>{friend.placename}</TableRowColumn>
+          <TableRowColumn>{friend.genres.edges.length}</TableRowColumn>
+          <TableRowColumn>{friend.projects.edges.length}</TableRowColumn>
+        </TableRow>
       )
     })
   }
 
   render () {
     return (
-      <List>
-        {this.friendsList}
-      </List>
+      <Table>
+        <TableHeader
+          displaySelectAll={false}
+          adjustForCheckbox={false}
+        >
+          <TableRow>
+            <TableHeaderColumn>{/*image*/}</TableHeaderColumn>
+            <TableHeaderColumn>Name</TableHeaderColumn>
+            <TableHeaderColumn>Rating</TableHeaderColumn>
+            <TableHeaderColumn>Location</TableHeaderColumn>
+            <TableHeaderColumn>Genres</TableHeaderColumn>
+            <TableHeaderColumn>Projects</TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody
+          displayRowCheckbox={false}
+        >
+          {this.friendsList}
+        </TableBody>
+      </Table>
     )
   }
 }
@@ -47,6 +74,28 @@ export default Relay.createContainer(
                 node {
                   name
                   id
+                  portrait {
+                    url
+                  }
+                  placename
+                  genres (
+                    first: 2
+                  ) {
+                    edges {
+                      node {
+                        name
+                      }
+                    }
+                  }
+                  projects (
+                    first: 9999
+                  ) {
+                    edges {
+                      node {
+                        id
+                      }
+                    }
+                  }
                 }
               }
             }

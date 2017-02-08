@@ -1,18 +1,39 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {List} from 'styled/list'
+import TextField from 'material-ui/TextField'
+import {View} from 'styled'
+import {Container, Header, HeaderOptions, Title} from 'styled/list'
 
 class TribeFind extends Component {
 
-  get userList () {
-    //let allUsers = this.props.viewer.allUsers.edges.map
-  }
 
   render () {
+    let {router, userHandle, viewer} = this.props
     return (
-      <List>
+      <View>
+        <Container>
+          <Header>
+            <Title>
+              Add to Tribe
+            </Title>
+            <HeaderOptions>
+              <TextField
+                label={'Search'}
+                name={'search'}
+                onChange={(event, newValue) => router.replace({
+                  query: {
+                    handle: newValue,
+                    ownId: viewer.user.id
+                  },
+                  pathname: `/${userHandle}/tribe/find/`
+                })}
+              />
+            </HeaderOptions>
+          </Header>
 
-      </List>
+          {this.props.children}
+        </Container>
+      </View>
     )
   }
 }
@@ -20,7 +41,7 @@ class TribeFind extends Component {
 export default Relay.createContainer(
   TribeFind, {
     initialVariables: {
-      ownHandle: ''
+      userHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -28,7 +49,7 @@ export default Relay.createContainer(
           user {
             id
           }
-          User (handle: $ownHandle) {
+          User (handle: $userHandle) {
             id
             email
           }
