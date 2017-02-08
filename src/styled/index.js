@@ -4,6 +4,8 @@ import {white, grey230, grey215} from 'theme'
 import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
+import FlatButton from 'material-ui/FlatButton'
+
 
 export const BtLink = styled(Link)`
   display: flex;
@@ -90,6 +92,25 @@ export const Button = (props) => {
       >
         {props.children}
       </RaisedButton>
+
+    </ButtonLink>
+  )
+}
+
+export const BtFlatButton = (props) => {
+  return (
+    <ButtonLink
+      to={props.to}
+    >
+      <FlatButton
+        {...props}
+        labelStyle={{
+          textTransform: 'none',
+          ...props.labelStyle
+        }}
+      >
+        {props.children}
+      </FlatButton>
 
     </ButtonLink>
   )

@@ -10,7 +10,7 @@ class Login extends Component {
     if (this.props.viewer.user) {
       this.props.router.push('/')
     } else {
-      this.props.route.auth.showLock()
+      this.props.route.auth.showLock(false)
     }
   }
 
@@ -20,10 +20,12 @@ class Login extends Component {
     }
   }
 
+
+
   render () {
     return (
       <Background>
-
+        
         <Container>
 
           <Logo

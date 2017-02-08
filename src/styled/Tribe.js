@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import React from 'react'
 import {Item2, Left, Right, Column} from 'styled/list'
-import {BtLink, Button} from 'styled'
-import {purple} from 'theme'
-
+import {BtLink, BtFlatButton} from 'styled'
+import {purple, white, grey500, grey400} from 'theme'
+import AddFriend from 'icons/AddFriend'
 
 const SmallPicImg = styled.img`
   height: 40px;
@@ -56,14 +56,36 @@ export const SearchUser = ({user, createFriendRequest}) => {
       </Left>
 
       <Right>
-        <Button
+        <BtFlatButton
           label={'Add to Tribe'}
           onClick={createFriendRequest}
+          backgroundColor={white}
+          labelStyle={{
+            color: purple
+          }}
+          icon={
+            <AddFriend
+              fill={purple}
+            />
+          }
+          style={{
+            border: `1px solid ${grey400}`
+          }}
         />
       </Right>
     </SearchUserContainer>
   )
 }
+
+const Dismiss = styled(BtLink)`
+  color: ${grey500};
+  font-size: 12px;
+  margin-top: 15px;
+`
+
+const RequestColumn = styled(Column)`
+  align-items: center;
+`
 
 export const RequestUser = ({user, accept, ignore}) => {
   return (
@@ -82,14 +104,31 @@ export const RequestUser = ({user, accept, ignore}) => {
       </Left>
 
       <Right>
-        <Button
-          label={'Add'}
-          onClick={accept}
-        />
-        <Button
-          label={'Ignore'}
-          onClick={ignore}
-        />
+        <RequestColumn>
+          <BtFlatButton
+            label={'Accept'}
+            onClick={accept}
+            backgroundColor={white}
+            labelStyle={{
+              color: purple
+            }}
+            icon={
+              <AddFriend
+                fill={purple}
+              />
+            }
+            style={{
+              border: `1px solid ${grey400}`
+            }}
+          />
+
+          <Dismiss
+            onClick={ignore}
+          >
+            Dismiss Request
+          </Dismiss>
+        </RequestColumn>
+
       </Right>
     </SearchUserContainer>
   )

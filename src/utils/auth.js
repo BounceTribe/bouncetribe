@@ -19,7 +19,8 @@ class AuthService {
     this.defaultOptions = {
       auth: {
         params: {
-          scope: 'openid email update:current_user_identities'
+          scope: 'openid email update:current_user_identities',
+          state: 'default'
         },
         redirectUrl: `${url}/login`,
         responseType: 'token',
@@ -128,7 +129,8 @@ class AuthService {
       accessToken,
       state,
     } = result
-    if (state) {
+    console.log()
+    if (state !== 'default') {
       let primaryAuth0UserId = state
       let primaryToken = localStorage.getItem('idToken')
       let secondaryToken = result.idToken
