@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import {grey230, grey40} from 'theme'
 import {Link} from 'react-router'
-import React from 'react'
 
 export const Container = styled.div`
   display: flex;
@@ -17,7 +16,7 @@ export const Header = styled.div`
   justify-content: space-between;
   align-items: baseline;
   border-bottom: solid ${grey230} .5px;
-  padding: 5px ${xPadding}px;
+  padding: 20px ${xPadding}px;
   width: 100%;
   box-sizing: border-box;
 `
@@ -63,10 +62,6 @@ export const Title = styled(Link)`
   font-weight: 200;
 `
 
-export const MyTribeItem = styled(Item2)`
-
-`
-
 export const Left = styled.div`
   display: flex;
   margin-left: 15px;
@@ -83,17 +78,3 @@ export const Column = styled.div`
   flex-direction: column;
   margin-left: 15px;
 `
-
-export const TribeRequest = () => {
-  return (
-    <MyTribeItem>
-      <Left>
-
-      </Left>
-
-      <Right>
-
-      </Right>
-    </MyTribeItem>
-  )
-}

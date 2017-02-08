@@ -38,7 +38,7 @@ class TribeRequests extends Component {
   get requests() {
     if (this.props.viewer.user.invitations.edges.length < 1) {
       return (
-        <h3>No New Requests!</h3>
+        <span>No New Requests!</span>
       )
     } else {
       return this.props.viewer.user.invitations.edges.map(edge => {

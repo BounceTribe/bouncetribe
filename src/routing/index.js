@@ -14,6 +14,7 @@ import TribeRequests from 'containers/TribeRequests'
 import TribeFind from 'containers/TribeFind'
 import TribeSearchResults from 'containers/TribeSearchResults'
 import Login from 'containers/Login'
+import Connect from 'containers/Connect'
 import {Loading} from 'styled/Spinner'
 
 const ViewerQuery = {
@@ -76,6 +77,12 @@ const createRoutes = () => {
         queries={ViewerQuery}
         auth={auth}
       />
+      <Route
+        path={'/connect'}
+        component={Connect}
+        queries={ViewerQuery}
+        auth={auth}
+      />
 
       <Route
         path={'/:userHandle'}
@@ -110,6 +117,7 @@ const createRoutes = () => {
           component={TribeFind}
           queries={ViewerQuery}
           render={({ props }) => props ? <TribeFind {...props} /> : <Loading />}
+          auth={auth}
         >
           <IndexRoute
             component={TribeSearchResults}

@@ -10,12 +10,13 @@ import AddToFriends from 'mutations/AddToFriends'
 import {generateHandle} from 'utils/handles'
 import uploadImageFromUrl from 'utils/uploadImageFromUrl'
 import {findUserIds} from 'utils/graphql'
+import {connectAuth0Accounts} from 'utils/connectAuth0Accounts'
 
 class AuthService {
 
   constructor() {
 
-    this.lock = new Auth0Lock(clientId, domain, {
+    this.defaultOptions = {
       auth: {
         params: {
           scope: 'openid email update:current_user_identities'
@@ -23,6 +24,11 @@ class AuthService {
         redirectUrl: `${url}/login`,
         responseType: 'token',
       },
+      allowedConnections: [
+        'Username-Password-Authentication',
+        'facebook'
+      ],
+      closable: false,
       theme: {
         logo: `${window.location.origin}/logo.png`,
         primaryColor: purple,
@@ -31,20 +37,48 @@ class AuthService {
         emailInputPlaceholder: "rockstar@band.com",
         title: "BounceTribe"
       },
-      allowedConnections: [
-        'Username-Password-Authentication',
-        'facebook'
-      ],
-      closable: false,
       container: 'lock',
-    })
+    }
+
+    this.lock = new Auth0Lock(clientId, domain, this.defaultOptions)
 
     this.lock.on('authenticated', this.authFlow)
 
+    this.showLock = this.showLock.bind(this)
   }
 
-  showLock () {
-    this.lock.show()
+  hide = () => {
+    this.lock.hide()
+  }
+
+  fbOptions = (primaryAuthId) => {
+    return {
+      allowedConnections: [
+        'facebook'
+      ],
+      rememberLastLogin: false,
+      languageDictionary: {
+        signin: {
+          title: 'Link your Facebook account'
+        }
+      },
+      auth: {
+        params: {
+          state: primaryAuthId,
+          scope: 'openid email update:current_user_identities'
+        },
+        responseType: 'token',
+
+      }
+    }
+  }
+
+  showLock (primaryAuthId) {
+    let config = {}
+    if (primaryAuthId) {
+      config = this.fbOptions(primaryAuthId)
+    }
+    this.lock.show(config)
   }
 
   isCurrent() {
@@ -84,45 +118,77 @@ class AuthService {
   }
 
   authFlow = (result) => {
-    console.log(result)
     let {
       exp,
       email,
+      sub
     } = result.idTokenPayload
     let {
       idToken,
-      accessToken
-    } = result
-    this.signinUser({
-      idToken,
       accessToken,
-      email,
-      exp
-    }).then(
-      userId => userId,
-      rejected => {
-        generateHandle(email).then(
-          handle => {
-            this.createUser({
-              idToken,
-              email,
-              handle,
-              exp,
-              accessToken
-            }).then(
-              userId => {
-                this.getUserInfo(accessToken).then(profile=>{
-                  this.updateUser(userId, profile)
-                })
-              },
-              rejected => {
-                console.log('Sorry a user already exists with that email', rejected)
+      state,
+    } = result
+    if (state) {
+      let primaryAuth0UserId = state
+      let primaryToken = localStorage.getItem('idToken')
+      let secondaryToken = result.idToken
+      connectAuth0Accounts({
+        primaryAuth0UserId,
+        primaryToken,
+        secondaryToken
+      }).then(result=>{
+        accessToken = localStorage.getItem('accessToken')
+        this.signinUser({
+          idToken: primaryToken,
+          accessToken,
+          email,
+          exp
+        }).then(
+          userId => {
+            this.getUserInfo(accessToken).then(profile=>{
+              profile = {
+                ...profile,
+                userId: sub
               }
-            )
-          }
+              this.updateUser(userId, profile)
+            })
+          },
+          rejected => rejected
         )
-      }
-    )
+      })
+    } else {
+      this.signinUser({
+        idToken,
+        accessToken,
+        email,
+        exp
+      }).then(
+        userId => userId,
+        rejected => {
+          generateHandle(email).then(
+            handle => {
+              this.createUser({
+                idToken,
+                email,
+                handle,
+                exp,
+                accessToken
+              }).then(
+                userId => {
+                  this.getUserInfo(accessToken).then(profile=>{
+                    this.updateUser(userId, profile)
+                  })
+                },
+                rejected => {
+                  console.log('Sorry a user already exists with that email', rejected)
+                  window.alert('Sorry a user already exists with that email. You may already have an account. Try logging in again using your original credentials.')
+                }
+              )
+            }
+          )
+        }
+      )
+    }
   }
 
   setToken = (authFields) => {
@@ -191,11 +257,18 @@ class AuthService {
 
 
   updateUser = (userId, profile) => {
+    console.log(profile)
     let {
       name,
       pictureLarge,
-      picture
+      picture,
+      userId: auth0Id
     } = profile
+    let facebookId
+    if (auth0Id.search('facebook') === 0 ) {
+      console.log('facebook user')
+      facebookId = auth0Id.split('|')[1]
+    }
     let pictureUrl = (pictureLarge) ? (pictureLarge) : (picture)
     if (pictureUrl) {
       uploadImageFromUrl(pictureUrl).then(portraitId=>{
@@ -203,7 +276,8 @@ class AuthService {
           new UpdateUser({
             userId,
             name,
-            portraitId
+            portraitId,
+            facebookId
           })
         )
       })
@@ -214,31 +288,33 @@ class AuthService {
   addFriends = () => {
     let accessToken = localStorage.getItem('accessToken')
     this.getUserInfo(accessToken).then((info, error) => {
-      let friends = info.context.mutualFriends.data
-      let {userId} = info
-      let socialIds = []
-      for (let index in friends) {
-        if (index) {
-          socialIds.push(`"facebook|${friends[index].id}"`)
+      if (info.userId.search('facebook') !== -1) {
+        let friends = info.context.mutualFriends.data
+        let {userId} = info
+        let socialIds = []
+        for (let index in friends) {
+          if (index) {
+            socialIds.push(`"facebook|${friends[index].id}"`)
+          }
         }
-      }
-      Promise.all([
-        findUserIds(socialIds),
-        findUserIds(`"${userId}"`)
-      ])
-      .then((result)=>{
-        let newFriends = result[0]
-        let selfId = result[1][0]
-        newFriends.forEach( (newFriendId)=>{
-          Relay.Store.commitUpdate(
-            new AddToFriends({
-              newFriendId,
-              selfId
-            })
-          )
-        })
+        Promise.all([
+          findUserIds(socialIds),
+          findUserIds(`"${userId}"`)
+        ])
+        .then((result)=>{
+          let newFriends = result[0]
+          let selfId = result[1][0]
+          newFriends.forEach( (newFriendId)=>{
+            Relay.Store.commitUpdate(
+              new AddToFriends({
+                newFriendId,
+                selfId
+              })
+            )
+          })
 
-      })
+        })
+      }
     })
   }
 

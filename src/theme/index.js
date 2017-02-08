@@ -5,7 +5,7 @@ import {fade} from 'material-ui/utils/colorManipulator'
 
 
 
-
+export const fbBlue = 'rgb(68,100,162)'
 
 export const size = {
   m: (...args) => css`

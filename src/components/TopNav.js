@@ -1,6 +1,6 @@
 import React from 'react'
 import {Bar, Logo, NavList, NavLink} from 'styled/TopNav'
-import {IconTextContainer, IconText} from 'styled'
+import {IconText} from 'styled'
 
 const TopNav = ({handle}) => {
 
@@ -17,32 +17,26 @@ const TopNav = ({handle}) => {
         <NavLink
           to={`/${handle}/tribe`}
         >
-          <IconTextContainer>
 
             <IconText>
               Tribe
             </IconText>
-          </IconTextContainer>
         </NavLink>
         <NavLink
           to={`/${handle}/projects`}
         >
-          <IconTextContainer>
 
             <IconText>
               Projects
             </IconText>
-          </IconTextContainer>
         </NavLink>
         <NavLink
           to={`/${handle}`}
         >
-          <IconTextContainer>
 
             <IconText>
               Profile
             </IconText>
-          </IconTextContainer>
         </NavLink>
       </NavList>
 

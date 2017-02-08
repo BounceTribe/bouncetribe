@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
-import {SmallPic} from 'styled/Tribe'
+import {SmallPic, Name} from 'styled/Tribe'
 
 class TribeAll extends Component {
 
@@ -15,9 +15,16 @@ class TribeAll extends Component {
           <TableRowColumn>
             <SmallPic
               src={friend.portrait.url}
+              to={`/${friend.handle}`}
             />
           </TableRowColumn>
-          <TableRowColumn>{friend.name}</TableRowColumn>
+          <TableRowColumn>
+            <Name
+              to={`/${friend.handle}`}
+            >
+              {friend.name}
+            </Name>
+          </TableRowColumn>
           <TableRowColumn></TableRowColumn>
           <TableRowColumn>{friend.placename}</TableRowColumn>
           <TableRowColumn>{friend.genres.edges.length}</TableRowColumn>
@@ -29,7 +36,12 @@ class TribeAll extends Component {
 
   render () {
     return (
-      <Table>
+      <Table
+        style={{
+          width: '90%',
+          margin: 'auto'
+        }}
+      >
         <TableHeader
           displaySelectAll={false}
           adjustForCheckbox={false}
@@ -73,6 +85,7 @@ export default Relay.createContainer(
               edges {
                 node {
                   name
+                  handle
                   id
                   portrait {
                     url

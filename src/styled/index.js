@@ -36,11 +36,12 @@ export const ProjectNewView = styled(View)`
   padding: 80px;
 `
 
-export const IconTextContainer = styled.span`
+export const IconTextContainer = styled(BtLink)`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: baseline;
+  font-size: 30px;
 `
 export const IconText = styled.span`
   margin-left: 12px;

@@ -2,6 +2,8 @@ import styled from 'styled-components'
 import React from 'react'
 import {Item2, Left, Right, Column} from 'styled/list'
 import {BtLink, Button} from 'styled'
+import {purple} from 'theme'
+
 
 const SmallPicImg = styled.img`
   height: 40px;
@@ -22,9 +24,13 @@ const SearchUserContainer = styled(Item2)`
 
 export const SmallPic = (props) => {
   return (
-    <SmallPicImg
+    <BtLink
       {...props}
-    />
+    >
+      <SmallPicImg
+        {...props}
+      />
+    </BtLink>
   )
 }
 
@@ -88,3 +94,21 @@ export const RequestUser = ({user, accept, ignore}) => {
     </SearchUserContainer>
   )
 }
+
+export const Name = styled(BtLink)`
+  font-weight: 600;
+  &:hover {
+    color: ${purple};
+  }
+`
+
+export const FindH3 = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-weight: 200;
+  color: ${purple};
+  box-sizing: border-box;
+  width: 100%;
+  padding: 60px 30px 40px 30px;
+`
