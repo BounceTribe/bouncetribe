@@ -33,7 +33,6 @@ const tribeSearch = (params, {location})=>{
   return {
     ...params,
     tribeFilter: {
-      handle_contains: query.handle,
       id_not: query.ownId,
       invitations_none: {
         actor: {

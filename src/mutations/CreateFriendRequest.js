@@ -1,6 +1,6 @@
 import Relay, {Mutation} from 'react-relay'
 
-export default class CreateProjectMutation extends Mutation {
+export default class CreateFriendRequest extends Mutation {
 
   getVariables () {
     return {

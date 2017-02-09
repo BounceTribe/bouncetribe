@@ -12,7 +12,7 @@ class TribeSearchResults extends Component {
     this.props.relay.commitUpdate(
       new CreateFriendRequest({
         actorId,
-        recipientId
+        recipientId,
       })
     )
   }

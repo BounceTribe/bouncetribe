@@ -1,7 +1,10 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
-import {SmallPic, Name} from 'styled/Tribe'
+import {SmallPic, Name, Projects, GenreChip} from 'styled/Tribe'
+import Bolt from 'icons/Bolt'
+import Music from 'icons/Music'
+import {white} from 'theme'
 
 class TribeAll extends Component {
 
@@ -25,10 +28,29 @@ class TribeAll extends Component {
               {friend.name}
             </Name>
           </TableRowColumn>
-          <TableRowColumn></TableRowColumn>
+          <TableRowColumn>
+            <Bolt
+              height={15}
+            />
+            {friend.score}
+          </TableRowColumn>
           <TableRowColumn>{friend.placename}</TableRowColumn>
-          <TableRowColumn>{friend.genres.edges.length}</TableRowColumn>
-          <TableRowColumn>{friend.projects.edges.length}</TableRowColumn>
+          <TableRowColumn>
+            {friend.genres.edges.map(edge=>(
+              <GenreChip key={edge.node.id}>
+                {edge.node.name}
+              </GenreChip>
+            ))}
+          </TableRowColumn>
+          <TableRowColumn>
+            <Projects>
+              <Music
+                fill={white}
+                height={15}
+              />
+              {friend.projects.edges.length}
+            </Projects>
+          </TableRowColumn>
         </TableRow>
       )
     })
@@ -87,6 +109,7 @@ export default Relay.createContainer(
                   name
                   handle
                   id
+                  score
                   portrait {
                     url
                   }
@@ -96,6 +119,7 @@ export default Relay.createContainer(
                   ) {
                     edges {
                       node {
+                        id
                         name
                       }
                     }
