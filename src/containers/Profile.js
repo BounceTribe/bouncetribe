@@ -8,6 +8,8 @@ import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
+import ImageEditor from 'components/ImageEditor'
+import UpdateUser from 'mutations/UpdateUser'
 
 class Profile extends Component {
 
@@ -20,7 +22,8 @@ class Profile extends Component {
     placenameFocus: false,
     summary: '',
     portraitUrl: '',
-    portraitHover: false
+    portraitHover: false,
+    imageEditorOpen: false
   }
 
   componentWillMount(){
@@ -38,8 +41,37 @@ class Profile extends Component {
     })
   }
 
+  componentWillReceiveProps (newProps) {
+    this.setState( (prevState, props) => {
+      let {User} = newProps.viewer
+      return {
+        handle: User.handle,
+        placename: User.placename || '',
+        summary: User.summary || '',
+        portraitUrl: User.portrait.url,
+        score: User.score,
+        projects: User.projects.edges.length,
+        friends: User.friends.edges.length
+      }
+    })
+  }
+
+  portraitSuccess = (file) => {
+    console.log('portraitSuccess', file)
+    this.setState({imageEditorOpen: false})
+    this.props.relay.commitUpdate(
+      new UpdateUser({
+        userId: this.props.viewer.User.id,
+        portraitId: file.id,
+      }), {
+        onSuccess: success => console.log(success),
+        failure: failure => console.log('fail', failure)
+      }
+    )
+  }
+
   render () {
-    let {portraitUrl, portraitHover, handle, handleHover, handleFocus, placename, placenameHover, placenameFocus, score, projects, friends} = this.state
+    let {portraitUrl, portraitHover, handle, handleHover, handleFocus, placename, placenameHover, placenameFocus, score, projects, friends, imageEditorOpen} = this.state
     let {User, user} = this.props.viewer
     let ownProfile = (User.id === user.id)
     return (
@@ -50,10 +82,22 @@ class Profile extends Component {
               src={portraitUrl}
               onMouseOver={()=>this.setState({portraitHover:true})}
               onMouseLeave={()=>this.setState({portraitHover:false})}
+              onClick={()=>{
+                if (ownProfile) {
+                  this.setState({imageEditorOpen: true})
+                }
+              }}
+              ownProfile={ownProfile}
             />
             <Edit
               style={{display: (ownProfile) ? '' : 'none'}}
               fill={(portraitHover) ? purple : ''}
+            />
+            <ImageEditor
+              open={imageEditorOpen}
+              onRequestClose={()=>this.setState({imageEditorOpen:false})}
+              user={user}
+              portraitSuccess={this.portraitSuccess}
             />
             <TopCol>
               <InputRow
@@ -134,6 +178,7 @@ export default Relay.createContainer(
             handle
             summary
             portrait {
+              id
               url
             }
             placename

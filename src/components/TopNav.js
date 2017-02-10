@@ -1,43 +1,64 @@
 import React from 'react'
-import {Bar, Logo, NavList, NavLink} from 'styled/TopNav'
-import {IconText} from 'styled'
+import {Bar, Logo, NavList, NavLink, Portrait, NavText} from 'styled/TopNav'
+import {BtFlatButton} from 'styled'
+import {white, purple} from 'theme'
+import Plus from 'icons/Plus'
+import Music from 'icons/Music'
+import Headphones from 'icons/Headphones'
 
-const TopNav = ({handle}) => {
+const TopNav = ({handle, portraitUrl}) => {
 
   return (
     <Bar>
-      <NavLink
-        to={`/`}
-      >
-        <Logo>
-          BOUNCETRIBE
-        </Logo>
-      </NavLink>
+        <Logo
+          to={'/'}
+        />
       <NavList>
         <NavLink
           to={`/${handle}/tribe`}
         >
 
-            <IconText>
+            <NavText>
               Tribe
-            </IconText>
+            </NavText>
+        </NavLink>
+        <NavLink
+          to={`/${handle}/sessions`}
+        >
+          <Headphones/>
+          <NavText>
+            Sessions
+          </NavText>
         </NavLink>
         <NavLink
           to={`/${handle}/projects`}
         >
-
-            <IconText>
-              Projects
-            </IconText>
+          <Music
+            height={18}
+          />
+          <NavText>
+            Projects
+          </NavText>
         </NavLink>
-        <NavLink
+
+        <Portrait
+          src={portraitUrl}
           to={`/${handle}`}
-        >
+        />
 
-            <IconText>
-              Profile
-            </IconText>
-        </NavLink>
+        <BtFlatButton
+          label={'New Project'}
+          labelStyle={{
+            color: white,
+            fontSize: '13px',
+            fontWeight: '400'
+          }}
+          backgroundColor={purple}
+          to={`/${handle}/projects/new`}
+          icon={<Plus/>}
+          style={{borderRadius: '8px'}}
+        />
+
       </NavList>
 
     </Bar>

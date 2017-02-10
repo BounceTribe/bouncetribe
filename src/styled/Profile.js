@@ -65,6 +65,7 @@ export const Portrait = styled.img`
   width: 150px;
   border-radius: 150px;
   object-fit: cover;
+  cursor: ${({ownProfile})=>(ownProfile) ? 'pointer' : '' };
 `
 
 

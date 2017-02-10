@@ -16,6 +16,7 @@ class Template extends Component {
       return (
         <TopNav
           handle={this.props.viewer.user.handle}
+          portraitUrl={this.props.viewer.user.portrait.url}
         />
       )
     }
@@ -44,6 +45,9 @@ export default Relay.createContainer(
           user {
             id
             handle
+            portrait {
+              url
+            }
           }
         }
       `,

@@ -8,12 +8,15 @@ import ReactCrop from 'react-image-crop'
 import {Button} from 'styled'
 import 'react-image-crop/dist/ReactCrop.css'
 
-class ImageUploader extends Component {
+export default class ImageUploader extends Component {
 
   state = {
     image: false,
     crop: {
-      aspect: 1/1
+      aspect: 1/1,
+      x: 0,
+      y: 0,
+      width: 100,
     }
   }
 
@@ -50,7 +53,7 @@ class ImageUploader extends Component {
         canvas.toBlob((blob)=>{
           uploadFile(blob, imageName)
           .then( fileId => {
-            this.props.relay.commitUpdate(
+            Relay.Store.commitUpdate(
               new UpdateFile({
                 self: this.props.self,
                 fileId: fileId,
@@ -105,6 +108,7 @@ class ImageUploader extends Component {
           <Button
             label="Done"
             onClick={this.uploadImage}
+            primary
           />
         </div>
       )
@@ -113,7 +117,7 @@ class ImageUploader extends Component {
         <Dropzone
           style={{
             display: 'flex',
-            width: '200px',
+            width: '100%',
             height: '200px',
           }}
           multiple={false}
@@ -130,7 +134,9 @@ class ImageUploader extends Component {
 
   render () {
     return (
-      <ImageDropContainer>
+      <ImageDropContainer
+        image={this.state.image}
+      >
 
 
         {this.dropzoneOrCropper}
@@ -139,16 +145,3 @@ class ImageUploader extends Component {
     )
   }
 }
-
-
-export default Relay.createContainer(
-  ImageUploader, {
-    fragments: {
-      self: () => Relay.QL`
-        fragment on User {
-          id
-        }
-      `,
-    },
-  }
-)

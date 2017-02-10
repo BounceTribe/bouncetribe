@@ -9,9 +9,8 @@ export default class UpdateUser extends Relay.Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on UpdateUserPayload {
-        user {
-          id
-        }
+        user
+        portrait
       }
     `
   }
@@ -20,6 +19,7 @@ export default class UpdateUser extends Relay.Mutation {
       type: 'FIELDS_CHANGE',
       fieldIDs: {
         user: this.props.userId,
+        portrait: this.props.portraitId
       },
     }]
   }
@@ -29,7 +29,7 @@ export default class UpdateUser extends Relay.Mutation {
       id: this.props.userId,
       name: this.props.name,
       portraitId: this.props.portraitId,
-      facebookId: this.props.facebookId
+      facebookId: this.props.facebookId,
     }
   }
 
@@ -37,6 +37,9 @@ export default class UpdateUser extends Relay.Mutation {
     return {
       user: {
         id: this.props.userId,
+        portrait: {
+          id: this.props.portraitId
+        }
       },
     }
   }

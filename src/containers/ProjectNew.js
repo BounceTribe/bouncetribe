@@ -174,7 +174,6 @@ class ProjectNew extends Component {
   }
 
   render () {
-    console.log(this.state)
     return (
       <ProjectNewView>
 
@@ -199,7 +198,6 @@ export default Relay.createContainer(
             id
             handle
             ${AudioUploader.getFragment('self')}
-            ${ImageUploader.getFragment('self')}
           }
         }
       `,

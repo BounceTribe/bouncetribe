@@ -67,16 +67,19 @@ export const DropContainer = styled.div`
 
 export const ImageDropContainer = styled.div`
   display: flex;
+  margin: auto;
   align-items: center;
-  width: 250px;
-  height: 250px;
+  max-width: 800px;
+  max-height: 800px;
   border-radius: 10px;
-  border: 2px dashed ${grey215};
   cursor: pointer;
+  border: ${({image})=>(image) ? `none` : `2px dashed ${grey215}`};
 `
 
 export const CroppedImage = styled.img`
-  max-width: 100%;
+  max-height: 600px;
+  max-width: 600px;
+  margin: auto;
 `
 
 export const Button = (props) => {
