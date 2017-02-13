@@ -27,7 +27,6 @@ const ViewerQuery = {
   `,
 }
 
-
 const tribeSearch = (params, {location})=>{
   let {query} = location
   return {

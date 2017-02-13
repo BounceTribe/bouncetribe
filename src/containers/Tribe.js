@@ -6,6 +6,7 @@ import {Container, Header, HeaderOptions} from 'styled/list'
 import {purple, white} from 'theme'
 import AddFriend from 'icons/AddFriend'
 import TribeIcon from 'icons/Tribe'
+import Notifications from 'icons/Notifications'
 
 class Tribe extends Component {
 
@@ -81,6 +82,11 @@ class Tribe extends Component {
               }}
             />
             <Tab
+              icon={(
+                <Notifications
+                  notifications={person.invitations.edges.length}
+                />
+              )}
               label={'Requests'}
               value={1}
               onActive={()=>{
@@ -91,9 +97,12 @@ class Tribe extends Component {
               }}
             />
             <Tab
-              label={'Messages'}
+              label={'Messages (coming soon)'}
               value={2}
               disabled={true}
+              style={{
+                cursor: 'not-allowed'
+              }}
             />
           </Tabs>
           {this.props.children}
@@ -118,6 +127,20 @@ export default Relay.createContainer(
             handle
             id
             email
+            invitations (
+              filter: {
+                accepted: false
+                ignored: false
+              }
+              first: 2147483647
+              orderBy: createdAt_ASC
+            ) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
           }
         }
       `,

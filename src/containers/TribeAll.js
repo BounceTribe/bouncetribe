@@ -15,7 +15,9 @@ class TribeAll extends Component {
         <TableRow
           key={friend.id}
         >
-          <TableRowColumn>
+          <TableRowColumn
+            style={{width: '50px'}}
+          >
             <SmallPic
               src={friend.portrait.url}
               to={`/${friend.handle}`}
@@ -28,7 +30,9 @@ class TribeAll extends Component {
               {friend.name}
             </Name>
           </TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn
+            style={{width: '50px'}}
+          >
             <Bolt
               height={15}
             />
@@ -69,9 +73,13 @@ class TribeAll extends Component {
           adjustForCheckbox={false}
         >
           <TableRow>
-            <TableHeaderColumn>{/*image*/}</TableHeaderColumn>
+            <TableHeaderColumn
+              style={{width: '50px'}}
+            >{/*image*/}</TableHeaderColumn>
             <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn>Rating</TableHeaderColumn>
+            <TableHeaderColumn
+              style={{width: '50px'}}
+            >Rating</TableHeaderColumn>
             <TableHeaderColumn>Location</TableHeaderColumn>
             <TableHeaderColumn>Genres</TableHeaderColumn>
             <TableHeaderColumn>Projects</TableHeaderColumn>

@@ -161,7 +161,7 @@ export const FindH3 = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  font-weight: 200;
+  font-weight: 400;
   color: ${purple};
   box-sizing: border-box;
   width: 100%;

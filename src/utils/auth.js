@@ -247,6 +247,9 @@ class AuthService {
   }
 
   getUserInfo = (accessToken) => {
+    if (!accessToken) {
+      accessToken = localStorage.getItem('accessToken')
+    }
     return new Promise((resolve, reject)=>{
       this.lock.getUserInfo(accessToken, (error, profile) => {
         if (profile) {

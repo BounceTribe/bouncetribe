@@ -5,11 +5,19 @@ import {View, IconText, IconTextContainer, Button} from 'styled'
 import {Container, Header, HeaderOptions} from 'styled/list'
 import Tribe from 'icons/Tribe'
 import {purple, fbBlue, white} from 'theme'
-import {FindH3} from 'styled/Tribe'
+import {FindH3, SearchUser} from 'styled/Tribe'
 import Facebook from 'icons/Facebook'
 import {fbId} from 'config/facebook'
+import {suggestedFriends} from 'utils/graphql'
+import {List} from 'styled/list'
+import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
 class TribeFind extends Component {
+
+  state = {
+    suggestions: [],
+    searching: false
+  }
 
   share = () => {
     window.open(
@@ -26,6 +34,39 @@ class TribeFind extends Component {
   connect = () => {
     let {router} = this.props
     router.push('/connect')
+  }
+
+  createFriendRequest = (recipientId) => {
+    let {id: actorId} = this.props.viewer.user
+    this.props.relay.commitUpdate(
+      new CreateFriendRequest({
+        actorId,
+        recipientId,
+      })
+    )
+  }
+
+  componentWillMount() {
+    this.findFriends()
+  }
+
+  findFriends = () => {
+    suggestedFriends(this.props.viewer.user.id).then(suggestions=>{
+      console.log(suggestions)
+      this.setState((prevState, props)=>{
+        let users = suggestions.map(user => (
+          <SearchUser
+            key={user.id}
+            user={user}
+            createFriendRequest={()=>this.createFriendRequest(user.id)}
+          />
+        ))
+        console.log(users)
+        return {
+          suggestions: users
+        }
+      })
+    })
   }
 
   render () {
@@ -58,22 +99,41 @@ class TribeFind extends Component {
             </HeaderOptions>
           </Header>
 
+          {
+            (this.state.suggestions.length > 0) ? (
+              <FindH3>
+                Facebook Friends
+              </FindH3>
+            ) : null
+          }
+
+          {
+            (this.state.suggestions.length > 0) ? (
+              <List>
+                {this.state.suggestions}
+              </List>
+            ) : null
+          }
+
           <FindH3>
             Search
             <TextField
               label={'Search'}
               name={'search'}
-              onChange={(event, newValue) => router.replace({
-                query: {
-                  handle: newValue,
-                  ownId: user.id
-                },
-                pathname: `/${userHandle}/tribe/find/`
-              })}
+              onChange={(event, newValue) => {
+                router.replace({
+                  query: {
+                    handle: newValue,
+                    ownId: user.id
+                  },
+                  pathname: `/${userHandle}/tribe/find/`
+                })
+                this.setState({searching: true})
+              }}
             />
           </FindH3>
 
-          {this.props.children}
+          {(this.state.searching) ? this.props.children : null}
         </Container>
       </View>
     )
@@ -83,7 +143,8 @@ class TribeFind extends Component {
 export default Relay.createContainer(
   TribeFind, {
     initialVariables: {
-      userHandle: ''
+      userHandle: '',
+      suggestedFriendsFilter: {}
     },
     fragments: {
       viewer: () => Relay.QL`
