@@ -204,7 +204,7 @@ class AuthService {
     localStorage.setItem('idToken', idToken)
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('exp', exp * 1000)
-    location.reload()
+    //location.reload()
   }
 
   createUser = (authFields) => {
