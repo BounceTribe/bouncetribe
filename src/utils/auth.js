@@ -69,7 +69,7 @@ class AuthService {
           scope: 'openid email update:current_user_identities'
         },
         responseType: 'token',
-
+        redirectUrl: `${url}/login`,
       }
     }
   }
