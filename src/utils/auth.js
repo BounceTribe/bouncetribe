@@ -16,6 +16,9 @@ class AuthService {
 
   constructor() {
 
+    console.log('url', url)
+    console.log('proccess', process.env)
+
     this.defaultOptions = {
       auth: {
         params: {
