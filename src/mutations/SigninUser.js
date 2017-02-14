@@ -31,6 +31,9 @@ export default class SigninUserMutation extends Relay.Mutation {
                 user {
                   id
                   handle
+                  portrait {
+                    url
+                  }
                 }
               }
             }

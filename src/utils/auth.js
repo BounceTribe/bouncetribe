@@ -129,7 +129,6 @@ class AuthService {
       accessToken,
       state,
     } = result
-    console.log()
     if (state !== 'default') {
       let primaryAuth0UserId = state
       let primaryToken = localStorage.getItem('idToken')
@@ -202,6 +201,7 @@ class AuthService {
     localStorage.setItem('idToken', idToken)
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('exp', exp * 1000)
+    location.reload()
   }
 
   createUser = (authFields) => {
@@ -235,7 +235,7 @@ class AuthService {
           onSuccess: (response) => {
             this.setToken(authFields)
             let userId = response.signinUser.viewer.user.id
-            this.addFriends()
+            //this.addFriends()
             resolve(userId)
           },
           onFailure: (response) => {
@@ -262,7 +262,6 @@ class AuthService {
 
 
   updateUser = (userId, profile) => {
-    console.log(profile)
     let {
       name,
       pictureLarge,
@@ -271,7 +270,6 @@ class AuthService {
     } = profile
     let facebookId
     if (auth0Id.search('facebook') === 0 ) {
-      console.log('facebook user')
       facebookId = auth0Id.split('|')[1]
     }
     let pictureUrl = (pictureLarge) ? (pictureLarge) : (picture)
