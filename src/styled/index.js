@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {white, grey230, grey215} from 'theme'
+import {white, grey230, grey215, size} from 'theme'
 import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -28,6 +28,7 @@ export const View = styled.section`
   width: 80%;
   margin-top: 50px;
   border: solid ${grey230} .5px;
+  border-radius: 10px;
 `
 export const FeedView = styled(View)`
   width: 65%;
@@ -133,3 +134,10 @@ export const RoundButton = (props) => {
     </ButtonLink>
   )
 }
+
+export const MobileOnly = styled.div`
+  display: none;
+  ${size.m`
+    display: flex;
+  `}
+`

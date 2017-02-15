@@ -71,3 +71,23 @@ export const suggestedFriends = (userId) => {
     })
   })
 }
+
+
+export const getAllGenres = () => {
+  return fetch(simple, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `{
+          allGenres (first: 300) {
+            id
+            name
+          }
+        }`
+      }),
+    }).then(result=>result.json()).then(json => {
+      return json.data.allGenres
+    })
+}

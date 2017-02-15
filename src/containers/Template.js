@@ -5,18 +5,23 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import {Main} from 'styled'
 import 'theme/global.css'
 import TopNav from 'components/TopNav'
+import MobileNav from 'components/MobileNav'
 import {btTheme} from 'theme'
+import {url} from 'config'
 
 injectTapEventPlugin()
 
 class Template extends Component {
 
   get userOnly () {
-    if (this.props.viewer.user) {
+    let {
+      user
+    } = this.props.viewer
+    if (user) {
       return (
         <TopNav
-          handle={this.props.viewer.user.handle}
-          portraitUrl={this.props.viewer.user.portrait.url}
+          handle={user.handle}
+          portraitUrl={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
         />
       )
     }
@@ -30,8 +35,8 @@ class Template extends Component {
         <Main>
           {this.userOnly}
           {this.props.children}
+          <MobileNav/>
         </Main>
-
       </MuiThemeProvider>
     )
   }

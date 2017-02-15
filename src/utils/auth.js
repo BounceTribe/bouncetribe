@@ -16,9 +16,6 @@ class AuthService {
 
   constructor() {
 
-    console.log('url', url)
-    console.log('proccess', process.env)
-
     this.defaultOptions = {
       auth: {
         params: {
@@ -180,6 +177,7 @@ class AuthService {
               }).then(
                 userId => {
                   this.getUserInfo(accessToken).then(profile=>{
+                    console.log('profile', profile)
                     this.updateUser(userId, profile)
                   })
                 },
@@ -204,7 +202,6 @@ class AuthService {
     localStorage.setItem('idToken', idToken)
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('exp', exp * 1000)
-    //location.reload()
   }
 
   createUser = (authFields) => {
@@ -269,24 +266,29 @@ class AuthService {
       name,
       pictureLarge,
       picture,
-      userId: auth0Id
+      userId: auth0Id,
+      location
     } = profile
     let facebookId
     if (auth0Id.search('facebook') === 0 ) {
       facebookId = auth0Id.split('|')[1]
     }
     let pictureUrl = (pictureLarge) ? (pictureLarge) : (picture)
+    let placename = (location) ? (location.name) : undefined
     if (pictureUrl) {
-      uploadImageFromUrl(pictureUrl).then(portraitId=>{
-        Relay.Store.commitUpdate(
-          new UpdateUser({
-            userId,
-            name,
-            portraitId,
-            facebookId
-          })
-        )
-      })
+      uploadImageFromUrl(pictureUrl).then(
+        portraitId=>{
+          Relay.Store.commitUpdate(
+            new UpdateUser({
+              userId,
+              name,
+              portraitId,
+              facebookId,
+              placename
+            })
+          )
+        }
+      )
     }
   }
 
