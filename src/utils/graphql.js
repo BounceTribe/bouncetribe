@@ -75,19 +75,99 @@ export const suggestedFriends = (userId) => {
 
 export const getAllGenres = () => {
   return fetch(simple, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `{
+        allGenres (first: 300) {
+          id
+          name
+        }
+      }`
+    }),
+  })
+  .then(result=>result.json()).then(json => {
+    return json.data.allGenres
+  })
+}
+
+export const getAllSkills = () => {
+  return fetch(simple, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `{
+        allSkills (first: 300) {
+          id
+          name
+        }
+      }`
+    }),
+  })
+  .then(result=>result.json()).then(json => {
+    return json.data.allSkills
+  })
+}
+
+export const ensureBtArtistExists = (artist) => {
+  let {label: name} = artist
+  let {spotifyId, imageUrl} = artist.value
+  return new Promise( (resolve, reject)=>{
+    fetch(simple, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
         query: `{
-          allGenres (first: 300) {
+          Artist (
+            spotifyId: "${spotifyId}"
+          ) {
             id
+            imageUrl
             name
+            spotifyId
           }
         }`
       }),
-    }).then(result=>result.json()).then(json => {
-      return json.data.allGenres
     })
+    .then(response=>response.json())
+    .then( result => {
+      if (result.data.Artist) {
+        resolve(result.data.Artist.id)
+      } else {
+        fetch(simple,{
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+            query: `
+              mutation {
+                createArtist(
+                  imageUrl: "${imageUrl}"
+                  name: "${name}"
+                  spotifyId: "${spotifyId}"
+                ) {
+                  id
+                  imageUrl
+                  name
+                  spotifyId
+                }
+              }
+            `
+          }),
+        })
+        .then(response => response.json())
+        .then(result => {
+          console.log(result)
+          resolve(result.data.createArtist.id)
+        })
+      }
+    })
+  })
 }

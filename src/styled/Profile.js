@@ -145,7 +145,7 @@ export const BotLeft = styled.div`
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  width: 59.5%;
+  width: 58.5%;
   border: solid ${grey400} .5px;
   border-radius: 10px;
 `
@@ -156,7 +156,15 @@ export const BotRight = styled.div`
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  width: 39.5%;
+  width: 38.5%;
   border: solid ${grey400} .5px;
   border-radius: 10px;
+  padding: 0 20px;
+`
+
+export const Label = styled.label`
+  display: flex;
+  font-size: 18px;
+  font-weight: 400;
+  margin-top: 40px
 `

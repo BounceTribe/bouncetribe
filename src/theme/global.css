@@ -12,9 +12,3 @@ body {
 .auth0-lock.auth0-lock .auth0-lock-header {
   display: none;
 }
-
-.async {
-  display: flex;
-  width: 100%;
-  background-color: salmon;
-}
