@@ -4,7 +4,7 @@
 }
 
 .async .Select-value  {
-  background-color: purple;
+  background-color: #9575CD;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -25,17 +25,22 @@
 }
 
 .influences .Select-value {
-  background-color: grey;
+  background-color: lightgrey;
+  border: none;
+}
+
+.Select--multi .Select-value-icon {
+  border: none;
 }
 
 .async.Select--multi.is-disabled .Select-value {
-  background-color: purple;
-  color: white
+  background-color: #9575CD;
+  color: white;
 }
 
 .influences.Select--multi.is-disabled .Select-value {
-  background-color: grey;
-  color: white
+  background-color: lightgrey;
+  color: black;
 }
 
 
@@ -51,6 +56,6 @@
   display: none;
 }
 
-.select.is-disabled > .select-control {
-  background-color: none;
+.Select.is-disabled > .Select-control {
+  background-color: white;
 }

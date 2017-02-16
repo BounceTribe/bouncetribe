@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, Portrait, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotLeft, BotRow, BotRight, Label} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, Portrait, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotLeft, BotRow, BotRight, Label, InputError} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
@@ -15,6 +15,8 @@ import 'react-select/dist/react-select.css'
 import 'theme/newSelect.css'
 import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
+import {handleValidator} from 'utils/handles'
+import {purple, grey200} from 'theme'
 
 class Profile extends Component {
 
@@ -22,7 +24,8 @@ class Profile extends Component {
     imageEditorOpen: false,
     genres: [],
     skills: [],
-    influences: []
+    influences: [],
+    handleError: ''
   }
 
   inputChange = (e) => {
@@ -30,11 +33,37 @@ class Profile extends Component {
       name,
       value
     } = e.target
-    this.setState((prevState, props)=>{
-      return {
-        [name]: value
-      }
-    })
+    if (name === 'handle') {
+      let {handle: newHandle, error} = handleValidator(value)
+      this.setState((prevState, props)=>{
+        return {
+          [name]: newHandle,
+          handleError: error
+        }
+      })
+    } else {
+      this.setState((prevState, props)=>{
+        return {
+          [name]: value
+        }
+      })
+    }
+  }
+
+  inputSubmit = (e) => {
+    let {name, value} = e.target
+    if (this.state[`${name}Error`]) {
+      return
+    } else {
+      this.props.relay.commitUpdate(
+        new UpdateUser({
+          userId: this.props.viewer.user.id,
+          [name]: value
+        }), {
+          onSuccess: success => console.log('success')
+        }
+      )
+    }
   }
 
   genreChange = (val) => {
@@ -66,7 +95,6 @@ class Profile extends Component {
   }
 
   influenceChange = (options) => {
-    console.log(options, this.state.influences)
     if (options.length < this.state.influences.length) {
       let artistInfluencesIds = options.map((option) => {
         return option.value.id
@@ -242,7 +270,7 @@ class Profile extends Component {
   }
 
   render () {
-    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences} = this.state
+    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
     let projects = User.projects.edges.length
@@ -275,15 +303,21 @@ class Profile extends Component {
                       disabled={!ownProfile}
                       placeholder={'handle'}
                       name={'handle'}
+                      onBlur={this.inputSubmit}
                     />
+                    <InputError>
+                      {handleError}
+                    </InputError>
                   </InputRow>
                   <InputRow>
                     <PinIcon/>
                     <Location
                       value={placename}
                       onChange={this.inputChange}
-                      placeholder={'add your location'}
+                      placeholder={(ownProfile) ? 'add your location' : ''}
                       name={'placename'}
+                      disabled={!ownProfile}
+                      onBlur={this.inputSubmit}
                     />
                   </InputRow>
                   <ScoreRow>
@@ -305,8 +339,11 @@ class Profile extends Component {
                 <Left>
                   <Summary
                     value={summary}
+                    name={'summary'}
                     onChange={this.inputChange}
-                    placeholder={'add your summary'}
+                    placeholder={(ownProfile) ? 'add your summary' : ''}
+                    disabled={!ownProfile}
+                    onBlur={this.inputSubmit}
                   />
                 </Left>
                 <Right>
@@ -314,16 +351,20 @@ class Profile extends Component {
                     <Email/>
                     <Input
                       value={email}
-                      placeholder={'Add your email'}
+                      placeholder={(ownProfile) ? 'add your email' : ''}
                       onChange={this.inputChange}
+                      disabled
                     />
                   </InputRow>
                   <InputRow>
                     <Link/>
                     <Input
                       value={website}
-                      placeholder={'Add your website'}
+                      name={'website'}
+                      placeholder={(ownProfile) ? 'add your website' : ''}
                       onChange={this.inputChange}
+                      disabled={!ownProfile}
+                      onBlur={this.inputSubmit}
                     />
                   </InputRow>
                 </Right>
@@ -332,16 +373,31 @@ class Profile extends Component {
           <BotRow>
             <BotLeft>
               <Tabs
-                style={{width: '100%', marginTop: '6px'}}
+                style={{
+                  width: '100%',
+                  marginTop: '6px',
+                }}
+                inkBarStyle={{
+                  backgroundColor: purple
+                }}
               >
                 <Tab
                   label={'Activity'}
+                  style={{
+                    borderBottom: `2px solid ${grey200}`
+                  }}
                 />
                 <Tab
                   label={'Projects'}
+                  style={{
+                    borderBottom: `2px solid ${grey200}`
+                  }}
                 />
                 <Tab
                   label={'Bounces'}
+                  style={{
+                    borderBottom: `2px solid ${grey200}`
+                  }}
                 />
               </Tabs>
             </BotLeft>

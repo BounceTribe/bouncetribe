@@ -43,6 +43,29 @@ const sanitizeHandle = (handle) => {
    return sanitized
 }
 
+
+export const handleValidator = (handle) => {
+  let valid = handle.replace(nonAlphanumeric, '')
+   restricted.forEach((word)=>{
+     valid = valid.replace(word, '')
+   })
+   if (valid.length > 20) {
+     return {
+       handle: valid,
+       error: 'Too long!'
+     }
+   }
+   if (valid.length < 6) {
+     return {
+       handle: valid,
+       error: 'Too short!'
+     }
+   }
+   return {
+     handle: valid,
+     error: ''
+   }
+}
 // const isValidHandle = () => {
 //
 // }

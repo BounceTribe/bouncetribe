@@ -142,12 +142,14 @@ export const BotRow = styled.div`
 
 export const BotLeft = styled.div`
   display: flex;
+  flex-direction: column;
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  width: 58.5%;
+  width: 60%;
   border: solid ${grey400} .5px;
   border-radius: 10px;
+  margin-right: 15px;
 `
 
 export const BotRight = styled.div`
@@ -156,10 +158,11 @@ export const BotRight = styled.div`
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  width: 38.5%;
+  width: 40%;
   border: solid ${grey400} .5px;
   border-radius: 10px;
   padding: 0 20px;
+  margin-left: 15px;
 `
 
 export const Label = styled.label`
@@ -167,4 +170,10 @@ export const Label = styled.label`
   font-size: 18px;
   font-weight: 400;
   margin-top: 40px
+`
+
+export const InputError = styled.span`
+  display: flex;
+  color: red;
+  font-size: 12px;
 `

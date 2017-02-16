@@ -28,6 +28,9 @@ export default class UpdateUser extends Relay.Mutation {
     return {
       id: this.props.userId,
       name: this.props.name,
+      handle: this.props.handle,
+      summary: this.props.summary,
+      website: this.props.website,
       portraitId: this.props.portraitId,
       facebookId: this.props.facebookId,
       placename: this.props.placename,
@@ -41,9 +44,6 @@ export default class UpdateUser extends Relay.Mutation {
     return {
       user: {
         id: this.props.userId,
-        portrait: {
-          id: this.props.portraitId
-        },
       },
     }
   }
