@@ -16,25 +16,36 @@ export default class SigninUserMutation extends Relay.Mutation {
 
   getFatQuery() {
     return Relay.QL`fragment on SigninPayload {
-      viewer
+      token
+      viewer {
+        user
+      }
+      user
     }`
   }
 
   getConfigs() {
     return [
       {
+        type: 'FIELDS_CHANGE',
+        fieldIDs: {
+          viewer: "viewer-fixed"
+         },
+      },
+      {
         type: 'REQUIRED_CHILDREN',
         children: [
           Relay.QL`
             fragment on SigninPayload {
+              token
               viewer {
                 user {
                   id
-                  handle
-                  portrait {
-                    url
-                  }
                 }
+                id
+              }
+              user {
+                id
               }
             }
           `,

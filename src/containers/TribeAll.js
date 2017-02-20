@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
-import {SmallPic, Name, Projects, GenreChip} from 'styled/Tribe'
+import {SmallPic, Name, Projects, GenreChip, NoTribe} from 'styled/Tribe'
 import Bolt from 'icons/Bolt'
 import Music from 'icons/Music'
 import {white} from 'theme'
@@ -9,6 +9,16 @@ import {white} from 'theme'
 class TribeAll extends Component {
 
   get friendsList () {
+
+    if (this.props.viewer.User.friends.edges.length < 1) {
+      return (
+        <NoTribe
+          user={this.props.viewer.user}
+          handle={this.props.viewer.user.handle}
+        />
+      )
+    }
+
     return this.props.viewer.User.friends.edges.map(edge=>{
       let {node:friend} = edge
       return (
@@ -27,16 +37,20 @@ class TribeAll extends Component {
             <Name
               to={`/${friend.handle}`}
             >
-              {friend.name}
+              {friend.handle}
             </Name>
           </TableRowColumn>
           <TableRowColumn
-            style={{width: '50px'}}
+            style={{
+              width: '50px',
+            }}
           >
             <Bolt
               height={15}
             />
-            {friend.score}
+            <Name>
+                {friend.score}
+            </Name>
           </TableRowColumn>
           <TableRowColumn>{friend.placename}</TableRowColumn>
           <TableRowColumn>
@@ -105,6 +119,7 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            handle
           }
           User (handle: $userHandle) {
             id

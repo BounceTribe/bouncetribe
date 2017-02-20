@@ -34,6 +34,6 @@ export const Header = styled.div`
 
 export const Lock = styled.div`
   display: flex;
-  min-height: 100px;
+  min-height: 380px;
   min-width: 200px;
 `

@@ -14,6 +14,8 @@ export const findUserIds = (ids) => {
           }) {
             id
             email
+            placename
+            score
           }
         }`
       }),

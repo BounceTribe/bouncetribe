@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View, Button, RoundButton} from 'styled'
-import {Container, Header, HeaderOptions, Title, List} from 'styled/list'
+import {Container, Header, HeaderOptions, List} from 'styled/list'
 import {ProjectItem, Left, Artwork, Info, ProjectTitle, Trio, TrioItem} from 'styled/ProjectList'
 import {IconTextContainer, IconText} from 'styled'
 import Music from 'icons/Music'
@@ -66,10 +66,10 @@ class ProjectList extends Component {
       <View>
         <Container>
           <Header>
-            <Title
-              to={`/${this.props.viewer.User.handle}`}
-            >
-              <IconTextContainer>
+
+              <IconTextContainer
+                to={`/${this.props.viewer.User.handle}`}
+              >
                 <Music
                   style={{
                     display: 'flex',
@@ -81,7 +81,6 @@ class ProjectList extends Component {
                   My Projects
                 </IconText>
               </IconTextContainer>
-            </Title>
             <HeaderOptions>
               <Button
                 to={`/${this.props.viewer.user.handle}/projects/new`}

@@ -36,23 +36,18 @@ class TribeRequests extends Component {
   }
 
   get requests() {
-    if (this.props.viewer.user.invitations.edges.length < 1) {
+
+    return this.props.viewer.user.invitations.edges.map(edge => {
+      let {actor:user, id} = edge.node
       return (
-        <span>No New Requests!</span>
+        <RequestUser
+          key={user.id}
+          user={user}
+          accept={()=>this.accept(id, user.id)}
+          ignore={()=>this.ignore(id)}
+        />
       )
-    } else {
-      return this.props.viewer.user.invitations.edges.map(edge => {
-        let {actor:user, id} = edge.node
-        return (
-          <RequestUser
-            key={user.id}
-            user={user}
-            accept={()=>this.accept(id, user.id)}
-            ignore={()=>this.ignore(id)}
-          />
-        )
-      })
-    }
+    })
   }
 
   render () {

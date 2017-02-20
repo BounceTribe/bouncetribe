@@ -7,6 +7,7 @@ import {purple, white} from 'theme'
 import AddFriend from 'icons/AddFriend'
 import TribeIcon from 'icons/Tribe'
 import Notifications from 'icons/Notifications'
+import Lock from 'icons/Lock'
 
 class Tribe extends Component {
 
@@ -97,7 +98,11 @@ class Tribe extends Component {
               }}
             />
             <Tab
-              label={'Messages (coming soon)'}
+              icon={(
+                <Lock
+                />
+              )}
+              label={'Messages'}
               value={2}
               disabled={true}
               style={{

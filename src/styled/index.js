@@ -29,6 +29,7 @@ export const View = styled.section`
   margin-top: 50px;
   border: solid ${grey230} .5px;
   border-radius: 10px;
+  min-height: 80vh;
 `
 export const FeedView = styled(View)`
   width: 65%;

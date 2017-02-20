@@ -7,6 +7,7 @@ import UpdateFile from 'mutations/UpdateFile'
 import ReactCrop from 'react-image-crop'
 import {Button} from 'styled'
 import 'react-image-crop/dist/ReactCrop.css'
+import Camera from 'icons/Camera'
 
 export default class ImageUploader extends Component {
 
@@ -35,7 +36,7 @@ export default class ImageUploader extends Component {
     let imageName = this.state.imageName
 
     let {image, pixel} = this.state
-
+    console.log(this.state)
     let htmlImage = new Image()
 
 
@@ -109,6 +110,7 @@ export default class ImageUploader extends Component {
             label="Done"
             onClick={this.uploadImage}
             primary
+            disabled={!this.state.pixel}
           />
         </div>
       )
@@ -119,13 +121,15 @@ export default class ImageUploader extends Component {
             display: 'flex',
             width: '100%',
             height: '200px',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}
           multiple={false}
           accept={'image/*'}
           maxSize={10000000}
           onDrop={this.onImageDrop}
         >
-
+          <Camera/>
         </Dropzone>
       )
     }

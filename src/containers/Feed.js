@@ -3,10 +3,12 @@ import Relay from 'react-relay'
 import {FeedView} from 'styled'
 
 class Feed extends Component {
+
   render () {
     return (
       <FeedView>
         <h1>Feed</h1>
+
       </FeedView>
     )
   }

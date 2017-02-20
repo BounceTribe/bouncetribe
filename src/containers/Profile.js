@@ -59,9 +59,7 @@ class Profile extends Component {
         new UpdateUser({
           userId: this.props.viewer.user.id,
           [name]: value
-        }), {
-          onSuccess: success => console.log('success')
-        }
+        })
       )
     }
   }
@@ -74,9 +72,7 @@ class Profile extends Component {
       new UpdateUser({
         userId: this.props.viewer.user.id,
         genresIds
-      }), {
-        onSuccess: success => console.log('success')
-      }
+      })
     )
   }
 
@@ -88,9 +84,7 @@ class Profile extends Component {
       new UpdateUser({
         userId: this.props.viewer.user.id,
         skillsIds
-      }), {
-        onSuccess: success => console.log('success')
-      }
+      })
     )
   }
 
@@ -103,9 +97,7 @@ class Profile extends Component {
         new UpdateUser({
           userId: this.props.viewer.user.id,
           artistInfluencesIds
-        }), {
-          onSuccess: success => console.log('success')
-        }
+        })
       )
     } else {
       let newInfluence = options.find((option) => {
@@ -174,8 +166,8 @@ class Profile extends Component {
   }
 
   componentWillReceiveProps (newProps) {
+    let {handle, placename, summary, portrait, score, projects, friends, website, email, genres, skills, artistInfluences} = newProps.viewer.User
     this.setState( (prevState, props) => {
-      let {handle, placename, summary, portrait, score, projects, friends, website, email, genres, skills, artistInfluences} = newProps.viewer.User
       let newGenres = genres.edges.map(edge=>{
         let {node: genre} = edge
         return {
@@ -216,6 +208,10 @@ class Profile extends Component {
         influences: newInfluences
       }
     })
+    let oldHandle = this.props.viewer.User.handle
+    if (oldHandle !== handle) {
+      this.props.router.replace(`/${handle}`)
+    }
   }
 
   portraitSuccess = (file) => {

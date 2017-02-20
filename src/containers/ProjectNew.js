@@ -3,17 +3,20 @@ import Relay from 'react-relay'
 import {ProjectNewView, Button, RoundButton} from 'styled'
 import {Row, Left, Right, Sharing, Choice, ChoiceText} from 'styled/ProjectNew'
 import AudioUploader from 'components/AudioUploader'
-import ImageUploader from 'components/ImageUploader'
 import TextField from 'material-ui/TextField'
 import CreateProject from 'mutations/CreateProject'
 import Music from 'icons/Music'
 import AudioPlayer from 'components/AudioPlayer'
 import {Spinner} from 'styled/Spinner'
+import LinearProgress from 'material-ui/LinearProgress'
+import ImageEditor from 'components/ImageEditor'
 
 class ProjectNew extends Component {
 
-  state={
-    title: ''
+  state = {
+    title: '',
+    progress: 0,
+    imageEditorOpen: false
   }
 
   createProject = () => {
@@ -32,24 +35,59 @@ class ProjectNew extends Component {
     )
   }
 
-  audioDropped = ({audioProgress, title}) => {
+  audioDropped = ({audioProgress, title, size}) => {
 
     if (title) {
+      this.updateProgress()
       this.setState({
         audioProgress,
-        title
+        title,
+        message: 'Generating Waveform',
+        size
       })
     } else {
       this.setState({
-        audioProgress
+        audioProgress,
+        message: 'Uploading Audio File'
       })
     }
   }
 
+  updateProgress = () => {
+
+    this.timer = setInterval( ()=>{
+      this.setState( (prevState, props) => {
+        let {progress, audioProgress} = prevState
+        if (audioProgress === 'GENERATING' && progress >= 40) {
+          progress = 40
+        } else if (audioProgress === 'UPLOADING' && progress <= 40) {
+          progress += 3
+        } else if (audioProgress === 'UPLOADING' && progress >= 90) {
+          progress = 90
+        } else if (audioProgress === 'COMPLETE') {
+          progress = 100
+        } else {
+          progress ++
+        }
+        return {
+          progress
+        }
+      })
+    }, 500)
+  }
+
+  clearTimer = () => {
+    clearInterval(this.timer)
+  }
+
   audioSuccess = (file) => {
+    console.log('audioSuccess')
+    this.clearTimer()
     this.setState({
       track: file,
-      tracksIds: [file.id]
+      tracksIds: [file.id],
+      message: false,
+      audioProgress: false
     })
   }
 
@@ -63,7 +101,9 @@ class ProjectNew extends Component {
     let {track, audioProgress} = this.state
     if (!track && audioProgress && audioProgress !== 'COMPLETE' ) {
       return (
-        <Spinner/>
+        <Spinner
+          style={{height: '200px'}}
+        />
       )
     } else if (!this.state.track) {
       return (
@@ -115,9 +155,15 @@ class ProjectNew extends Component {
             />
           </Left>
           <Right>
-            <ImageUploader
-              self={this.props.viewer.user}
-              fileSuccess={this.imageSuccess}
+            <div
+              style={{backgroundColor: 'salmon', height: '100px', width: '100px'}}
+              onClick={()=>this.setState({imageEditorOpen: true})}
+            />
+            <ImageEditor
+              open={this.state.imageEditorOpen}
+              onRequestClose={()=>this.setState({imageEditorOpen:false})}
+              user={this.props.viewer.user}
+              portraitSuccess={this.portraitSuccess}
             />
             <Sharing>
               <Choice>
@@ -151,35 +197,20 @@ class ProjectNew extends Component {
     }
   }
 
-
-  get message () {
-    let {audioProgress} = this.state
-    console.log(audioProgress)
-    switch (audioProgress) {
-      case 'GENERATING': {
-        return (
-          <span>Generating Waveform</span>
-        )
-      }
-      case 'UPLOADING': {
-        return (
-          <span>Uploading Audio File</span>
-        )
-      }
-      default: {
-        return null
-      }
-    }
-
-  }
-
   render () {
+    let {audioProgress, progress} = this.state
     return (
       <ProjectNewView>
 
         {this.uploader}
 
-        {this.message}
+        <LinearProgress
+          mode={'determinate'}
+          value={progress}
+          style={{
+            display: (!audioProgress || audioProgress === 'COMPLETE') ? 'none' : ''
+          }}
+        />
 
         {this.form}
 

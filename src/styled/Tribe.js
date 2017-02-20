@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
 import {Item2, Left, Right, Column} from 'styled/list'
-import {BtLink, BtFlatButton} from 'styled'
-import {purple, white, grey500, grey400} from 'theme'
+import {BtLink, BtFlatButton, Button} from 'styled'
+import {purple, white, grey500, grey400, grey700} from 'theme'
 import AddFriend from 'icons/AddFriend'
+import Bolt from 'icons/Bolt'
 
 const SmallPicImg = styled.img`
-  height: 40px;
-  width: 40px;
-  border-radius: 40px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
   margin: 5px;
   object-fit: cover;
 `
@@ -41,6 +42,33 @@ export const Handle = styled(BtLink)`
   font-weight: 400;
 `
 
+export const Location = styled.span`
+  font-size: 14px;
+  margin: 10px 0;
+  color: ${grey700};
+`
+
+
+export const Pair = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+export const Value = styled.span`
+  display: flex;
+`
+
+const Score = ({score}) => {
+  return (
+    <Pair>
+      <Bolt/>
+      <Value>
+        {score}
+      </Value>
+    </Pair>
+  )
+}
+
 export class SearchUser extends Component {
   state = {
     invited: false,
@@ -61,6 +89,12 @@ export class SearchUser extends Component {
             >
               {user.handle}
             </Handle>
+            <Location>
+              {user.placename}
+            </Location>
+            <Score
+              score={user.score}
+            />
           </Column>
         </Left>
 
@@ -103,6 +137,7 @@ const RequestColumn = styled(Column)`
   align-items: center;
 `
 
+
 export const RequestUser = ({user, accept, ignore}) => {
   return (
     <SearchUserContainer>
@@ -116,6 +151,12 @@ export const RequestUser = ({user, accept, ignore}) => {
           >
             {user.handle}
           </Handle>
+          <Location>
+            {user.placename}
+          </Location>
+          <Score
+            score={user.score}
+          />
         </Column>
       </Left>
 
@@ -151,7 +192,9 @@ export const RequestUser = ({user, accept, ignore}) => {
 }
 
 export const Name = styled(BtLink)`
+  display: inline-flex;
   font-weight: 600;
+  font-size: 14px;
   &:hover {
     color: ${purple};
   }
@@ -166,6 +209,7 @@ export const FindH3 = styled.div`
   box-sizing: border-box;
   width: 100%;
   padding: 60px 30px 40px 30px;
+  font-size: 20px;
 `
 
 export const Projects = styled.div`
@@ -183,3 +227,40 @@ export const GenreChip = styled.span`
   border-radius: 15px;
   padding: 3px 10px;
 `
+
+const NoTribeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`
+
+const NoTribeMessage = styled.span`
+  display: flex;
+  font-size: 36px;
+  margin: 100px 0 20px 0;
+  color: ${grey400};
+`
+
+export const NoTribe = ({handle, user}) => {
+  return (
+    <NoTribeContainer>
+      <NoTribeMessage>Add Members to Your Tribe</NoTribeMessage>
+      <Button
+        to={{
+          pathname: `/${handle}/tribe/find/`,
+          query: {
+            ownId: user.id
+          },
+        }}
+        icon={
+          <AddFriend
+            fill={white}
+          />
+        }
+        label={'Add Members'}
+        primary
+      />
+    </NoTribeContainer>
+  )
+}

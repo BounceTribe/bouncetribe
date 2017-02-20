@@ -52,7 +52,6 @@ class TribeFind extends Component {
 
   findFriends = () => {
     suggestedFriends(this.props.viewer.user.id).then(suggestions=>{
-      console.log(suggestions)
       this.setState((prevState, props)=>{
         let users = suggestions.map(user => (
           <SearchUser
@@ -116,7 +115,7 @@ class TribeFind extends Component {
           }
 
           <FindH3>
-            Search
+            Search by Username
             <TextField
               label={'Search'}
               name={'search'}
@@ -130,6 +129,7 @@ class TribeFind extends Component {
                 })
                 this.setState({searching: true})
               }}
+              placeholder={'JohnLennon'}
             />
           </FindH3>
 

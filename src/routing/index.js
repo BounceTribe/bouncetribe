@@ -42,7 +42,8 @@ const tribeSearch = (params, {location})=>{
         recipient: {
           id: query.ownId
         },
-      }
+      },
+      handle_contains: query.handle
     }
   }
 }

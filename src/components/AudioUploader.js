@@ -19,14 +19,15 @@ class AudioUploader extends Component {
 
     this.props.audioDropped({
       audioProgress: 'GENERATING',
-      title
+      title,
+      size: file.size
     })
     createVisualization(file).then(visualization=>{
       this.props.audioDropped({
         audioProgress: 'UPLOADING',
         title: false,
       })
-      uploadFile(file).then(fileId=>{        
+      uploadFile(file).then(fileId=>{
         this.props.relay.commitUpdate(
           new UpdateFile({
             self: this.props.self,
@@ -37,7 +38,7 @@ class AudioUploader extends Component {
               let {file} = transaction.updateFile
               this.props.audioSuccess(file)
               this.props.audioDropped({
-                audioProgress: 'UPLOADING',
+                audioProgress: 'COMPLETE',
                 title: false,
               })
             },

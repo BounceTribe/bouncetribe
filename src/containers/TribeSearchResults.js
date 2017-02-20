@@ -68,6 +68,8 @@ export default Relay.createContainer(
                 portrait {
                   url
                 }
+                placename
+                score
               }
             }
           }

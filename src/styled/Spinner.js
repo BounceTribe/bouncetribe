@@ -4,6 +4,7 @@ import {purple} from 'theme'
 
 const SpinBox = styled.div`
   display: flex;
+  align-items: center;
 `
 
 const Bounce = keyframes`
@@ -32,9 +33,11 @@ const Ball1 = styled(Ball2)`
 `
 
 
-export const Spinner = () => {
+export const Spinner = (props) => {
   return (
-    <SpinBox>
+    <SpinBox
+      {...props}
+    >
       <Ball0/>
       <Ball1/>
       <Ball2/>

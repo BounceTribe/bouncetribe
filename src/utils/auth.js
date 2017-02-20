@@ -11,6 +11,7 @@ import {generateHandle} from 'utils/handles'
 import uploadImageFromUrl from 'utils/uploadImageFromUrl'
 import {findUserIds} from 'utils/graphql'
 import {connectAuth0Accounts} from 'utils/connectAuth0Accounts'
+import {browserHistory} from 'react-router'
 
 class AuthService {
 
@@ -202,6 +203,7 @@ class AuthService {
     localStorage.setItem('idToken', idToken)
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('exp', exp * 1000)
+    browserHistory.push('/')
   }
 
   createUser = (authFields) => {
