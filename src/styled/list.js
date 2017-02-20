@@ -64,12 +64,12 @@ export const Title = styled(Link)`
 
 export const Left = styled.div`
   display: flex;
-  margin-left: 15px;
+  margin-left: 20px;
 `
 
 export const Right = styled.div`
   display: flex;
-  margin-right: 15px;
+  margin-right: 25px;
 
 `
 

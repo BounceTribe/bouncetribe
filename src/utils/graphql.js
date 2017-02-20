@@ -53,6 +53,7 @@ export const suggestedFriends = (userId) => {
               portrait {
                 url
               }
+              score
             }
             User (id: "${userId}") {
               friends (first: 1000) {

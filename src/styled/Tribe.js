@@ -52,10 +52,13 @@ export const Location = styled.span`
 export const Pair = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `
 
 export const Value = styled.span`
   display: flex;
+  margin-left: 5px;
+  font-weight: 400;
 `
 
 const Score = ({score}) => {
@@ -100,7 +103,7 @@ export class SearchUser extends Component {
 
         <Right>
           <BtFlatButton
-            label={(invited) ? 'Invited Sent' : 'Add to Tribe'}
+            label={(invited) ? 'Request Sent' : 'Add to Tribe'}
             onClick={()=>{
               this.setState({
                 invited: true,
@@ -117,8 +120,10 @@ export class SearchUser extends Component {
               />
             }
             style={{
-              border: `1px solid ${grey400}`
+              border: `1px solid ${grey400}`,
+              borderRadius: '5px',
             }}
+
             disabled={invited}
           />
         </Right>
