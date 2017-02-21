@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {ProjectNewView, Button, RoundButton} from 'styled'
-import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop} from 'styled/ProjectNew'
+import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop, TrackContainer} from 'styled/ProjectNew'
 import AudioUploader from 'components/AudioUploader'
 import SelectField from 'material-ui/SelectField'
 import TextField from 'material-ui/TextField'
@@ -14,7 +14,8 @@ import ImageEditor from 'components/ImageEditor'
 import {getAllGenres} from 'utils/graphql'
 import MenuItem from 'material-ui/MenuItem'
 import {url} from 'config'
-import {purple, grey300} from 'theme'
+import {purple, grey300, white} from 'theme'
+import {ensureUsersProjectTitleUnique} from 'utils/graphql'
 
 class ProjectNew extends Component {
 
@@ -134,9 +135,11 @@ class ProjectNew extends Component {
       )
     } else {
       return (
-        <AudioPlayer
-          track={this.state.track}
-        />
+        <TrackContainer>
+          <AudioPlayer
+            track={this.state.track}
+          />
+        </TrackContainer>
       )
     }
   }
@@ -150,8 +153,24 @@ class ProjectNew extends Component {
     })
   }
 
-   get form () {
-    let {title, description, tracksIds, artworkId, audioProgress, privacy, genres} = this.state
+  titleChange = (title) => {
+    this.setState({
+      title,
+      titleUnique: true
+    })
+    if (this.debounce) {
+      clearTimeout(this.debounce)
+
+    }
+    this.debounce = setTimeout(()=>{
+      ensureUsersProjectTitleUnique(this.props.viewer.user.id, title).then(unique=>{
+        this.setState({titleUnique: unique})
+      })
+    },1000)
+  }
+
+  get form () {
+    let {title, description, tracksIds, artworkId, audioProgress, privacy, genres, titleUnique} = this.state
     if (audioProgress  && audioProgress !== 'GENERATING') {
       return (
         <Row>
@@ -161,8 +180,9 @@ class ProjectNew extends Component {
               name={'title'}
               type={'text'}
               value={this.state.title}
-              onChange={(e)=>{this.setState({title:e.target.value})}}
+              onChange={(e)=>this.titleChange(e.target.value)}
               fullWidth={true}
+              errorText={(!titleUnique && title) ? 'Title must be unique' : null}
             />
             <SelectField
               floatingLabelText={'Genre'}
@@ -186,10 +206,14 @@ class ProjectNew extends Component {
             />
             <Button
               primary={true}
-              disabled={(!title || !description || !tracksIds || !genres || !artworkId)}
+              disabled={(!titleUnique || !title || !description || !tracksIds || !genres || !artworkId)}
               label={'Create'}
               onClick={this.createProject}
-              icon={<Music/>}
+              icon={
+                <Music
+                  fill={white}
+                />
+              }
             />
           </Left>
           <Right>

@@ -7,6 +7,7 @@ import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
 import Email from 'icons/Email'
 import Link from 'icons/Link'
+import Lock from 'icons/Lock'
 import ExperienceIcon from 'icons/Experience'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import ImageEditor from 'components/ImageEditor'
@@ -468,6 +469,7 @@ class Profile extends Component {
                   style={{
                     borderBottom: `2px solid ${grey200}`
                   }}
+
                 />
                 <Tab
                   label={'Projects'}
@@ -480,6 +482,11 @@ class Profile extends Component {
                   style={{
                     borderBottom: `2px solid ${grey200}`
                   }}
+                  icon={(
+                    <Lock
+                    />
+                  )}
+                  disabled={true}
                 />
               </Tabs>
             </BotLeft>

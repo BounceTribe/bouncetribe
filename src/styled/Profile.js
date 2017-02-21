@@ -26,7 +26,7 @@ export const Top = styled.div`
   background-color: white;
   border-radius: 10px;
   border: solid ${grey400} .5px;
-  padding-top: 80px;
+  padding-top: 40px;
 `
 
 export const TopCol = styled.div`

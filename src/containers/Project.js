@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View} from 'styled'
-import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title} from 'styled/Project'
+import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre} from 'styled/Project'
 import AudioPlayer from 'components/AudioPlayer'
 import Comments from 'containers/Comments'
 import CommentMarkers from 'components/CommentMarkers'
+import Music from 'icons/Music'
+import {white} from 'theme'
 
 class Project extends Component {
 
@@ -46,6 +48,16 @@ class Project extends Component {
               <Title>
                 {project.title}
               </Title>
+              <Genre>
+                <Music
+                  fill={white}
+                  style={{
+                    marginRight: '5px',
+                    height: '18px'
+                  }}
+                />
+                {project.genres.edges[0].node.name}
+              </Genre>
             </TitleGenre>
             <Summary>
               {project.description}
@@ -128,7 +140,6 @@ export default Relay.createContainer(
                 artwork {
                   url
                 }
-                new
                 tracks (
                   first: 1
                 ) {

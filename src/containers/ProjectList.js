@@ -7,7 +7,7 @@ import {IconTextContainer, IconText} from 'styled'
 import Music from 'icons/Music'
 import Upload from 'icons/Upload'
 import Logo from 'icons/Logo'
-import {purple, white} from 'theme'
+import {purple, white, grey400} from 'theme'
 
 class ProjectList extends Component {
 
@@ -45,6 +45,7 @@ class ProjectList extends Component {
 
           </Left>
           <RoundButton
+            backgroundColor={(project.privacy === 'PUBLIC') ? purple : grey400}
             icon={
               <Logo
                 fill={white}

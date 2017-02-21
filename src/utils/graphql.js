@@ -173,3 +173,35 @@ export const ensureBtArtistExists = (artist) => {
     })
   })
 }
+
+export const ensureUsersProjectTitleUnique = (userId, projectTitle)=> {
+  return fetch(simple, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `{
+        User (id: "${userId}") {
+          projects (
+            first: 1
+            filter: {
+              title: "${projectTitle}"
+            }
+          ) {
+            id
+            title
+          }
+        }
+      }`
+    }),
+  })
+  .then(result=>result.json()).then(json => {
+    if (json.data.User.projects.length > 0) {
+      return false
+    } else {
+      return true
+    }
+
+  })
+}

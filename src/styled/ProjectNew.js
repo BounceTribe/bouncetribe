@@ -1,6 +1,12 @@
 import styled from 'styled-components'
 import {grey300} from 'theme'
 
+export const TrackContainer = styled.div`
+  width: 80%;
+  max-width: 800px;
+  margin: 50px 0;
+`
+
 export const Row = styled.div`
   display: flex;
   justify-content: space-between;
