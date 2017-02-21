@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, Portrait, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotLeft, BotRow, BotRight, Label, InputError} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, Portrait, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotLeft, BotRow, BotRight, Label, InputError, TribeButton, SubRow, Experience, ExperienceRow} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
 import Email from 'icons/Email'
 import Link from 'icons/Link'
+import ExperienceIcon from 'icons/Experience'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import ImageEditor from 'components/ImageEditor'
 import UpdateUser from 'mutations/UpdateUser'
@@ -19,6 +20,11 @@ import {handleValidator} from 'utils/handles'
 import {purple, grey200} from 'theme'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
+import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
+import AddToFriends from 'mutations/AddToFriends'
+import RemoveFromFriends from 'mutations/RemoveFromFriends'
+import CreateFriendRequest from 'mutations/CreateFriendRequest'
+import {formatEnum} from 'utils/strings'
 
 class Profile extends Component {
 
@@ -29,7 +35,7 @@ class Profile extends Component {
     influences: [],
     handleError: '',
     experience: '',
-    experiences: ['','NOVICE', 'PROFESSIONAL']
+    experiences: ['Novice', 'Professional']
   }
 
   inputChange = (e) => {
@@ -76,6 +82,15 @@ class Profile extends Component {
       new UpdateUser({
         userId: this.props.viewer.user.id,
         genresIds
+      })
+    )
+  }
+
+  experienceChange = (experience) => {
+    this.props.relay.commitUpdate(
+      new UpdateUser({
+        userId: this.props.viewer.user.id,
+        experience: experience.toUpperCase()
       })
     )
   }
@@ -137,8 +152,8 @@ class Profile extends Component {
           value={experience}
         />
       ))
-
       let {User} = this.props.viewer
+      console.log(User)
       let genres = User.genres.edges.map(edge=>{
         let {node: genre} = edge
         return {
@@ -281,6 +296,52 @@ class Profile extends Component {
     })
   }
 
+  addToTribe = () => {
+    let {id: actorId} = this.props.viewer.user
+    let {id: recipientId} = this.props.viewer.User
+    this.props.relay.commitUpdate(
+      new CreateFriendRequest({
+        actorId,
+        recipientId,
+      })
+    )
+  }
+
+  accept = (inviteId) => {
+    let {id: selfId} = this.props.viewer.user
+    let {id: newFriendId} = this.props.viewer.User
+    this.props.relay.commitUpdate(
+      new UpdateFriendRequest({
+        id: inviteId,
+        accepted: true
+      }), {
+        onSuccess: (response) => {
+          console.log('success?')
+          this.props.relay.commitUpdate(
+            new AddToFriends({
+              selfId,
+              newFriendId
+            })
+          )
+        },
+        onFailure: (response) => {
+          console.log('failure', response)
+        }
+      }
+    )
+  }
+
+  unfriend = () => {
+    let {id: selfId} = this.props.viewer.user
+    let {id: exfriendId} = this.props.viewer.User
+    this.props.relay.commitUpdate(
+      new RemoveFromFriends({
+        selfId,
+        exfriendId
+      })
+    )
+  }
+
   render () {
     let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError, experience, experiences} = this.state
     let {User, user} = this.props.viewer
@@ -292,59 +353,68 @@ class Profile extends Component {
       <ProfileView>
           <Top>
               <Row>
-                <Portrait
-                  src={portraitUrl}
-                  onClick={()=>{
-                    if (ownProfile) {
-                      this.setState({imageEditorOpen: true})
-                    }
-                  }}
-                  ownProfile={ownProfile}
+                <SubRow>
+                  <Portrait
+                    src={portraitUrl}
+                    onClick={()=>{
+                      if (ownProfile) {
+                        this.setState({imageEditorOpen: true})
+                      }
+                    }}
+                    ownProfile={ownProfile}
+                  />
+                  <ImageEditor
+                    open={imageEditorOpen}
+                    onRequestClose={()=>this.setState({imageEditorOpen:false})}
+                    user={user}
+                    portraitSuccess={this.portraitSuccess}
+                  />
+                  <TopCol>
+                    <InputRow>
+                      <Handle
+                        value={handle}
+                        onChange={this.inputChange}
+                        disabled={!ownProfile}
+                        placeholder={'handle'}
+                        name={'handle'}
+                        onBlur={this.inputSubmit}
+                      />
+                      <InputError>
+                        {handleError}
+                      </InputError>
+                    </InputRow>
+                    <InputRow>
+                      <PinIcon/>
+                      <Location
+                        value={placename}
+                        onChange={this.inputChange}
+                        placeholder={(ownProfile) ? 'add your location' : ''}
+                        name={'placename'}
+                        disabled={!ownProfile}
+                        onBlur={this.inputSubmit}
+                      />
+                    </InputRow>
+                    <ScoreRow>
+                      <Bolt/>
+                      <Score>{score}</Score>
+                      <Music
+                        height={20}
+                      />
+                      <Score>{projects}</Score>
+                      <Tribe
+                        height={20}
+                      />
+                      <Score>{friends}</Score>
+                    </ScoreRow>
+                  </TopCol>
+                </SubRow>
+
+                <TribeButton
+                  viewer={this.props.viewer}
+                  accept={this.accept}
+                  addToTribe={this.addToTribe}
+                  unfriend={this.unfriend}
                 />
-                <ImageEditor
-                  open={imageEditorOpen}
-                  onRequestClose={()=>this.setState({imageEditorOpen:false})}
-                  user={user}
-                  portraitSuccess={this.portraitSuccess}
-                />
-                <TopCol>
-                  <InputRow>
-                    <Handle
-                      value={handle}
-                      onChange={this.inputChange}
-                      disabled={!ownProfile}
-                      placeholder={'handle'}
-                      name={'handle'}
-                      onBlur={this.inputSubmit}
-                    />
-                    <InputError>
-                      {handleError}
-                    </InputError>
-                  </InputRow>
-                  <InputRow>
-                    <PinIcon/>
-                    <Location
-                      value={placename}
-                      onChange={this.inputChange}
-                      placeholder={(ownProfile) ? 'add your location' : ''}
-                      name={'placename'}
-                      disabled={!ownProfile}
-                      onBlur={this.inputSubmit}
-                    />
-                  </InputRow>
-                  <ScoreRow>
-                    <Bolt/>
-                    <Score>{score}</Score>
-                    <Music
-                      height={20}
-                    />
-                    <Score>{projects}</Score>
-                    <Tribe
-                      height={20}
-                    />
-                    <Score>{friends}</Score>
-                  </ScoreRow>
-                </TopCol>
               </Row>
               <Divider/>
               <Row>
@@ -417,16 +487,41 @@ class Profile extends Component {
               <Label>
                 Experience
               </Label>
-              <SelectField
-                value={experience}
-                fullWidth={true}
-                onChange={(e, index, value)=>{
-                  this.setState({experience:value})
-                }}
-                disabled={(!ownProfile)}
-              >
-                {experiences}
-              </SelectField>
+              {(ownProfile) ? (
+                <ExperienceRow>
+                  <ExperienceIcon
+                    style={{
+                      marginRight: '5px'
+                    }}
+                  />
+                  <SelectField
+                    value={formatEnum(experience)}
+                    fullWidth={true}
+                    onChange={(e, index, value)=>{
+                      this.experienceChange(value)
+                    }}
+                    disabled={(!ownProfile)}
+                    hintText={'add your experience'}
+                  >
+                    {experiences}
+                  </SelectField>
+                </ExperienceRow>
+              ) : (
+                <ExperienceRow>
+                  <ExperienceIcon
+                    style={{
+                      marginRight: '5px'
+                    }}
+                  />
+                  <Experience
+                    value={formatEnum(experience)}
+                    disabled={true}
+                    placeholder={'experience'}
+                  />
+                </ExperienceRow>
+
+              )}
+
               <Label>
                 Genres
               </Label>
@@ -481,6 +576,48 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            friends (
+              first: 100000
+            ) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
+            invitations (
+              filter: {
+                accepted: false
+                ignored: false
+              }
+              first: 2147483647
+              orderBy: createdAt_ASC
+            ) {
+              edges {
+                node {
+                  id
+                  actor {
+                    id
+                  }
+                }
+              }
+            }
+            sentRequests (
+              filter: {
+                accepted: false
+                ignored: false
+              }
+              first: 2147483647
+              orderBy: createdAt_ASC
+            ) {
+              edges {
+                node {
+                  recipient {
+                    id
+                  }
+                }
+              }
+            }
           }
           User (handle: $userHandle) {
             id
