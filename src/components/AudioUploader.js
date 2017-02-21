@@ -5,6 +5,7 @@ import Dropzone from 'react-dropzone'
 import uploadFile from 'utils/uploadFile'
 import createVisualization from 'utils/createVisualization'
 import UpdateFile from 'mutations/UpdateFile'
+import UploadTrack from 'icons/UploadTrack'
 
 class AudioUploader extends Component {
 
@@ -59,6 +60,8 @@ class AudioUploader extends Component {
         <Dropzone
           style={{
             display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
             width: '100%',
             height: '100%',
           }}
@@ -67,7 +70,7 @@ class AudioUploader extends Component {
           maxSize={15000000}
           onDrop={this.onAudioDrop}
         >
-
+          <UploadTrack/>
         </Dropzone>
       </DropContainer>
     )

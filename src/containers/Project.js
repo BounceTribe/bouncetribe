@@ -44,7 +44,7 @@ class Project extends Component {
           <Info>
             <TitleGenre>
               <Title>
-                {project.title}                
+                {project.title}
               </Title>
             </TitleGenre>
             <Summary>
@@ -116,7 +116,15 @@ export default Relay.createContainer(
                 description
                 privacy
                 creator
-                genre
+                genres (
+                  first: 3
+                ) {
+                  edges {
+                    node {
+                      name
+                    }
+                  }
+                }
                 artwork {
                   url
                 }

@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {ProjectNewView, Button, RoundButton} from 'styled'
-import {Row, Left, Right, Sharing, Choice, ChoiceText} from 'styled/ProjectNew'
+import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop} from 'styled/ProjectNew'
 import AudioUploader from 'components/AudioUploader'
+import SelectField from 'material-ui/SelectField'
 import TextField from 'material-ui/TextField'
 import CreateProject from 'mutations/CreateProject'
 import Music from 'icons/Music'
@@ -10,13 +11,36 @@ import AudioPlayer from 'components/AudioPlayer'
 import {Spinner} from 'styled/Spinner'
 import LinearProgress from 'material-ui/LinearProgress'
 import ImageEditor from 'components/ImageEditor'
+import {getAllGenres} from 'utils/graphql'
+import MenuItem from 'material-ui/MenuItem'
+import {url} from 'config'
+import {purple, grey300} from 'theme'
 
 class ProjectNew extends Component {
 
   state = {
     title: '',
     progress: 0,
-    imageEditorOpen: false
+    imageEditorOpen: false,
+    genre: '',
+    genres: [],
+    privacy: 'PUBLIC'
+  }
+
+  constructor(props) {
+    super(props)
+    getAllGenres().then(results=>{
+      let genres = results.map(genre=>(
+        <MenuItem
+          primaryText={genre.name}
+          value={genre.id}
+          key={genre.id}
+        />
+      ))
+      this.setState({
+        genres
+      })
+    })
   }
 
   createProject = () => {
@@ -25,7 +49,7 @@ class ProjectNew extends Component {
     this.props.relay.commitUpdate(
       new CreateProject({
         project,
-        user
+        user,
       }), {
         onSuccess: success => {
           console.log('success', this.props.router)
@@ -91,11 +115,6 @@ class ProjectNew extends Component {
     })
   }
 
-  imageSuccess = (file) => {
-    this.setState({
-      artworkId: file.id
-    })
-  }
 
   get uploader () {
     let {track, audioProgress} = this.state
@@ -122,8 +141,17 @@ class ProjectNew extends Component {
     }
   }
 
+  artworkSuccess = (file) => {
+    console.log(file)
+    this.setState({
+      imageEditorOpen: false,
+      artworkUrl: file.url,
+      artworkId: file.id
+    })
+  }
+
    get form () {
-    let {titleValid, description, tracksIds, artworkId, audioProgress} = this.state
+    let {title, description, tracksIds, artworkId, audioProgress, privacy, genres} = this.state
     if (audioProgress  && audioProgress !== 'GENERATING') {
       return (
         <Row>
@@ -136,6 +164,16 @@ class ProjectNew extends Component {
               onChange={(e)=>{this.setState({title:e.target.value})}}
               fullWidth={true}
             />
+            <SelectField
+              floatingLabelText={'Genre'}
+              value={this.state.genre}
+              fullWidth={true}
+              onChange={(e, index, value)=>{
+                this.setState({genre:value})
+              }}
+            >
+              {this.state.genres}
+            </SelectField>
             <TextField
               name={'description'}
               floatingLabelText={'Description'}
@@ -148,27 +186,30 @@ class ProjectNew extends Component {
             />
             <Button
               primary={true}
-              disabled={(!titleValid || !description || !tracksIds || !artworkId)}
+              disabled={(!title || !description || !tracksIds || !genres || !artworkId)}
               label={'Create'}
               onClick={this.createProject}
               icon={<Music/>}
             />
           </Left>
           <Right>
-            <div
-              style={{backgroundColor: 'salmon', height: '100px', width: '100px'}}
+            <ArtworkDrop
               onClick={()=>this.setState({imageEditorOpen: true})}
+              src={(this.state.artworkUrl) ? this.state.artworkUrl : `${url}/artwork.png` }
             />
+
+
             <ImageEditor
               open={this.state.imageEditorOpen}
               onRequestClose={()=>this.setState({imageEditorOpen:false})}
               user={this.props.viewer.user}
-              portraitSuccess={this.portraitSuccess}
+              portraitSuccess={this.artworkSuccess}
             />
             <Sharing>
               <Choice>
                 <RoundButton
-
+                  onClick={()=>this.setState({privacy: 'PRIVATE'})}
+                  backgroundColor={(privacy === 'PRIVATE') ? purple : grey300}
                 />
                   <ChoiceText>
                     Private
@@ -176,6 +217,8 @@ class ProjectNew extends Component {
               </Choice>
               <Choice>
                 <RoundButton
+                  onClick={()=>this.setState({privacy: 'TRIBE'})}
+                  backgroundColor={(privacy === 'TRIBE') ? purple : grey300}
 
                 />
                 <ChoiceText>
@@ -184,7 +227,8 @@ class ProjectNew extends Component {
               </Choice>
               <Choice>
                 <RoundButton
-
+                  onClick={()=>this.setState({privacy: 'PUBLIC'})}
+                  backgroundColor={(privacy === 'PUBLIC') ? purple : grey300}
                 />
                 <ChoiceText>
                   Find Sessions

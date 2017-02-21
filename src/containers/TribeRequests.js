@@ -86,6 +86,7 @@ export default Relay.createContainer(
                     portrait {
                       url
                     }
+                    score
                     placename
                     friends (first: 2147483647) {
                       edges {

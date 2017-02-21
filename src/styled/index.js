@@ -36,8 +36,7 @@ export const FeedView = styled(View)`
 `
 
 export const ProjectNewView = styled(View)`
-  width: 800px;
-  padding: 80px;
+  
 `
 
 export const IconTextContainer = styled(BtLink)`
@@ -63,7 +62,6 @@ export const DropContainer = styled.div`
   max-width: 400px;
   height: 200px;
   border-radius: 10px;
-  border: 2px dashed ${grey215};
   cursor: pointer;
 `
 

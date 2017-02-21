@@ -17,6 +17,8 @@ import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
 import {handleValidator} from 'utils/handles'
 import {purple, grey200} from 'theme'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
 
 class Profile extends Component {
 
@@ -25,7 +27,9 @@ class Profile extends Component {
     genres: [],
     skills: [],
     influences: [],
-    handleError: ''
+    handleError: '',
+    experience: '',
+    experiences: ['','NOVICE', 'PROFESSIONAL']
   }
 
   inputChange = (e) => {
@@ -125,6 +129,15 @@ class Profile extends Component {
 
   componentWillMount = () => {
     this.setState( (prevState, props) => {
+
+      let experiences = prevState.experiences.map(experience=>(
+        <MenuItem
+          primaryText={experience}
+          key={experience}
+          value={experience}
+        />
+      ))
+
       let {User} = this.props.viewer
       let genres = User.genres.edges.map(edge=>{
         let {node: genre} = edge
@@ -160,13 +173,15 @@ class Profile extends Component {
         email: User.email || '',
         genres,
         skills,
-        influences
+        influences,
+        experiences,
+        experience: User.experience || '',
       }
     })
   }
 
   componentWillReceiveProps (newProps) {
-    let {handle, placename, summary, portrait, score, projects, friends, website, email, genres, skills, artistInfluences} = newProps.viewer.User
+    let {handle, placename, summary, portrait, score, projects, friends, website, email, genres, skills, artistInfluences, experience} = newProps.viewer.User
     this.setState( (prevState, props) => {
       let newGenres = genres.edges.map(edge=>{
         let {node: genre} = edge
@@ -205,7 +220,8 @@ class Profile extends Component {
         friends: friends.edges.length,
         genres: newGenres,
         skills: newSkills,
-        influences: newInfluences
+        influences: newInfluences,
+        experience: experience || '',
       }
     })
     let oldHandle = this.props.viewer.User.handle
@@ -266,7 +282,7 @@ class Profile extends Component {
   }
 
   render () {
-    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError} = this.state
+    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError, experience, experiences} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
     let projects = User.projects.edges.length
@@ -401,6 +417,16 @@ class Profile extends Component {
               <Label>
                 Experience
               </Label>
+              <SelectField
+                value={experience}
+                fullWidth={true}
+                onChange={(e, index, value)=>{
+                  this.setState({experience:value})
+                }}
+                disabled={(!ownProfile)}
+              >
+                {experiences}
+              </SelectField>
               <Label>
                 Genres
               </Label>
@@ -458,6 +484,7 @@ export default Relay.createContainer(
           }
           User (handle: $userHandle) {
             id
+            experience
             email
             handle
             summary

@@ -65,9 +65,8 @@ export const suggestedFriends = (userId) => {
       }).then(result=>result.json()).then(json => {
         let fbFriends = json.data.allUsers.map(user=>user)
         let btFriends = json.data.User.friends.map(user => user.id)
-
-        let suggestedFriends = fbFriends.filter((id)=>{
-          return !btFriends.includes(id)
+        let suggestedFriends = fbFriends.filter((fbFriend)=>{
+          return !btFriends.includes(fbFriend.id)
         })
         resolve(suggestedFriends)
       })

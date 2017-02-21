@@ -9,17 +9,17 @@ export default class CreateProjectMutation extends Relay.Mutation {
       privacy,
       title,
       artworkId,
-      tracksIds
+      tracksIds,
     } = this.props.project
     return {
       creatorId: this.props.user.id,
       description,
-      genre,
       new: this.props.project.new,
       privacy,
       title,
       artworkId,
-      tracksIds
+      tracksIds,
+      genresIds: genre
     }
   }
 

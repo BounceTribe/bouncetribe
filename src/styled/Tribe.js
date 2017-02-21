@@ -200,9 +200,17 @@ export const Name = styled(BtLink)`
   display: inline-flex;
   font-weight: 600;
   font-size: 14px;
+  color: ${grey700};
   &:hover {
     color: ${purple};
   }
+`
+
+export const TableScore = styled.span`
+  display: inline-flex;
+  font-weight: 600;
+  font-size: 18px;
+  color: ${grey700};
 `
 
 export const FindH3 = styled.div`
@@ -218,6 +226,8 @@ export const FindH3 = styled.div`
 `
 
 export const Projects = styled.div`
+  display: flex;
+  justify-content: center;
   background-color: ${purple};
   border-radius: 5px;
   color: ${white};
