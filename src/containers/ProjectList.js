@@ -69,7 +69,7 @@ class ProjectList extends Component {
           <Header>
 
               <IconTextContainer
-                to={`/${this.props.viewer.User.handle}`}
+                to={`/${this.props.viewer.User.handle}/projects`}
               >
                 <Music
                   style={{

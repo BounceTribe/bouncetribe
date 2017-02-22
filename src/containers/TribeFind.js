@@ -2,14 +2,13 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import TextField from 'material-ui/TextField'
 import {View, IconText, IconTextContainer, Button} from 'styled'
-import {Container, Header, HeaderOptions} from 'styled/list'
+import {Container, Header, HeaderOptions, List} from 'styled/list'
 import Tribe from 'icons/Tribe'
 import {purple, fbBlue, white} from 'theme'
 import {FindH3, SearchUser} from 'styled/Tribe'
 import Facebook from 'icons/Facebook'
 import {fbId} from 'config/facebook'
 import {suggestedFriends} from 'utils/graphql'
-import {List} from 'styled/list'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
 class TribeFind extends Component {
@@ -75,7 +74,9 @@ class TribeFind extends Component {
       <View>
         <Container>
           <Header>
-            <IconTextContainer>
+            <IconTextContainer
+              to={`/${user.handle}/tribe`}
+            >
               <Tribe
                 fill={purple}
               />
@@ -153,6 +154,7 @@ export default Relay.createContainer(
             id
             facebookId
             auth0UserId
+            handle
           }
           User (handle: $userHandle) {
             id

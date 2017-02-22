@@ -16,91 +16,98 @@ class TribeAll extends Component {
           handle={this.props.viewer.user.handle}
         />
       )
+    } else {
+      let friends = this.props.viewer.User.friends.edges.map(edge=>{
+        let {node:friend} = edge
+        return (
+          <TableRow
+            key={friend.id}
+          >
+            <TableRowColumn
+              style={{width: '50px'}}
+            >
+              <SmallPic
+                src={friend.portrait.url}
+                to={`/${friend.handle}`}
+              />
+            </TableRowColumn>
+            <TableRowColumn>
+              <Name
+                to={`/${friend.handle}`}
+              >
+                {friend.handle}
+              </Name>
+            </TableRowColumn>
+            <TableRowColumn
+              style={{
+                width: '50px',
+              }}
+            >
+              <Bolt
+                height={18}
+              />
+              <TableScore>
+                  {friend.score}
+              </TableScore>
+            </TableRowColumn>
+            <TableRowColumn>{friend.placename}</TableRowColumn>
+            <TableRowColumn>
+              {friend.genres.edges.map(edge=>(
+                <GenreChip key={edge.node.id}>
+                  {edge.node.name}
+                </GenreChip>
+              ))}
+            </TableRowColumn>
+            <TableRowColumn>
+              <Projects>
+
+                {friend.projects.edges.length}
+              </Projects>
+            </TableRowColumn>
+          </TableRow>
+        )
+      })
+      return (
+        <Table
+          style={{
+            width: '90%',
+            margin: 'auto'
+          }}
+        >
+          <TableHeader
+            displaySelectAll={false}
+            adjustForCheckbox={false}
+          >
+            <TableRow>
+              <TableHeaderColumn
+                style={{width: '50px'}}
+              >{/*image*/}</TableHeaderColumn>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn
+                style={{width: '50px'}}
+              >Rating</TableHeaderColumn>
+              <TableHeaderColumn>Location</TableHeaderColumn>
+              <TableHeaderColumn>Genres</TableHeaderColumn>
+              <TableHeaderColumn>Projects</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            displayRowCheckbox={false}
+          >
+            {friends}
+          </TableBody>
+        </Table>
+
+      )
     }
 
-    return this.props.viewer.User.friends.edges.map(edge=>{
-      let {node:friend} = edge
-      return (
-        <TableRow
-          key={friend.id}
-        >
-          <TableRowColumn
-            style={{width: '50px'}}
-          >
-            <SmallPic
-              src={friend.portrait.url}
-              to={`/${friend.handle}`}
-            />
-          </TableRowColumn>
-          <TableRowColumn>
-            <Name
-              to={`/${friend.handle}`}
-            >
-              {friend.handle}
-            </Name>
-          </TableRowColumn>
-          <TableRowColumn
-            style={{
-              width: '50px',
-            }}
-          >
-            <Bolt
-              height={18}
-            />
-            <TableScore>
-                {friend.score}
-            </TableScore>
-          </TableRowColumn>
-          <TableRowColumn>{friend.placename}</TableRowColumn>
-          <TableRowColumn>
-            {friend.genres.edges.map(edge=>(
-              <GenreChip key={edge.node.id}>
-                {edge.node.name}
-              </GenreChip>
-            ))}
-          </TableRowColumn>
-          <TableRowColumn>
-            <Projects>
-
-              {friend.projects.edges.length}
-            </Projects>
-          </TableRowColumn>
-        </TableRow>
-      )
-    })
   }
 
   render () {
     return (
-      <Table
-        style={{
-          width: '90%',
-          margin: 'auto'
-        }}
-      >
-        <TableHeader
-          displaySelectAll={false}
-          adjustForCheckbox={false}
-        >
-          <TableRow>
-            <TableHeaderColumn
-              style={{width: '50px'}}
-            >{/*image*/}</TableHeaderColumn>
-            <TableHeaderColumn>Name</TableHeaderColumn>
-            <TableHeaderColumn
-              style={{width: '50px'}}
-            >Rating</TableHeaderColumn>
-            <TableHeaderColumn>Location</TableHeaderColumn>
-            <TableHeaderColumn>Genres</TableHeaderColumn>
-            <TableHeaderColumn>Projects</TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody
-          displayRowCheckbox={false}
-        >
-          {this.friendsList}
-        </TableBody>
-      </Table>
+      <div>
+        {this.friendsList}
+      </div>
     )
   }
 }

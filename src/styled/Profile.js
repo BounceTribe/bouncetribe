@@ -158,7 +158,7 @@ export const BotLeft = styled.div`
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  width: 60%;
+  width: 66%;
   border: solid ${grey400} .5px;
   border-radius: 10px;
   margin-right: 15px;
@@ -170,7 +170,7 @@ export const BotRight = styled.div`
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  width: 40%;
+  width: 33%;
   border: solid ${grey400} .5px;
   border-radius: 10px;
   padding: 0 20px;

@@ -221,7 +221,7 @@ export const FindH3 = styled.div`
   color: ${purple};
   box-sizing: border-box;
   width: 100%;
-  padding: 60px 30px 40px 30px;
+  padding: 60px 30px 10px 30px;
   font-size: 20px;
 `
 

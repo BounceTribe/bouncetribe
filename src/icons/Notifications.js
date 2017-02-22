@@ -7,7 +7,8 @@ const Notifications = ({style, fill, height, width, viewBox, notifications}) => 
   <svg
     style={{
       position: 'absolute',
-      marginLeft: '-54px'
+      marginLeft: '-54px',
+      display: (notifications < 1) ? 'none' : ''
     }}
     width={width || 20} height={height || 20} viewBox={viewBox ||"104 0 20 20"} version="1.1" xmlns="http://www.w3.org/2000/svg" >
       <circle id="notification-circle" stroke="none" fill={(notifications > 0) ? purple : grey400} fillRule="evenodd" cx="114" cy="10" r="10"></circle>

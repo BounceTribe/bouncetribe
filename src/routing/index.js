@@ -117,12 +117,14 @@ const createRoutes = () => {
           queries={ViewerQuery}
           render={({ props }) => props ? <TribeFind {...props} /> : <Loading />}
           auth={auth}
+          ignoreScrollBehavior
         >
           <IndexRoute
             component={TribeSearchResults}
             queries={ViewerQuery}
             render={({ props }) => props ? <TribeSearchResults {...props} /> : <Loading />}
             prepareParams={tribeSearch}
+            ignoreScrollBehavior
           />
         </Route>
         <Route
