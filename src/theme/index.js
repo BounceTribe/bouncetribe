@@ -29,6 +29,7 @@ export const btTheme = getMuiTheme({
   }
 })
 
+export const transparent = `rgba(0,0,0,0)`
 
 export const teal = 'rgb(23, 207, 170)'
 export const grey40 = 'rgb(40,40,40)'

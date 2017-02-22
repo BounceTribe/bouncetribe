@@ -5,6 +5,7 @@ import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
 import Music from 'icons/Music'
 import Headphones from 'icons/Headphones'
+import Alerts from 'icons/Alerts'
 
 const TopNav = ({handle, portraitUrl}) => {
 
@@ -14,14 +15,6 @@ const TopNav = ({handle, portraitUrl}) => {
           to={'/'}
         />
       <NavList>
-        <NavLink
-          to={`/${handle}/tribe`}
-        >
-
-            <NavText>
-              Tribe
-            </NavText>
-        </NavLink>
         <NavLink
           to={`/${handle}/sessions`}
         >
@@ -40,7 +33,11 @@ const TopNav = ({handle, portraitUrl}) => {
             Projects
           </NavText>
         </NavLink>
-
+        <NavLink>
+          <Alerts
+            alerts={false}
+          />
+        </NavLink>
         <Portrait
           src={portraitUrl}
           to={`/${handle}`}

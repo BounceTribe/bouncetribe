@@ -26,6 +26,7 @@ import AddToFriends from 'mutations/AddToFriends'
 import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
+import Snackbar from 'material-ui/Snackbar'
 
 class Profile extends Component {
 
@@ -36,7 +37,8 @@ class Profile extends Component {
     influences: [],
     handleError: '',
     experience: '',
-    experiences: ['Novice', 'Professional']
+    experiences: ['Novice', 'Professional'],
+    notification: false
   }
 
   inputChange = (e) => {
@@ -66,11 +68,18 @@ class Profile extends Component {
     if (this.state[`${name}Error`]) {
       return
     } else {
+      document.getElementById(name).blur()
       this.props.relay.commitUpdate(
         new UpdateUser({
           userId: this.props.viewer.user.id,
-          [name]: value
-        })
+          [name]: value,
+        }), {
+          onSuccess: (success) => {
+            this.setState({
+              notification: `${name.toUpperCase()} UPDATED.`
+            })
+          }
+        }
       )
     }
   }
@@ -83,7 +92,13 @@ class Profile extends Component {
       new UpdateUser({
         userId: this.props.viewer.user.id,
         genresIds
-      })
+      }), {
+        onSuccess: (success) => {
+          this.setState({
+            notification: `GENRE UPDATED.`
+          })
+        }
+      }
     )
   }
 
@@ -92,7 +107,13 @@ class Profile extends Component {
       new UpdateUser({
         userId: this.props.viewer.user.id,
         experience: experience.toUpperCase()
-      })
+      }), {
+        onSuccess: (success) => {
+          this.setState({
+            notification: `EXPERIENCE UPDATED.`
+          })
+        }
+      }
     )
   }
 
@@ -104,7 +125,13 @@ class Profile extends Component {
       new UpdateUser({
         userId: this.props.viewer.user.id,
         skillsIds
-      })
+      }), {
+        onSuccess: (success) => {
+          this.setState({
+            notification: `SKILLS UPDATED.`
+          })
+        }
+      }
     )
   }
 
@@ -117,7 +144,13 @@ class Profile extends Component {
         new UpdateUser({
           userId: this.props.viewer.user.id,
           artistInfluencesIds
-        })
+        }), {
+          onSuccess: (success) => {
+            this.setState({
+              notification: `INFLUENCES UPDATED.`
+            })
+          }
+        }
       )
     } else {
       let newInfluence = options.find((option) => {
@@ -135,8 +168,12 @@ class Profile extends Component {
           new UpdateUser({
             userId: this.props.viewer.user.id,
             artistInfluencesIds
-          }), {
-            onSuccess: success => console.log('success')
+          }),{
+            onSuccess: (success) => {
+              this.setState({
+                notification: `INFLUENCES UPDATED.`
+              })
+            }
           }
         )
       })
@@ -154,7 +191,6 @@ class Profile extends Component {
         />
       ))
       let {User} = this.props.viewer
-      console.log(User)
       let genres = User.genres.edges.map(edge=>{
         let {node: genre} = edge
         return {
@@ -343,8 +379,16 @@ class Profile extends Component {
     )
   }
 
+  closeSnackbar = () => {
+    this.setState( (prevState, props) => {
+      return {
+        notification: false
+      }
+    })
+  }
+
   render () {
-    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError, experience, experiences} = this.state
+    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError, experience, experiences, notification} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
     let projects = User.projects.edges.length
@@ -352,221 +396,284 @@ class Profile extends Component {
     let ownProfile = (User.id === user.id)
     return (
       <ProfileView>
-          <Top>
-              <Row>
-                <SubRow>
-                  <Portrait
-                    src={portraitUrl}
-                    onClick={()=>{
-                      if (ownProfile) {
-                        this.setState({imageEditorOpen: true})
-                      }
-                    }}
-                    ownProfile={ownProfile}
-                  />
-                  <ImageEditor
-                    open={imageEditorOpen}
-                    onRequestClose={()=>this.setState({imageEditorOpen:false})}
-                    user={user}
-                    portraitSuccess={this.portraitSuccess}
-                  />
-                  <TopCol>
-                    <InputRow>
-                      <Handle
-                        value={handle}
-                        onChange={this.inputChange}
-                        disabled={!ownProfile}
-                        placeholder={'handle'}
-                        name={'handle'}
-                        onBlur={this.inputSubmit}
-                      />
-                      <InputError>
-                        {handleError}
-                      </InputError>
-                    </InputRow>
-                    <InputRow>
-                      <PinIcon/>
-                      <Location
-                        value={placename}
-                        onChange={this.inputChange}
-                        placeholder={(ownProfile) ? 'add your location' : ''}
-                        name={'placename'}
-                        disabled={!ownProfile}
-                        onBlur={this.inputSubmit}
-                      />
-                    </InputRow>
-                    <ScoreRow>
-                      <Bolt/>
-                      <Score>{score}</Score>
-                      <Music
-                        height={20}
-                      />
-                      <Score>{projects}</Score>
-                      <Tribe
-                        height={20}
-                      />
-                      <Score>{friends}</Score>
-                    </ScoreRow>
-                  </TopCol>
-                </SubRow>
-
-                <TribeButton
-                  viewer={this.props.viewer}
-                  accept={this.accept}
-                  addToTribe={this.addToTribe}
-                  unfriend={this.unfriend}
+        <Snackbar
+          open={notification}
+          message={notification}
+          action={"close"}
+          autoHideDuration={2000}
+          onRequestClose={this.closeSnackbar}
+          onActionTouchTap={this.closeSnackbar}
+          bodyStyle={{
+            backgroundColor: purple
+          }}
+        />
+        <Top>
+            <Row>
+              <SubRow>
+                <Portrait
+                  src={portraitUrl}
+                  onClick={()=>{
+                    if (ownProfile) {
+                      this.setState({imageEditorOpen: true})
+                    }
+                  }}
+                  ownProfile={ownProfile}
                 />
-              </Row>
-              <Divider/>
-              <Row>
-                <Left>
-                  <Summary
-                    value={summary}
-                    name={'summary'}
-                    onChange={this.inputChange}
-                    placeholder={(ownProfile) ? 'add your summary' : ''}
-                    disabled={!ownProfile}
-                    onBlur={this.inputSubmit}
-                  />
-                </Left>
-                <Right>
+                <ImageEditor
+                  open={imageEditorOpen}
+                  onRequestClose={()=>this.setState({imageEditorOpen:false})}
+                  user={user}
+                  portraitSuccess={this.portraitSuccess}
+                />
+                <TopCol>
                   <InputRow>
-                    <Email/>
-                    <Input
-                      value={email}
-                      placeholder={(ownProfile) ? 'add your email' : ''}
-                      onChange={this.inputChange}
-                      disabled
-                    />
-                  </InputRow>
-                  <InputRow>
-                    <Link/>
-                    <Input
-                      value={website}
-                      name={'website'}
-                      placeholder={(ownProfile) ? 'add your website' : ''}
+                    <Handle
+                      value={handle}
+                      id={'handle'}
                       onChange={this.inputChange}
                       disabled={!ownProfile}
+                      placeholder={'handle'}
+                      name={'handle'}
                       onBlur={this.inputSubmit}
+                      onKeyPress={(e)=>{
+                        if (e.charCode === 13) {
+                          this.inputSubmit(e)
+                        }
+                      }}
+                    />
+                    <InputError>
+                      {handleError}
+                    </InputError>
+                  </InputRow>
+                  <InputRow
+                    hide={(!ownProfile && placename.length < 1)}
+                  >
+                    <PinIcon/>
+                    <Location
+                      value={placename}
+                      onChange={this.inputChange}
+                      placeholder={(ownProfile) ? 'add your location' : ''}
+                      name={'placename'}
+                      id={'placename'}
+                      disabled={!ownProfile}
+                      onBlur={this.inputSubmit}
+                      onKeyPress={(e)=>{
+                        if (e.charCode === 13) {
+                          this.inputSubmit(e)
+                        }
+                      }}
                     />
                   </InputRow>
-                </Right>
-              </Row>
-          </Top>
-          <BotRow>
-            <BotLeft>
-              <Tabs
+                  <ScoreRow>
+                    <Bolt/>
+                    <Score>{score}</Score>
+                    <Music
+                      height={20}
+                    />
+                    <Score>{projects}</Score>
+                    <Tribe
+                      height={20}
+                    />
+                    <Score>{friends}</Score>
+                  </ScoreRow>
+                </TopCol>
+              </SubRow>
+
+              <TribeButton
+                viewer={this.props.viewer}
+                accept={this.accept}
+                addToTribe={this.addToTribe}
+                unfriend={this.unfriend}
+              />
+            </Row>
+            <Divider/>
+            <Row>
+              <Left>
+                <Summary
+                  value={summary}
+                  name={'summary'}
+                  id={'summary'}
+                  onChange={this.inputChange}
+                  placeholder={(ownProfile) ? 'add your summary' : ''}
+                  disabled={!ownProfile}
+                  onBlur={this.inputSubmit}
+                  onKeyPress={(e)=>{
+                    if (e.charCode === 13 && e.shiftKey) {
+                      this.inputSubmit(e)
+                    }
+                  }}
+                />
+              </Left>
+              <Right>
+                <InputRow
+                  hide={(!ownProfile)}
+                >
+                  <Email/>
+                  <Input
+                    value={email}
+                    placeholder={(ownProfile) ? 'add your email' : ''}
+                    onChange={this.inputChange}
+                    disabled
+                  />
+                </InputRow>
+                <InputRow
+                  hide={(!ownProfile || website.length < 1)}
+
+                >
+                  <Link/>
+                  <Input
+                    value={website}
+                    name={'website'}
+                    id={'website'}
+                    placeholder={(ownProfile) ? 'add your website' : ''}
+                    onChange={this.inputChange}
+                    disabled={!ownProfile}
+                    onBlur={this.inputSubmit}
+                    onKeyPress={(e)=>{
+                      if (e.charCode === 13) {
+                        this.inputSubmit(e)
+                      }
+                    }}
+                  />
+                </InputRow>
+              </Right>
+            </Row>
+        </Top>
+        <BotRow>
+          <BotLeft>
+            <Tabs
+              style={{
+                width: '100%',
+                marginTop: '6px',
+              }}
+              inkBarStyle={{
+                backgroundColor: purple
+              }}
+            >
+              <Tab
+                label={'Activity'}
                 style={{
-                  width: '100%',
-                  marginTop: '6px',
+                  borderBottom: `2px solid ${grey200}`
                 }}
-                inkBarStyle={{
-                  backgroundColor: purple
+
+              />
+              <Tab
+                label={'Projects'}
+                style={{
+                  borderBottom: `2px solid ${grey200}`
                 }}
               >
-                <Tab
-                  label={'Activity'}
+                
+              </Tab>
+              <Tab
+                label={'Bounces'}
+                style={{
+                  borderBottom: `2px solid ${grey200}`
+                }}
+                icon={(
+                  <Lock
+                  />
+                )}
+                disabled={true}
+              />
+            </Tabs>
+          </BotLeft>
+          <BotRight>
+            <Label
+              hide={(!ownProfile && experience.length < 1)}
+            >
+              Experience
+            </Label>
+            {(ownProfile) ? (
+              <ExperienceRow>
+                <ExperienceIcon
                   style={{
-                    borderBottom: `2px solid ${grey200}`
+                    marginRight: '5px'
                   }}
-
                 />
-                <Tab
-                  label={'Projects'}
+                <SelectField
+                  value={formatEnum(experience)}
+                  fullWidth={true}
+                  onChange={(e, index, value)=>{
+                    this.experienceChange(value)
+                  }}
+                  disabled={(!ownProfile)}
+                  hintText={'add your experience'}
+                >
+                  {experiences}
+                </SelectField>
+              </ExperienceRow>
+            ) : (
+              <ExperienceRow
+                hide={(!ownProfile && experience.length < 1)}
+              >
+                <ExperienceIcon
                   style={{
-                    borderBottom: `2px solid ${grey200}`
+                    marginRight: '5px'
                   }}
                 />
-                <Tab
-                  label={'Bounces'}
-                  style={{
-                    borderBottom: `2px solid ${grey200}`
-                  }}
-                  icon={(
-                    <Lock
-                    />
-                  )}
+                <Experience
+                  value={formatEnum(experience)}
                   disabled={true}
+                  placeholder={'experience'}
                 />
-              </Tabs>
-            </BotLeft>
-            <BotRight>
-              <Label>
-                Experience
-              </Label>
-              {(ownProfile) ? (
-                <ExperienceRow>
-                  <ExperienceIcon
-                    style={{
-                      marginRight: '5px'
-                    }}
-                  />
-                  <SelectField
-                    value={formatEnum(experience)}
-                    fullWidth={true}
-                    onChange={(e, index, value)=>{
-                      this.experienceChange(value)
-                    }}
-                    disabled={(!ownProfile)}
-                    hintText={'add your experience'}
-                  >
-                    {experiences}
-                  </SelectField>
-                </ExperienceRow>
-              ) : (
-                <ExperienceRow>
-                  <ExperienceIcon
-                    style={{
-                      marginRight: '5px'
-                    }}
-                  />
-                  <Experience
-                    value={formatEnum(experience)}
-                    disabled={true}
-                    placeholder={'experience'}
-                  />
-                </ExperienceRow>
+              </ExperienceRow>
 
-              )}
+            )}
 
-              <Label>
-                Genres
-              </Label>
-              <Async
-                loadOptions={this.loadGenres}
-                value={genres}
-                onChange={this.genreChange}
-                multi={true}
-                className={(ownProfile) ? 'async' : 'async others'}
-                disabled={!ownProfile}
-                placeholder={'add your genres'}
-              />
-              <Label>
-                Skills
-              </Label>
-              <Async
-                loadOptions={this.loadSkills}
-                value={skills}
-                onChange={this.skillChange}
-                multi={true}
-                className={(ownProfile) ? 'async' : 'async others'}
-                disabled={!ownProfile}
-                placeholder={'add your skills'}
-              />
-              <Label>
-                Influences
-              </Label>
-              <Async
-                value={influences}
-                loadOptions={this.influenceOptions}
-                multi={true}
-                onChange={this.influenceChange}
-                className={(ownProfile) ? 'async influences' : 'async influences others'}
-                disabled={!ownProfile}
-                placeholder={'add your influences'}
-              />
-            </BotRight>
-          </BotRow>
+            <Label
+              hide={(!ownProfile && genres.length < 1)}
+            >
+              Genres
+            </Label>
+            <Async
+              loadOptions={this.loadGenres}
+              value={genres}
+              onChange={this.genreChange}
+              multi={true}
+              className={(ownProfile) ? 'async' : 'async others'}
+              disabled={!ownProfile}
+              placeholder={'add your genres'}
+              style={{
+                display: (!ownProfile && genres.length < 1) ? 'none' : ''
+              }}
+            />
+            <Label
+              hide={(!ownProfile && skills.length < 1)}
+            >
+              Skills
+            </Label>
+            <Async
+              loadOptions={this.loadSkills}
+              value={skills}
+              onChange={this.skillChange}
+              multi={true}
+              className={(ownProfile) ? 'async' : 'async others'}
+              disabled={!ownProfile}
+              placeholder={'add your skills'}
+              style={{
+                display: (!ownProfile && skills.length < 1) ? 'none' : ''
+              }}
+            />
+            <Label
+              hide={(!ownProfile && influences.length < 1)}
+            >
+              Influences
+            </Label>
+            <Async
+              value={influences}
+              loadOptions={this.influenceOptions}
+              multi={true}
+              onChange={this.influenceChange}
+              className={(ownProfile) ? 'async influences' : 'async influences others'}
+              disabled={!ownProfile}
+              placeholder={'add your influences'}
+              style={{
+                display: (!ownProfile && influences.length < 1) ? 'none' : ''
+              }}
+            />
+          </BotRight>
+        </BotRow>
 
       </ProfileView>
     )
@@ -583,6 +690,7 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            handle
             friends (
               first: 100000
             ) {

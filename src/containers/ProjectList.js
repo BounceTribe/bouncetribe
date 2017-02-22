@@ -12,53 +12,57 @@ import {purple, white, grey400} from 'theme'
 class ProjectList extends Component {
 
   get projects () {
-    let {User: owner} = this.props.viewer
+    let {User: owner, user} = this.props.viewer
     return this.props.viewer.User.projects.edges.map(edge=>{
       let {node:project} = edge
-      return (
-        <ProjectItem
-          key={project.id}
-        >
-          <Left>
-            <Artwork
-              src={project.artwork.url}
-              alt={'Project Artwork'}
-            />
-            <Info>
-              <ProjectTitle
-                to={`/${owner.handle}/${project.title}`}
-              >
-                {project.title}
-              </ProjectTitle>
-              <Trio>
-                <TrioItem>
-                  One
-                </TrioItem>
-                <TrioItem>
-                  Two
-                </TrioItem>
-                <TrioItem>
-                  Three
-                </TrioItem>
-              </Trio>
-            </Info>
-
-          </Left>
-          <RoundButton
-            backgroundColor={(project.privacy === 'PUBLIC') ? purple : grey400}
-            icon={
-              <Logo
-                fill={white}
-                style={{
-                  display: 'inline-block',
-                  lineHeight: '56px',
-                  height: '56px'
-                }}
+      if (owner.id !== user.id && project.privacy === 'PRIVATE') {
+        return null
+      } else {
+        return (
+          <ProjectItem
+            key={project.id}
+          >
+            <Left>
+              <Artwork
+                src={project.artwork.url}
+                alt={'Project Artwork'}
               />
-            }
-          />
-        </ProjectItem>
-      )
+              <Info>
+                <ProjectTitle
+                  to={`/${owner.handle}/${project.title}`}
+                >
+                  {project.title}
+                </ProjectTitle>
+                <Trio>
+                  <TrioItem>
+                    One
+                  </TrioItem>
+                  <TrioItem>
+                    Two
+                  </TrioItem>
+                  <TrioItem>
+                    Three
+                  </TrioItem>
+                </Trio>
+              </Info>
+
+            </Left>
+            <RoundButton
+              backgroundColor={(project.privacy === 'PUBLIC') ? purple : grey400}
+              icon={
+                <Logo
+                  fill={white}
+                  style={{
+                    display: 'inline-block',
+                    lineHeight: '56px',
+                    height: '56px'
+                  }}
+                />
+              }
+            />
+          </ProjectItem>
+        )
+      }
     })
   }
 

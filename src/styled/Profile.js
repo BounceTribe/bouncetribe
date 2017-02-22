@@ -75,17 +75,6 @@ export const Portrait = styled.img`
   object-fit: cover;
   cursor: ${({ownProfile})=>(ownProfile) ? 'pointer' : '' };
 `
-
-
-export const Input = styled.input`
-  border: none;
-  outline: none;
-  font-weight: 200;
-  margin-left: 10px;
-  margin-bottom: 10px;
-
-`
-
 const inputWidth = (props, multiplier) => {
   let {value, placeholder} = props
   let width = value.length * multiplier
@@ -96,6 +85,17 @@ const inputWidth = (props, multiplier) => {
     return width
   }
 }
+
+export const Input = styled.input`
+  border: none;
+  outline: none;
+  font-weight: 200;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  width: ${(props)=>inputWidth(props,8)}px;
+`
+
+
 
 export const Handle = styled(Input)`
   font-size: 30px;
@@ -109,7 +109,7 @@ export const Location = styled(Input)`
 `
 
 export const InputRow = styled.div`
-  display: flex;
+  display: ${({hide}) => (hide) ? 'none' : 'flex'};
   justify-content: flex-start;
 `
 
@@ -133,7 +133,7 @@ export const Score = styled.span`
 `
 
 export const Summary = styled.textarea`
-  display: flex;
+  display: ${({value, ownProfile}) => (!value && !ownProfile) ? 'none' : 'flex'};
   width: 100%;
   height: 100%;
   border: 0;
@@ -178,7 +178,7 @@ export const BotRight = styled.div`
 `
 
 export const Label = styled.label`
-  display: flex;
+  display: ${({hide}) => (hide) ? 'none' : 'flex'};
   font-size: 18px;
   font-weight: 400;
   margin-top: 40px
@@ -214,9 +214,28 @@ export class TribeButton extends Component {
 
   button = () => {
     let {user, User} = this.props.viewer
-    let button = null
     if (user.id === User.id) {
-      return button
+      return (
+        <BtFlatButton
+          label={'My Tribe'}
+          backgroundColor={purple}
+          labelStyle={{
+            color: white
+          }}
+          icon={
+            <Tribe
+              fill={white}
+              height={16}
+            />
+          }
+          style={{
+            border: `1px solid ${grey400}`,
+            borderRadius: '5px',
+            width: '160px'
+          }}
+          to={`/${user.handle}/tribe`}
+        />
+      )
     } else {
       let friends = user.friends.edges.map(edge => edge.node.id)
       let inviters = user.invitations.edges.map(edge => edge.node.actor.id)
@@ -232,6 +251,7 @@ export class TribeButton extends Component {
             icon={
               <Tribe
                 fill={(this.state.remove) ? purple : white}
+                height={16}
               />
             }
             onClick={()=>{
@@ -262,6 +282,7 @@ export class TribeButton extends Component {
             icon={
               <Tribe
                 fill={white}
+                height={16}
               />
             }
             onClick={()=>{
@@ -285,6 +306,7 @@ export class TribeButton extends Component {
             icon={
               <Tribe
                 fill={purple}
+                height={16}
               />
             }
             onClick={()=>{
@@ -309,6 +331,7 @@ export class TribeButton extends Component {
             icon={
               <Tribe
                 fill={white}
+                height={16}
               />
             }
             onClick={()=>{

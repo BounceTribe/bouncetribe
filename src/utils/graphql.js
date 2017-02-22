@@ -205,3 +205,48 @@ export const ensureUsersProjectTitleUnique = (userId, projectTitle)=> {
 
   })
 }
+
+export const fetchFeed = (handle) => {
+  return fetch(simple, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `{
+        allProjects (
+          first: 10
+          orderBy: updatedAt_ASC
+          filter: {
+            creator: {
+              handle_not: "${handle}"
+              friends_every: {
+                handle: "${handle}"
+              }
+            }
+            privacy_not: PRIVATE
+          }
+        ) {
+          id
+          title
+          artwork {
+            url
+          }
+          genres (first: 1){
+            name
+          }
+          comments (first: 10000){
+            id
+          }
+          creator {
+            handle
+            portrait {
+              url
+            }
+          }
+        }
+      }`
+    })
+  }).then(response => response.json())
+  .then(result => result.data.allProjects)
+}
