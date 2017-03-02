@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation'
-import Paper from 'material-ui/Paper'
 // import {white, purple} from 'theme'
 // import Plus from 'icons/Plus'
 import Music from 'icons/Music'
 // import Headphones from 'icons/Headphones'
-import {MobileOnly} from 'styled'
+import {BotNav} from 'styled'
 
 class MobileNav extends Component {
 
@@ -17,10 +16,7 @@ class MobileNav extends Component {
 
   render() {
     return (
-      <MobileOnly>
-        <Paper
-          zDepth={1}
-        >
+        <BotNav>
           <BottomNavigation
             selectedIndex={this.state.selectedIndex}
           >
@@ -30,8 +26,7 @@ class MobileNav extends Component {
               onTouchTap={() => this.select(0)}
             />
           </BottomNavigation>
-        </Paper>
-      </MobileOnly>
+        </BotNav>
     )
   }
 }

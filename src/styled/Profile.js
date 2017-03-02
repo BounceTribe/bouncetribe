@@ -4,6 +4,7 @@ import {View, BtFlatButton} from 'styled'
 // import Edit from 'icons/Edit'
 import {grey400, grey200, grey800, purple, white} from 'theme'
 import Tribe from 'icons/Tribe'
+import AddFriend from 'icons/AddFriend'
 
 export const ProfileView = styled(View)`
   background-color: transparent;
@@ -55,14 +56,15 @@ export const SubRow = styled.div`
 export const Left = styled.div`
   display: flex;
   flex-direction: column;
-  width: 60%;
+  width: 70%;
+  padding-right: 50px;
 `
 
 export const Right = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 40%;
+  width: 30%;
   padding-left: 20px;
 `
 
@@ -143,6 +145,7 @@ export const Summary = styled.textarea`
   color: ${grey800};
   min-height: 100px;
   resize: none;
+  padding-top: 50px;
 `
 
 export const BotRow = styled.div`
@@ -162,6 +165,7 @@ export const BotLeft = styled.div`
   border: solid ${grey400} .5px;
   border-radius: 10px;
   margin-right: 15px;
+  padding-bottom: 40px;
 `
 
 export const BotRight = styled.div`
@@ -175,13 +179,15 @@ export const BotRight = styled.div`
   border-radius: 10px;
   padding: 0 20px;
   margin-left: 15px;
+  padding-bottom: 40px;
 `
 
 export const Label = styled.label`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: bold;
   margin-top: 40px
+  color: ${grey800};
 `
 
 export const InputError = styled.span`
@@ -298,7 +304,7 @@ export class TribeButton extends Component {
       } else if (requestees.includes(User.id)) {
         return (
           <BtFlatButton
-            label={'Invite Sent'}
+            label={'Request Sent'}
             backgroundColor={white}
             labelStyle={{
               color:purple
@@ -329,7 +335,7 @@ export class TribeButton extends Component {
               color: white
             }}
             icon={
-              <Tribe
+              <AddFriend
                 fill={white}
                 height={16}
               />

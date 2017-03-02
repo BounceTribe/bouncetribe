@@ -36,7 +36,7 @@ export const FeedView = styled(View)`
 `
 
 export const ProjectNewView = styled(View)`
-  
+
 `
 
 export const IconTextContainer = styled(BtLink)`
@@ -134,8 +134,14 @@ export const RoundButton = (props) => {
   )
 }
 
-export const MobileOnly = styled.div`
+export const BotNav = styled.div`
   display: none;
+  position: fixed;
+  width: 100%;
+  height: 200px;
+  top: 0;
+  left: 0;
+  z-index: 1000;
   ${size.m`
     display: flex;
   `}

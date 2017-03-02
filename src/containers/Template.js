@@ -33,9 +33,9 @@ class Template extends Component {
         muiTheme={btTheme}
       >
         <Main>
+          <MobileNav/>
           {this.userOnly}
           {this.props.children}
-          <MobileNav/>
         </Main>
       </MuiThemeProvider>
     )

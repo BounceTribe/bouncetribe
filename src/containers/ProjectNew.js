@@ -53,7 +53,6 @@ class ProjectNew extends Component {
         user,
       }), {
         onSuccess: success => {
-          console.log('success', this.props.router)
           this.props.router.push(`/${user.handle}/${project.title}`)
         }
       }
@@ -296,6 +295,7 @@ export default Relay.createContainer(
           user {
             id
             handle
+            score
             ${AudioUploader.getFragment('self')}
           }
         }

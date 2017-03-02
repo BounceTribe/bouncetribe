@@ -1,2 +1,2 @@
 export const domain = 'carlpeaslee.auth0.com'
-export const clientId = 'cKacry8a5wk5N8HfYggEXJ1r7Izpnq8J'
+export const clientId = 'wMoUQb2Kb9XViLB6Wek2fLYPlMxJV5hg'

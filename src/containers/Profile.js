@@ -18,7 +18,7 @@ import 'theme/newSelect.css'
 import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
 import {handleValidator} from 'utils/handles'
-import {purple, grey200} from 'theme'
+import {purple, white, grey200} from 'theme'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
@@ -37,8 +37,166 @@ class Profile extends Component {
     influences: [],
     handleError: '',
     experience: '',
-    experiences: ['Novice', 'Professional'],
+    experiences: [
+      {
+        value: 'NOVICE',
+        text: 'Novice (Just Started)'
+      },
+      {
+        value: 'BEGINNER',
+        text: 'Beginner (0-2 Years)'
+      },
+      {
+        value: 'SKILLED',
+        text: 'Skilled (3-9 Years)'
+      },
+      {
+        value: 'ACCOMPLISHED',
+        text: 'Accomplished (10-24 Years)'
+      },
+      {
+        value: 'VETERAN',
+        text: 'Veteran (25+ Years)'
+      },
+    ],
     notification: false
+  }
+
+  componentWillMount = () => {
+    this.setState( (prevState, props) => {
+
+      let experiences = prevState.experiences.map(experience=>(
+        <MenuItem
+          primaryText={experience.text}
+          key={experience.value}
+          value={experience.value}
+        />
+      ))
+      let {User} = this.props.viewer
+      let genres = User.genres.edges.map(edge=>{
+        let {node: genre} = edge
+        return {
+          value: genre.id,
+          label: genre.name
+        }
+      })
+      let skills = User.skills.edges.map(edge=>{
+        let {node: skill} = edge
+        return {
+          value: skill.id,
+          label: skill.name
+        }
+      })
+      let influences = User.artistInfluences.edges.map(edge=>{
+        let {node: influence} = edge
+        return {
+          value: {
+            imageUrl: influence.imageUrl,
+            spotifyId: influence.spotifyId,
+            id: influence.id
+          },
+          label: influence.name
+        }
+      })
+      return {
+        handle: User.handle,
+        placename: User.placename || '',
+        summary: User.summary || '',
+        portraitUrl: User.portrait.url,
+        website: User.website || '',
+        email: User.email || '',
+        genres,
+        skills,
+        influences,
+        experiences,
+        experience: User.experience || '',
+      }
+    })
+  }
+
+  componentWillReceiveProps (newProps) {
+    let {handle, placename, summary, portrait, score, projects, friends, website, email, genres, skills, artistInfluences, experience} = newProps.viewer.User
+    this.setState( (prevState, props) => {
+      let newGenres = genres.edges.map(edge=>{
+        let {node: genre} = edge
+        return {
+          value: genre.id,
+          label: genre.name
+        }
+      })
+      let newSkills = skills.edges.map(edge=>{
+        let {node: skill} = edge
+        return {
+          value: skill.id,
+          label: skill.name
+        }
+      })
+      let newInfluences = artistInfluences.edges.map(edge=>{
+        let {node: influence} = edge
+        return {
+          value: {
+            imageUrl: influence.imageUrl,
+            spotifyId: influence.spotifyId,
+            id: influence.id
+          },
+          label: influence.name
+        }
+      })
+      return {
+        handle: handle || '',
+        placename: placename || '',
+        summary: summary || '',
+        score: score || '',
+        website: website || '',
+        email: email || '',
+        portraitUrl: portrait.url,
+        projects: projects.edges.length,
+        friends: friends.edges.length,
+        genres: newGenres,
+        skills: newSkills,
+        influences: newInfluences,
+        experience: experience || '',
+      }
+    })
+    let oldHandle = this.props.viewer.User.handle
+    if (oldHandle !== handle) {
+      this.props.router.replace(`/${handle}`)
+    }
+  }
+
+  accept = (inviteId) => {
+    let {id: selfId} = this.props.viewer.user
+    let {id: newFriendId} = this.props.viewer.User
+    this.props.relay.commitUpdate(
+      new UpdateFriendRequest({
+        id: inviteId,
+        accepted: true
+      }), {
+        onSuccess: (response) => {
+          console.log('success?')
+          this.props.relay.commitUpdate(
+            new AddToFriends({
+              selfId,
+              newFriendId
+            })
+          )
+        },
+        onFailure: (response) => {
+          console.log('failure', response)
+        }
+      }
+    )
+  }
+
+  addToTribe = () => {
+    let {id: actorId} = this.props.viewer.user
+    let {id: recipientId} = this.props.viewer.User
+    this.props.relay.commitUpdate(
+      new CreateFriendRequest({
+        actorId,
+        recipientId,
+      })
+    )
   }
 
   inputChange = (e) => {
@@ -52,6 +210,12 @@ class Profile extends Component {
         return {
           [name]: newHandle,
           handleError: error
+        }
+      })
+    } else if (name === 'summary' && value.length >= 150) {
+      this.setState((prevState, props)=>{
+        return {
+          [name]: prevState.summary,
         }
       })
     } else {
@@ -180,107 +344,7 @@ class Profile extends Component {
     }
   }
 
-  componentWillMount = () => {
-    this.setState( (prevState, props) => {
 
-      let experiences = prevState.experiences.map(experience=>(
-        <MenuItem
-          primaryText={experience}
-          key={experience}
-          value={experience}
-        />
-      ))
-      let {User} = this.props.viewer
-      let genres = User.genres.edges.map(edge=>{
-        let {node: genre} = edge
-        return {
-          value: genre.id,
-          label: genre.name
-        }
-      })
-      let skills = User.skills.edges.map(edge=>{
-        let {node: skill} = edge
-        return {
-          value: skill.id,
-          label: skill.name
-        }
-      })
-      let influences = User.artistInfluences.edges.map(edge=>{
-        let {node: influence} = edge
-        return {
-          value: {
-            imageUrl: influence.imageUrl,
-            spotifyId: influence.spotifyId,
-            id: influence.id
-          },
-          label: influence.name
-        }
-      })
-      return {
-        handle: User.handle,
-        placename: User.placename || '',
-        summary: User.summary || '',
-        portraitUrl: User.portrait.url,
-        website: User.website || '',
-        email: User.email || '',
-        genres,
-        skills,
-        influences,
-        experiences,
-        experience: User.experience || '',
-      }
-    })
-  }
-
-  componentWillReceiveProps (newProps) {
-    let {handle, placename, summary, portrait, score, projects, friends, website, email, genres, skills, artistInfluences, experience} = newProps.viewer.User
-    this.setState( (prevState, props) => {
-      let newGenres = genres.edges.map(edge=>{
-        let {node: genre} = edge
-        return {
-          value: genre.id,
-          label: genre.name
-        }
-      })
-      let newSkills = skills.edges.map(edge=>{
-        let {node: skill} = edge
-        return {
-          value: skill.id,
-          label: skill.name
-        }
-      })
-      let newInfluences = artistInfluences.edges.map(edge=>{
-        let {node: influence} = edge
-        return {
-          value: {
-            imageUrl: influence.imageUrl,
-            spotifyId: influence.spotifyId,
-            id: influence.id
-          },
-          label: influence.name
-        }
-      })
-      return {
-        handle: handle || '',
-        placename: placename || '',
-        summary: summary || '',
-        score: score || '',
-        website: website || '',
-        email: email || '',
-        portraitUrl: portrait.url,
-        projects: projects.edges.length,
-        friends: friends.edges.length,
-        genres: newGenres,
-        skills: newSkills,
-        influences: newInfluences,
-        experience: experience || '',
-      }
-    })
-    let oldHandle = this.props.viewer.User.handle
-    if (oldHandle !== handle) {
-      this.props.router.replace(`/${handle}`)
-    }
-  }
 
   portraitSuccess = (file) => {
     this.setState({imageEditorOpen: false})
@@ -333,40 +397,7 @@ class Profile extends Component {
     })
   }
 
-  addToTribe = () => {
-    let {id: actorId} = this.props.viewer.user
-    let {id: recipientId} = this.props.viewer.User
-    this.props.relay.commitUpdate(
-      new CreateFriendRequest({
-        actorId,
-        recipientId,
-      })
-    )
-  }
 
-  accept = (inviteId) => {
-    let {id: selfId} = this.props.viewer.user
-    let {id: newFriendId} = this.props.viewer.User
-    this.props.relay.commitUpdate(
-      new UpdateFriendRequest({
-        id: inviteId,
-        accepted: true
-      }), {
-        onSuccess: (response) => {
-          console.log('success?')
-          this.props.relay.commitUpdate(
-            new AddToFriends({
-              selfId,
-              newFriendId
-            })
-          )
-        },
-        onFailure: (response) => {
-          console.log('failure', response)
-        }
-      }
-    )
-  }
 
   unfriend = () => {
     let {id: selfId} = this.props.viewer.user
@@ -399,13 +430,13 @@ class Profile extends Component {
         <Snackbar
           open={notification}
           message={notification}
-          action={"close"}
           autoHideDuration={2000}
           onRequestClose={this.closeSnackbar}
           onActionTouchTap={this.closeSnackbar}
           bodyStyle={{
             backgroundColor: purple
           }}
+
         />
         <Top>
             <Row>
@@ -502,6 +533,7 @@ class Profile extends Component {
                       this.inputSubmit(e)
                     }
                   }}
+                  ownProfile={ownProfile}
                 />
               </Left>
               <Right>
@@ -517,7 +549,7 @@ class Profile extends Component {
                   />
                 </InputRow>
                 <InputRow
-                  hide={(!ownProfile || website.length < 1)}
+                  hide={(!ownProfile && website.length < 1)}
 
                 >
                   <Link/>
@@ -563,7 +595,7 @@ class Profile extends Component {
                   borderBottom: `2px solid ${grey200}`
                 }}
               >
-                
+
               </Tab>
               <Tab
                 label={'Bounces'}
@@ -592,13 +624,16 @@ class Profile extends Component {
                   }}
                 />
                 <SelectField
-                  value={formatEnum(experience)}
+                  value={experience}
                   fullWidth={true}
                   onChange={(e, index, value)=>{
                     this.experienceChange(value)
                   }}
                   disabled={(!ownProfile)}
                   hintText={'add your experience'}
+                  selectedMenuItemStyle={{
+                    color: purple
+                  }}
                 >
                   {experiences}
                 </SelectField>

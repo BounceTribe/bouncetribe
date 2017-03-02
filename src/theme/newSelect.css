@@ -14,6 +14,7 @@
 
 .async .Select-control {
   border: none;
+  padding-bottom: 5px;
 }
 
 .async .others .Select-value-icon {
@@ -26,7 +27,8 @@
 }
 
 .influences .Select-value {
-  background-color: lightgrey;
+  background-color: #D8D8D8;
+  color: #333333;
   border: none;
 }
 
@@ -40,8 +42,8 @@
 }
 
 .influences.Select--multi.is-disabled .Select-value {
-  background-color: lightgrey;
-  color: black;
+  background-color: #D8D8D8;
+  color: #333333;
 }
 
 
