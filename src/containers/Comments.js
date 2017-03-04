@@ -43,13 +43,16 @@ class Comments extends Component {
   }
 
   render () {
+    let ownProject = (this.props.viewer.user.handle === this.props.params.userHandle)
     return (
       <Container>
         <CommentMarkers
           comments={this.props.viewer.allComments}
           duration={this.state.duration}
         />
-        <ButtonRow>
+        <ButtonRow
+          hide={(ownProject)}
+        >
           <ButtonColumn>
             <RoundButton
               secondary
@@ -68,7 +71,9 @@ class Comments extends Component {
             </ButtonLabel>
           </ButtonColumn>
         </ButtonRow>
-        <CommentBox>
+        <CommentBox
+          hide={(ownProject)}
+        >
           <RoundButton
             icon={
               <Comment
@@ -106,6 +111,9 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
+          user {
+            handle
+          }
           allComments (
             first: 50
             filter: $commentFilter

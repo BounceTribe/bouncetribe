@@ -8,7 +8,7 @@ export const Container = styled.div`
   width: 100%;
 `
 export const ButtonRow = styled.div`
-  display: flex;
+  display: ${({hide}) => (hide) ? 'none' : 'flex'};
   flex-direction: row;
 `
 
@@ -26,7 +26,7 @@ export const ButtonLabel = styled.span`
 `
 
 export const CommentBox = styled.div`
-  display: flex;
+  display: ${({hide}) => (hide) ? 'none' : 'flex'};
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -42,6 +42,7 @@ export const Single = styled.div`
   border-radius: 6px;
   padding: 10px 30px;
   width: 100%;
+  margin-bottom: 20px;
 `
 
 export const Bottom = styled.div`

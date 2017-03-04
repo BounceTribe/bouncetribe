@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
-import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
-import {grey200} from 'theme'
+import {grey200, purple, blue} from 'theme'
 import Avatar from 'material-ui/Avatar'
 import Toggle from 'material-ui/Toggle'
+
 
 class ProjectTribeList extends Component {
 
@@ -45,13 +45,71 @@ class ProjectTribeList extends Component {
   }
 
 
+  nestedItems = () => {
+    let recentIds = this.props.recentCommenters.map(recent=>recent.node.author.id)
+    let recents = this.props.recentCommenters.map(recent => {
+      let {author} = recent.node
+      let {selections} = this.state
+      return (
+        <ListItem
+          key={`recent${author.id}`}
+          primaryText={author.handle}
+          leftAvatar={
+            <Avatar
+              src={author.portrait.url}
+            />
+          }
+          style={{
+            color: (selections.includes(author.handle)) ? purple : '',
+          }}
+          innerDivStyle={{
+            marginLeft: '0px',
+            fontSize: '14px',
+            fontWeight: '400'
+          }}
+          onClick={()=>{this.toggleSelection(author.handle)}}
+        />
+      )
+    })
+    let all = this.props.tribe.map(friend => {
+      let {handle, id, portrait} = friend.node
+      let {selections} = this.state
+      if (recentIds.includes(id)) {
+        return null
+      } else {
+        return (
+          <ListItem
+            key={`tribe${id}`}
+            style={{
+              color: (selections.includes(handle)) ? purple : '',
+            }}
+            innerDivStyle={{
+              marginLeft: '0px',
+              fontSize: '14px',
+              fontWeight: '400'
+
+            }}
+            onClick={()=>{this.toggleSelection(handle)}}
+            primaryText={handle}
+            leftAvatar={
+              <Avatar
+                src={portrait.url}
+              />
+            }
+          />
+        )
+      }
+    })
+    return [...recents, ...all]
+  }
+
   render() {
     return (
       <List
         style={{
           width: '100%',
           border: `.5px solid ${grey200}`,
-          borderRadius: `6 px`
+          borderRadius: `6px`
         }}
       >
         <ListItem
@@ -60,54 +118,23 @@ class ProjectTribeList extends Component {
         />
         <Divider/>
         <ListItem
-          primaryText={'TribeMembers'}
+          primaryText={'Tribe Members'}
+          style={{
+            fontSize: '16px',
+            color: purple
+          }}
           initiallyOpen={true}
-          nestedItems={[
-            ...this.props.recentCommenters.map(recent => {
-              let {author} = recent.node
-              let {selections} = this.state
-              return (
-                <ListItem
-                  key={`recent${author.id}`}
-                  primaryText={author.handle}
-                  leftAvatar={
-                    <Avatar
-                      src={author.portrait.url}
-                    />
-                  }
-                  style={{
-                    backgroundColor: (selections.includes(author.handle)) ? 'lightblue' : ''
-                  }}
-                  onClick={()=>{this.toggleSelection(author.handle)}}
-                />
-              )
-            }),
-            ...this.props.tribe.map(friend => {
-              let {handle, id, portrait} = friend.node
-              let {selections} = this.state
-              return (
-                <ListItem
-                  key={`tribe${id}`}
-                  style={{
-                    backgroundColor: (selections.includes(handle)) ? 'lightblue' : ''
-                  }}
-                  onClick={()=>{this.toggleSelection(handle)}}
-                  primaryText={handle}
-                  leftAvatar={
-                    <Avatar
-                      src={portrait.url}
-                    />
-                  }
-                />
-              )
-            })
-          ]}
+          nestedItems={this.nestedItems()}
         />
         <Divider/>
-        <Subheader>
-          Session Feedback
-        </Subheader>
-        <Divider/>
+        <ListItem
+          primaryText={'Session Feedback'}
+          style={{
+            fontSize: '16px',
+            color: blue
+          }}
+          initiallyOpen={false}
+        />
       </List>
     )
   }

@@ -92,12 +92,12 @@ export const Bot = styled.div`
 
 export const LeftList = styled.div`
   display: flex;
-  width: 25%;
+  width: 30%;
   margin-right: 20px;
 `
 
 export const CommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
-  width: 75%;
+  width: 70%;
 `
