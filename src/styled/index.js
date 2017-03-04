@@ -36,6 +36,7 @@ export const FeedView = styled(View)`
 `
 
 export const ProjectNewView = styled(View)`
+  min-height: 85vh;
 
 `
 
@@ -126,6 +127,9 @@ export const RoundButton = (props) => {
     >
       <FloatingActionButton
         {...props}
+        style={{
+          boxShadow: 0,
+        }}
       >
         {props.icon}
       </FloatingActionButton>

@@ -5,7 +5,7 @@ const Lock = ({style, fill, height, width, viewBox}) => {
   return (
 
   <svg
-    style={{
+    style={style || {
     position: 'absolute',
     marginTop: '-3px',
     marginLeft: '54px'}}

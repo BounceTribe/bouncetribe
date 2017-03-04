@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProjectNewView, Button, RoundButton} from 'styled'
+import {ProjectNewView, Button, RoundButton, IconText, IconTextContainer} from 'styled'
 import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop, TrackContainer} from 'styled/ProjectNew'
+import {Header} from 'styled/list'
 import AudioUploader from 'components/AudioUploader'
 import SelectField from 'material-ui/SelectField'
 import TextField from 'material-ui/TextField'
@@ -16,6 +17,9 @@ import MenuItem from 'material-ui/MenuItem'
 import {url} from 'config'
 import {purple, grey300, white} from 'theme'
 import {ensureUsersProjectTitleUnique} from 'utils/graphql'
+import Lock from 'icons/Lock'
+import Tribe from 'icons/Tribe'
+import Logo from 'icons/Logo'
 
 class ProjectNew extends Component {
 
@@ -25,7 +29,7 @@ class ProjectNew extends Component {
     imageEditorOpen: false,
     genre: '',
     genres: [],
-    privacy: 'PUBLIC'
+    privacy: 'PUBLIC',
   }
 
   constructor(props) {
@@ -169,7 +173,7 @@ class ProjectNew extends Component {
   }
 
   get form () {
-    let {title, description, tracksIds, artworkId, audioProgress, privacy, genres, titleUnique} = this.state
+    let {title, description, tracksIds, audioProgress, privacy, genres, titleUnique} = this.state
     if (audioProgress  && audioProgress !== 'GENERATING') {
       return (
         <Row>
@@ -205,12 +209,12 @@ class ProjectNew extends Component {
             />
             <Button
               primary={true}
-              disabled={(!titleUnique || !title || !description || !tracksIds || !genres || !artworkId)}
-              label={'Create'}
+              disabled={(!titleUnique || !title || !description || !tracksIds || !genres)}
+              label={'Create Project'}
               onClick={this.createProject}
               icon={
                 <Music
-                  fill={white}
+                  fill={purple}
                 />
               }
             />
@@ -233,6 +237,14 @@ class ProjectNew extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'PRIVATE'})}
                   backgroundColor={(privacy === 'PRIVATE') ? purple : grey300}
+                  icon={
+                    <Lock
+                      style={{}}
+                      height={23}
+                      width={22}
+                      fill={white}
+                    />
+                  }
                 />
                   <ChoiceText>
                     Private
@@ -242,7 +254,11 @@ class ProjectNew extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'TRIBE'})}
                   backgroundColor={(privacy === 'TRIBE') ? purple : grey300}
-
+                  icon={
+                    <Tribe
+                      fill={white}
+                    />
+                  }
                 />
                 <ChoiceText>
                   Tribe Only
@@ -252,6 +268,11 @@ class ProjectNew extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'PUBLIC'})}
                   backgroundColor={(privacy === 'PUBLIC') ? purple : grey300}
+                  icon={
+                    <Logo
+                      fill={white}
+                    />
+                  }
                 />
                 <ChoiceText>
                   Find Sessions
@@ -268,6 +289,23 @@ class ProjectNew extends Component {
     let {audioProgress, progress} = this.state
     return (
       <ProjectNewView>
+
+        <Header>
+
+            <IconTextContainer
+            >
+              <Music
+                style={{
+                  display: 'flex',
+                  marginBottom: '5px'
+                }}
+                fill={purple}
+              />
+              <IconText>
+                New Project
+              </IconText>
+            </IconTextContainer>
+        </Header>
 
         {this.uploader}
 

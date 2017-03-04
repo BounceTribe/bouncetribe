@@ -1,12 +1,13 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import Relay from 'react-relay'
 import {View} from 'styled'
 import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre} from 'styled/Project'
 import AudioPlayer from 'components/AudioPlayer'
-import Comments from 'containers/Comments'
-import CommentMarkers from 'components/CommentMarkers'
 import Music from 'icons/Music'
-import {white} from 'theme'
+import {white, purple} from 'theme'
+import {url} from 'config'
+import ProjectTribeList from 'components/ProjectTribeList'
+import {Tabs, Tab} from 'material-ui/Tabs'
 
 class Project extends Component {
 
@@ -14,10 +15,22 @@ class Project extends Component {
     time: 0
   }
 
+  static childContextTypes = {
+    duration: PropTypes.number,
+  }
+
   componentWillMount () {
-    this.props.relay.setVariables({
-      projectId: this.props.viewer.allProjects.edges[0].node.id
-    })
+    if (this.props.viewer.user.id === this.props.viewer.User.id) {
+      this.setState({ownProject:true})
+    } else {
+      this.setState({ownProject:false})
+    }
+  }
+
+  getChildContext() {
+    return {
+      duration: this.state.duration
+    }
   }
 
   currentTime = (time) => {
@@ -36,11 +49,12 @@ class Project extends Component {
     let {
       node: project
     } = this.props.viewer.allProjects.edges[0]
+    let {ownProject} = this.state
     return (
       <View>
         <Top>
           <Art
-            src={project.artwork.url}
+            src={ (project.artwork) ? project.artwork.url : `${url}/logo.png`}
             alt={'Project Art'}
           />
           <Info>
@@ -64,6 +78,24 @@ class Project extends Component {
             </Summary>
           </Info>
         </Top>
+        <Tabs
+          style={{
+            width: '100%',
+            marginTop: '6px',
+            display: (ownProject) ? 'none' : '',
+            marginBottom: '25px'
+          }}
+          inkBarStyle={{
+            backgroundColor: purple
+          }}
+        >
+          <Tab
+            label={'Listen & Give'}
+          />
+          <Tab
+            label={'View Feedback'}
+          />
+        </Tabs>
         <TrackContainer>
           <AudioPlayer
             track={project.tracks.edges[0].node}
@@ -71,15 +103,15 @@ class Project extends Component {
             project={project}
             getDuration={this.getDuration}
           />
-          <CommentMarkers
-            project={project}
-            duration={this.state.duration}
-          />
         </TrackContainer>
-        <Comments
+
+        {this.props.children}
+
+        <ProjectTribeList
           project={project}
-          self={this.props.viewer.user}
-          time={this.state.time}
+          tribe={this.props.viewer.User.friends.edges}
+          recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
+          router={this.props.router}
         />
       </View>
     )
@@ -92,7 +124,6 @@ export default Relay.createContainer(
       userHandle: '',
       projectTitle: '',
       projectFilter: {},
-      projectId: ''
     },
     prepareVariables: (prevVar)=>{
       return {
@@ -110,11 +141,21 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
-            ${Comments.getFragment('self')}
           }
           User (handle: $userHandle) {
             id
             email
+            friends (
+              first: 10000
+              orderBy: handle_ASC
+            ) {
+              edges {
+                node {
+                  id
+                  handle
+                }
+              }
+            }
           }
           allProjects (
             first: 1
@@ -122,12 +163,13 @@ export default Relay.createContainer(
           ) {
             edges {
               node {
-                ${Comments.getFragment('project')}
                 id
                 title
                 description
                 privacy
-                creator
+                creator {
+                  handle
+                }
                 genres (
                   first: 3
                 ) {
@@ -152,13 +194,16 @@ export default Relay.createContainer(
                   }
                 }
                 comments (
-                  first: 1000
+                  first: 3
+                  orderBy: createdAt_ASC
                 ) {
                   edges {
                     node {
                       id
-                      text
-                      timestamp
+                      author {
+                        id
+                        handle
+                      }
                     }
                   }
                 }

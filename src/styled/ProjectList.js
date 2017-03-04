@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import {Item} from 'styled/list'
 import {Link} from 'react-router'
+import {grey800} from 'theme'
+import React from 'react'
 
 export const ProjectItem = styled(Item)`
   height: 200px;
@@ -10,27 +12,45 @@ export const ProjectItem = styled(Item)`
   border-left: none;
   border-radius: 0;
   font-size: 21px;
+  margin-bottom: 0;
 `
 
 export const Left = styled.div`
   display: flex;
 `
-export const Artwork = styled.img`
+const ArtworkImg = styled.img`
   height: 160px;
   width: 160px;
+  cursor: pointer;
+  object-fit: cover;
 `
+
+export const Artwork = (props) => {
+  return (
+    <Link
+      {...props}
+    >
+      <ArtworkImg
+        {...props}
+      />
+    </Link>
+  )
+}
 
 export const Info = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   margin-left: 30px;
 `
 
 export const ProjectTitle = styled(Link)`
   text-decoration: none;
-  color: grey;
+  font-size: 23px;
+  color: ${grey800};
   cursor: pointer;
-  margin-top: 15px;
+  margin-top: 20px;
+  font-weight: 400;
 `
 
 export const Trio = styled.div`
@@ -40,6 +60,9 @@ export const Trio = styled.div`
 
 export const TrioItem = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-right: 5px;
+  justify-content: flex-start;
+  margin-right: 10px;
+  font-size: 16px;
+  align-items: center;
+
 `

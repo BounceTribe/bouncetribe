@@ -15,6 +15,8 @@ import TribeFind from 'containers/TribeFind'
 import TribeSearchResults from 'containers/TribeSearchResults'
 import Login from 'containers/Login'
 import Connect from 'containers/Connect'
+import Comments from 'containers/Comments'
+
 import {Loading} from 'styled/Spinner'
 
 const ViewerQuery = {
@@ -44,6 +46,30 @@ const tribeSearch = (params, {location})=>{
         },
       },
       handle_contains: query.handle
+    }
+  }
+}
+
+const commentFilter = (params, {location})=>{
+  let {query} = location
+  let handleIn = []
+  if (Array.isArray(query.in)) {
+    handleIn.push(...query.in)
+  } else if (typeof query.in === 'string') {
+    handleIn.push(query.in)
+  }
+  return {
+    ...params,
+    commentFilter: {
+      author: {
+        handle_in: handleIn,
+      },
+      project: {
+        title: params.projectTitle,
+        creator: {
+          handle: params.userHandle
+        }
+      }
     }
   }
 }
@@ -155,11 +181,14 @@ const createRoutes = () => {
         <Route
           path={'/:userHandle/:projectTitle'}
           onEnter={userOnly}
+          component={Project}
+          queries={ViewerQuery}
+          render={({ props }) => props ? <Project {...props} /> : <Loading />}
         >
           <IndexRoute
-            component={Project}
+            component={Comments}
             queries={ViewerQuery}
-            render={({ props }) => props ? <Project {...props} /> : <Loading />}
+            prepareParams={commentFilter}
           />
 
           <Route

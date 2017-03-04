@@ -26,6 +26,9 @@ export const btTheme = getMuiTheme({
     backgroundColor: white,
     textColor: fade(grey800, 0.7),
     selectedTextColor: grey800,
+  },
+  floatingActionButton: {
+    buttonSize: 75
   }
 })
 

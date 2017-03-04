@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {purple, white} from 'theme'
+import {purple, white, grey800} from 'theme'
 
 export const Top = styled.div`
   display: flex;
@@ -32,6 +32,7 @@ export const TitleGenre = styled.div`
 export const Title = styled.div`
   display: flex;
   font-size: 25px;
+  color: ${grey800};
 `
 
 export const Genre = styled.span`
@@ -42,7 +43,7 @@ export const Genre = styled.span`
   color: ${white};
   background-color: ${purple};
   padding: 5px 10px;
-  border-radius: 10px;
+  border-radius: 3px;
   vertical-align: middle;
   margin-left: 15px;
 `

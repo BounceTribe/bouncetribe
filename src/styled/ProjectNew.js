@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {grey300} from 'theme'
+import {grey300, grey500} from 'theme'
 
 export const TrackContainer = styled.div`
   width: 80%;
@@ -47,7 +47,8 @@ export const Choice = styled.div`
 
 export const ChoiceText = styled.span`
   display: flex;
-  margin-top: 7px;
+  margin-top: 14px;
+  color: ${grey500};
 `
 
 export const ArtworkDrop = styled.img`

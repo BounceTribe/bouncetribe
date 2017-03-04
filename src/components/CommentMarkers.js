@@ -1,7 +1,11 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import {MarkerContainer, Marker} from 'styled/Project'
 
 class CommentMarkers extends Component {
+
+  static contextTypes = {
+    duration: PropTypes.number,
+  }
 
   state = {
     left: 0,
@@ -21,9 +25,9 @@ class CommentMarkers extends Component {
   }
 
   get markers () {
-    return this.props.project.comments.edges.map(edge=>{
+    return this.props.comments.edges.map(edge=>{
       let {node: comment} = edge
-      let left = (comment.timestamp / this.props.duration) * 100 //making a percentage
+      let left = (comment.timestamp / this.context.duration) * 100 //making a percentage
       return (
         <Marker
           key={comment.id}

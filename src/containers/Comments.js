@@ -3,12 +3,14 @@ import Relay from 'react-relay'
 import TextField from 'material-ui/TextField'
 import {Button} from 'styled'
 import CreateComment from 'mutations/CreateComment'
+import CommentMarkers from 'components/CommentMarkers'
 
 class Comments extends Component {
 
   state = {
     comment: ''
   }
+
 
   createComment = () => {
     this.props.relay.commitUpdate(
@@ -25,7 +27,7 @@ class Comments extends Component {
   }
 
   get comments () {
-    return this.props.project.comments.edges.map(edge=>{
+    return this.props.viewer.allComments.edges.map(edge=>{
       let {node: comment} = edge
       return (
         <div
@@ -41,6 +43,10 @@ class Comments extends Component {
   render () {
     return (
       <div>
+        <CommentMarkers
+          comments={this.props.viewer.allComments}
+          duration={this.state.duration}
+        />
         <TextField
           name={'comment'}
           multiLine={true}
@@ -63,27 +69,28 @@ class Comments extends Component {
 
 export default Relay.createContainer(
   Comments, {
+    initialVariables: {
+      commentFilter: {}
+    },
     fragments: {
-      project: () => Relay.QL`
-        fragment on Project {
-          id
-          title
-          comments (
-            first: 1000
+      viewer: () => Relay.QL`
+        fragment on Viewer {
+          allComments (
+            first: 50
+            filter: $commentFilter
           ) {
             edges {
               node {
-                text
                 id
+                type
+                text
+                author {
+                  handle
+                }
                 timestamp
               }
             }
           }
-        }
-      `,
-      self: () => Relay.QL`
-        fragment on User {
-          id
         }
       `,
     },

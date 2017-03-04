@@ -8,6 +8,11 @@ import Music from 'icons/Music'
 import Upload from 'icons/Upload'
 import Logo from 'icons/Logo'
 import {purple, white, grey400} from 'theme'
+import {url} from 'config'
+import UpdateProject from 'mutations/UpdateProject'
+import Headphones from 'icons/Headphones'
+import Comment from 'icons/Comment'
+import Heart from 'icons/Heart'
 
 class ProjectList extends Component {
 
@@ -18,14 +23,21 @@ class ProjectList extends Component {
       if (owner.id !== user.id && project.privacy === 'PRIVATE') {
         return null
       } else {
+        let comments = project.comments.edges.filter( (edge) => {
+          return edge.node.type === 'COMMENT'
+        })
+        let likes = project.comments.edges.filter( (edge) => {
+          return edge.node.type === 'LIKE'
+        })
         return (
           <ProjectItem
             key={project.id}
           >
             <Left>
               <Artwork
-                src={project.artwork.url}
+                src={(project.artwork) ? project.artwork.url : `${url}/logo.png`}
                 alt={'Project Artwork'}
+                to={`/${owner.handle}/${project.title}`}
               />
               <Info>
                 <ProjectTitle
@@ -35,13 +47,34 @@ class ProjectList extends Component {
                 </ProjectTitle>
                 <Trio>
                   <TrioItem>
-                    One
+                    <Headphones
+                      height={30}
+                      width={30}
+                      style={{
+                        margin: '0 5px 0 0px'
+                      }}
+                    />
+                    {12}
                   </TrioItem>
                   <TrioItem>
-                    Two
+                    <Comment
+                      height={30}
+                      width={30}
+                      style={{
+                        margin: '0 5px 0 0px'
+                      }}
+                    />
+                    {comments.length}
                   </TrioItem>
                   <TrioItem>
-                    Three
+                    <Heart
+                      height={30}
+                      width={30}
+                      style={{
+                        margin: '0 5px 0 0px'
+                      }}
+                    />
+                    {likes.length}
                   </TrioItem>
                 </Trio>
               </Info>
@@ -49,16 +82,29 @@ class ProjectList extends Component {
             </Left>
             <RoundButton
               backgroundColor={(project.privacy === 'PUBLIC') ? purple : grey400}
+              title={(project.privacy === 'PUBLIC') ? 'Set privacy to Tribe-Only' : 'Start looking for sessions!'}
               icon={
                 <Logo
                   fill={white}
                   style={{
                     display: 'inline-block',
-                    lineHeight: '56px',
-                    height: '56px'
+                    lineHeight: '75px',
+                    height: '75px'
                   }}
+
                 />
               }
+              onClick={()=>{
+                project = {
+                  ...project,
+                  privacy: (project.privacy !== 'PUBLIC') ? 'PUBLIC' : 'TRIBE'
+                }
+                this.props.relay.commitUpdate(
+                  new UpdateProject({
+                    project
+                  })
+                )
+              }}
             />
           </ProjectItem>
         )
@@ -94,7 +140,7 @@ class ProjectList extends Component {
                     fill={white}
                   />
                 }
-                label={'Create'}
+                label={'New Project'}
                 primary
               />
 
@@ -134,6 +180,15 @@ export default Relay.createContainer(
                     url
                   }
                   privacy
+                  comments (
+                    first: 10000
+                  ){
+                    edges {
+                      node {
+                        type
+                      }
+                    }
+                  }
                 }
               }
             }
