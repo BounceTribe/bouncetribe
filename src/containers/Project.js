@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import Relay from 'react-relay'
 import {View} from 'styled'
-import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre} from 'styled/Project'
+import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, LeftList, CommentContainer} from 'styled/Project'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
 import {white, purple} from 'theme'
@@ -105,14 +105,20 @@ class Project extends Component {
           />
         </TrackContainer>
 
-        {this.props.children}
+        <Bot>
+          <LeftList>
+            <ProjectTribeList
+              project={project}
+              tribe={this.props.viewer.User.friends.edges}
+              recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
+              router={this.props.router}
+            />
+          </LeftList>
+          <CommentContainer>
+            {this.props.children}
+          </CommentContainer>
+        </Bot>
 
-        <ProjectTribeList
-          project={project}
-          tribe={this.props.viewer.User.friends.edges}
-          recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
-          router={this.props.router}
-        />
       </View>
     )
   }
@@ -153,6 +159,9 @@ export default Relay.createContainer(
                 node {
                   id
                   handle
+                  portrait {
+                    url
+                  }
                 }
               }
             }
@@ -203,6 +212,9 @@ export default Relay.createContainer(
                       author {
                         id
                         handle
+                        portrait {
+                          url
+                        }
                       }
                     }
                   }

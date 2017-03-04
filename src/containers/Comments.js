@@ -1,9 +1,13 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import TextField from 'material-ui/TextField'
-import {Button} from 'styled'
+import {RoundButton} from 'styled'
+import {Container, ButtonRow, ButtonColumn, ButtonLabel, CommentBox} from 'styled/Comments'
 import CreateComment from 'mutations/CreateComment'
 import CommentMarkers from 'components/CommentMarkers'
+import Heart from 'icons/Heart'
+import Comment from 'icons/Comment'
+import SingleComment from 'containers/SingleComment'
 
 class Comments extends Component {
 
@@ -30,39 +34,66 @@ class Comments extends Component {
     return this.props.viewer.allComments.edges.map(edge=>{
       let {node: comment} = edge
       return (
-        <div
+        <SingleComment
+          comment={comment}
           key={comment.id}
-        >
-          {comment.text}
-          {comment.timestamp}
-        </div>
+        />
       )
     })
   }
 
   render () {
     return (
-      <div>
+      <Container>
         <CommentMarkers
           comments={this.props.viewer.allComments}
           duration={this.state.duration}
         />
-        <TextField
-          name={'comment'}
-          multiLine={true}
-          rows={2}
-          onChange={(e)=>{this.setState({comment: e.target.value})}}
-        />
-        <Button
-          primary
-          label={'Comment'}
-          onClick={this.createComment}
-        />
+        <ButtonRow>
+          <ButtonColumn>
+            <RoundButton
+              secondary
+              icon={<Comment/>}
+            />
+            <ButtonLabel>
+              Idea
+            </ButtonLabel>
+          </ButtonColumn>
+          <ButtonColumn>
+            <RoundButton
+              icon={<Heart/>}
+            />
+            <ButtonLabel>
+              Like
+            </ButtonLabel>
+          </ButtonColumn>
+        </ButtonRow>
+        <CommentBox>
+          <RoundButton
+            icon={
+              <Comment
+                height={25}
+                width={25}
+              />
+            }
+            onClick={this.createComment}
+            mini={true}
+            secondary
+          />
+          <TextField
+            name={'comment'}
+            style={{marginLeft: '15px'}}
+            multiLine={true}
+            fullWidth={true}
+            rows={2}
+            onChange={(e)=>{this.setState({comment: e.target.value})}}
+          />
 
-        <div>
-          {this.comments}
-        </div>
-      </div>
+        </CommentBox>
+
+        {this.comments}
+
+      </Container>
     )
   }
 }

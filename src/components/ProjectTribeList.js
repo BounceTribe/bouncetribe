@@ -2,6 +2,9 @@ import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
+import {grey200} from 'theme'
+import Avatar from 'material-ui/Avatar'
+import Toggle from 'material-ui/Toggle'
 
 class ProjectTribeList extends Component {
 
@@ -20,72 +23,86 @@ class ProjectTribeList extends Component {
     this.setState({selections})
   }
 
+  toggleSelection = (handle) => {
+    let {title, creator} = this.props.project
+    this.setState((prevState) => {
+      let {selections} = prevState
+      if (selections.includes(handle)) {
+        selections = selections.filter((item) => item !== handle )
+      } else {
+        selections.push(handle)
+      }
+      this.props.router.replace({
+        pathname: `/${creator.handle}/${title}/`,
+        query: {
+          in: selections
+        }
+      })
+      return {
+        selections
+      }
+    })
+  }
+
 
   render() {
     return (
-      <List>
+      <List
+        style={{
+          width: '100%',
+          border: `.5px solid ${grey200}`,
+          borderRadius: `6 px`
+        }}
+      >
         <ListItem
-          primaryText={'Show all'}
-        />
-        <ListItem
-          primaryText={'Hide all'}
+          primaryText={'Show / Hide all'}
+          rightToggle={<Toggle/>}
         />
         <Divider/>
-        <Subheader>
-          Trime Members
-        </Subheader>
         <ListItem
-          primaryText={'Recent'}
-          open={true}
-          nestedItems={
-            this.props.recentCommenters.map(recent => (
-              <ListItem
-                key={recent.node.author.id}
-                primaryText={recent.node.author.handle}
-              />
-            ))
-          }
-        />
-        <ListItem
-          primaryText={'All'}
-          open={true}
-          nestedItems={
-            this.props.tribe.map(friend => {
-              let {handle, id} = friend.node
+          primaryText={'TribeMembers'}
+          initiallyOpen={true}
+          nestedItems={[
+            ...this.props.recentCommenters.map(recent => {
+              let {author} = recent.node
               let {selections} = this.state
               return (
                 <ListItem
-                  key={id}
+                  key={`recent${author.id}`}
+                  primaryText={author.handle}
+                  leftAvatar={
+                    <Avatar
+                      src={author.portrait.url}
+                    />
+                  }
+                  style={{
+                    backgroundColor: (selections.includes(author.handle)) ? 'lightblue' : ''
+                  }}
+                  onClick={()=>{this.toggleSelection(author.handle)}}
+                />
+              )
+            }),
+            ...this.props.tribe.map(friend => {
+              let {handle, id, portrait} = friend.node
+              let {selections} = this.state
+              return (
+                <ListItem
+                  key={`tribe${id}`}
                   style={{
                     backgroundColor: (selections.includes(handle)) ? 'lightblue' : ''
                   }}
-                  onClick={()=> {
-                    let {title, creator} = this.props.project
-                    this.setState((prevState) => {
-                      let {selections} = prevState
-                      if (selections.includes(handle)) {
-                        selections = selections.filter((item) => item !== handle )
-                      } else {
-                        selections.push(handle)
-                      }
-                      this.props.router.replace({
-                        pathname: `/${creator.handle}/${title}/`,
-                        query: {
-                          in: selections
-                        }
-                      })
-                      return {
-                        selections
-                      }
-                    })
-                  }}
+                  onClick={()=>{this.toggleSelection(handle)}}
                   primaryText={handle}
+                  leftAvatar={
+                    <Avatar
+                      src={portrait.url}
+                    />
+                  }
                 />
               )
             })
-          }
+          ]}
         />
-
         <Divider/>
         <Subheader>
           Session Feedback

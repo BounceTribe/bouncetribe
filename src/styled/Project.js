@@ -81,3 +81,23 @@ export const Marker = styled.div`
   border-radius: 20px;
   background-color: ${purple};
 `
+
+export const Bot = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 50px;
+  width: 90%;
+`
+
+export const LeftList = styled.div`
+  display: flex;
+  width: 25%;
+  margin-right: 20px;
+`
+
+export const CommentContainer = styled.div`
+  display: flex;
+  margin-left: 20px;
+  width: 75%;
+`
