@@ -8,6 +8,7 @@ import Heart from 'icons/Heart'
 
 import {white} from 'theme'
 import {Loading} from 'styled/Spinner'
+import {url} from 'config'
 
 class Feed extends Component {
 
@@ -58,7 +59,7 @@ class Feed extends Component {
               </Genre>
             </Profile>
             <Artwork
-              src={project.artwork.url}
+              src={(project.artwork) ? project.artwork.url : `${url}/logo.png`}
               to={`/${project.creator.handle}/'${project.title}'`}
 
             />
