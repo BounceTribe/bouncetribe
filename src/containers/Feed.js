@@ -59,7 +59,7 @@ class Feed extends Component {
               </Genre>
             </Profile>
             <Artwork
-              src={(project.artwork) ? project.artwork.url : `${url}/logo.png`}
+              src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
               to={`/${project.creator.handle}/'${project.title}'`}
 
             />

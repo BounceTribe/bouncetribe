@@ -35,7 +35,7 @@ class ProjectList extends Component {
           >
             <Left>
               <Artwork
-                src={(project.artwork) ? project.artwork.url : `${url}/logo.png`}
+                src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
                 alt={'Project Artwork'}
                 to={`/${owner.handle}/${project.title}`}
               />

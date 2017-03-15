@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import {Item} from 'styled/list'
 import {Link} from 'react-router'
-import {grey800} from 'theme'
+import {grey500, grey800, purple, blue} from 'theme'
 import React from 'react'
 
 export const ProjectItem = styled(Item)`
@@ -15,6 +15,12 @@ export const ProjectItem = styled(Item)`
   margin-bottom: 0;
 `
 
+export const ProfileProjectItem = styled(ProjectItem)`
+  height: 100px;
+  padding: 10px 20px;
+
+`
+
 export const Left = styled.div`
   display: flex;
 `
@@ -25,12 +31,47 @@ const ArtworkImg = styled.img`
   object-fit: cover;
 `
 
+const ProfileArtworkImg = styled(ArtworkImg)`
+  height: 100px;
+  width: 100px;
+`
+
+export const Bubble = styled.div`
+  display: flex;
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({secondary}) => (secondary) ? blue : purple};
+  margin-right: 5px;
+`
+
+
+export const CreatedAt = styled.div`
+  color: ${grey500};
+  font-size: 13px;
+  margin-top: 5px;
+`
+
 export const Artwork = (props) => {
   return (
     <Link
       {...props}
     >
       <ArtworkImg
+        {...props}
+      />
+    </Link>
+  )
+}
+
+export const ProfileArtwork = (props) => {
+  return (
+    <Link
+      {...props}
+    >
+      <ProfileArtworkImg
         {...props}
       />
     </Link>
@@ -53,6 +94,11 @@ export const ProjectTitle = styled(Link)`
   font-weight: 400;
 `
 
+export const ProfileProjectTitle = styled(ProjectTitle)`
+  font-size: 20px;
+  margin-top: 10px;
+`
+
 export const Trio = styled.div`
   display: flex;
   margin-top: 30px;
@@ -64,5 +110,14 @@ export const TrioItem = styled.div`
   margin-right: 10px;
   font-size: 16px;
   align-items: center;
+
+`
+
+export const Duo = styled(Trio)`
+  margin-top: 10px;
+`
+
+export const DuoItem = styled(TrioItem)`
+  font-size: 14px;
 
 `

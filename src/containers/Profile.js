@@ -27,6 +27,12 @@ import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
+import { List} from 'styled/list'
+import {ProfileProjectItem, Left as ProjectLeft, ProfileArtwork, Info, ProfileProjectTitle, Duo, DuoItem, Bubble, CreatedAt} from 'styled/ProjectList'
+import {url} from 'config'
+import Heart from 'icons/Heart'
+import Comment from 'icons/Comment'
+
 
 class Profile extends Component {
 
@@ -59,7 +65,9 @@ class Profile extends Component {
         text: 'Veteran (25+ Years)'
       },
     ],
-    notification: false
+    notification: false,
+    tabs: 'projects'
+
   }
 
   componentWillMount = () => {
@@ -418,8 +426,82 @@ class Profile extends Component {
     })
   }
 
+  tabs = (value) => {
+    this.setState({tabs:value})
+  }
+
+  get projects () {
+    let {User, user} = this.props.viewer
+    return User.projects.edges.map(edge => {
+      let {node:project} = edge
+      if (User.id !== user.id && project.privacy === 'PRIVATE') {
+        return null
+      } else {
+        let comments = project.comments.edges.filter( (edge) => {
+          return edge.node.type === 'COMMENT'
+        })
+        let likes = project.comments.edges.filter( (edge) => {
+          return edge.node.type === 'LIKE'
+        })
+        return (
+          <ProfileProjectItem
+            key={project.id}
+          >
+            <ProjectLeft>
+              <ProfileArtwork
+                src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+                alt={'Project Artwork'}
+                to={`/${User.handle}/${project.title}`}
+              />
+              <Info>
+                <ProfileProjectTitle
+                  to={`/${User.handle}/${project.title}`}
+                >
+                  {project.title}
+                </ProfileProjectTitle>
+                <CreatedAt>
+                  Created on {new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </CreatedAt>
+                <Duo>
+                  <DuoItem>
+                    <Bubble
+                      secondary
+                    >
+                        <Comment
+                          height={15}
+                          width={15}
+                        />
+                    </Bubble>
+
+                    {comments.length}
+                  </DuoItem>
+                  <DuoItem>
+                    <Bubble>
+                      <Heart
+                        height={15}
+                        width={15}
+                      />
+                    </Bubble>
+
+
+                    {likes.length}
+                  </DuoItem>
+                </Duo>
+              </Info>
+
+            </ProjectLeft>
+
+          </ProfileProjectItem>
+        )
+      }
+    })
+  }
+
   render () {
-    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError, experience, experiences, notification} = this.state
+    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError, experience, experiences, notification, tabs} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
     let projects = User.projects.edges.length
@@ -581,24 +663,37 @@ class Profile extends Component {
               inkBarStyle={{
                 backgroundColor: purple
               }}
+              value={tabs}
+              onChange={this.tabs}
             >
               <Tab
                 label={'Activity'}
+                value={'activity'}
                 style={{
                   borderBottom: `2px solid ${grey200}`
                 }}
+                disabled={true}
 
-              />
+              >
+                <h4>Coming soon!</h4>
+
+              </Tab>
+
               <Tab
                 label={'Projects'}
+                value={'projects'}
                 style={{
                   borderBottom: `2px solid ${grey200}`
                 }}
               >
+                <List>
+                  {this.projects}
+                </List>
 
               </Tab>
               <Tab
                 label={'Bounces'}
+                value={'bounces'}
                 style={{
                   borderBottom: `2px solid ${grey200}`
                 }}
@@ -783,11 +878,29 @@ export default Relay.createContainer(
             placename
             score
             projects (
-              first: 100000
+              first: 8
+              orderBy: createdAt_ASC
             ){
               edges {
                 node {
                   id
+                  title
+                  createdAt
+                  artwork {
+                    url
+                  }
+                  privacy
+                  comments (
+                    first: 1000
+                  ) {
+                    edges {
+                      node {
+                        id
+                        type
+                      }
+                    }
+                  }
+
                 }
               }
             }

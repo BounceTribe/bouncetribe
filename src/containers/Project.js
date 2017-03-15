@@ -54,7 +54,7 @@ class Project extends Component {
       <View>
         <Top>
           <Art
-            src={ (project.artwork) ? project.artwork.url : `${url}/logo.png`}
+            src={ (project.artwork) ? project.artwork.url : `${url}/artwork.png`}
             alt={'Project Art'}
           />
           <Info>
