@@ -6,8 +6,9 @@ export default class CreateComment extends Relay.Mutation {
     return {
       text: this.props.text,
       timestamp: this.props.timestamp,
-      authorId: this.props.self.id,
-      projectId: this.props.project.id
+      authorId: this.props.authorId,
+      projectId: this.props.projectId,
+      type: this.props.tyoe
     }
   }
 
@@ -29,7 +30,7 @@ export default class CreateComment extends Relay.Mutation {
     return [{
       type: 'RANGE_ADD',
       parentName: 'project',
-      parentID: this.props.project.id,
+      parentID: this.props.projectId,
       connectionName: 'comments',
       edgeName: 'edge',
       rangeBehaviors: {
@@ -38,18 +39,18 @@ export default class CreateComment extends Relay.Mutation {
     }]
   }
 
-  getOptimisticResponse() {
-    return {
-      project: {
-        id: this.props.project.id
-      },
-      edge: {
-        node: {
-          text: this.props.text,
-          timestamp: this.props.timestamp,
-        }
-      }
-    }
-  }
+  // getOptimisticResponse() {
+  //   return {
+  //     project: {
+  //       id: this.props.project
+  //     },
+  //     edge: {
+  //       node: {
+  //         text: this.props.text,
+  //         timestamp: this.props.timestamp,
+  //       }
+  //     }
+  //   }
+  // }
 
 }

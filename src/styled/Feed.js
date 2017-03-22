@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {purple, grey600, grey200, white} from 'theme'
+import {purple, grey600, grey200, grey800, white} from 'theme'
 
 export const Container = styled.div`
   display: flex;
@@ -119,4 +119,5 @@ export const Value = styled.span`
   display: flex;
   font-size: 18px;
   margin: 0 10px 0 5px;
+  color: ${grey800};
 `

@@ -12,7 +12,8 @@ import {Tabs, Tab} from 'material-ui/Tabs'
 class Project extends Component {
 
   state = {
-    time: 0
+    time: 0,
+    tabs: 'listen'
   }
 
   static childContextTypes = {
@@ -80,7 +81,7 @@ class Project extends Component {
         </Top>
         <Tabs
           style={{
-            width: '100%',
+            width: '85%',
             marginTop: '6px',
             display: (ownProject) ? 'none' : '',
             marginBottom: '25px'
@@ -88,12 +89,17 @@ class Project extends Component {
           inkBarStyle={{
             backgroundColor: purple
           }}
+          value={this.state.tabs}
         >
           <Tab
             label={'Listen & Give'}
+            value={'listen'}
+            onActive={()=>this.setState({tabs: 'listen'})}
           />
           <Tab
             label={'View Feedback'}
+            value={'view'}
+            onActive={()=>this.setState({tabs: 'view'})}
           />
         </Tabs>
         <TrackContainer>
@@ -106,7 +112,9 @@ class Project extends Component {
         </TrackContainer>
 
         <Bot>
-          <LeftList>
+          <LeftList
+            hide={(this.state.tabs === 'listen')}
+          >
             <ProjectTribeList
               project={project}
               tribe={this.props.viewer.User.friends.edges}

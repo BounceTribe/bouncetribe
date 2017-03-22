@@ -87,13 +87,14 @@ export const Bot = styled.div`
   justify-content: center;
   align-items: flex-start;
   margin-top: 50px;
-  width: 90%;
+  width: 85%;
 `
 
 export const LeftList = styled.div`
-  display: flex;
+  display: ${({hide}) => (hide) ? 'none' : 'flex'};
   width: 30%;
   margin-right: 20px;
+
 `
 
 export const CommentContainer = styled.div`

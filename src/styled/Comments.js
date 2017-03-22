@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {grey300, grey700, grey900} from 'theme'
+import {grey300, grey700, grey900, blue, purple} from 'theme'
 
 export const Container = styled.div`
   display: flex;
@@ -80,4 +80,11 @@ export const Text = styled.div`
   align-content: center;
   min-height: 75px;
   font-size: 16px;
+`
+
+export const Handle = styled.div`
+  display: flex;
+  color: ${({comment}) => (comment) ? blue : purple};
+  margin-right: 10px;
+  font-weight: 400;
 `

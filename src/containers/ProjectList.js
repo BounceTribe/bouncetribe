@@ -1,20 +1,34 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View, Button, RoundButton} from 'styled'
-import {Container, Header, HeaderOptions, List} from 'styled/list'
-import {ProjectItem, Left, Artwork, Info, ProjectTitle, Trio, TrioItem} from 'styled/ProjectList'
+import {Container, Header, HeaderOptions, PList} from 'styled/list'
+import {ProjectItem, Left, Artwork, Info, ProjectTitle, Trio, TrioItem, BigBubble, ButtonRow} from 'styled/ProjectList'
 import {IconTextContainer, IconText} from 'styled'
 import Music from 'icons/Music'
 import Upload from 'icons/Upload'
 import Logo from 'icons/Logo'
-import {purple, white, grey400} from 'theme'
+import {purple, white, grey300} from 'theme'
 import {url} from 'config'
 import UpdateProject from 'mutations/UpdateProject'
 import Headphones from 'icons/Headphones'
 import Comment from 'icons/Comment'
 import Heart from 'icons/Heart'
+import Lock from 'icons/Lock'
+import Tribe from 'icons/Tribe'
 
 class ProjectList extends Component {
+
+  setPrivacy = (currentProject, newPrivacy) => {
+    let project = {
+      ...currentProject,
+      privacy: newPrivacy
+    }
+    this.props.relay.commitUpdate(
+      new UpdateProject({
+        project
+      })
+    )
+  }
 
   get projects () {
     let {User: owner, user} = this.props.viewer
@@ -57,55 +71,88 @@ class ProjectList extends Component {
                     {12}
                   </TrioItem>
                   <TrioItem>
-                    <Comment
-                      height={30}
-                      width={30}
-                      style={{
-                        margin: '0 5px 0 0px'
-                      }}
-                    />
+                    <BigBubble
+                      secondary
+                    >
+                      <Comment
+                        height={20}
+                        width={20}
+                      />
+                    </BigBubble>
                     {comments.length}
                   </TrioItem>
                   <TrioItem>
-                    <Heart
-                      height={30}
-                      width={30}
-                      style={{
-                        margin: '0 5px 0 0px'
-                      }}
-                    />
+                    <BigBubble>
+                      <Heart
+                        height={20}
+                        width={20}
+                      />
+                    </BigBubble>
                     {likes.length}
                   </TrioItem>
                 </Trio>
               </Info>
 
             </Left>
-            <RoundButton
-              backgroundColor={(project.privacy === 'PUBLIC') ? purple : grey400}
-              title={(project.privacy === 'PUBLIC') ? 'Set privacy to Tribe-Only' : 'Start looking for sessions!'}
-              icon={
-                <Logo
-                  fill={white}
-                  style={{
-                    display: 'inline-block',
-                    lineHeight: '75px',
-                    height: '75px'
-                  }}
-
-                />
-              }
-              onClick={()=>{
-                project = {
-                  ...project,
-                  privacy: (project.privacy !== 'PUBLIC') ? 'PUBLIC' : 'TRIBE'
+            <ButtonRow>
+              <RoundButton
+                backgroundColor={(project.privacy === 'PRIVATE') ? purple : grey300}
+                title={'Set project privacy.'}
+                icon={
+                  <Lock
+                    fill={white}
+                    style={{
+                      display: 'inline-block',
+                      lineHeight: '60px',
+                      height: '60px'
+                    }}
+                    height={25}
+                    width={25}
+                  />
                 }
-                this.props.relay.commitUpdate(
-                  new UpdateProject({
-                    project
-                  })
-                )
-              }}
-            />
+                onClick={()=>this.setPrivacy(project,'PRIVATE')}
+              />
+              <RoundButton
+                backgroundColor={(project.privacy === 'TRIBE') ? purple : grey300}
+                title={'Set project privacy.'}
+                icon={
+                  <Tribe
+                    fill={white}
+                    style={{
+                      display: 'inline-block',
+                      lineHeight: '60px',
+                      height: '60px'
+                    }}
+                    height={50}
+                    width={50}
+                  />
+                }
+                style={{
+                  marginLeft: '20px',
+                }}
+                onClick={()=>this.setPrivacy(project, 'TRIBE')}
+              />
+              <RoundButton
+                backgroundColor={(project.privacy === 'PUBLIC') ? purple : grey300}
+                title={'Set project privacy.'}
+                icon={
+                  <Logo
+                    fill={white}
+                    style={{
+                      display: 'inline-block',
+                      lineHeight: '60px',
+                      height: '60px'
+                    }}
+
+                  />
+                }
+                onClick={()=>this.setPrivacy(project, 'PUBLIC')}
+                style={{
+                  marginLeft: '20px',
+                }}
+              />
+            </ButtonRow>
+
           </ProjectItem>
         )
       }
@@ -146,9 +193,9 @@ class ProjectList extends Component {
 
             </HeaderOptions>
           </Header>
-          <List>
+          <PList>
             {this.projects}
-          </List>
+          </PList>
         </Container>
       </View>
     )
@@ -181,7 +228,7 @@ export default Relay.createContainer(
                   }
                   privacy
                   comments (
-                    first: 10000
+                    first: 999
                   ){
                     edges {
                       node {

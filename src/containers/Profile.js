@@ -460,7 +460,7 @@ class Profile extends Component {
                   {project.title}
                 </ProfileProjectTitle>
                 <CreatedAt>
-                  Created on {new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {
+                  Created {new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {
                     month: 'long',
                     day: 'numeric'
                   })}
@@ -822,7 +822,7 @@ export default Relay.createContainer(
             id
             handle
             friends (
-              first: 100000
+              first: 999
             ) {
               edges {
                 node {
@@ -835,7 +835,7 @@ export default Relay.createContainer(
                 accepted: false
                 ignored: false
               }
-              first: 2147483647
+              first: 999
               orderBy: createdAt_ASC
             ) {
               edges {
@@ -852,7 +852,7 @@ export default Relay.createContainer(
                 accepted: false
                 ignored: false
               }
-              first: 2147483647
+              first: 999
               orderBy: createdAt_ASC
             ) {
               edges {
@@ -891,7 +891,7 @@ export default Relay.createContainer(
                   }
                   privacy
                   comments (
-                    first: 1000
+                    first: 999
                   ) {
                     edges {
                       node {
@@ -905,7 +905,7 @@ export default Relay.createContainer(
               }
             }
             friends (
-              first: 100000
+              first: 999
             ){
               edges {
                 node {

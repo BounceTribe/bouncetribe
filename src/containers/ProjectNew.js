@@ -30,6 +30,7 @@ class ProjectNew extends Component {
     genre: '',
     genres: [],
     privacy: 'PUBLIC',
+    artworkUrl: `${url}/uploadartwork.png`
   }
 
   constructor(props) {
@@ -65,13 +66,18 @@ class ProjectNew extends Component {
 
   audioDropped = ({audioProgress, title, size}) => {
 
+
     if (title) {
       this.updateProgress()
-      this.setState({
-        audioProgress,
-        title,
-        message: 'Generating Waveform',
-        size
+      ensureUsersProjectTitleUnique(this.props.viewer.user.id, title)
+      .then(unique=>{
+        this.setState({
+          titleUnique: unique,
+          audioProgress,
+          title,
+          message: 'Generating Waveform',
+          size
+        })
       })
     } else {
       this.setState({
@@ -173,7 +179,7 @@ class ProjectNew extends Component {
   }
 
   get form () {
-    let {title, description, tracksIds, audioProgress, privacy, genres, titleUnique} = this.state
+    let {title, tracksIds, audioProgress, privacy, genres, titleUnique} = this.state
     if (audioProgress  && audioProgress !== 'GENERATING') {
       return (
         <Row>
@@ -194,6 +200,9 @@ class ProjectNew extends Component {
               onChange={(e, index, value)=>{
                 this.setState({genre:value})
               }}
+              selectedMenuItemStyle={{
+                color: purple
+              }}
             >
               {this.state.genres}
             </SelectField>
@@ -209,12 +218,12 @@ class ProjectNew extends Component {
             />
             <Button
               primary={true}
-              disabled={(!titleUnique || !title || !description || !tracksIds || !genres)}
+              disabled={(!titleUnique || !title || !tracksIds || !genres)}
               label={'Create Project'}
               onClick={this.createProject}
               icon={
                 <Music
-                  fill={purple}
+                  fill={white}
                 />
               }
             />

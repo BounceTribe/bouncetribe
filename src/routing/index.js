@@ -52,22 +52,51 @@ const tribeSearch = (params, {location})=>{
 
 const commentFilter = (params, {location})=>{
   let {query} = location
-  let handleIn = []
-  if (Array.isArray(query.in)) {
-    handleIn.push(...query.in)
-  } else if (typeof query.in === 'string') {
-    handleIn.push(query.in)
-  }
-  return {
-    ...params,
-    commentFilter: {
-      author: {
-        handle_in: handleIn,
-      },
-      project: {
-        title: params.projectTitle,
-        creator: {
-          handle: params.userHandle
+  if (query.in && query.showAll === 'false') {
+    let handleIn = []
+    if (Array.isArray(query.in)) {
+      handleIn.push(...query.in)
+    } else if (typeof query.in === 'string') {
+      handleIn.push(query.in)
+    }
+    return {
+      ...params,
+      commentFilter: {
+        author: {
+          handle_in: handleIn,
+        },
+        project: {
+          title: params.projectTitle,
+          creator: {
+            handle: params.userHandle
+          }
+        }
+      }
+    }
+  } else if (query.showAll === 'false') {
+    return {
+      ...params,
+      commentFilter: {
+        author: {
+          handle_in: [],
+        },
+        project: {
+          title: params.projectTitle,
+          creator: {
+            handle: params.userHandle
+          }
+        }
+      }
+    }
+  } else {
+    return {
+      ...params,
+      commentFilter: {
+        project: {
+          title: params.projectTitle,
+          creator: {
+            handle: params.userHandle
+          }
         }
       }
     }

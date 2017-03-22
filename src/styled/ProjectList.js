@@ -18,6 +18,7 @@ export const ProjectItem = styled(Item)`
 export const ProfileProjectItem = styled(ProjectItem)`
   height: 100px;
   padding: 10px 20px;
+  border-top: none;
 
 `
 
@@ -47,6 +48,11 @@ export const Bubble = styled.div`
   margin-right: 5px;
 `
 
+export const BigBubble = styled(Bubble)`
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
+`
 
 export const CreatedAt = styled.div`
   color: ${grey500};
@@ -110,7 +116,7 @@ export const TrioItem = styled.div`
   margin-right: 10px;
   font-size: 16px;
   align-items: center;
-
+  color: ${grey800};
 `
 
 export const Duo = styled(Trio)`
@@ -119,5 +125,11 @@ export const Duo = styled(Trio)`
 
 export const DuoItem = styled(TrioItem)`
   font-size: 14px;
+`
 
+export const ButtonRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
 `

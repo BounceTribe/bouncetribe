@@ -83,7 +83,10 @@ export const getAllGenres = () => {
     },
     body: JSON.stringify({
       query: `{
-        allGenres (first: 300) {
+        allGenres (
+          first: 300
+          orderBy: name_ASC
+        ) {
           id
           name
         }
@@ -235,7 +238,7 @@ export const fetchFeed = (handle) => {
           genres (first: 1){
             name
           }
-          comments (first: 10000){
+          comments (first: 999){
             id
           }
           creator {
@@ -249,4 +252,29 @@ export const fetchFeed = (handle) => {
     })
   }).then(response => response.json())
   .then(result => result.data.allProjects)
+}
+
+export const getProjectId = (handle, title) => {
+  return fetch(simple, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `{
+        allProjects (
+          filter: {
+            creator: {
+              handle: "${handle}"
+            }
+            title: "${title}"
+          }
+        ) {
+          id
+        }
+      }`
+    }),
+  }).then(result=>result.json()).then(json => {
+    return json.data.allProjects[0].id
+  })
 }

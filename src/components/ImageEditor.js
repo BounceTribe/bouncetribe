@@ -7,7 +7,7 @@ export default class ImageEditor extends Component {
   render() {
     return (
       <Dialog
-        title={'Edit Your Image'}
+        title={'Upload Your Image'}
         open={this.props.open}
         onRequestClose={this.props.onRequestClose}
         contentStyle={{

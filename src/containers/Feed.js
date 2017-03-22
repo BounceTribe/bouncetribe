@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
+import {Bubble} from 'styled'
 import {Container, Paper, Profile, Left, Col, Portrait, Artwork, Title, Handle, Genre, Row, Value} from 'styled/Feed'
 import {fetchFeed} from 'utils/graphql'
 import Music from 'icons/Music'
@@ -64,17 +65,25 @@ class Feed extends Component {
 
             />
             <Row>
-              <Heart
-                height={30}
-                width={30}
-              />
+              <Bubble>
+                <Heart
+                  height={20}
+                  width={20}
+                />
+              </Bubble>
+
               <Value>
                 {project.comments.length}
               </Value>
-              <Comment
-                height={30}
-                width={30}
-              />
+              <Bubble
+                secondary
+              >
+                <Comment
+                  height={20}
+                  width={20}
+                />
+              </Bubble>
+
               <Value>
                 {project.comments.length}
               </Value>

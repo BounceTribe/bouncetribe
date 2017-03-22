@@ -9,7 +9,8 @@ import Toggle from 'material-ui/Toggle'
 class ProjectTribeList extends Component {
 
   state = {
-    selections: []
+    selections: [],
+    showAll: true
   }
 
   componentWillMount () {
@@ -21,6 +22,7 @@ class ProjectTribeList extends Component {
       selections.push(query.in)
     }
     this.setState({selections})
+
   }
 
   toggleSelection = (handle) => {
@@ -35,7 +37,8 @@ class ProjectTribeList extends Component {
       this.props.router.replace({
         pathname: `/${creator.handle}/${title}/`,
         query: {
-          in: selections
+          in: selections,
+          showAll: false
         }
       })
       return {
@@ -46,8 +49,7 @@ class ProjectTribeList extends Component {
 
 
   nestedItems = () => {
-    let recentIds = this.props.recentCommenters.map(recent=>recent.node.author.id)
-    let recents = this.props.recentCommenters.map(recent => {
+    return this.props.recentCommenters.map(recent => {
       let {author} = recent.node
       let {selections} = this.state
       return (
@@ -71,36 +73,19 @@ class ProjectTribeList extends Component {
         />
       )
     })
-    let all = this.props.tribe.map(friend => {
-      let {handle, id, portrait} = friend.node
-      let {selections} = this.state
-      if (recentIds.includes(id)) {
-        return null
-      } else {
-        return (
-          <ListItem
-            key={`tribe${id}`}
-            style={{
-              color: (selections.includes(handle)) ? purple : '',
-            }}
-            innerDivStyle={{
-              marginLeft: '0px',
-              fontSize: '14px',
-              fontWeight: '400'
+  }
 
-            }}
-            onClick={()=>{this.toggleSelection(handle)}}
-            primaryText={handle}
-            leftAvatar={
-              <Avatar
-                src={portrait.url}
-              />
-            }
-          />
-        )
-      }
-    })
-    return [...recents, ...all]
+  componentWillReceiveProps(nextProps) {
+    let {query} = nextProps.router.location
+    if (query.showAll === 'false') {
+      this.setState({
+        showAll: false
+      })
+    } else {
+      this.setState({
+        showAll: true
+      })
+    }
   }
 
   render() {
@@ -113,8 +98,28 @@ class ProjectTribeList extends Component {
         }}
       >
         <ListItem
-          primaryText={'Show / Hide all'}
-          rightToggle={<Toggle/>}
+          primaryText={(this.state.showAll) ? 'Showing all' : 'Hiding all'}
+          rightToggle={
+            <Toggle
+              toggled={this.state.showAll}
+              onToggle={(e, value)=>{
+                let {title, creator} = this.props.project
+                if (value) {
+                  this.props.router.replace({
+                    pathname: `/${creator.handle}/${title}`,
+                  })
+                } else {
+                  this.props.router.replace({
+                    pathname: `/${creator.handle}/${title}/`,
+                    query: {
+                      in: this.state.selections,
+                      showAll: false
+                    }
+                  })
+                }
+              }}
+            />
+          }
         />
         <Divider/>
         <ListItem

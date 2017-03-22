@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {white, grey230, grey215, size} from 'theme'
+import {white, grey230, grey215, size, grey800, purple, blue} from 'theme'
 import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -51,6 +51,7 @@ export const IconTextContainer = styled(BtLink)`
 `
 export const IconText = styled.span`
   margin-left: 12px;
+  color: ${grey800};
 `
 
 
@@ -131,6 +132,7 @@ export const RoundButton = (props) => {
         {...props}
         style={{
           boxShadow: 0,
+          ...props.style
         }}
       >
         {props.icon}
@@ -151,4 +153,14 @@ export const BotNav = styled.div`
   ${size.m`
     display: flex;
   `}
+`
+
+export const Bubble = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({secondary}) => (secondary) ? blue : purple}
+  height: 30px;
+  width: 30px;
+  border-radius: 30px;
 `

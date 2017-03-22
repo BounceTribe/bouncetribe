@@ -36,6 +36,10 @@ export const List = styled.div`
   box-sizing: border-box;
 `
 
+export const PList = styled(List)`
+  padding-top: 100px;
+`
+
 export const Item = styled.div`
   display: flex;
   flex-direction: row;

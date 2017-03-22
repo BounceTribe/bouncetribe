@@ -42,7 +42,7 @@ export const Choice = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 10px;
+  font-size: 14px;
 `
 
 export const ChoiceText = styled.span`

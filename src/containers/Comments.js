@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import TextField from 'material-ui/TextField'
+// import TextField from 'material-ui/TextField'
 import {RoundButton} from 'styled'
 import {Container, ButtonRow, ButtonColumn, ButtonLabel, CommentBox} from 'styled/Comments'
 import CreateComment from 'mutations/CreateComment'
@@ -8,6 +8,7 @@ import CommentMarkers from 'components/CommentMarkers'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
+import {getProjectId} from 'utils/graphql'
 
 class Comments extends Component {
 
@@ -15,14 +16,23 @@ class Comments extends Component {
     comment: ''
   }
 
+  constructor(props) {
+    super(props)
+    let {userHandle, projectTitle} = this.props.params
+    getProjectId(userHandle, projectTitle).then( (projectId) => {
+      this.setState({projectId})
+    })
+  }
 
-  createComment = () => {
+
+  dropMarker = (type) => {
     this.props.relay.commitUpdate(
       new CreateComment({
         text: this.state.comment,
         timestamp: this.props.time,
-        self: this.props.self,
-        project: this.props.project
+        authorId: this.props.viewer.user,
+        projectId: this.state.projectId,
+        type
       }), {
         onSuccess: success => success,
         onFailure: failure => failure
@@ -42,6 +52,7 @@ class Comments extends Component {
     })
   }
 
+
   render () {
     let ownProject = (this.props.viewer.user.handle === this.props.params.userHandle)
     return (
@@ -56,7 +67,13 @@ class Comments extends Component {
           <ButtonColumn>
             <RoundButton
               secondary
-              icon={<Comment/>}
+              icon={
+                <Comment
+                  height={40}
+                  width={40}
+                />
+              }
+              onTouchTap={()=>{this.dropMarker('COMMENT')}}
             />
             <ButtonLabel>
               Idea
@@ -64,7 +81,13 @@ class Comments extends Component {
           </ButtonColumn>
           <ButtonColumn>
             <RoundButton
-              icon={<Heart/>}
+              icon={
+                <Heart
+                  height={40}
+                  width={40}
+                />
+              }
+              onTouchTap={()=>{this.dropMarker('LIKE')}}
             />
             <ButtonLabel>
               Like
@@ -74,25 +97,7 @@ class Comments extends Component {
         <CommentBox
           hide={(ownProject)}
         >
-          <RoundButton
-            icon={
-              <Comment
-                height={25}
-                width={25}
-              />
-            }
-            onClick={this.createComment}
-            mini={true}
-            secondary
-          />
-          <TextField
-            name={'comment'}
-            style={{marginLeft: '15px'}}
-            multiLine={true}
-            fullWidth={true}
-            rows={2}
-            onChange={(e)=>{this.setState({comment: e.target.value})}}
-          />
+
 
         </CommentBox>
 
@@ -112,6 +117,7 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
+            id
             handle
           }
           allComments (
