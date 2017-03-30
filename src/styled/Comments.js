@@ -43,11 +43,11 @@ export const Single = styled.div`
   padding: 10px 30px;
   width: 100%;
   margin-bottom: 20px;
+  min-height: 100px;
+  box-sizing: border-box;
 `
 
 export const Bottom = styled.div`
-  position: absolute;
-  margin-top: 30px;
   font-size: 13px;
 `
 
@@ -60,18 +60,19 @@ export const Time = styled.div`
 `
 
 export const Center = styled.div`
-  flex-direction: column;
+  flex-direction: row;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: flex-end;
   margin-left: 20px;
-  width: 100%;
+  width: 90%;
+  flex-wrap: wrap;
 `
 
 export const Text = styled.div`
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   width: 100%;
   text-align: left;
   font-size: 16px;
@@ -80,6 +81,7 @@ export const Text = styled.div`
   align-content: center;
   min-height: 75px;
   font-size: 16px;
+  align-self: center;
 `
 
 export const Handle = styled.div`
@@ -87,4 +89,14 @@ export const Handle = styled.div`
   color: ${({comment}) => (comment) ? blue : purple};
   margin-right: 10px;
   font-weight: 400;
+`
+
+export const CommentScroller = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-y: auto;
+  height: 500px;
+  width: 80%;
 `

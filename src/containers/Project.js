@@ -18,6 +18,7 @@ class Project extends Component {
 
   static childContextTypes = {
     duration: PropTypes.number,
+    time: PropTypes.number
   }
 
   componentWillMount () {
@@ -26,11 +27,17 @@ class Project extends Component {
     } else {
       this.setState({ownProject:false})
     }
+    if (this.props.router.params.handle) {
+      this.setState({tabs: 'listen'})
+    } else {
+      this.setState({tabs: 'view'})
+    }
   }
 
   getChildContext() {
     return {
-      duration: this.state.duration
+      duration: this.state.duration,
+      time: this.state.time
     }
   }
 
@@ -94,12 +101,22 @@ class Project extends Component {
           <Tab
             label={'Listen & Give'}
             value={'listen'}
-            onActive={()=>this.setState({tabs: 'listen'})}
+            onActive={()=>{
+              this.setState({tabs: 'listen'})
+              this.props.router.replace({
+                pathname: `/${this.props.viewer.User.handle}/${project.title}/${this.props.viewer.user.handle}`
+              })
+            }}
           />
           <Tab
             label={'View Feedback'}
             value={'view'}
-            onActive={()=>this.setState({tabs: 'view'})}
+            onActive={()=>{
+              this.setState({tabs: 'view'})
+              this.props.router.replace({
+                pathname: `/${this.props.viewer.User.handle}/${project.title}/view/`
+              })
+            }}
           />
         </Tabs>
         <TrackContainer>
@@ -113,7 +130,7 @@ class Project extends Component {
 
         <Bot>
           <LeftList
-            hide={(this.state.tabs === 'listen')}
+            hide={( (this.state.tabs === 'listen') && (!ownProject) )}
           >
             <ProjectTribeList
               project={project}
@@ -155,12 +172,14 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            handle
           }
           User (handle: $userHandle) {
             id
             email
+            handle
             friends (
-              first: 10000
+              first: 999
               orderBy: handle_ASC
             ) {
               edges {
@@ -211,8 +230,8 @@ export default Relay.createContainer(
                   }
                 }
                 comments (
-                  first: 3
-                  orderBy: createdAt_ASC
+                  first: 999
+                  orderBy: timestamp_ASC
                 ) {
                   edges {
                     node {
@@ -224,6 +243,10 @@ export default Relay.createContainer(
                           url
                         }
                       }
+                      project {
+                        id
+                      }
+                      timestamp
                     }
                   }
                 }

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {purple, white, grey800} from 'theme'
+import {purple, white, grey800, blue} from 'theme'
 
 export const Top = styled.div`
   display: flex;
@@ -79,7 +79,7 @@ export const Marker = styled.div`
   width: 20px;
   height: 20px;
   border-radius: 20px;
-  background-color: ${purple};
+  background-color: ${({comment})=>(comment)? blue : purple};
 `
 
 export const Bot = styled.div`
@@ -100,5 +100,5 @@ export const LeftList = styled.div`
 export const CommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
-  width: 70%;
+  width: 100%;
 `

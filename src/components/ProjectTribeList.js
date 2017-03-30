@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
-import {grey200, purple, blue} from 'theme'
+import {grey200, purple, blue, grey700} from 'theme'
 import Avatar from 'material-ui/Avatar'
-import Toggle from 'material-ui/Toggle'
+// import Toggle from 'material-ui/Toggle'
 
 
 class ProjectTribeList extends Component {
@@ -14,47 +14,86 @@ class ProjectTribeList extends Component {
   }
 
   componentWillMount () {
-    let {query} = this.props.router.location
-    let selections = []
-    if (Array.isArray(query.in)) {
-      selections.push(...query.in)
-    } else if (typeof query.in === 'string') {
-      selections.push(query.in)
+    // let {query} = this.props.router.location
+    // let selections = []
+    // if (Array.isArray(query.in)) {
+    //   selections.push(...query.in)
+    // } else if (typeof query.in === 'string') {
+    //   selections.push(query.in)
+    // }
+    // this.setState({selections})
+    if (this.props.router.location.query.in) {
+      this.setState({selections: [this.props.router.location.query.in]})
     }
-    this.setState({selections})
-
   }
 
   toggleSelection = (handle) => {
     let {title, creator} = this.props.project
-    this.setState((prevState) => {
-      let {selections} = prevState
-      if (selections.includes(handle)) {
-        selections = selections.filter((item) => item !== handle )
-      } else {
-        selections.push(handle)
-      }
+    if (this.state.selections.includes(handle)) {
       this.props.router.replace({
-        pathname: `/${creator.handle}/${title}/`,
+        pathname: `/${creator.handle}/${title}/view`
+      })
+      this.setState({
+        selections: []
+      })
+    } else {
+      this.props.router.replace({
+        pathname: `/${creator.handle}/${title}/view`,
         query: {
-          in: selections,
-          showAll: false
+          in: handle
         }
       })
-      return {
-        selections
-      }
-    })
+      this.setState({
+        selections: [handle]
+      })
+    }
+
+
+    // this.setState((prevState) => {
+    //   let {selections} = prevState
+    //   if (selections.includes(handle)) {
+    //     selections = selections.filter((item) => item !== handle )
+    //   } else {
+    //     selections.push(handle)
+    //   }
+    //   this.props.router.replace({
+    //     pathname: `/${creator.handle}/${title}/`,
+    //     query: {
+    //       in: selections,
+    //       showAll: false
+    //     }
+    //   })
+    //   return {
+    //     selections
+    //   }
+    // })
   }
 
 
+  componentWillReceiveProps (newProps) {
+      if (!newProps.router.location.query.in) {
+        this.setState({
+          selections: []
+        })
+      }
+  }
+
   nestedItems = () => {
-    return this.props.recentCommenters.map(recent => {
+    let uniqueAuthorIds = []
+    let uniqueAuthors = []
+    this.props.recentCommenters.forEach( (recent) => {
+      if (!uniqueAuthorIds.includes(recent.node.author.id)){
+        uniqueAuthorIds.push(recent.node.author.id)
+        uniqueAuthors.push(recent)
+      }
+    })
+
+    return uniqueAuthors.map((recent, index) => {
       let {author} = recent.node
       let {selections} = this.state
       return (
         <ListItem
-          key={`recent${author.id}`}
+          key={index}
           primaryText={author.handle}
           leftAvatar={
             <Avatar
@@ -62,7 +101,7 @@ class ProjectTribeList extends Component {
             />
           }
           style={{
-            color: (selections.includes(author.handle)) ? purple : '',
+            color: (selections.includes(author.handle)) ? purple : grey700,
           }}
           innerDivStyle={{
             marginLeft: '0px',
@@ -75,18 +114,18 @@ class ProjectTribeList extends Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
-    let {query} = nextProps.router.location
-    if (query.showAll === 'false') {
-      this.setState({
-        showAll: false
-      })
-    } else {
-      this.setState({
-        showAll: true
-      })
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   let {query} = nextProps.router.location
+  //   if (query.showAll === 'false') {
+  //     this.setState({
+  //       showAll: false
+  //     })
+  //   } else {
+  //     this.setState({
+  //       showAll: true
+  //     })
+  //   }
+  // }
 
   render() {
     return (
@@ -97,7 +136,7 @@ class ProjectTribeList extends Component {
           borderRadius: `6px`
         }}
       >
-        <ListItem
+        {/* <ListItem
           primaryText={(this.state.showAll) ? 'Showing all' : 'Hiding all'}
           rightToggle={
             <Toggle
@@ -106,22 +145,18 @@ class ProjectTribeList extends Component {
                 let {title, creator} = this.props.project
                 if (value) {
                   this.props.router.replace({
-                    pathname: `/${creator.handle}/${title}`,
+                    pathname: `/${creator.handle}/${title}/view`,
                   })
                 } else {
                   this.props.router.replace({
-                    pathname: `/${creator.handle}/${title}/`,
-                    query: {
-                      in: this.state.selections,
-                      showAll: false
-                    }
+                    pathname: `/${creator.handle}/${title}/view`,
                   })
                 }
               }}
             />
           }
         />
-        <Divider/>
+        <Divider/> */}
         <ListItem
           primaryText={'Tribe Members'}
           style={{

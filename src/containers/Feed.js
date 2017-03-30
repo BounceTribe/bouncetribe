@@ -25,6 +25,7 @@ class Feed extends Component {
 
   feed = () => {
     let {feed} = this.state
+    let {handle} = this.props.viewer.user
     if (feed) {
       return feed.map(project=>{
         return (
@@ -35,11 +36,11 @@ class Feed extends Component {
               <Left>
                 <Portrait
                   src={project.creator.portrait.url}
-                  to={`/${project.creator.handle}`}
+                  to={`/${project.creator.handle}/${handle}`}
                 />
                 <Col>
                   <Title
-                    to={`/${project.creator.handle}/${project.title}`}
+                    to={`/${project.creator.handle}/${project.title}/${handle}`}
                   >
                     {project.title}
                   </Title>

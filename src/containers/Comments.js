@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import Relay from 'react-relay'
 // import TextField from 'material-ui/TextField'
 import {RoundButton} from 'styled'
-import {Container, ButtonRow, ButtonColumn, ButtonLabel, CommentBox} from 'styled/Comments'
+import {Container, ButtonRow, ButtonColumn, ButtonLabel, CommentBox, CommentScroller} from 'styled/Comments'
 import CreateComment from 'mutations/CreateComment'
 import CommentMarkers from 'components/CommentMarkers'
 import Heart from 'icons/Heart'
@@ -10,10 +10,17 @@ import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
 import {getProjectId} from 'utils/graphql'
 
+
 class Comments extends Component {
 
+  static contextTypes = {
+    duration: PropTypes.number,
+    time: PropTypes.number
+  }
+
   state = {
-    comment: ''
+    comment: '',
+    comments: []
   }
 
   constructor(props) {
@@ -26,22 +33,53 @@ class Comments extends Component {
 
 
   dropMarker = (type) => {
+    let timestamp = this.context.time
     this.props.relay.commitUpdate(
       new CreateComment({
         text: this.state.comment,
-        timestamp: this.props.time,
-        authorId: this.props.viewer.user,
+        authorId: this.props.viewer.user.id,
         projectId: this.state.projectId,
-        type
+        type,
+        timestamp
       }), {
         onSuccess: success => success,
         onFailure: failure => failure
       }
     )
+    this.setState(
+      (prevState,props)=> {
+        let comments = props.viewer.allComments.edges.concat({node:{
+          text: this.state.comment,
+          authorId: this.props.viewer.user.id,
+          projectId: this.state.projectId,
+          type,
+          timestamp,
+          id: 'new',
+          author: this.props.viewer.user,
+          canEdit: true
+        }})
+        return {
+          comments
+        }
+      },
+      ()=>{
+        document.getElementById('new').scrollIntoView(true)
+      }
+    )
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.viewer.allComments.edges && this.state.comments.length === 0) {
+      this.setState({comments: nextProps.viewer.allComments.edges})
+    }
   }
 
   get comments () {
-    return this.props.viewer.allComments.edges.map(edge=>{
+    this.state.comments.sort((a, b) => {
+      return a.node.timestamp - b.node.timestamp
+    })
+    return this.state.comments.map(edge=>{
       let {node: comment} = edge
       return (
         <SingleComment
@@ -53,16 +91,18 @@ class Comments extends Component {
   }
 
 
+
+
   render () {
     let ownProject = (this.props.viewer.user.handle === this.props.params.userHandle)
     return (
       <Container>
         <CommentMarkers
-          comments={this.props.viewer.allComments}
+          comments={this.state.comments}
           duration={this.state.duration}
         />
         <ButtonRow
-          hide={(ownProject)}
+          hide={((ownProject) || (this.props.router.location.pathname.includes('/view')))}
         >
           <ButtonColumn>
             <RoundButton
@@ -100,8 +140,10 @@ class Comments extends Component {
 
 
         </CommentBox>
+        <CommentScroller>
+          {this.comments}
+        </CommentScroller>
 
-        {this.comments}
 
       </Container>
     )
@@ -123,6 +165,7 @@ export default Relay.createContainer(
           allComments (
             first: 50
             filter: $commentFilter
+            orderBy: timestamp_ASC
           ) {
             edges {
               node {
@@ -131,6 +174,10 @@ export default Relay.createContainer(
                 text
                 author {
                   handle
+                }
+                timestamp
+                project {
+                  id
                 }
                 timestamp
               }

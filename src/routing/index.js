@@ -50,35 +50,31 @@ const tribeSearch = (params, {location})=>{
   }
 }
 
-const commentFilter = (params, {location})=>{
-  let {query} = location
-  if (query.in && query.showAll === 'false') {
-    let handleIn = []
-    if (Array.isArray(query.in)) {
-      handleIn.push(...query.in)
-    } else if (typeof query.in === 'string') {
-      handleIn.push(query.in)
-    }
-    return {
-      ...params,
-      commentFilter: {
-        author: {
-          handle_in: handleIn,
-        },
-        project: {
-          title: params.projectTitle,
-          creator: {
-            handle: params.userHandle
-          }
+const ownCommentsFilter = (params, {location}) => {
+  return {
+    ...params,
+    commentFilter: {
+      author: {
+        handle: params.handle
+      },
+      project: {
+        title: params.projectTitle,
+        creator: {
+          handle: params.userHandle
         }
       }
     }
-  } else if (query.showAll === 'false') {
+  }
+}
+
+const commentFilter = (params, {location}) => {
+  let {query} = location
+  if (query.in) {
     return {
       ...params,
       commentFilter: {
         author: {
-          handle_in: [],
+          handle_in: query.in
         },
         project: {
           title: params.projectTitle,
@@ -102,6 +98,59 @@ const commentFilter = (params, {location})=>{
     }
   }
 }
+
+// const commentFilter = (params, {location})=>{
+//   let {query} = location
+//   if (query.in && query.showAll === 'false') {
+//     let handleIn = []
+//     if (Array.isArray(query.in)) {
+//       handleIn.push(...query.in)
+//     } else if (typeof query.in === 'string') {
+//       handleIn.push(query.in)
+//     }
+//     return {
+//       ...params,
+//       commentFilter: {
+//         author: {
+//           handle_in: handleIn,
+//         },
+//         project: {
+//           title: params.projectTitle,
+//           creator: {
+//             handle: params.userHandle
+//           }
+//         }
+//       }
+//     }
+//   } else if (query.showAll === 'false') {
+//     return {
+//       ...params,
+//       commentFilter: {
+//         author: {
+//           handle_in: [],
+//         },
+//         project: {
+//           title: params.projectTitle,
+//           creator: {
+//             handle: params.userHandle
+//           }
+//         }
+//       }
+//     }
+//   } else {
+//     return {
+//       ...params,
+//       commentFilter: {
+//         project: {
+//           title: params.projectTitle,
+//           creator: {
+//             handle: params.userHandle
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
 
 const userOnly = (nextState, replace) => {
   if (!auth.getToken()) {
@@ -214,10 +263,17 @@ const createRoutes = () => {
           queries={ViewerQuery}
           render={({ props }) => props ? <Project {...props} /> : <Loading />}
         >
-          <IndexRoute
+          <Route
+            path={'/:userHandle/:projectTitle/view'}
             component={Comments}
             queries={ViewerQuery}
             prepareParams={commentFilter}
+          />
+          <Route
+            path={'/:userHandle/:projectTitle/:handle'}
+            component={Comments}
+            queries={ViewerQuery}
+            prepareParams={ownCommentsFilter}
           />
 
           <Route

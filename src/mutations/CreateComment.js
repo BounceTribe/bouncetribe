@@ -8,7 +8,7 @@ export default class CreateComment extends Relay.Mutation {
       timestamp: this.props.timestamp,
       authorId: this.props.authorId,
       projectId: this.props.projectId,
-      type: this.props.tyoe
+      type: this.props.type
     }
   }
 
@@ -22,20 +22,15 @@ export default class CreateComment extends Relay.Mutation {
         project {
           comments
         }
-        edge
       }
     `
   }
   getConfigs () {
     return [{
-      type: 'RANGE_ADD',
-      parentName: 'project',
-      parentID: this.props.projectId,
-      connectionName: 'comments',
-      edgeName: 'edge',
-      rangeBehaviors: {
-        '': 'append',
-      },
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        project: this.props.projectId
+      }
     }]
   }
 
