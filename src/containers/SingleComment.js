@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Single, Bottom, Time, Text, Center, Handle, BotLink} from 'styled/Comments'
+import {Single, Bottom, Time, Text, Center, Handle, BotLink, UpVote} from 'styled/Comments'
 import {RoundButton} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
@@ -60,7 +60,7 @@ class SingleComment extends Component {
   }
 
   render() {
-    let {author, timestamp, type, id} = this.props.comment
+    let {author, timestamp, type, id, upvotes, children} = this.props.comment
     return (
       <Single
         id={id}
@@ -102,6 +102,17 @@ class SingleComment extends Component {
               hideLink={(this.props.tabs === 'view')}
             >
               Delete
+            </BotLink>
+            <UpVote
+              secondary={(type==='COMMENT')}
+              hideLink={(this.props.tabs === 'listen')}
+            >
+              Upvote | {upvotes}
+            </UpVote>
+            <BotLink
+              hideLink={(this.props.tabs === 'listen')}
+            >
+              Comments {children.edges.length}
             </BotLink>
           </Bottom>
         </Center>

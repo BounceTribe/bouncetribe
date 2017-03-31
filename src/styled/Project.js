@@ -1,5 +1,7 @@
 import styled from 'styled-components'
-import {purple, white, grey800, blue} from 'theme'
+import React from 'react'
+import {purple, white, grey800, grey500, grey200, grey300, blue} from 'theme'
+import {BtLink} from 'styled'
 
 export const Top = styled.div`
   display: flex;
@@ -80,6 +82,9 @@ export const Marker = styled.div`
   height: 20px;
   border-radius: 20px;
   background-color: ${({comment})=>(comment)? blue : purple};
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export const Bot = styled.div`
@@ -101,4 +106,101 @@ export const CommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
   width: 100%;
+`
+
+export const ProfContainer = styled.div`
+  display: ${({hide}) => (hide) ? 'none' : 'flex'};
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 80%;
+  margin-top: 20px;
+
+`
+
+export const ProfTop = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+`
+
+const PortImg = styled.img`
+  display: flex;
+  height: 90px;
+  width: 90px;
+  border-radius: 90px;
+  object-fit: cover;
+`
+
+export const Portrait = (props) => {
+  return (
+    <BtLink
+      to={props.to}
+    >
+      <PortImg
+        src={props.src}
+      />
+    </BtLink>
+  )
+}
+
+export const ProfLeft = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+export const ProfCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 15px;
+`
+
+export const ProfHandle = styled.div`
+  display: flex;
+  color: ${purple};
+  font-size: 20px;
+`
+
+export const Score = styled.div`
+  display: flex;
+  flex-direction: row;
+  color: ${grey800};
+`
+
+export const MoreInfo = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-self: flex-end;
+  align-items: flex-end;
+  justify-content: flex-end;
+  color: ${grey500};
+`
+
+export const Divider = styled.hr`
+  border: .5px solid ${grey200};
+  background-color: ${grey200};
+  width: 100%;
+`
+
+export const CommonInfluences = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 50%;
+  margin-left: 50%;
+`
+
+export const InfluenceChip = styled.div`
+  display: flex;
+  color: black;
+  background-color: ${grey300};
+  border-radius: 30px;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  font-size: 12px;
+  margin-left: 5px;
 `

@@ -60,6 +60,11 @@ export const BotLink = styled.span`
   margin-right: 10px;
 `
 
+export const UpVote = styled(BotLink)`
+  color: ${({secondary}) => (secondary) ? blue: purple};
+  font-weight: bold;
+`
+
 export const Time = styled.div`
   display: flex;
   align-items: center;

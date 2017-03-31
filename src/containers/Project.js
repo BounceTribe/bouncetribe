@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import Relay from 'react-relay'
 import {View, RoundButton} from 'styled'
-import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, LeftList} from 'styled/Project'
+import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, LeftList, ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
@@ -14,7 +14,10 @@ import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
 import CreateComment from 'mutations/CreateComment'
-
+import Bolt from 'icons/Bolt'
+import Tribe from 'icons/Tribe'
+import Location from 'icons/Location'
+import Experience from 'icons/Experience'
 
 class Project extends Component {
 
@@ -141,6 +144,75 @@ class Project extends Component {
     let {ownProject} = this.state
     return (
       <View>
+        <ProfContainer
+          hide={(ownProject)}
+        >
+
+          <ProfTop>
+            <ProfLeft>
+              <Portrait
+                src={this.props.viewer.User.portrait.url}
+              />
+              <ProfCol>
+                <ProfHandle>
+                  {this.props.viewer.User.handle}
+                </ProfHandle>
+                <Score>
+                  <Bolt
+                    style={{
+                      marginRight: '5px'
+                    }}
+                  />
+                  {this.props.viewer.User.score}
+                </Score>
+              </ProfCol>
+            </ProfLeft>
+            <MoreInfo>
+              <Location
+                fill={purple}
+                height={20}
+                width={20}
+                style={{
+                  marginLeft: '15px',
+                  marginRight: '5px',
+                  display: (this.props.viewer.User.placename) ? '': 'none'
+                }}
+              />
+              {this.props.viewer.User.placename}
+              <Experience
+                height={18}
+                width={18}
+                style={{
+                  marginLeft: '15px',
+                  marginRight: '5px',
+                  display: (this.props.viewer.User.experience) ? '': 'none'
+                }}
+              />
+              {this.props.viewer.User.experience}
+              <Tribe
+                height={15}
+                width={15}
+                style={{
+                  marginLeft: '15px',
+                  marginRight: '5px'
+                }}
+              />
+              {this.props.viewer.User.friends.edges.length}
+            </MoreInfo>
+          </ProfTop>
+          <Divider/>
+          <CommonInfluences>
+            {this.props.viewer.User.artistInfluences.edges.map(edge=>{
+              return (
+                <InfluenceChip
+                  key={edge.node.id}
+                >
+                  {edge.node.name}
+                </InfluenceChip>
+              )}
+            )}
+          </CommonInfluences>
+        </ProfContainer>
         <Top>
           <Art
             src={ (project.artwork) ? project.artwork.url : `${url}/artwork.png`}
@@ -210,7 +282,7 @@ class Project extends Component {
             <ProjectTribeList
               project={project}
               tribe={this.props.viewer.User.friends.edges}
-              recentCommenters={this.state.comments}
+              recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
               router={this.props.router}
             />
           </LeftList>
@@ -293,6 +365,22 @@ export default Relay.createContainer(
             id
             email
             handle
+            placename
+            experience
+            portrait {
+              url
+            }
+            score
+            artistInfluences (
+              first: 999
+            ) {
+              edges {
+                node {
+                  id
+                  name
+                }
+              }
+            }
             friends (
               first: 999
               orderBy: handle_ASC
@@ -364,6 +452,17 @@ export default Relay.createContainer(
                         id
                       }
                       timestamp
+                      children (
+                        first: 999
+                      ) {
+                        edges {
+                          node {
+                            id
+                            text
+                          }
+                        }
+                      }
+                      upvotes
                     }
                   }
                 }

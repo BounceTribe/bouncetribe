@@ -1,5 +1,8 @@
 import React, {Component, PropTypes} from 'react'
 import {MarkerContainer, Marker} from 'styled/Project'
+import Heart from 'icons/Heart'
+import Comment from 'icons/Comment'
+import {white} from 'theme'
 
 class CommentMarkers extends Component {
 
@@ -33,7 +36,21 @@ class CommentMarkers extends Component {
           key={comment.id}
           left={left}
           comment={(comment.type === 'COMMENT')}
-        />
+        >
+          {(comment.type === 'COMMENT') ?
+          <Comment
+            height={12}
+            width={12}
+            fill={white}
+          />
+          :
+          <Heart
+            height={12}
+            width={12}
+            fill={white}
+          />
+          }
+        </Marker>
       )
     })
   }

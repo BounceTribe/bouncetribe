@@ -40,7 +40,7 @@ class Feed extends Component {
                 />
                 <Col>
                   <Title
-                    to={`/${project.creator.handle}/${project.title}/${handle}`}
+                    to={`/${project.creator.handle}/${project.title}`}
                   >
                     {project.title}
                   </Title>
