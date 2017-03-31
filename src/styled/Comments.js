@@ -1,15 +1,17 @@
 import styled from 'styled-components'
 import {grey300, grey700, grey900, blue, purple} from 'theme'
 
-export const Container = styled.div`
+export const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
+  justify-content: flex-start;
   width: 100%;
 `
 export const ButtonRow = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   flex-direction: row;
+  justify-content: center;
 `
 
 export const ButtonColumn = styled.div`
@@ -49,6 +51,13 @@ export const Single = styled.div`
 
 export const Bottom = styled.div`
   font-size: 13px;
+`
+
+export const BotLink = styled.span`
+  cursor: pointer;
+  color: ${grey700};
+  display: ${({hideLink})=> (hideLink) ? 'none': ''};
+  margin-right: 10px;
 `
 
 export const Time = styled.div`
@@ -98,5 +107,5 @@ export const CommentScroller = styled.div`
   align-items: center;
   overflow-y: auto;
   height: 500px;
-  width: 80%;
+  width: 100%;
 `

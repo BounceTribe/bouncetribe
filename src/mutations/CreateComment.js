@@ -7,7 +7,7 @@ export default class CreateComment extends Relay.Mutation {
       text: this.props.text,
       timestamp: this.props.timestamp,
       authorId: this.props.authorId,
-      projectId: this.props.projectId,
+      projectId: this.props.project.id,
       type: this.props.type
     }
   }
@@ -29,23 +29,10 @@ export default class CreateComment extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        project: this.props.projectId
+        project: this.props.project.id
       }
     }]
   }
 
-  // getOptimisticResponse() {
-  //   return {
-  //     project: {
-  //       id: this.props.project
-  //     },
-  //     edge: {
-  //       node: {
-  //         text: this.props.text,
-  //         timestamp: this.props.timestamp,
-  //       }
-  //     }
-  //   }
-  // }
 
 }

@@ -15,7 +15,7 @@ import TribeFind from 'containers/TribeFind'
 import TribeSearchResults from 'containers/TribeSearchResults'
 import Login from 'containers/Login'
 import Connect from 'containers/Connect'
-import Comments from 'containers/Comments'
+// import Comments from 'containers/Comments'
 
 import {Loading} from 'styled/Spinner'
 
@@ -50,54 +50,54 @@ const tribeSearch = (params, {location})=>{
   }
 }
 
-const ownCommentsFilter = (params, {location}) => {
-  return {
-    ...params,
-    commentFilter: {
-      author: {
-        handle: params.handle
-      },
-      project: {
-        title: params.projectTitle,
-        creator: {
-          handle: params.userHandle
-        }
-      }
-    }
-  }
-}
-
-const commentFilter = (params, {location}) => {
-  let {query} = location
-  if (query.in) {
-    return {
-      ...params,
-      commentFilter: {
-        author: {
-          handle_in: query.in
-        },
-        project: {
-          title: params.projectTitle,
-          creator: {
-            handle: params.userHandle
-          }
-        }
-      }
-    }
-  } else {
-    return {
-      ...params,
-      commentFilter: {
-        project: {
-          title: params.projectTitle,
-          creator: {
-            handle: params.userHandle
-          }
-        }
-      }
-    }
-  }
-}
+// const ownCommentsFilter = (params, {location}) => {
+//   return {
+//     ...params,
+//     commentFilter: {
+//       author: {
+//         handle: params.handle
+//       },
+//       project: {
+//         title: params.projectTitle,
+//         creator: {
+//           handle: params.userHandle
+//         }
+//       }
+//     }
+//   }
+// }
+//
+// const commentFilter = (params, {location}) => {
+//   let {query} = location
+//   if (query.in) {
+//     return {
+//       ...params,
+//       commentFilter: {
+//         author: {
+//           handle_in: query.in
+//         },
+//         project: {
+//           title: params.projectTitle,
+//           creator: {
+//             handle: params.userHandle
+//           }
+//         }
+//       }
+//     }
+//   } else {
+//     return {
+//       ...params,
+//       commentFilter: {
+//         project: {
+//           title: params.projectTitle,
+//           creator: {
+//             handle: params.userHandle
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
 
 // const commentFilter = (params, {location})=>{
 //   let {query} = location
@@ -263,7 +263,7 @@ const createRoutes = () => {
           queries={ViewerQuery}
           render={({ props }) => props ? <Project {...props} /> : <Loading />}
         >
-          <Route
+          {/* <Route
             path={'/:userHandle/:projectTitle/view'}
             component={Comments}
             queries={ViewerQuery}
@@ -274,7 +274,7 @@ const createRoutes = () => {
             component={Comments}
             queries={ViewerQuery}
             prepareParams={ownCommentsFilter}
-          />
+          /> */}
 
           <Route
             path={'/:ownHandle/:ownProject/:otherHandle/:otherProject'}

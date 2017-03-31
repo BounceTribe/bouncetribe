@@ -1,19 +1,28 @@
 import React, {Component, PropTypes} from 'react'
 import Relay from 'react-relay'
-import {View} from 'styled'
-import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, LeftList, CommentContainer} from 'styled/Project'
+import {View, RoundButton} from 'styled'
+import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, LeftList} from 'styled/Project'
+import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
 import {white, purple} from 'theme'
 import {url} from 'config'
 import ProjectTribeList from 'components/ProjectTribeList'
 import {Tabs, Tab} from 'material-ui/Tabs'
+import CommentMarkers from 'components/CommentMarkers'
+import Heart from 'icons/Heart'
+import Comment from 'icons/Comment'
+import SingleComment from 'containers/SingleComment'
+import CreateComment from 'mutations/CreateComment'
+
 
 class Project extends Component {
 
   state = {
     time: 0,
-    tabs: 'listen'
+    tabs: 'listen',
+    comments: [],
+    active: []
   }
 
   static childContextTypes = {
@@ -27,11 +36,26 @@ class Project extends Component {
     } else {
       this.setState({ownProject:false})
     }
-    if (this.props.router.params.handle) {
-      this.setState({tabs: 'listen'})
-    } else {
-      this.setState({tabs: 'view'})
-    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let focus
+    let oldComments = this.props.viewer.allProjects.edges[0].node.comments.edges.map(edge=>edge.node.id)
+    this.setState(
+      (prevState)=>{
+        let active = prevState.active
+        nextProps.viewer.allProjects.edges[0].node.comments.edges.forEach( (edge, index) => {
+          if (!oldComments.includes(edge.node.id)) {
+            active.push(index)
+            focus= edge.node.id
+          }
+        })
+        return {
+          focus,
+          active
+        }
+      }
+    )
   }
 
   getChildContext() {
@@ -50,6 +74,63 @@ class Project extends Component {
   getDuration = (duration) => {
     this.setState({
       duration
+    })
+  }
+
+  dropMarker = (type) => {
+    this.props.relay.commitUpdate(
+      new CreateComment({
+        authorId: this.props.viewer.user.id,
+        project: this.props.viewer.allProjects.edges[0].node,
+        type,
+        timestamp: this.state.time,
+        text: ''
+      }), {
+        onSuccess: success => {
+          console.log("success", success )
+        },
+        onFailure: failure => failure
+      }
+    )
+  }
+
+  activate = (index) => {
+    console.log("activate", index )
+    this.setState( (prevState) => {
+      let {active} = prevState
+      active.push(index)
+      return {
+        active
+      }
+    })
+  }
+
+  deactivate = (index) => {
+    this.setState( (prevState) => {
+      let {active} = prevState
+      active.splice(active.indexOf(index),1)
+      return {
+        active
+      }
+    })
+  }
+
+  get comments () {
+    return this.props.viewer.allProjects.edges[0].node.comments.edges.map((edge, index)=>{
+      let {node: comment} = edge
+      return (
+        <SingleComment
+          index={index}
+          comment={comment}
+          key={comment.id}
+          focus={this.state.focus}
+          active={(this.state.active.includes(index))}
+          activate={this.activate}
+          deactivate={this.deactivate}
+          userId={this.props.viewer.user.id}
+          tabs={this.state.tabs}
+        />
+      )
     })
   }
 
@@ -103,9 +184,6 @@ class Project extends Component {
             value={'listen'}
             onActive={()=>{
               this.setState({tabs: 'listen'})
-              this.props.router.replace({
-                pathname: `/${this.props.viewer.User.handle}/${project.title}/${this.props.viewer.user.handle}`
-              })
             }}
           />
           <Tab
@@ -113,9 +191,6 @@ class Project extends Component {
             value={'view'}
             onActive={()=>{
               this.setState({tabs: 'view'})
-              this.props.router.replace({
-                pathname: `/${this.props.viewer.User.handle}/${project.title}/view/`
-              })
             }}
           />
         </Tabs>
@@ -135,12 +210,52 @@ class Project extends Component {
             <ProjectTribeList
               project={project}
               tribe={this.props.viewer.User.friends.edges}
-              recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
+              recentCommenters={this.state.comments}
               router={this.props.router}
             />
           </LeftList>
           <CommentContainer>
-            {this.props.children}
+            <CommentMarkers
+              comments={this.props.viewer.allProjects.edges[0].node.comments.edges}
+              duration={this.state.duration}
+            />
+            <ButtonRow
+              hide={(ownProject || this.state.tabs === 'view')}
+            >
+              <ButtonColumn>
+                <RoundButton
+                  secondary
+                  icon={
+                    <Comment
+                      height={40}
+                      width={40}
+                    />
+                  }
+                  onTouchTap={()=>{this.dropMarker('COMMENT')}}
+                />
+                <ButtonLabel>
+                  Idea
+                </ButtonLabel>
+              </ButtonColumn>
+              <ButtonColumn>
+                <RoundButton
+                  icon={
+                    <Heart
+                      height={40}
+                      width={40}
+                    />
+                  }
+                  onTouchTap={()=>{this.dropMarker('LIKE')}}
+                />
+                <ButtonLabel>
+                  Like
+                </ButtonLabel>
+              </ButtonColumn>
+            </ButtonRow>
+            <CommentScroller>
+              {this.comments}
+
+            </CommentScroller>
           </CommentContainer>
         </Bot>
 
@@ -235,6 +350,8 @@ export default Relay.createContainer(
                 ) {
                   edges {
                     node {
+                      text
+                      type
                       id
                       author {
                         id
