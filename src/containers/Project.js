@@ -1,11 +1,11 @@
 import React, {Component, PropTypes} from 'react'
 import Relay from 'react-relay'
-import {View, RoundButton} from 'styled'
+import {View, RoundButton, BtFlatButton} from 'styled'
 import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, LeftList, ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
-import {white, purple} from 'theme'
+import {white, purple, grey300} from 'theme'
 import {url} from 'config'
 import ProjectTribeList from 'components/ProjectTribeList'
 import {Tabs, Tab} from 'material-ui/Tabs'
@@ -16,8 +16,18 @@ import SingleComment from 'containers/SingleComment'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Location from 'icons/Location'
-import Experience from 'icons/Experience'
+import Lock from 'icons/Lock'
+import Logo from 'icons/Logo'
 
+import Experience from 'icons/Experience'
+import Edit from 'icons/Edit'
+import Dialog from 'material-ui/Dialog'
+import TextField from 'material-ui/TextField'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
+import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
+import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
+import UpdateProject from 'mutations/UpdateProject'
 class Project extends Component {
 
   state = {
@@ -25,6 +35,7 @@ class Project extends Component {
     tabs: 'listen',
     markers: [],
     active: [],
+    edit: false
   }
 
   static childContextTypes = {
@@ -32,9 +43,31 @@ class Project extends Component {
     time: PropTypes.number
   }
 
+  constructor(props) {
+    super(props)
+    getAllGenres().then(results=>{
+      let genres = results.map(genre=>(
+        <MenuItem
+          primaryText={genre.name}
+          value={genre.id}
+          key={genre.id}
+        />
+      ))
+      this.setState({
+        genres
+      })
+    })
+  }
+
   componentWillMount () {
     if (this.props.viewer.user.id === this.props.viewer.User.id) {
-      this.setState({ownProject:true})
+      this.setState({
+        ownProject:true,
+        title: this.props.viewer.allProjects.edges[0].node.title,
+        description: this.props.viewer.allProjects.edges[0].node.description,
+        genre: this.props.viewer.allProjects.edges[0].node.genres.edges[0].node.id,
+        privacy: this.props.viewer.allProjects.edges[0].node.privacy
+      })
     } else {
       this.setState({ownProject:false})
     }
@@ -149,6 +182,22 @@ class Project extends Component {
     })
   }
 
+  titleChange = (title) => {
+    this.setState({
+      title,
+      titleUnique: true
+    })
+    if (this.debounce) {
+      clearTimeout(this.debounce)
+
+    }
+    this.debounce = setTimeout(()=>{
+      ensureUsersProjectTitleUnique(this.props.viewer.user.id, title).then(unique=>{
+        this.setState({titleUnique: unique})
+      })
+    },1000)
+  }
+
   render () {
     let {
       node: project
@@ -246,10 +295,127 @@ class Project extends Component {
                 {project.genres.edges[0].node.name}
               </Genre>
             </TitleGenre>
-            <Summary>
+            <Summary
+
+            >
               {project.description}
             </Summary>
           </Info>
+          <Edit
+            fill={purple}
+            style={{
+              display: (ownProject) ? '' : 'none',
+              cursor: 'pointer'
+            }}
+            onClick={()=>{
+              console.log("hello" )
+              this.setState({edit:true})
+            }}
+          />
+          <Dialog
+            open={this.state.edit}
+            onRequestClose={()=>{this.setState({edit:false})}}
+            title={'Edit Project'}
+            actions={<BtFlatButton
+              label={'Save'}
+              onClick={()=>{
+                let project = {
+                  id: this.props.viewer.allProjects.edges[0].node.id,
+                  privacy: this.state.privacy,
+                  title: this.state.title,
+                  description: this.state.description,
+                }
+                this.props.relay.commitUpdate(
+                  new UpdateProject({
+                    project,
+                    genresIds: this.state.genre
+                  })
+                )
+                this.setState({edit: false})
+              }}
+            />}
+          >
+            <TextField
+              floatingLabelText={'Title'}
+              name={'title'}
+              type={'text'}
+              value={this.state.title}
+              disabled
+              fullWidth={true}
+
+            />
+            <SelectField
+              floatingLabelText={'Genre'}
+              value={this.state.genre}
+              fullWidth={true}
+              onChange={(e, index, value)=>{
+                this.setState({genre:value})
+              }}
+              selectedMenuItemStyle={{
+                color: purple
+              }}
+            >
+              {this.state.genres}
+            </SelectField>
+            <TextField
+              name={'description'}
+              floatingLabelText={'Description'}
+              multiLine={true}
+              rows={3}
+              value={this.state.description}
+              onChange={(e)=>{this.setState({description:e.target.value})}}
+              fullWidth={true}
+
+            />
+            <SharingModal>
+              <Choice>
+                <RoundButton
+                  onClick={()=>this.setState({privacy: 'PRIVATE'})}
+                  backgroundColor={(this.state.privacy === 'PRIVATE') ? purple : grey300}
+                  icon={
+                    <Lock
+                      style={{}}
+                      height={23}
+                      width={22}
+                      fill={white}
+                    />
+                  }
+                />
+                  <ChoiceText>
+                    Private
+                  </ChoiceText>
+              </Choice>
+              <Choice>
+                <RoundButton
+                  onClick={()=>this.setState({privacy: 'TRIBE'})}
+                  backgroundColor={(this.state.privacy === 'TRIBE') ? purple : grey300}
+                  icon={
+                    <Tribe
+                      fill={white}
+                    />
+                  }
+                />
+                <ChoiceText>
+                  Tribe Only
+                </ChoiceText>
+              </Choice>
+              <Choice>
+                <RoundButton
+                  onClick={()=>this.setState({privacy: 'PUBLIC'})}
+                  backgroundColor={(this.state.privacy === 'PUBLIC') ? purple : grey300}
+                  icon={
+                    <Logo
+                      fill={white}
+                    />
+                  }
+                />
+                <ChoiceText>
+                  Find Sessions
+                </ChoiceText>
+              </Choice>
+            </SharingModal>
+
+          </Dialog>
         </Top>
         <Tabs
           style={{
@@ -443,6 +609,7 @@ export default Relay.createContainer(
                   edges {
                     node {
                       name
+                      id
                     }
                   }
                 }

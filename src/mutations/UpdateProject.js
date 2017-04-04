@@ -5,7 +5,10 @@ export default class UpdateProject extends Mutation {
   getVariables () {
     return {
       id: this.props.project.id,
-      privacy: this.props.project.privacy
+      privacy: this.props.project.privacy,
+      title: this.props.project.title,
+      description: this.props.project.description,
+      genresIds: this.props.genresIds
     }
   }
 

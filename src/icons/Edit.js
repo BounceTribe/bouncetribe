@@ -3,9 +3,10 @@ import {grey400} from 'theme'
 
 
 
-const Edit = ({style, fill}) => {
+const Edit = ({style, fill, onClick}) => {
   return (
     <svg
+      onClick={onClick}
       style={style}
       width="20px" height="20px" viewBox="330 28 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
 

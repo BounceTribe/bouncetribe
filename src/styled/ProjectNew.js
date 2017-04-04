@@ -37,6 +37,9 @@ export const Sharing = styled.div`
   justify-content: space-between;
   margin-top: 20px;
 `
+export const SharingModal = styled(Sharing)`
+  width: 300px;
+`
 
 export const Choice = styled.div`
   display: flex;
@@ -44,6 +47,7 @@ export const Choice = styled.div`
   align-items: center;
   font-size: 14px;
 `
+
 
 export const ChoiceText = styled.span`
   display: flex;
