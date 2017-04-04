@@ -1,5 +1,7 @@
 import styled from 'styled-components'
-import {grey300, grey700, grey900, blue, purple} from 'theme'
+import React from 'react'
+import {grey300, grey700, grey900, grey500, blue, purple} from 'theme'
+import {BtLink} from 'styled'
 
 export const CommentContainer = styled.div`
   display: flex;
@@ -39,13 +41,13 @@ export const Single = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   border: 1px solid ${grey300};
   border-radius: 6px;
   padding: 10px 30px;
   width: 100%;
   margin-bottom: 20px;
-  min-height: 100px;
+  min-height: 40px;
   box-sizing: border-box;
 `
 
@@ -71,6 +73,7 @@ export const Time = styled.div`
   margin-left: 20px;
   font-size: 14px;
   color: ${grey700};
+  margin-top: 40px;
 `
 
 export const Center = styled.div`
@@ -83,6 +86,10 @@ export const Center = styled.div`
   flex-wrap: wrap;
 `
 
+export const CommentP = styled.p`
+  margin: 0;
+`
+
 export const Text = styled.div`
   display: flex;
   flex-direction: row;
@@ -91,11 +98,11 @@ export const Text = styled.div`
   text-align: left;
   font-size: 16px;
   color: ${grey900};
-  align-items: center;
+  align-items: flex-start;
   align-content: center;
-  min-height: 75px;
+  min-height: 50px;
   font-size: 16px;
-  align-self: center;
+  margin-top: 40px;
 `
 
 export const Handle = styled.div`
@@ -110,7 +117,71 @@ export const CommentScroller = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  overflow-y: auto;
-  height: 500px;
   width: 100%;
+`
+
+export const SCContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 15px;
+`
+
+export const SubComment = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0;
+`
+
+export const SCCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+`
+
+export const SCImg = styled.img`
+  display: flex;
+  height: 25px;
+  width: 25px;
+  object-fit: cover;
+  border-radius: 25px;
+`
+
+export const SCPortrait = (props) => {
+  return(
+    <BtLink
+      to={props.to}
+    >
+      <SCImg
+        src={props.src}
+      />
+    </BtLink>
+  )
+}
+
+export const SCHandleText = styled.div`
+  display: flex;
+  font-weight: 400;
+  color: ${grey700};
+  font-size: 14px;
+`
+
+export const SCHandle = (props) => {
+  return(
+    <BtLink
+      to={props.to}
+    >
+      <SCHandleText>
+        {props.children}
+      </SCHandleText>
+    </BtLink>
+  )
+}
+
+export const SCText = styled.div`
+  display: flex;
+  color: ${grey500};
+  margin-top: 10px;
+  font-size: 13px;
 `

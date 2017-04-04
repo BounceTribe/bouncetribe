@@ -13,7 +13,6 @@ import CommentMarkers from 'components/CommentMarkers'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
-import CreateComment from 'mutations/CreateComment'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Location from 'icons/Location'
@@ -24,8 +23,8 @@ class Project extends Component {
   state = {
     time: 0,
     tabs: 'listen',
-    comments: [],
-    active: []
+    markers: [],
+    active: [],
   }
 
   static childContextTypes = {
@@ -39,26 +38,27 @@ class Project extends Component {
     } else {
       this.setState({ownProject:false})
     }
+    // this.setState({markers: this.props.viewer.allProjects.edges[0].node.comments.edges})
   }
 
   componentWillReceiveProps(nextProps) {
-    let focus
-    let oldComments = this.props.viewer.allProjects.edges[0].node.comments.edges.map(edge=>edge.node.id)
-    this.setState(
-      (prevState)=>{
-        let active = prevState.active
-        nextProps.viewer.allProjects.edges[0].node.comments.edges.forEach( (edge, index) => {
-          if (!oldComments.includes(edge.node.id)) {
-            active.push(index)
-            focus= edge.node.id
-          }
-        })
-        return {
-          focus,
-          active
-        }
-      }
-    )
+    // let focus
+    // let oldComments = this.props.viewer.allProjects.edges[0].node.comments.edges.map(edge=>edge.node.id)
+    // this.setState(
+    //   (prevState)=>{
+    //     let active = prevState.active
+    //     nextProps.viewer.allProjects.edges[0].node.comments.edges.forEach( (edge, index) => {
+    //       if (!oldComments.includes(edge.node.id)) {
+    //         active.push(index)
+    //         focus= edge.node.id
+    //       }
+    //     })
+    //     return {
+    //       focus,
+    //       active
+    //     }
+    //   }
+    // )
   }
 
   getChildContext() {
@@ -81,20 +81,32 @@ class Project extends Component {
   }
 
   dropMarker = (type) => {
-    this.props.relay.commitUpdate(
-      new CreateComment({
-        authorId: this.props.viewer.user.id,
-        project: this.props.viewer.allProjects.edges[0].node,
-        type,
-        timestamp: this.state.time,
-        text: ''
-      }), {
-        onSuccess: success => {
-          console.log("success", success )
-        },
-        onFailure: failure => failure
+    this.setState((prevState)=> {
+      // let {edges} = this.props.viewer.allProjects.edges[0].node.comments
+      // edges.push({node:{
+      //   id: 'newText',
+      //   timestamp: this.state.time,
+      //   author: {
+      //     id: this.props.viewer.user.id
+      //   },
+      //   project: {
+      //     id: this.props.viewer.allProjects.edges[0].node.id
+      //   },
+      //   text: "",
+      //   type
+      // }})
+      return {
+        // markers: edges,
+        new: {
+          id: 'new',
+          type: type,
+          text: "",
+          author: this.props.viewer.user,
+          timestamp: this.state.time,
+          project: this.props.viewer.allProjects.edges[0].node
+        }
       }
-    )
+    })
   }
 
   activate = (index) => {
@@ -123,11 +135,11 @@ class Project extends Component {
       let {node: comment} = edge
       return (
         <SingleComment
-          index={index}
+          index={index + 1}
           comment={comment}
           key={comment.id}
           focus={this.state.focus}
-          active={(this.state.active.includes(index))}
+          active={(this.state.active.includes(index+1))}
           activate={this.activate}
           deactivate={this.deactivate}
           userId={this.props.viewer.user.id}
@@ -288,7 +300,7 @@ class Project extends Component {
           </LeftList>
           <CommentContainer>
             <CommentMarkers
-              comments={this.props.viewer.allProjects.edges[0].node.comments.edges}
+              comments={(this.state.new) ? this.props.viewer.allProjects.edges[0].node.comments.edges.concat({node:this.state.new}) : this.props.viewer.allProjects.edges[0].node.comments.edges}
               duration={this.state.duration}
             />
             <ButtonRow
@@ -325,6 +337,22 @@ class Project extends Component {
               </ButtonColumn>
             </ButtonRow>
             <CommentScroller>
+              {(this.state.new) ?
+                <SingleComment
+                  index={0}
+                  comment={this.state.new}
+                  key={0}
+                  focus={this.state.focus}
+                  active={(this.state.active.includes('new'))}
+                  activate={this.activate}
+                  deactivate={this.deactivate}
+                  userId={this.props.viewer.user.id}
+                  tabs={this.state.tabs}
+                  commentCreated={()=>{this.setState({new: false})}}
+                /> :
+                null
+              }
+
               {this.comments}
 
             </CommentScroller>
@@ -459,10 +487,24 @@ export default Relay.createContainer(
                           node {
                             id
                             text
+                            author {
+                              handle
+                              portrait {
+                                url
+                              }
+                            }
                           }
                         }
                       }
-                      upvotes
+                      upvotes (
+                        first: 999
+                      ) {
+                        edges {
+                          node {
+                            id
+                          }
+                        }
+                      }
                     }
                   }
                 }

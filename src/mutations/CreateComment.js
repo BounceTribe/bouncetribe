@@ -7,8 +7,9 @@ export default class CreateComment extends Relay.Mutation {
       text: this.props.text,
       timestamp: this.props.timestamp,
       authorId: this.props.authorId,
-      projectId: this.props.project.id,
-      type: this.props.type
+      projectId: this.props.projectId,
+      type: this.props.type,
+      parentId: this.props.parentId
     }
   }
 
@@ -19,9 +20,7 @@ export default class CreateComment extends Relay.Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on CreateCommentPayload {
-        project {
-          comments
-        }
+        viewer
       }
     `
   }
@@ -29,7 +28,7 @@ export default class CreateComment extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        project: this.props.project.id
+        viewer: 'viewer-fixed'
       }
     }]
   }
