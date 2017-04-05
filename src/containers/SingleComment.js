@@ -146,7 +146,7 @@ class SingleComment extends Component {
                 )
               }}
             >
-              Upvote | {(upvotes.edges) ? upvotes.edges.length : ''}
+              Upvote | {(upvotes) ? upvotes.edges.length : 0}
             </UpVote>
             <BotLink
               hideLink={(this.props.tabs === 'listen')}
@@ -154,7 +154,7 @@ class SingleComment extends Component {
                 this.setState((prevState)=>{return {subcomments: !prevState.subcomments}})
               }}
             >
-              Comments | {this.props.comment.children.edges.length}
+              Comments | {(this.props.comment.children) ?  this.props.comment.children.edges.length : 0}
             </BotLink>
           </Bottom>
           {(this.state.subcomments) ?
