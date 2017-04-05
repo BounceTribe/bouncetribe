@@ -146,7 +146,7 @@ class SingleComment extends Component {
                 )
               }}
             >
-              Upvote | {upvotes.edges.length}
+              Upvote | {(upvotes.edges) ? upvotes.edges.length : ''}
             </UpVote>
             <BotLink
               hideLink={(this.props.tabs === 'listen')}

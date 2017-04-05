@@ -151,7 +151,7 @@ export default Relay.createContainer(
                     }
                   }
                   projects (
-                    first: 9999
+                    first: 999
                   ) {
                     edges {
                       node {

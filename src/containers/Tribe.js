@@ -137,7 +137,7 @@ export default Relay.createContainer(
                 accepted: false
                 ignored: false
               }
-              first: 2147483647
+              first: 999
               orderBy: createdAt_ASC
             ) {
               edges {
