@@ -208,7 +208,7 @@ class ProjectNew extends Component {
             </SelectField>
             <TextField
               name={'description'}
-              floatingLabelText={'Description'}
+              floatingLabelText={'Instructions'}
               multiLine={true}
               rows={3}
               value={this.state.description}

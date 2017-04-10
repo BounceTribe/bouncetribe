@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import React from 'react'
-import {grey300, grey700, grey900, grey500, blue, purple} from 'theme'
+import {grey300, grey700, grey900, blue, purple} from 'theme'
 import {BtLink} from 'styled'
 
 export const CommentContainer = styled.div`
@@ -49,6 +49,8 @@ export const Single = styled.div`
   margin-bottom: 20px;
   min-height: 40px;
   box-sizing: border-box;
+  display: ${({hide})=> (hide) ? 'none': ''};
+
 `
 
 export const Bottom = styled.div`
@@ -60,6 +62,7 @@ export const BotLink = styled.span`
   color: ${grey700};
   display: ${({hideLink})=> (hideLink) ? 'none': ''};
   margin-right: 10px;
+  font-size: 12px;
 `
 
 export const UpVote = styled(BotLink)`
@@ -88,6 +91,8 @@ export const Center = styled.div`
 
 export const CommentP = styled.p`
   margin: 0;
+  font-size: 16px;
+  color: ${grey700};
 `
 
 export const Text = styled.div`
@@ -181,7 +186,7 @@ export const SCHandle = (props) => {
 
 export const SCText = styled.div`
   display: flex;
-  color: ${grey500};
+  color: ${grey700};
   margin-top: 10px;
   font-size: 13px;
 `

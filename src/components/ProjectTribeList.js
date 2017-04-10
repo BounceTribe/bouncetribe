@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
-import Divider from 'material-ui/Divider'
-import {grey200, purple, blue, grey700} from 'theme'
+// import Divider from 'material-ui/Divider'
+import {grey200, purple, grey700} from 'theme'
 import Avatar from 'material-ui/Avatar'
 // import Toggle from 'material-ui/Toggle'
 
@@ -28,21 +28,21 @@ class ProjectTribeList extends Component {
   }
 
   toggleSelection = (handle) => {
-    let {title, creator} = this.props.project
+    // let {title, creator} = this.props.project
     if (this.state.selections.includes(handle)) {
-      this.props.router.replace({
-        pathname: `/${creator.handle}/${title}/view`
-      })
+      // this.props.router.replace({
+      //   pathname: `/${creator.handle}/${title}/view`
+      // })
       this.setState({
         selections: []
       })
     } else {
-      this.props.router.replace({
-        pathname: `/${creator.handle}/${title}/view`,
-        query: {
-          in: handle
-        }
-      })
+      // this.props.router.replace({
+      //   pathname: `/${creator.handle}/${title}/view`,
+      //   query: {
+      //     in: handle
+      //   }
+      // })
       this.setState({
         selections: [handle]
       })
@@ -166,6 +166,8 @@ class ProjectTribeList extends Component {
           initiallyOpen={true}
           nestedItems={this.nestedItems()}
         />
+
+        {/*
         <Divider/>
         <ListItem
           primaryText={'Session Feedback'}
@@ -174,7 +176,7 @@ class ProjectTribeList extends Component {
             color: blue
           }}
           initiallyOpen={false}
-        />
+        /> */}
       </List>
     )
   }

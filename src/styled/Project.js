@@ -158,16 +158,19 @@ export const ProfCol = styled.div`
   margin-left: 15px;
 `
 
-export const ProfHandle = styled.div`
+export const ProfHandle = styled(BtLink)`
   display: flex;
   color: ${purple};
   font-size: 20px;
+  font-weight: 400;
 `
 
 export const Score = styled.div`
   display: flex;
   flex-direction: row;
-  color: ${grey800};
+  color: ${grey500};
+  font-size: 18px;
+  font-weight: 400;
 `
 
 export const MoreInfo = styled.div`

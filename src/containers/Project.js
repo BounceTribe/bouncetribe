@@ -5,7 +5,7 @@ import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, 
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
-import {white, purple, grey300} from 'theme'
+import {white, purple, grey300, grey200} from 'theme'
 import {url} from 'config'
 import ProjectTribeList from 'components/ProjectTribeList'
 import {Tabs, Tab} from 'material-ui/Tabs'
@@ -18,7 +18,7 @@ import Tribe from 'icons/Tribe'
 import Location from 'icons/Location'
 import Lock from 'icons/Lock'
 import Logo from 'icons/Logo'
-
+import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Edit from 'icons/Edit'
 import Dialog from 'material-ui/Dialog'
@@ -213,9 +213,12 @@ class Project extends Component {
             <ProfLeft>
               <Portrait
                 src={this.props.viewer.User.portrait.url}
+                to={`/${this.props.viewer.User.handle}`}
               />
               <ProfCol>
-                <ProfHandle>
+                <ProfHandle
+                  to={`/${this.props.viewer.User.handle}`}
+                >
                   {this.props.viewer.User.handle}
                 </ProfHandle>
                 <Score>
@@ -249,7 +252,7 @@ class Project extends Component {
                   display: (this.props.viewer.User.experience) ? '': 'none'
                 }}
               />
-              {this.props.viewer.User.experience}
+              {formatEnum(this.props.viewer.User.experience)}
               <Tribe
                 height={15}
                 width={15}
@@ -294,6 +297,18 @@ class Project extends Component {
                 />
                 {project.genres.edges[0].node.name}
               </Genre>
+              <Edit
+                fill={purple}
+                style={{
+                  display: (ownProject) ? '' : 'none',
+                  cursor: 'pointer',
+                  marginLeft: '15px'
+                }}
+                onClick={()=>{
+                  console.log("hello" )
+                  this.setState({edit:true})
+                }}
+              />
             </TitleGenre>
             <Summary
 
@@ -301,17 +316,7 @@ class Project extends Component {
               {project.description}
             </Summary>
           </Info>
-          <Edit
-            fill={purple}
-            style={{
-              display: (ownProject) ? '' : 'none',
-              cursor: 'pointer'
-            }}
-            onClick={()=>{
-              console.log("hello" )
-              this.setState({edit:true})
-            }}
-          />
+
           <Dialog
             open={this.state.edit}
             onRequestClose={()=>{this.setState({edit:false})}}
@@ -359,7 +364,7 @@ class Project extends Component {
             </SelectField>
             <TextField
               name={'description'}
-              floatingLabelText={'Description'}
+              floatingLabelText={'Instructions'}
               multiLine={true}
               rows={3}
               value={this.state.description}
@@ -422,7 +427,7 @@ class Project extends Component {
             width: '85%',
             marginTop: '6px',
             display: (ownProject) ? 'none' : '',
-            marginBottom: '25px'
+            marginBottom: '25px',
           }}
           inkBarStyle={{
             backgroundColor: purple
@@ -435,12 +440,18 @@ class Project extends Component {
             onActive={()=>{
               this.setState({tabs: 'listen'})
             }}
+            style={{
+              borderBottom: `2px solid ${grey200}`
+            }}
           />
           <Tab
             label={'View Feedback'}
             value={'view'}
             onActive={()=>{
               this.setState({tabs: 'view'})
+            }}
+            style={{
+              borderBottom: `2px solid ${grey200}`
             }}
           />
         </Tabs>
@@ -474,6 +485,7 @@ class Project extends Component {
             >
               <ButtonColumn>
                 <RoundButton
+                  big
                   secondary
                   icon={
                     <Comment
@@ -489,6 +501,7 @@ class Project extends Component {
               </ButtonColumn>
               <ButtonColumn>
                 <RoundButton
+                  big
                   icon={
                     <Heart
                       height={40}

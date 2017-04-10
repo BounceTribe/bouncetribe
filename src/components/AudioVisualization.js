@@ -49,7 +49,7 @@ class AudioVisualization extends Component {
     let parentWidth = this.canvas.parentElement.clientWidth
     this.setState((prevState,props)=>{
       return {
-        width: parentWidth * .8,
+        width: parentWidth * .9,
         height: 100
       }
     })

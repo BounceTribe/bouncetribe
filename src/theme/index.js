@@ -48,5 +48,22 @@ export const btTheme = getMuiTheme({
   }
 })
 
+export const bigTheme = getMuiTheme({
+  fontFamily: 'Helvetica, san-serif',
+  palette: {
+    primary1Color: purple,
+  },
+  tabs: {
+    backgroundColor: white,
+    textColor: fade(grey800, 0.7),
+    selectedTextColor: grey800,
+  },
+  floatingActionButton: {
+    buttonSize: 80,
+    secondaryColor: blue,
+    miniSize: 40
+  }
+})
+
 
 export {purple, grey50, grey100, grey200, grey300, grey400, grey500, grey600, grey700, grey800, grey900, white, black}

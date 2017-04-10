@@ -8,7 +8,7 @@ import formatTime from 'utils/formatTime'
 import TextField from 'material-ui/TextField'
 import UpdateComment from 'mutations/UpdateComment'
 import Relay from 'react-relay'
-import {white} from 'theme'
+import {white, grey700} from 'theme'
 import CreateComment from 'mutations/CreateComment'
 import DeleteComment from 'mutations/DeleteComment'
 import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
@@ -62,6 +62,13 @@ class SingleComment extends Component {
           fullWidth={true}
           autoFocus={(this.props.focus === this.props.comment.id || this.props.index === 0)}
           onKeyPress={this.editComment}
+          style={{
+            marginTop: '-16px',
+          }}
+          inputStyle={{
+            color: grey700,
+            fontSize: '16px'
+          }}
         />
       )
     } else {
@@ -83,6 +90,7 @@ class SingleComment extends Component {
     return (
       <Single
         id={id}
+        hide={(this.props.userId !== this.props.comment.author.id && this.props.tabs === 'listen')}
       >
         <RoundButton
           icon={(type === 'COMMENT') ?
@@ -116,12 +124,12 @@ class SingleComment extends Component {
           <Bottom>
             <BotLink
               onClick={()=>{this.props.activate(this.props.index)}}
-              hideLink={(this.props.tabs === 'view' || this.props.index === 0)}
+              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.userId !== this.props.comment.author.id)}
             >
               Edit
             </BotLink>
             <BotLink
-              hideLink={(this.props.tabs === 'view' || this.props.index === 0)}
+              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.userId !== this.props.comment.author.id)}
               onClick={()=>{
                 console.log("this.props.comment.project.id", this.props.comment.project.id )
                 Relay.Store.commitUpdate(
@@ -155,6 +163,11 @@ class SingleComment extends Component {
               }}
             >
               Comments | {(this.props.comment.children) ?  this.props.comment.children.edges.length : 0}
+            </BotLink>
+            <BotLink
+              hideLink={false}
+            >
+
             </BotLink>
           </Bottom>
           {(this.state.subcomments) ?

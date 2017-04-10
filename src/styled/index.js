@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import {white, grey230, grey215, size, grey800, purple, blue} from 'theme'
+import {white, grey230, grey215, size, grey800, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 
 export const BtLink = styled(Link)`
@@ -128,15 +129,21 @@ export const RoundButton = (props) => {
     <ButtonLink
       to={props.to}
     >
-      <FloatingActionButton
-        {...props}
-        style={{
-          boxShadow: 0,
-          ...props.style
-        }}
+      <MuiThemeProvider
+        muiTheme={
+          (props.big) ? bigTheme : btTheme
+        }
       >
-        {props.icon}
-      </FloatingActionButton>
+        <FloatingActionButton
+          style={{
+            boxShadow: 0,
+            ...props.style
+          }}
+          secondary={props.secondary}
+        >
+          {props.icon}
+        </FloatingActionButton>
+      </MuiThemeProvider>
 
     </ButtonLink>
   )
