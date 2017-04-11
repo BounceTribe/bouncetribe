@@ -17,7 +17,7 @@ const uploadFile = (file, name) => {
 
     console.log(formData)
 
-    fetch(graphCool.fileUrl, {
+    fetch(graphCool.file, {
       method: 'POST',
       body: formData
     })
