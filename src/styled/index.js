@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {white, grey230, grey215, size, grey800, purple, blue, btTheme, bigTheme} from 'theme'
+import {white, grey230, grey215, size, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -10,7 +10,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 export const BtLink = styled(Link)`
   display: flex;
-  color: black;
+  color: ${grey700};
   text-decoration: none;
   cursor: pointer;
 `
