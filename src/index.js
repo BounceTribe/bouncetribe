@@ -8,7 +8,7 @@ import {
   RelayNetworkLayer,
   urlMiddleware
 } from 'react-relay-network-layer'
-import {GRAPHQL_ENDPOINT} from 'config'
+import {graphCool} from 'config'
 import auth from 'utils/auth'
 
 const createHeaders = (idToken) => {
@@ -24,7 +24,7 @@ const createHeaders = (idToken) => {
 Relay.injectNetworkLayer(
   new RelayNetworkLayer([
     urlMiddleware({
-      url: (req) => GRAPHQL_ENDPOINT,
+      url: (req) => graphCool.relay,
     }),
     next => req => {
       let idToken = auth.getToken()

@@ -1,7 +1,6 @@
 import Auth0Lock from 'auth0-lock'
 import Relay from 'react-relay'
-import {clientId, domain} from 'config/auth0'
-import {url} from 'config'
+import {url, auth0} from 'config'
 import {purple} from 'theme'
 import CreateUser from 'mutations/CreateUser'
 import SigninUser from 'mutations/SigninUser'
@@ -32,7 +31,7 @@ class AuthService {
       ],
       closable: false,
       theme: {
-        logo: `${window.location.origin}/logo.png`,
+        logo: `${url}/logo.png`,
         primaryColor: purple,
       },
       languageDictionary: {
@@ -40,9 +39,10 @@ class AuthService {
         title: "BounceTribe"
       },
       container: 'lock',
+      rememberLastLogin: false,
     }
 
-    this.lock = new Auth0Lock(clientId, domain, this.defaultOptions)
+    this.lock = new Auth0Lock(auth0.clientId, auth0.domain, this.defaultOptions)
 
     this.lock.on('authenticated', this.authFlow)
 

@@ -1,4 +1,4 @@
-import {simple} from 'config'
+import {graphCool} from 'config'
 import {randomString} from 'utils/random'
 const nonAlphanumeric = /[^a-zA-Z\w_:]/gi
 
@@ -6,7 +6,7 @@ const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /lo
 
 
 const isUniqueHandle = (handle) => {
-  return fetch(simple,{
+  return fetch(graphCool.simple,{
     method: 'POST',
     headers: {
       'content-type': 'application/json'

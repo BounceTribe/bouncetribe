@@ -1,8 +1,8 @@
-import { simple } from 'config'
+import { graphCool } from 'config'
 import auth from 'utils/auth'
 
 export const findUserIds = (ids) => {
-  return fetch(simple, {
+  return fetch(graphCool.simple, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -35,7 +35,7 @@ export const suggestedFriends = (userId) => {
           facebookIds.push(`"${friends[index].id}"`)
         }
       }
-      return fetch(simple, {
+      return fetch(graphCool.simple, {
         method: 'POST',
         headers: {
           'content-type': 'application/json'
@@ -76,7 +76,7 @@ export const suggestedFriends = (userId) => {
 
 
 export const getAllGenres = () => {
-  return fetch(simple, {
+  return fetch(graphCool.simple, {
     method: 'POST',
     headers: {
       'content-type': 'application/json'
@@ -99,7 +99,7 @@ export const getAllGenres = () => {
 }
 
 export const getAllSkills = () => {
-  return fetch(simple, {
+  return fetch(graphCool.simple, {
     method: 'POST',
     headers: {
       'content-type': 'application/json'
@@ -122,7 +122,7 @@ export const ensureBtArtistExists = (artist) => {
   let {label: name} = artist
   let {spotifyId, imageUrl} = artist.value
   return new Promise( (resolve, reject)=>{
-    fetch(simple, {
+    fetch(graphCool.simple, {
       method: 'POST',
       headers: {
         'content-type': 'application/json'
@@ -145,7 +145,7 @@ export const ensureBtArtistExists = (artist) => {
       if (result.data.Artist) {
         resolve(result.data.Artist.id)
       } else {
-        fetch(simple,{
+        fetch(graphCool.simple,{
           method: 'POST',
           headers: {
             'content-type': 'application/json'
@@ -178,7 +178,7 @@ export const ensureBtArtistExists = (artist) => {
 }
 
 export const ensureUsersProjectTitleUnique = (userId, projectTitle)=> {
-  return fetch(simple, {
+  return fetch(graphCool.simple, {
     method: 'POST',
     headers: {
       'content-type': 'application/json'
@@ -210,7 +210,7 @@ export const ensureUsersProjectTitleUnique = (userId, projectTitle)=> {
 }
 
 export const fetchFeed = (handle) => {
-  return fetch(simple, {
+  return fetch(graphCool.simple, {
     method: 'POST',
     headers: {
       'content-type': 'application/json'
@@ -255,7 +255,7 @@ export const fetchFeed = (handle) => {
 }
 
 export const getProjectId = (handle, title) => {
-  return fetch(simple, {
+  return fetch(graphCool.simple, {
     method: 'POST',
     headers: {
       'content-type': 'application/json'

@@ -1,4 +1,4 @@
-import {domain} from 'config/auth0'
+import {auth0} from 'config'
 
 export const connectAuth0Accounts = (inputObject) => {
   let {
@@ -6,7 +6,7 @@ export const connectAuth0Accounts = (inputObject) => {
     primaryToken,
     secondaryToken
   } = inputObject
-  let route = `https://${domain}/api/v2/users/${primaryAuth0UserId}/identities`
+  let route = `https://${auth0.domain}/api/v2/users/${primaryAuth0UserId}/identities`
   let options = {
     method: 'POST',
     headers: {

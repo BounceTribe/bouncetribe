@@ -1,4 +1,4 @@
-import {fileUrl, url} from 'config'
+import {graphCool, url} from 'config'
 
 const uploadImageFromUrl = (imageUrl) => {
   return new Promise((resolve,reject)=>{
@@ -12,7 +12,7 @@ const uploadImageFromUrl = (imageUrl) => {
         let formData = new FormData()
         formData.append('data', myBlob, 'portrait.jpg')
         console.log('formData', formData)
-        fetch(fileUrl, {
+        fetch(graphCool.file, {
           method: 'POST',
           body: formData
         }).then(
@@ -35,7 +35,7 @@ const uploadImageFromUrl = (imageUrl) => {
           let formData = new FormData()
           formData.append('data', myBlob, 'placeholder.png')
           console.log('formData', formData)
-          fetch(fileUrl, {
+          fetch(graphCool.file, {
             method: 'POST',
             body: formData
           }).then(

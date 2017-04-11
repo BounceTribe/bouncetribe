@@ -7,7 +7,7 @@ import Tribe from 'icons/Tribe'
 import {purple, fbBlue, white} from 'theme'
 import {FindH3, SearchUser} from 'styled/Tribe'
 import Facebook from 'icons/Facebook'
-import {fbId} from 'config/facebook'
+import {facebook} from 'config'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
@@ -21,7 +21,7 @@ class TribeFind extends Component {
   share = () => {
     window.open(
       `http://www.facebook.com/dialog/send?
-      app_id=${fbId}
+      app_id=${facebook.id}
       &link=http://www.bouncetribe.com
       &redirect_uri=http://www.bouncetribe.com`,
       '_blank',

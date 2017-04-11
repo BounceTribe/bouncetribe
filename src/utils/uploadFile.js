@@ -1,4 +1,4 @@
-import {fileUrl} from 'config'
+import {graphCool} from 'config'
 
 const uploadFile = (file, name) => {
   return new Promise ((resolve, reject) => {
@@ -17,7 +17,7 @@ const uploadFile = (file, name) => {
 
     console.log(formData)
 
-    fetch(fileUrl, {
+    fetch(graphCool.fileUrl, {
       method: 'POST',
       body: formData
     })
