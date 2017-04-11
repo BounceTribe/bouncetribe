@@ -24,6 +24,9 @@ class AuthService {
         },
         redirectUrl: `${url}/login`,
         responseType: 'token',
+        connectionScopes: {
+          'facebook': ['email', 'public_profile', 'user_actions.music', 'user_friends']
+        }
       },
       allowedConnections: [
         'Username-Password-Authentication',
