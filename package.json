@@ -64,8 +64,8 @@
     "styled-components": "^1.3.1"
   },
   "scripts": {
-    "start": "REACT_APP_CONFIG=local NODE_PATH=src/ GRAPHQL_ENDPOINT=https://api.graph.cool/relay/v1/bt-carl node scripts/start.js",
-    "build": "NODE_PATH=src/ node scripts/build.js",
+    "start": "REACT_APP_CONFIG=local NODE_PATH=src/ GRAPHQL_ENDPOINT=https://api.graph.cool/relay/v1/bt-api node scripts/start.js",
+    "build": "NODE_PATH=src/ GRAPHQL_ENDPOINT=https://api.graph.cool/relay/v1/bt-api node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
