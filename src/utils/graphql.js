@@ -223,7 +223,7 @@ export const fetchFeed = (handle) => {
           filter: {
             creator: {
               handle_not: "${handle}"
-              friends_every: {
+              friends_some: {
                 handle: "${handle}"
               }
             }

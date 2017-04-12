@@ -74,6 +74,9 @@ class AuthService {
         },
         responseType: 'token',
         redirectUrl: `${url}/login`,
+        connectionScopes: {
+          'facebook': ['email', 'public_profile', 'user_actions.music', 'user_friends']
+        }
       }
     }
   }
@@ -133,7 +136,10 @@ class AuthService {
       accessToken,
       state,
     } = result
-    if (state !== 'default') {
+
+    if (!email) {
+
+    } else if (state !== 'default') {
       let primaryAuth0UserId = state
       let primaryToken = localStorage.getItem('idToken')
       let secondaryToken = result.idToken
