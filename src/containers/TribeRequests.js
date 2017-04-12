@@ -74,7 +74,7 @@ export default Relay.createContainer(
                 accepted: false
                 ignored: false
               }
-              first: 2147483647
+              first: 999
               orderBy: createdAt_ASC
             ) {
               edges {
@@ -88,7 +88,7 @@ export default Relay.createContainer(
                     }
                     score
                     placename
-                    friends (first: 2147483647) {
+                    friends (first: 999) {
                       edges {
                         node
                       }
