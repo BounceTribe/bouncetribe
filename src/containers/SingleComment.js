@@ -87,7 +87,7 @@ class SingleComment extends Component {
   hider = () => {
     if (this.props.index === 0) {
       return false
-    } else if (this.props.userId !== author.id && this.props.tabs === 'listen') {
+    } else if (this.props.userId !== this.props.comment.author.id && this.props.tabs === 'listen') {
       return true
     } else {
       return false
