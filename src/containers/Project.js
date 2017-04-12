@@ -32,7 +32,7 @@ class Project extends Component {
 
   state = {
     time: 0,
-    tabs: 'listen',
+    tabs: 'view',
     markers: [],
     active: [],
     edit: false
