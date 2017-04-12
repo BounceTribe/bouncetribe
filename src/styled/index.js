@@ -142,6 +142,7 @@ export const RoundButton = (props) => {
           secondary={props.secondary}
           backgroundColor={props.backgroundColor}
           onClick={props.onClick}
+          onTouchTap={props.onTouchTap}
         >
           {props.icon}
         </FloatingActionButton>
