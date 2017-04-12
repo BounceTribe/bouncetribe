@@ -90,7 +90,7 @@ class SingleComment extends Component {
     return (
       <Single
         id={id}
-        hide={(this.props.userId !== this.props.comment.author.id && this.props.tabs === 'listen')}
+        hide={(this.props.userId !== this.props.comment.author.id && this.props.tabs === 'listen') && this.props.index !== 0}
       >
         <RoundButton
           icon={(type === 'COMMENT') ?

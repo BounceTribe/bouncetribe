@@ -56,7 +56,7 @@ export const suggestedFriends = (userId) => {
               score
             }
             User (id: "${userId}") {
-              friends (first: 1000) {
+              friends (first: 999) {
                 id
               }
             }
