@@ -80,7 +80,6 @@ class SingleComment extends Component {
 
   componentDidMount(){
     if(this.props.focus === this.props.comment.id){
-      console.log("match" )
       document.getElementById(this.props.comment.id).scrollIntoView({behavior:'smooth',block: 'start'})
     }
   }
@@ -90,7 +89,7 @@ class SingleComment extends Component {
     return (
       <Single
         id={id}
-        hide={(this.props.userId !== this.props.comment.author.id && this.props.tabs === 'listen') && this.props.index !== 0}
+        hide={(this.props.userId !== this.props.comment.author.id && this.props.tabs === 'listen') || this.props.index !== 0}
       >
         <RoundButton
           icon={(type === 'COMMENT') ?
