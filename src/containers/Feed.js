@@ -73,7 +73,7 @@ class Feed extends Component {
                   height={16}
                   style={{marginRight: '5px'}}
                 />
-                {(project.genres.edges.length > 1) ? project.genres.edges[0].node.name : ''}
+                {(project.genres.edges.length > 0) ? project.genres.edges[0].node.name : ''}
               </Genre>
             </Profile>
             <Artwork
@@ -139,7 +139,7 @@ export default Relay.createContainer(
               edges {
                 node {
                   projects (
-                    first: 1
+                    first: 999
                     filter: {
                       privacy_not: PRIVATE
                     }
