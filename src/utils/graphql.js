@@ -217,41 +217,44 @@ export const fetchFeed = (handle) => {
     },
     body: JSON.stringify({
       query: `{
-        allProjects (
-          first: 10
-          orderBy: updatedAt_ASC
-          filter: {
-            creator: {
-              handle_not: "${handle}"
-              friends_some: {
-                handle: "${handle}"
+        User (handle: "${handle}") {
+          friends (first: 999) {
+            projects (
+              first: 2
+              filter: {
+                privacy_not: PRIVATE
               }
-            }
-            privacy_not: PRIVATE
-          }
-        ) {
-          id
-          title
-          artwork {
-            url
-          }
-          genres (first: 1){
-            name
-          }
-          comments (first: 999){
-            id
-          }
-          creator {
-            handle
-            portrait {
-              url
+              orderBy: createdAt_ASC
+            ) {
+              id
+              title
+              genres (
+                first: 999
+              ) {
+                name
+              }
+              artwork {
+                url
+              }
+              creator {
+                handle
+                portrait {
+                  url
+                }
+              }
+              comments (first: 999) {
+                type
+              }
             }
           }
         }
       }`
     })
   }).then(response => response.json())
-  .then(result => result.data.allProjects)
+  .then(result => {
+    console.log("result", result)
+    return result.data.User.friends.projects
+  })
 }
 
 export const getProjectId = (handle, title) => {
