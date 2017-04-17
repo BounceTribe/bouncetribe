@@ -23,6 +23,16 @@ class Feed extends Component {
   }
 
 
+  countComments = (comments, type) => {
+    let counter = 0
+    comments.edges.forEach(edge => {
+      if (edge.node.type === type) {
+        counter++
+      }
+    })
+    return counter
+  }
+
   feed = () => {
     let feed = []
     this.props.viewer.user.friends.edges.forEach( (edge) => {
@@ -80,7 +90,7 @@ class Feed extends Component {
               </Bubble>
 
               <Value>
-                {project.comments.edges.length}
+                {this.countComments(project.comments, 'LIKE')}
               </Value>
               <Bubble
                 secondary
@@ -92,7 +102,7 @@ class Feed extends Component {
               </Bubble>
 
               <Value>
-                {project.comments.edges.length}
+                {this.countComments(project.comments, 'COMMENT')}
               </Value>
             </Row>
           </Paper>
