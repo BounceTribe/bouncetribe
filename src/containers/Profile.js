@@ -247,8 +247,12 @@ class Profile extends Component {
           [name]: value,
         }), {
           onSuccess: (success) => {
+            name = name.toUpperCase()
+            if (name === 'PLACENAME') {
+              name = 'LOCATION'
+            }
             this.setState({
-              notification: `${name.toUpperCase()} UPDATED.`
+              notification: `${name} UPDATED.`
             })
           }
         }

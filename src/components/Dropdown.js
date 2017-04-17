@@ -7,6 +7,7 @@ const DropdownContainer = styled.div`
   position: absolute;
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   margin: 0px 0px 40px 170px;
+  z-index: 1000;
 `
 
 const DropdownUl = styled.ul`

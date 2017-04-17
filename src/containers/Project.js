@@ -489,8 +489,8 @@ class Project extends Component {
                   secondary
                   icon={
                     <Comment
-                      height={40}
-                      width={40}
+                      height={50}
+                      width={50}
                     />
                   }
                   onTouchTap={()=>{this.dropMarker('COMMENT')}}
@@ -504,8 +504,8 @@ class Project extends Component {
                   big
                   icon={
                     <Heart
-                      height={40}
-                      width={40}
+                      height={50}
+                      width={50}
                     />
                   }
                   onTouchTap={()=>{this.dropMarker('LIKE')}}
