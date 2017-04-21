@@ -220,6 +220,7 @@ class SingleComment extends Component {
                       parentId: this.props.comment.id
                     })
                   )
+                  this.setState({newSubcomment: ""})
                 }
               }}
             />
