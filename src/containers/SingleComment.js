@@ -39,6 +39,7 @@ class SingleComment extends Component {
           })
         )
         this.props.commentCreated()
+        this.setState({text: ""})
       } else {
         Relay.Store.commitUpdate(
           new UpdateComment({
