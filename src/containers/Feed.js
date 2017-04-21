@@ -11,11 +11,43 @@ import {white} from 'theme'
 import {Loading} from 'styled/Spinner'
 import {url} from 'config'
 
+// import {SubscriptionClient} from 'subscriptions-transport-ws'
+
 class Feed extends Component {
 
   state = {
     feed: false
   }
+
+  // constructor(props) {
+  //   super(props)
+    // this.feedSub = new SubscriptionClient(
+    //   'wss://subscriptions.graph.cool/v1/bt-carl',
+    //   {
+    //     reconnect: true,
+    //   }
+    // )
+    //
+    // this.feedSub.subscribe(
+    //   {
+    //     query: `subscription updateProject {
+    //       Project (
+    //         filter: {
+    //           mutation_in: [UPDATED]
+    //         }
+    //       ) {
+    //         node {
+    //           title
+    //         }
+    //       }
+    //     }`
+    //   },
+    //   (error, result) => {
+    //     console.log("error, result", error, result)
+    //   }
+    // )
+  //
+  // }
 
   componentWillMount () {
     // let {handle} = this.props.viewer.user
@@ -41,7 +73,9 @@ class Feed extends Component {
       })
     })
     let {handle} = this.props.viewer.user
-    console.log("feed", feed)
+    feed.sort( (a, b) => {
+      return  Date.parse(b.createdAt) - Date.parse(a.createdAt)
+    })
     if (feed) {
       return feed.map(project=>{
         return (
@@ -143,10 +177,11 @@ export default Relay.createContainer(
                     filter: {
                       privacy_not: PRIVATE
                     }
-                    orderBy: createdAt_ASC
+                    orderBy: createdAt_DESC
                   ) {
                     edges {
                       node {
+                        createdAt
                         id
                         title
                         genres (
