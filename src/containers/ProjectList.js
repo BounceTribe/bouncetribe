@@ -30,6 +30,17 @@ class ProjectList extends Component {
     )
   }
 
+
+  uniqueCommenters = (comments) => {
+    let uniqueAuthors = []
+    comments.edges.forEach( (edge) => {
+      if (!uniqueAuthors.includes(edge.node.author.id))  {
+        uniqueAuthors.push(edge.node.author.id)
+      }
+    })
+    return uniqueAuthors.length
+  }
+
   get projects () {
     let {User: owner, user} = this.props.viewer
     return this.props.viewer.User.projects.edges.map(edge=>{
@@ -68,7 +79,7 @@ class ProjectList extends Component {
                         margin: '0 5px 0 0px'
                       }}
                     />
-                    {12}
+                    {this.uniqueCommenters(project.comments)}
                   </TrioItem>
                   <TrioItem>
                     <BigBubble
@@ -232,6 +243,9 @@ export default Relay.createContainer(
                   ){
                     edges {
                       node {
+                        author {
+                          id
+                        }
                         type
                       }
                     }
