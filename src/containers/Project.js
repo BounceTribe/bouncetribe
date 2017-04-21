@@ -32,7 +32,7 @@ class Project extends Component {
 
   state = {
     time: 0,
-    tabs: 'view',
+    tabs: 'listen',
     markers: [],
     active: [],
     edit: false
@@ -66,7 +66,8 @@ class Project extends Component {
         title: this.props.viewer.allProjects.edges[0].node.title,
         description: this.props.viewer.allProjects.edges[0].node.description,
         genre: this.props.viewer.allProjects.edges[0].node.genres.edges[0].node.id,
-        privacy: this.props.viewer.allProjects.edges[0].node.privacy
+        privacy: this.props.viewer.allProjects.edges[0].node.privacy,
+        tabs: 'view'
       })
     } else {
       this.setState({ownProject:false})
