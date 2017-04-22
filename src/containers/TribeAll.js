@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
-import {SmallPic, Name, Projects, GenreChip, NoTribe, TableScore} from 'styled/Tribe'
+import {SmallPic, Name, Projects, NoTribe, TableScore} from 'styled/Tribe'
 import Bolt from 'icons/Bolt'
 
 
@@ -51,13 +51,13 @@ class TribeAll extends Component {
               </TableScore>
             </TableRowColumn>
             <TableRowColumn>{friend.placename}</TableRowColumn>
-            <TableRowColumn>
+            {/* <TableRowColumn>
               {friend.genres.edges.map(edge=>(
                 <GenreChip key={edge.node.id}>
                   {edge.node.name}
                 </GenreChip>
               ))}
-            </TableRowColumn>
+            </TableRowColumn> */}
             <TableRowColumn>
               <Projects>
 
@@ -87,7 +87,7 @@ class TribeAll extends Component {
                 style={{width: '50px'}}
               >Rating</TableHeaderColumn>
               <TableHeaderColumn>Location</TableHeaderColumn>
-              <TableHeaderColumn>Genres</TableHeaderColumn>
+              {/* <TableHeaderColumn>Genres</TableHeaderColumn> */}
               <TableHeaderColumn>Projects</TableHeaderColumn>
             </TableRow>
           </TableHeader>
