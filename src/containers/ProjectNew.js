@@ -310,7 +310,11 @@ class ProjectNew extends Component {
                 }}
                 fill={purple}
               />
-              <IconText>
+              <IconText
+                style={{
+                  cursor: ''
+                }}
+              >
                 New Project
               </IconText>
             </IconTextContainer>

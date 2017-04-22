@@ -110,7 +110,7 @@ export const Text = styled.div`
   margin-top: 40px;
 `
 
-export const Handle = styled.div`
+export const Handle = styled(BtLink)`
   display: flex;
   color: ${({comment}) => (comment) ? blue : purple};
   margin-right: 10px;

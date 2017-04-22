@@ -81,6 +81,9 @@ class ProjectTribeList extends Component {
   nestedItems = () => {
     let uniqueAuthorIds = []
     let uniqueAuthors = []
+
+    
+
     this.props.recentCommenters.forEach( (recent) => {
       if (!uniqueAuthorIds.includes(recent.node.author.id)){
         uniqueAuthorIds.push(recent.node.author.id)
@@ -98,6 +101,9 @@ class ProjectTribeList extends Component {
           leftAvatar={
             <Avatar
               src={author.portrait.url}
+              style={{
+                objectFit: 'cover'
+              }}
             />
           }
           style={{

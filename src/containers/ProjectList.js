@@ -79,7 +79,7 @@ class ProjectList extends Component {
                         margin: '0 5px 0 0px'
                       }}
                     />
-                    {this.uniqueCommenters(project.comments)}
+                    {(project.comments.length > 0) ? this.uniqueCommenters(project.comments) : 0}
                   </TrioItem>
                   <TrioItem>
                     <BigBubble
