@@ -28,6 +28,8 @@ import MenuItem from 'material-ui/MenuItem'
 import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
+import ImageEditor from 'components/ImageEditor'
+
 class Project extends Component {
 
   state = {
@@ -35,7 +37,8 @@ class Project extends Component {
     tabs: 'listen',
     markers: [],
     active: [],
-    edit: false
+    edit: false,
+    artworkEditorOpen: false
   }
 
   static childContextTypes = {
@@ -199,6 +202,26 @@ class Project extends Component {
     },1000)
   }
 
+
+  artworkSuccess = (file) => {
+    this.setState({artworkEditorOpen: false})
+    this.props.relay.commitUpdate(
+      new UpdateProject({
+        project: this.props.viewer.allProjects.edges[0].node,
+        artworkId: file.id,
+      }), {
+        onSuccess: success => console.log(success),
+        failure: failure => console.log('fail', failure)
+      }
+    )
+  }
+
+  openArtworkEditor = () => {
+    if (this.state.ownProject) {
+      this.setState({artworkEditorOpen: true})
+    }
+  }
+
   render () {
     let {
       node: project
@@ -282,6 +305,14 @@ class Project extends Component {
           <Art
             src={ (project.artwork) ? project.artwork.url : `${url}/artwork.png`}
             alt={'Project Art'}
+            onClick={this.openArtworkEditor}
+            ownProject={ownProject}
+          />
+          <ImageEditor
+            open={this.state.artworkEditorOpen}
+            onRequestClose={()=>this.setState({artworkEditorOpen:false})}
+            user={this.props.viewer.user}
+            portraitSuccess={this.artworkSuccess}
           />
           <Info>
             <TitleGenre>

@@ -15,6 +15,7 @@ export const Art = styled.img`
   display: flex;
   width: 250px;
   height: 250px;
+  cursor: ${({ownProject}) => (ownProject) ? 'pointer' : ''};
 `
 
 export const Info = styled.div`

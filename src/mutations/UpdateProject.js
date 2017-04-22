@@ -8,7 +8,8 @@ export default class UpdateProject extends Mutation {
       privacy: this.props.project.privacy,
       title: this.props.project.title,
       description: this.props.project.description,
-      genresIds: this.props.genresIds
+      genresIds: this.props.genresIds,
+      artworkId: this.props.artworkId
     }
   }
 
