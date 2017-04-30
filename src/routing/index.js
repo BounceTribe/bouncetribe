@@ -296,7 +296,7 @@ const createRoutes = () => {
 
         </Route>
         <Route
-          path={'/:ownHandle/:ownProject/:otherHandle/:otherProject'}
+          path={'/:userHandle/session/:sessionId/:tab'}
           onEnter={userOnly}
           component={Session}
           queries={ViewerQuery}

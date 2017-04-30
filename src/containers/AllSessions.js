@@ -11,7 +11,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import Headphones from 'icons/Headphones'
 import {white} from 'theme'
 import {findMatches} from 'utils/graphql'
-import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location} from 'styled/Sessions'
+import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle} from 'styled/Sessions'
 import LocationIcon from 'icons/Location'
 import CreateSession from 'mutations/CreateSession'
 
@@ -27,6 +27,7 @@ class AllSessions extends Component {
       let currentProject = this.currentProject()
       let sessions =  []
       currentProject.sessions.edges.forEach( (edge) => {
+        let sessionId = edge.node.id
         edge.node.projects.edges.forEach((edge) => {
           let {node: project} = edge
           if (project.id !== currentProject.id) {
@@ -34,13 +35,21 @@ class AllSessions extends Component {
               <TableRow
                 key={project.id}
               >
-                <TableRowColumn>
+                <TableRowColumn
+                  style={{width: '50px'}}
+                >
                   <CreatorPortrait
                     src={(project.creator.portrait) ? project.creator.portrait.url : `${url}/logo.png`}
                   />
                 </TableRowColumn>
                 <TableRowColumn>
-                  {project.creator.handle}
+                  <ListHandle
+                    onClick={()=>{
+                      this.props.router.push(`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`)
+                    }}
+                  >
+                    {project.creator.handle}
+                  </ListHandle>
                 </TableRowColumn>
                 <TableRowColumn>
                   {project.creator.score}
@@ -69,7 +78,9 @@ class AllSessions extends Component {
             adjustForCheckbox={false}
           >
             <TableRow>
-              <TableHeaderColumn>
+              <TableHeaderColumn
+                style={{width: '50px'}}
+              >
                 {/*portrait*/}
               </TableHeaderColumn>
               <TableHeaderColumn>
@@ -135,12 +146,10 @@ class AllSessions extends Component {
   matchCards = async (currentProject) => {
     try {
       if (!this.state.matches) {
-        console.log("currentProject", currentProject )
         let currentSessions = []
         currentProject.sessions.edges.forEach((edge) => {
           currentSessions.push(`"${edge.node.id}"`)
         })
-        console.log("currentSessions", currentSessions )
 
         let matches = await findMatches(currentProject, currentSessions)
         matches = matches.map( (project) => {
@@ -159,6 +168,7 @@ class AllSessions extends Component {
                       projectsIds
                     }),{
                       onSuccess: (success) => {
+                        //this.props.router.push(`/${this.props.viewer.user.handle}/session/${success}`)
                         console.log("success", success )
                       }
                     }

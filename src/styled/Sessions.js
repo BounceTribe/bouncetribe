@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {grey200, grey700} from 'theme'
+import {grey200, grey700, grey800} from 'theme'
 
 export const MatchList = styled.div`
   display: flex;
@@ -46,6 +46,12 @@ export const CreatorInfo = styled.div`
   margin-left: 5px;
   justify-content: center;
   height: 55px;
+`
+
+export const ListHandle = styled(BtLink)`
+  font-size: 15px;
+  color: ${grey800};
+  font-weight: 400;
 `
 
 export const Handle = styled(BtLink)`
