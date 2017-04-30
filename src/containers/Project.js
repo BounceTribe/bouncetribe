@@ -222,6 +222,20 @@ class Project extends Component {
     }
   }
 
+
+  filteredComments = () => {
+    let comments = (this.state.new) ? this.props.viewer.allProjects.edges[0].node.comments.edges.concat({node:this.state.new}) : this.props.viewer.allProjects.edges[0].node.comments.edges
+
+
+    if (this.state.tabs === 'listen') {
+      comments = comments.filter( (comment) => {
+        return comment.node.author.id === this.props.viewer.user.id
+      })
+    }
+
+    return comments
+  }
+
   render () {
     let {
       node: project
@@ -509,7 +523,7 @@ class Project extends Component {
           </LeftList>
           <CommentContainer>
             <CommentMarkers
-              comments={(this.state.new) ? this.props.viewer.allProjects.edges[0].node.comments.edges.concat({node:this.state.new}) : this.props.viewer.allProjects.edges[0].node.comments.edges}
+              comments={this.filteredComments()}
               duration={this.state.duration}
             />
             <ButtonRow

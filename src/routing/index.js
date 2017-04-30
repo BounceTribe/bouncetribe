@@ -15,7 +15,8 @@ import TribeFind from 'containers/TribeFind'
 import TribeSearchResults from 'containers/TribeSearchResults'
 import Login from 'containers/Login'
 import Connect from 'containers/Connect'
-// import Comments from 'containers/Comments'
+import Session from 'containers/Session'
+import AllSessions from 'containers/AllSessions'
 
 import {Loading} from 'styled/Spinner'
 
@@ -231,17 +232,7 @@ const createRoutes = () => {
             ignoreScrollBehavior
           />
         </Route>
-        <Route
-          path={'/:userHandle/sessions'}
-          onEnter={userOnly}
-        >
-          <IndexRoute
 
-          />
-          <Route
-            path={'/:userHandle/sessions/find'}
-          />
-        </Route>
         <Route
           path={'/:userHandle/projects'}
           component={ProjectList}
@@ -276,11 +267,29 @@ const createRoutes = () => {
             prepareParams={ownCommentsFilter}
           /> */}
 
+
+        </Route>
+        <Route
+          path={'/:ownHandle/:ownProject/:otherHandle/:otherProject'}
+          onEnter={userOnly}
+          component={Session}
+          queries={ViewerQuery}
+          render={({ props }) => props ? <Session {...props} /> : <Loading />}
+        />
+
+        <Route
+          path={'/:userHandle/sessions'}
+        >
+          <IndexRoute
+            onEnter={userOnly}
+            component={AllSessions}
+            queries={ViewerQuery}
+            render={({ props }) => props ? <AllSessions {...props} /> : <Loading />}
+          />
           <Route
-            path={'/:ownHandle/:ownProject/:otherHandle/:otherProject'}
+            path={'/:userHandle/sessions/find'}
           />
         </Route>
-
       </Route>
 
 
