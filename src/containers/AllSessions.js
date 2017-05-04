@@ -11,9 +11,10 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import Headphones from 'icons/Headphones'
 import {white} from 'theme'
 import {findMatches} from 'utils/graphql'
-import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle} from 'styled/Sessions'
+import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle, ListProject, ListScore, ProjectArtThumb} from 'styled/Sessions'
 import LocationIcon from 'icons/Location'
 import CreateSession from 'mutations/CreateSession'
+import Bolt from 'icons/Bolt'
 
 class AllSessions extends Component {
 
@@ -51,14 +52,33 @@ class AllSessions extends Component {
                     {project.creator.handle}
                   </ListHandle>
                 </TableRowColumn>
-                <TableRowColumn>
-                  {project.creator.score}
+                <TableRowColumn
+                  style={{width: '50px'}}
+
+                >
+                  <ListScore>
+                    <Bolt
+                      style={{
+                        marginRight: '4px'
+                      }}
+                    />
+                    {project.creator.score}
+                  </ListScore>
+                </TableRowColumn>
+                <TableRowColumn
+                  style={{width: '50px'}}
+                >
+                  <ProjectArtThumb
+                    src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+                  />
                 </TableRowColumn>
                 <TableRowColumn>
-                  {project.title}
+                  <ListProject>
+                    {project.title}
+                  </ListProject>
                 </TableRowColumn>
                 <TableRowColumn>
-                  {project.createdAt}
+                  {`Created ${new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {month: 'long', 'day': 'numeric'})}`}
                 </TableRowColumn>
               </TableRow>
             )
@@ -86,8 +106,15 @@ class AllSessions extends Component {
               <TableHeaderColumn>
                 Name
               </TableHeaderColumn>
-              <TableHeaderColumn>
+              <TableHeaderColumn
+                style={{width: '50px'}}
+              >
                 Rating
+              </TableHeaderColumn>
+              <TableHeaderColumn
+                style={{width: '50px'}}
+              >
+                {/*portrait*/}
               </TableHeaderColumn>
               <TableHeaderColumn>
                 Project
@@ -325,6 +352,7 @@ export default Relay.createContainer(
                           edges {
                             node {
                               id
+                              createdAt
                               title
                               artwork {
                                 url

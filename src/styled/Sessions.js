@@ -40,6 +40,10 @@ export const CreatorPortrait = styled.img`
   margin-left: 10px;
 `
 
+export const ProjectArtThumb = styled(CreatorPortrait)`
+  border-radius: 0;
+`
+
 export const CreatorInfo = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,9 +53,21 @@ export const CreatorInfo = styled.div`
 `
 
 export const ListHandle = styled(BtLink)`
-  font-size: 15px;
+  font-size: 16px;
   color: ${grey800};
   font-weight: 400;
+`
+
+export const ListScore = styled.h2`
+  display: flex;
+  margin: 0;
+  font-weight: bold;
+  color: ${grey800};
+`
+
+export const ListProject = styled(BtLink)`
+  font-size: 14px;
+  color: ${grey700};
 `
 
 export const Handle = styled(BtLink)`

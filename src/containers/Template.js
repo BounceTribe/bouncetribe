@@ -21,6 +21,7 @@ class Template extends Component {
       return (
         <TopNav
           handle={user.handle}
+          user={user}
           portraitUrl={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
         />
       )
@@ -52,6 +53,16 @@ export default Relay.createContainer(
             handle
             portrait {
               url
+            }
+            projects (
+              first: 1
+              orderBy: createdAt_DESC
+            ) {
+              edges {
+                node {
+                  title
+                }
+              }
             }
           }
         }

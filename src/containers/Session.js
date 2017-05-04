@@ -70,6 +70,33 @@ class Session extends Component {
     })
   }
 
+  commonInfluences = () => {
+    let self = this.props.viewer.user
+    let ownInfluences = self.artistInfluences.edges
+    let otherProject = this.props.viewer.Session.projects.edges.find((edge)=>{
+      return edge.node.creator.id !== self.id
+    })
+    let otherInfluences = otherProject.node.creator.artistInfluences.edges
+    let commonInfluences = []
+    otherInfluences.forEach( (otherInfluence) => {
+      let match = ownInfluences.find((ownInfluence) => {
+        return ownInfluence.node.id === otherInfluence.node.id
+      })
+      if (match) {
+        commonInfluences.push(match)
+      }
+    })
+
+
+    return commonInfluences.map((edge)=> (
+      <InfluenceChip
+        key={edge.node.id}
+      >
+        {edge.node.name}
+      </InfluenceChip>
+    ))
+  }
+
   render() {
     let self = this.props.viewer.user
     let otherProject = this.props.viewer.Session.projects.edges.find((edge)=>{
@@ -143,15 +170,7 @@ class Session extends Component {
           </ProfTop>
           <Divider/>
           <CommonInfluences>
-            {otherUser.artistInfluences.edges.map(edge=>{
-              return (
-                <InfluenceChip
-                  key={edge.node.id}
-                >
-                  {edge.node.name}
-                </InfluenceChip>
-              )}
-            )}
+            {this.commonInfluences()}
           </CommonInfluences>
         </ProfContainer>
         <Tabs
@@ -230,18 +249,32 @@ class Session extends Component {
               <div/>
             )
           }
-          {(this.props.router.params.tab === 'theirs' || this.props.router.params.tab === 'mine') ? (
+          {(this.props.router.params.tab === 'theirs') ? (
             <TrackContainer>
               <AudioPlayer
-                track={project.tracks.edges[0].node}
+                track={otherProject.tracks.edges[0].node}
                 currentTime={this.currentTime}
-                project={project}
+                project={otherProject}
                 getDuration={this.getDuration}
               />
             </TrackContainer>
-          ) : (
-            <div/>
-          )
+            ) : (
+              <div/>
+            )
+          }
+
+          {(this.props.router.params.tab === 'mine') ? (
+            <TrackContainer>
+              <AudioPlayer
+                track={ownProject.tracks.edges[0].node}
+                currentTime={this.currentTime}
+                project={ownProject}
+                getDuration={this.getDuration}
+              />
+            </TrackContainer>
+            ) : (
+              <div/>
+            )
           }
 
         {(this.props.router.params.tab === 'theirs' || this.props.router.params.tab === 'mine') ? (
@@ -335,6 +368,16 @@ export default Relay.createContainer(
           user {
             id
             handle
+            artistInfluences (
+              first: 999
+            ) {
+              edges {
+                node {
+                  id
+                  name
+                }
+              }
+            }
           }
           Session (
             id: $sessionId

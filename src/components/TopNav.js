@@ -16,8 +16,9 @@ class TopNav extends Component {
   }
 
 
+
   render() {
-    let {handle, portraitUrl} = this.props
+    let {handle, portraitUrl, user} = this.props
     return (
       <Bar>
           <Logo
@@ -25,7 +26,7 @@ class TopNav extends Component {
           />
         <NavList>
           <NavLink
-            to={`/${handle}/sessions`}
+            to={(user.projects.edges.length > 0) ? `/${handle}/sessions/${user.projects.edges[0].node.title}` : `/${handle}/sessions`}
           >
             <Headphones/>
             <NavText>
