@@ -214,7 +214,8 @@ class AllSessions extends Component {
                 <Location>
                   <LocationIcon
                     style={{
-                      marginRight: '4px'
+                      marginRight: '4px',
+                      display: (project.creator.placename) ? '' : 'none'
                     }}
                   />
                   {project.creator.placename}

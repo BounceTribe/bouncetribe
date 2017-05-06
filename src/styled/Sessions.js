@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {grey200, grey700, grey800, purple} from 'theme'
+import {grey200, grey300, grey700, grey800, purple} from 'theme'
 
 export const MatchList = styled.div`
   display: flex;
@@ -18,9 +18,10 @@ export const MatchCard = styled.div`
   align-items: flex-start;
   width: 30%;
   margin-left: 2%;
-  border: 1px solid ${grey200};
+  border: 1px solid ${grey300};
   border-radius: 10px;
   padding-bottom: 10px;
+  overflow: hidden;
 `
 
 export const CardArt = styled.img`
@@ -47,7 +48,7 @@ export const ProjectArtThumb = styled(CreatorPortrait)`
 export const CreatorInfo = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 5px;
+  margin-left: 15px;
   justify-content: center;
   height: 55px;
 `
