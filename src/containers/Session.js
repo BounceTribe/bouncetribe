@@ -17,13 +17,15 @@ import CommentMarkers from 'components/CommentMarkers'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
+import {Appreciate, AppreciateText} from 'styled/Sessions'
+import AddToAppreciatedFeedback from 'mutations/AddToAppreciatedFeedback'
 
 
 class Session extends Component {
 
   state = {
     duration: 0,
-    active: []
+    active: [],
   }
 
   static childContextTypes = {
@@ -97,6 +99,68 @@ class Session extends Component {
     ))
   }
 
+  activate = (index) => {
+    console.log("activate", index )
+    this.setState( (prevState) => {
+      let {active} = prevState
+      active.push(index)
+      return {
+        active
+      }
+    })
+  }
+
+  deactivate = (index) => {
+    this.setState( (prevState) => {
+      let {active} = prevState
+      active.splice(active.indexOf(index),1)
+      return {
+        active
+      }
+    })
+  }
+
+  get comments() {
+    let self = this.props.viewer.user
+    let otherProject = this.props.viewer.Session.projects.edges.find((edge)=>{
+      return edge.node.creator.id !== self.id
+    })
+    let ownProject = this.props.viewer.Session.projects.edges.find((edge)=>{
+      return edge.node.creator.id === self.id
+    })
+    otherProject = otherProject.node
+    ownProject = ownProject.node
+    let {tab} = this.props.router.params
+    let otherUser = otherProject.creator
+
+    let project = (tab === 'theirs') ? otherProject : ownProject
+    let comments = []
+    project.comments.edges.forEach((edge, index) => {
+      if (tab === 'theirs' && edge.node.author.id !== self.id) {
+      } else if (tab === 'mine' && edge.node.author.id !== otherUser.id ) {
+      } else {
+        comments.push(edge)
+      }
+
+    })
+    return comments
+  }
+
+  getDuration = (duration) => {
+    this.setState({
+      duration
+    })
+  }
+
+  includeNew = () => {
+     let comments = this.comments
+     if (this.state.new) {
+       comments = comments.concat({node: this.state.new})
+     }
+     return comments
+  }
+
+
   render() {
     let self = this.props.viewer.user
     let otherProject = this.props.viewer.Session.projects.edges.find((edge)=>{
@@ -109,6 +173,9 @@ class Session extends Component {
     ownProject = ownProject.node
     let otherUser = otherProject.creator
     let project = (this.props.router.params.tab === 'theirs') ? otherProject : ownProject
+    let appreciated = this.props.viewer.Session.appreciatedFeedback.edges.find((edge) => {
+      return edge.node.id === this.props.viewer.user.id
+    })
     return (
       <View>
         <ProfContainer>
@@ -281,7 +348,7 @@ class Session extends Component {
           <Bot>
             <CommentContainer>
               <CommentMarkers
-                comments={project.comments.edges}
+                comments={this.includeNew()}
                 duration={this.state.duration}
               />
               <ButtonRow
@@ -319,6 +386,40 @@ class Session extends Component {
                   </ButtonLabel>
                 </ButtonColumn>
               </ButtonRow>
+              <ButtonRow
+                hide={(this.props.router.params.tab === 'theirs')}
+              >
+                <ButtonColumn>
+                  <Appreciate
+                    appreciated={appreciated}
+                    onClick={()=>{
+                      if (!appreciated) {
+                        this.props.relay.commitUpdate(
+                          new AddToAppreciatedFeedback({
+                            appreciatedFeedbackUserId: this.props.viewer.user.id,
+                            appreciatedFeedbackSessionId: this.props.viewer.Session.id
+
+                          })
+                        )
+                      }
+
+                    }}
+                  >
+                    <Bolt
+                      style={{
+                        height: '50px',
+                        width: '50px'
+                      }}
+                      fill={white}
+                    />
+                  </Appreciate>
+                  <AppreciateText
+                    appreciated={appreciated}
+                  >
+                    {(appreciated) ? "Appreciated!" : 'Appreciate Feedback'}
+                  </AppreciateText>
+                </ButtonColumn>
+              </ButtonRow>
               <CommentScroller>
                 {(this.state.new) ?
                   <SingleComment
@@ -330,13 +431,30 @@ class Session extends Component {
                     activate={this.activate}
                     deactivate={this.deactivate}
                     userId={this.props.viewer.user.id}
-                    tabs={this.state.tabs}
+                    tabs={'view'}
                     commentCreated={()=>{this.setState({new: false})}}
                   /> :
                   null
                 }
 
-                {this.comments}
+                {this.comments.map((edge, index) => {
+                  let {node: comment} = edge
+                  return (
+                    <SingleComment
+                      index={index + 1}
+                      comment={comment}
+                      key={comment.id}
+                      focus={this.state.focus}
+                      active={(this.state.active.includes(index+1))}
+                      activate={this.activate}
+                      deactivate={this.deactivate}
+                      userId={this.props.viewer.user.id}
+                      tabs={this.state.tabs}
+                      session
+                    />
+                  )
+                }
+                )}
 
               </CommentScroller>
             </CommentContainer>
@@ -383,6 +501,15 @@ export default Relay.createContainer(
             id: $sessionId
           ) {
             id
+            appreciatedFeedback (
+              first: 2
+            ) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
             projects (
               first: 999
             ) {
@@ -417,10 +544,49 @@ export default Relay.createContainer(
                   }
                   comments (
                     first: 999
+                    orderBy: timestamp_ASC
                   ) {
                     edges {
                       node {
+                        text
+                        type
                         id
+                        author {
+                          id
+                          handle
+                          portrait {
+                            url
+                          }
+                        }
+                        project {
+                          id
+                        }
+                        timestamp
+                        children (
+                          first: 999
+                        ) {
+                          edges {
+                            node {
+                              id
+                              text
+                              author {
+                                handle
+                                portrait {
+                                  url
+                                }
+                              }
+                            }
+                          }
+                        }
+                        upvotes (
+                          first: 999
+                        ) {
+                          edges {
+                            node {
+                              id
+                            }
+                          }
+                        }
                       }
                     }
                   }

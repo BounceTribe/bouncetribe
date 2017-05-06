@@ -155,7 +155,7 @@ class SingleComment extends Component {
             </BotLink>
             <UpVote
               secondary={(type==='COMMENT')}
-              hideLink={(this.props.tabs === 'listen')}
+              hideLink={(this.props.tabs === 'listen' || this.props.session)}
               onClick={()=>{
                 Relay.Store.commitUpdate(
                   new AddToCommentUpvotes({

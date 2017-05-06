@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {grey200, grey700, grey800} from 'theme'
+import {grey200, grey700, grey800, purple} from 'theme'
 
 export const MatchList = styled.div`
   display: flex;
@@ -82,4 +82,22 @@ export const Location = styled.h4`
   color: ${grey700};
   font-weight: 200;
   margin: 0;
+`
+
+export const Appreciate = styled.div`
+  height: 100px;
+  width: 100px;
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({appreciated}) => (appreciated) ? purple : grey700};
+  cursor: pointer;
+`
+
+export const AppreciateText = styled.div`
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: ${({appreciated}) => (appreciated) ? purple : grey700};
 `
