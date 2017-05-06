@@ -17,15 +17,70 @@ import CommentMarkers from 'components/CommentMarkers'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
-import {Appreciate, AppreciateText} from 'styled/Sessions'
+import {Appreciate, AppreciateText, MessageContainer, Messages, MessageText, SenderHandle, MessagePortrait, MessageNamePortraitRow, MessageDivider} from 'styled/Sessions'
 import AddToAppreciatedFeedback from 'mutations/AddToAppreciatedFeedback'
+import TextField from 'material-ui/TextField'
+import CreateMessage from 'mutations/CreateMessage'
+import {SubscriptionClient} from 'subscriptions-transport-ws'
 
 
 class Session extends Component {
 
+  constructor(props) {
+    super(props)
+    this.feedSub = new SubscriptionClient(
+      'wss://subscriptions.graph.cool/v1/bt-api',
+      {
+        reconnect: true,
+      }
+    )
+
+    this.feedSub.subscribe(
+      {
+        query: `subscription createMessage {
+          Message (
+            filter: {
+              mutation_in: [CREATED]
+              node: {
+                sessionParent: {
+                  id: "${this.props.viewer.Session.id}"
+                }
+              }
+            }
+          ) {
+            node {
+              sender {
+                id
+                handle
+                portrait {
+                  url
+                }
+              }
+              text
+              id
+            }
+          }
+        }`
+      },
+      (error, result) => {
+        if (result) {
+          let newMessage = result.Message
+          this.setState( (prevState) => {
+            let {messages} = prevState
+            messages.push(newMessage)
+            return {
+              messages
+            }
+          })
+        }
+      }
+    )
+  }
+
   state = {
     duration: 0,
     active: [],
+    messages: []
   }
 
   static childContextTypes = {
@@ -33,6 +88,13 @@ class Session extends Component {
     time: PropTypes.number
   }
 
+
+  componentWillMount() {
+    let {edges: messages} = this.props.viewer.Session.messages
+    this.setState({
+      messages
+    })
+  }
 
   getChildContext() {
     return {
@@ -100,7 +162,6 @@ class Session extends Component {
   }
 
   activate = (index) => {
-    console.log("activate", index )
     this.setState( (prevState) => {
       let {active} = prevState
       active.push(index)
@@ -160,6 +221,69 @@ class Session extends Component {
      return comments
   }
 
+  componentDidMount(){
+    let messages = document.getElementById('messages')
+    messages.scrollTop = messages.scrollHeight
+  }
+
+  messages = () => {
+    let messages = []
+    this.state.messages.forEach( (message, index) =>{
+      if (index === 0) {
+        messages.push(
+          <MessageNamePortraitRow
+            key={`portrait${message.node.id}`}
+          >
+            <MessagePortrait
+              src={message.node.sender.portrait.url}
+            />
+            <SenderHandle
+              key={`handle${message.node.id}`}
+
+            >
+              {message.node.sender.handle}
+            </SenderHandle>
+          </MessageNamePortraitRow>
+        )
+      } else if (message.node.sender.id !== this.state.messages[index - 1].node.sender.id) {
+        messages.push(<MessageDivider/>)
+        messages.push(
+          <MessageNamePortraitRow
+            key={`portrait${message.node.id}`}
+          >
+            <MessagePortrait
+              src={message.node.sender.portrait.url}
+            />
+            <SenderHandle
+              key={`handle${message.node.id}`}
+
+            >
+              {message.node.sender.handle}
+            </SenderHandle>
+          </MessageNamePortraitRow>
+
+        )
+      }
+      messages.push(
+        <MessageText
+          key={`text${message.node.id}`}
+        >
+          {message.node.text}
+        </MessageText>
+      )
+
+    })
+
+    return (
+      <Messages
+        id={'messages'}
+      >
+        {messages}
+
+      </Messages>
+    )
+
+  }
 
   render() {
     let self = this.props.viewer.user
@@ -458,11 +582,42 @@ class Session extends Component {
 
               </CommentScroller>
             </CommentContainer>
+
+
           </Bot>
         ) : (
-          <div>
-
-          </div>
+          <MessageContainer>
+            {this.messages()}
+            <TextField
+              multiLine
+              name="message"
+              style={{
+                width: '95%',
+                margin: '15px 0'
+              }}
+              hintText={"Your message..."}
+              value={this.state.message}
+              onChange={(e)=>{
+                this.setState({message: e.target.value})
+              }}
+              onKeyDown={(e)=>{
+                if (e.keyCode === 13) {
+                  this.props.relay.commitUpdate(
+                    new CreateMessage({
+                      text: this.state.message,
+                      senderId: this.props.viewer.user.id,
+                      recipientId: otherUser.id,
+                      sessionParentId: this.props.viewer.Session.id
+                    }), {
+                      onSuccess: (success) => {
+                        this.setState({message: ''})
+                      }
+                    }
+                  )
+                }
+              }}
+            />
+          </MessageContainer>
         )
         }
 
@@ -501,6 +656,24 @@ export default Relay.createContainer(
             id: $sessionId
           ) {
             id
+            messages (
+              first: 999
+              orderBy: createdAt_ASC
+            ) {
+              edges {
+                node {
+                  id
+                  text
+                  sender {
+                    id
+                    handle
+                    portrait {
+                      url
+                    }
+                  }
+                }
+              }
+            }
             appreciatedFeedback (
               first: 2
             ) {

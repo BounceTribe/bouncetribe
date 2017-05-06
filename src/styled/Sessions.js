@@ -101,3 +101,63 @@ export const AppreciateText = styled.div`
   font-weight: 600;
   color: ${({appreciated}) => (appreciated) ? purple : grey700};
 `
+
+export const MessageContainer = styled.div`
+  display: flex;
+  border: 1px solid ${grey200};
+  border-radius: 5px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  height: 600px;
+  width: 85%;
+`
+
+export const Messages = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  border-bottom: 1px solid ${grey200};
+  width: 100%;
+  height: 600px;
+  overflow-y: scroll;
+`
+
+export const MessageNamePortraitRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  min-height: 15px;
+  margin-top: 10px;
+  margin-left: 25px;
+`
+
+export const SenderHandle = styled.h4`
+  display: flex;
+  margin: 0;
+  padding: 0;
+  margin-left: 5px;
+  color: ${({isPurple})=> (isPurple) ? purple: grey700};
+`
+
+export const MessageText = styled.p`
+  display: flex;
+  color: ${grey700};
+  margin: 0px 95px 20px 95px;
+  line-height: 14px;
+`
+
+export const MessagePortrait = styled(CreatorPortrait)`
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
+`
+
+export const MessageDivider = styled.hr`
+  width: 100%;
+  background-color: ${grey200};
+  height: 1px;
+  border: 0;
+`
