@@ -38,7 +38,6 @@ export const CreatorPortrait = styled.img`
   width: 55px;
   object-fit: cover;
   border-radius: 55px;
-  margin-left: 10px;
 `
 
 export const ProjectArtThumb = styled(CreatorPortrait)`
@@ -51,6 +50,12 @@ export const CreatorInfo = styled.div`
   margin-left: 15px;
   justify-content: center;
   height: 55px;
+`
+
+export const ThumbLink = styled(BtLink)`
+  display: flex;
+  height: 55px;
+  width: 55px;
 `
 
 export const ListHandle = styled(BtLink)`

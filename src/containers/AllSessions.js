@@ -11,7 +11,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import Headphones from 'icons/Headphones'
 import {white} from 'theme'
 import {findMatches} from 'utils/graphql'
-import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle, ListProject, ListScore, ProjectArtThumb} from 'styled/Sessions'
+import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle, ListProject, ListScore, ProjectArtThumb, ThumbLink} from 'styled/Sessions'
 import LocationIcon from 'icons/Location'
 import CreateSession from 'mutations/CreateSession'
 import Bolt from 'icons/Bolt'
@@ -68,12 +68,18 @@ class AllSessions extends Component {
                 <TableRowColumn
                   style={{width: '50px'}}
                 >
-                  <ProjectArtThumb
-                    src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
-                  />
+                  <ThumbLink
+                    to={`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`}
+                  >
+                    <ProjectArtThumb
+                      src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+                    />
+                  </ThumbLink>
                 </TableRowColumn>
                 <TableRowColumn>
-                  <ListProject>
+                  <ListProject
+                    to={`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`}
+                  >
                     {project.title}
                   </ListProject>
                 </TableRowColumn>
@@ -361,6 +367,9 @@ export default Relay.createContainer(
                               creator {
                                 handle
                                 score
+                                portrait {
+                                  url
+                                }
                               }
                             }
                           }

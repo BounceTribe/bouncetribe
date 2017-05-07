@@ -222,7 +222,9 @@ class Session extends Component {
   }
 
   componentDidMount(){
-    window.scrollTo(0, document.body.scrollHeight)
+    if (this.props.router.params.tab === 'messages') {
+      window.scrollTo(0, document.body.scrollHeight)
+    }
   }
 
   messages = () => {
@@ -399,6 +401,7 @@ class Session extends Component {
             value={'messages'}
             onActive={()=>{
               this.props.router.replace(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/messages`)
+              window.scrollTo(0, document.body.scrollHeight)
             }}
             style={{
               borderBottom: `2px solid ${grey200}`
