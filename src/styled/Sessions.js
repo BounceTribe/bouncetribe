@@ -110,7 +110,6 @@ export const MessageContainer = styled.div`
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  height: 600px;
   width: 85%;
 `
 
@@ -121,8 +120,6 @@ export const Messages = styled.div`
   align-items: flex-start;
   border-bottom: 1px solid ${grey200};
   width: 100%;
-  height: 600px;
-  overflow-y: scroll;
 `
 
 export const MessageNamePortraitRow = styled.div`

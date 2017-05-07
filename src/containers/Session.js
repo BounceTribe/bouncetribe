@@ -222,8 +222,7 @@ class Session extends Component {
   }
 
   componentDidMount(){
-    let messages = document.getElementById('messages')
-    messages.scrollTop = messages.scrollHeight
+    window.scrollTo(0, document.body.scrollHeight)
   }
 
   messages = () => {
