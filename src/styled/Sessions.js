@@ -30,6 +30,43 @@ export const CardArt = styled.img`
   height: auto;
   object-fit: contain;
   margin-bottom: 10px;
+  &:hover {
+    opacity: .8;
+  }
+`
+ export const CardArtWrapper = styled.div`
+   display: flex;
+   cursor: pointer;
+   align-items: flex-start;
+   position: relative;
+ `
+export const ButtonWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  opacity: 0;
+  animation: all .1s;
+  &:hover {
+    opacity: 1;
+    background-color: rgba(255,255,255,.4);
+  }
+
+`
+
+export const Round = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${purple};
+  height: 80px;
+  width: 80px;
+  border-radius: 80px;
 `
 
 export const CreatorPortrait = styled.img`
@@ -50,6 +87,7 @@ export const CreatorInfo = styled.div`
   margin-left: 15px;
   justify-content: center;
   height: 55px;
+  font-weight: 400;
 `
 
 export const ThumbLink = styled(BtLink)`
@@ -79,6 +117,8 @@ export const ListProject = styled(BtLink)`
 export const Handle = styled(BtLink)`
   font-size: 18px;
   margin-bottom: 3px;
+  color: ${grey700};
+  font-weight: 400;
 `
 
 export const Location = styled.h4`
