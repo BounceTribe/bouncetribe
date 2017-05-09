@@ -16,6 +16,8 @@ import LocationIcon from 'icons/Location'
 import CreateSession from 'mutations/CreateSession'
 import Bolt from 'icons/Bolt'
 import Checkbox from 'material-ui/Checkbox'
+import Logo from 'icons/Logo'
+
 class AllSessions extends Component {
 
   state = {
@@ -193,29 +195,33 @@ class AllSessions extends Component {
             >
 
               <CardArtWrapper
-                onClick={()=>{
-                  let projectsIds = []
-                  projectsIds.push(project.id)
-                  projectsIds.push(currentProject.id)
-                  this.props.relay.commitUpdate(
-                    new CreateSession({
-                      projectsIds
-                    }),{
-                      onSuccess: (success) => {
-                        //this.props.router.push(`/${this.props.viewer.user.handle}/session/${success}`)
-                        console.log("success", success )
-                      }
-                    }
-                  )
-                }}
               >
 
-                <ButtonWrapper>
+                <ButtonWrapper
+                  title={`Create a new session!`}
+                  onClick={()=>{
+                    let projectsIds = []
+                    projectsIds.push(project.id)
+                    projectsIds.push(currentProject.id)
+                    this.props.relay.commitUpdate(
+                      new CreateSession({
+                        projectsIds
+                      }),{
+                        onSuccess: (success) => {
+                          let {id: sessionId} = success.createSession.session
+                          this.props.router.push(`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`)
+                        }
+                      }
+                    )
+                  }}
+                >
                   <Round>
-                    <Headphones
+                    <Logo
                       fill={white}
-                      height={80}
-                      width={80}
+                      style={{
+                        height: '60px',
+                        width: '60px'
+                      }}
                     />
                   </Round>
 
