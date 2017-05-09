@@ -22,6 +22,7 @@ import AddToAppreciatedFeedback from 'mutations/AddToAppreciatedFeedback'
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
+import AddToScore from 'mutations/AddToScore'
 
 
 class Session extends Component {
@@ -524,8 +525,16 @@ class Session extends Component {
                           new AddToAppreciatedFeedback({
                             appreciatedFeedbackUserId: this.props.viewer.user.id,
                             appreciatedFeedbackSessionId: this.props.viewer.Session.id
-
-                          })
+                          }), {
+                            onSuccess: (success) => {
+                              this.props.relay.commitUpdate(
+                                new AddToScore({
+                                  user: otherUser,
+                                  plus: 10
+                                })
+                              )
+                            }
+                          }
                         )
                       }
 
@@ -729,6 +738,7 @@ export default Relay.createContainer(
                         author {
                           id
                           handle
+                          score
                           portrait {
                             url
                           }

@@ -17,7 +17,7 @@ export default class AddToScore extends Relay.Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        user: this.props.userId,
+        user: this.props.user.id,
       },
     }]
   }
