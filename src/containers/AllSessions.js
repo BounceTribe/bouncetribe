@@ -198,7 +198,7 @@ class AllSessions extends Component {
               >
 
                 <ButtonWrapper
-                  title={`Create a new session!`}
+                  title={`Start Session`}
                   onClick={()=>{
                     let projectsIds = []
                     projectsIds.push(project.id)

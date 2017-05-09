@@ -10,7 +10,7 @@ class ProjectTribeList extends Component {
 
   state = {
     selections: [],
-    showAll: true
+    showAll: true,
   }
 
   componentWillMount () {
@@ -29,13 +29,14 @@ class ProjectTribeList extends Component {
 
   toggleSelection = (handle) => {
     // let {title, creator} = this.props.project
-    if (this.state.selections.includes(handle)) {
+    if (this.props.selection) {
       // this.props.router.replace({
       //   pathname: `/${creator.handle}/${title}/view`
       // })
       this.setState({
         selections: []
       })
+      this.props.handleSelection(false)
     } else {
       // this.props.router.replace({
       //   pathname: `/${creator.handle}/${title}/view`,
@@ -43,9 +44,10 @@ class ProjectTribeList extends Component {
       //     in: handle
       //   }
       // })
-      this.setState({
-        selections: [handle]
-      })
+      // this.setState({
+      //   selections: [handle]
+      // })
+      this.props.handleSelection(handle)
     }
 
 
@@ -82,7 +84,7 @@ class ProjectTribeList extends Component {
     let uniqueAuthorIds = []
     let uniqueAuthors = []
 
-    
+
 
     this.props.recentCommenters.forEach( (recent) => {
       if (!uniqueAuthorIds.includes(recent.node.author.id)){
@@ -107,7 +109,7 @@ class ProjectTribeList extends Component {
             />
           }
           style={{
-            color: (selections.includes(author.handle)) ? purple : grey700,
+            color: (this.props.selection === author.handle) ? purple : grey700,
           }}
           innerDivStyle={{
             marginLeft: '0px',
