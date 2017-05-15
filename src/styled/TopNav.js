@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import {BtLink} from 'styled'
 import {white, grey40, grey70} from 'theme'
+// import Header from 'icons/Header'
+import {url} from 'config'
 
 export const Bar = styled.div`
   display: flex;
@@ -37,9 +39,17 @@ export const Title = styled(BtLink)`
   display: flex;
   color: ${white};
 `
-const Bold = styled.span`
-  display: flex;
-  font-weight: 400;
+// const Bold = styled.span`
+//   display: flex;
+//   font-weight: 400;
+// `
+
+export const LogoImg = styled.div`
+  width: 159px;
+  height: 19px;
+  background-image: url(${url}/header.png);
+  background-repeat: no-repeat;
+  background-position: center;
 `
 
 export const Logo = (props) =>{
@@ -47,7 +57,7 @@ export const Logo = (props) =>{
     <Title
       {...props}
     >
-      <Bold>BOUNCE</Bold>TRIBE
+      <LogoImg/>
     </Title>
   )
 }

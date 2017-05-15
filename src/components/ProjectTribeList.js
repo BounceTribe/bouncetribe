@@ -82,7 +82,7 @@ class ProjectTribeList extends Component {
     let uniqueAuthorIds = []
     let uniqueAuthors = []
 
-    
+
 
     this.props.recentCommenters.forEach( (recent) => {
       if (!uniqueAuthorIds.includes(recent.node.author.id)){
@@ -139,7 +139,8 @@ class ProjectTribeList extends Component {
         style={{
           width: '100%',
           border: `.5px solid ${grey200}`,
-          borderRadius: `6px`
+          borderRadius: `6px`,
+          display: (this.props.recentCommenters.length > 0) ? '' : 'none'
         }}
       >
         {/* <ListItem
