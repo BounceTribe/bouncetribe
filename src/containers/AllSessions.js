@@ -87,7 +87,7 @@ class AllSessions extends Component {
                   </ListProject>
                 </TableRowColumn>
                 <TableRowColumn>
-                  {`Created ${new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {month: 'long', 'day': 'numeric'})}`}
+                  {`${new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {month: 'long', 'day': 'numeric'})}`}
                 </TableRowColumn>
               </TableRow>
             )

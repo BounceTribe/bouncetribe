@@ -72,7 +72,7 @@ class Feed extends Component {
         feed.push(projectEdge.node)
       })
     })
-    let {handle} = this.props.viewer.user
+    //let {handle} = this.props.viewer.user
     feed.sort( (a, b) => {
       return  Date.parse(b.createdAt) - Date.parse(a.createdAt)
     })

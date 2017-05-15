@@ -95,7 +95,7 @@ class ProjectTribeList extends Component {
 
     return uniqueAuthors.map((recent, index) => {
       let {author} = recent.node
-      let {selections} = this.state
+      //let {selections} = this.state
       return (
         <ListItem
           key={index}
