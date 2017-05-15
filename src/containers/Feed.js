@@ -86,7 +86,7 @@ class Feed extends Component {
               <Left>
                 <Portrait
                   src={project.creator.portrait.url}
-                  to={`/${project.creator.handle}/${handle}`}
+                  to={`/${project.creator.handle}`}
                 />
                 <Col>
                   <Title

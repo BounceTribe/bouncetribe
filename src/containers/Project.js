@@ -38,7 +38,8 @@ class Project extends Component {
     markers: [],
     active: [],
     edit: false,
-    artworkEditorOpen: false
+    artworkEditorOpen: false,
+    selection: false,
   }
 
   static childContextTypes = {
@@ -147,7 +148,6 @@ class Project extends Component {
   }
 
   activate = (index) => {
-    console.log("activate", index )
     this.setState( (prevState) => {
       let {active} = prevState
       active.push(index)
@@ -168,7 +168,8 @@ class Project extends Component {
   }
 
   get comments () {
-    return this.props.viewer.allProjects.edges[0].node.comments.edges.map((edge, index)=>{
+
+    return this.filteredComments().map((edge, index)=>{
       let {node: comment} = edge
       return (
         <SingleComment
@@ -202,6 +203,9 @@ class Project extends Component {
     },1000)
   }
 
+  handleSelection = (selection) => {
+    this.setState({selection})
+  }
 
   artworkSuccess = (file) => {
     this.setState({artworkEditorOpen: false})
@@ -232,6 +236,13 @@ class Project extends Component {
         return comment.node.author.id === this.props.viewer.user.id
       })
     }
+
+    if (this.state.selection) {
+      comments = comments.filter( (comment) => {
+        return comment.node.author.handle === this.state.selection
+      })
+    }
+
 
     return comments
   }
@@ -519,6 +530,8 @@ class Project extends Component {
               tribe={this.props.viewer.User.friends.edges}
               recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
               router={this.props.router}
+              handleSelection={this.handleSelection}
+              selection={this.state.selection}
             />
           </LeftList>
           <CommentContainer>

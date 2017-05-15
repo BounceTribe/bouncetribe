@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {View, Button} from 'styled'
+import {View, Button, BtLink} from 'styled'
 import {Container, Header, HeaderOptions} from 'styled/list'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
@@ -9,17 +9,20 @@ import Avatar from 'material-ui/Avatar'
 import {url} from 'config'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import Headphones from 'icons/Headphones'
-import {white} from 'theme'
+import {white, grey700} from 'theme'
 import {findMatches} from 'utils/graphql'
-import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle, ListProject, ListScore, ProjectArtThumb, ThumbLink} from 'styled/Sessions'
+import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle, ListProject, ListScore, ProjectArtThumb, ThumbLink, CardArtWrapper, ButtonWrapper, Round} from 'styled/Sessions'
 import LocationIcon from 'icons/Location'
 import CreateSession from 'mutations/CreateSession'
 import Bolt from 'icons/Bolt'
+import Checkbox from 'material-ui/Checkbox'
+import Logo from 'icons/Logo'
 
 class AllSessions extends Component {
 
   state = {
-    matches: null
+    matches: null,
+    nearby: false,
   }
 
   table = () => {
@@ -190,27 +193,56 @@ class AllSessions extends Component {
             <MatchCard
               key={project.id}
             >
-              <CardArt
-                src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
-                onClick={()=>{
-                  let projectsIds = []
-                  projectsIds.push(project.id)
-                  projectsIds.push(currentProject.id)
-                  this.props.relay.commitUpdate(
-                    new CreateSession({
-                      projectsIds
-                    }),{
-                      onSuccess: (success) => {
-                        //this.props.router.push(`/${this.props.viewer.user.handle}/session/${success}`)
-                        console.log("success", success )
+
+              <CardArtWrapper
+              >
+
+                <ButtonWrapper
+                  title={`Start Session`}
+                  onClick={()=>{
+                    let projectsIds = []
+                    projectsIds.push(project.id)
+                    projectsIds.push(currentProject.id)
+                    this.props.relay.commitUpdate(
+                      new CreateSession({
+                        projectsIds
+                      }),{
+                        onSuccess: (success) => {
+                          let {id: sessionId} = success.createSession.session
+                          this.props.router.push(`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`)
+                        }
                       }
-                    }
-                  )
-                }}
-              />
-              <CreatorPortrait
-                src={(project.creator.portrait) ? project.creator.portrait.url : `${url}/logo.png`}
-              />
+                    )
+                  }}
+                >
+                  <Round>
+                    <Logo
+                      fill={white}
+                      style={{
+                        height: '60px',
+                        width: '60px'
+                      }}
+                    />
+                  </Round>
+
+                </ButtonWrapper>
+
+                <CardArt
+                  src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+                />
+
+
+              </CardArtWrapper>
+              <BtLink
+                to={`/${project.creator.handle}`}
+              >
+                <CreatorPortrait
+                  src={(project.creator.portrait) ? project.creator.portrait.url : `${url}/logo.png`}
+                  style={{
+                    marginLeft: '10px'
+                  }}
+                />
+              </BtLink>
               <CreatorInfo>
                 <Handle
                   to={`/${project.creator.handle}`}
@@ -249,10 +281,9 @@ class AllSessions extends Component {
     let {router} = this.props
     let currentProject = this.currentProject()
     if (currentProject) {
-      if (router.location.pathname === `/${currentProject.creator.handle}/sessions/${currentProject.title}/find`) {
+      if (router.location.pathname.includes('/find')) {
         this.matchCards(currentProject)
         return this.state.matches
-
       } else {
         return this.table()
       }
@@ -282,7 +313,12 @@ class AllSessions extends Component {
                     />}
                     onTouchTap={()=>{
                       let {router} = this.props
-                      router.replace(`/${router.params.userHandle}/sessions/${project.title}`)
+                      if (router.location.pathname.includes('/find')) {
+                        this.setState({matches: false})
+                        router.push(`/${router.params.userHandle}/sessions/${project.title}/find`)
+                      } else {
+                        router.push(`/${router.params.userHandle}/sessions/${project.title}`)
+                      }
                     }}
                   />
                 )
@@ -290,7 +326,9 @@ class AllSessions extends Component {
             </IconMenu>
 
 
-            <HeaderOptions>
+            <HeaderOptions
+              style={{height: '100%', alignItems: 'center'}}
+            >
               <Button
                 label={'Find Session'}
                 icon={
@@ -299,9 +337,35 @@ class AllSessions extends Component {
                   />
                 }
                 primary
+                style={{
+                  display: (this.props.router.location.pathname.includes('/find') ? 'none' : '')
+                }}
                 onTouchTap={()=>{
                   let {router} = this.props
-                  router.replace(`/${router.params.userHandle}/sessions/${this.currentProject().title}/find`)
+                  router.push(`/${router.params.userHandle}/sessions/${this.currentProject().title}/find`)
+                }}
+              />
+              <Checkbox
+                label={"Search Nearby"}
+                style={{
+                  display: (this.props.router.location.pathname.includes('/find') ? 'flex' : 'none'),
+                }}
+                labelStyle={{
+                  width: '150px',
+                  color: grey700
+                }}
+                iconStyle={{
+                  color: grey700,
+                }}
+                checked={this.state.nearby}
+                onCheck={()=>{
+                  this.setState((prevState)=>{
+                    let {nearby} = prevState
+                    return {
+                      nearby: !nearby,
+                      matches: false
+                    }
+                  })
                 }}
               />
             </HeaderOptions>
