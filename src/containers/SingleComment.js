@@ -8,7 +8,7 @@ import formatTime from 'utils/formatTime'
 import TextField from 'material-ui/TextField'
 import UpdateComment from 'mutations/UpdateComment'
 import Relay from 'react-relay'
-import {white, grey700} from 'theme'
+import {white, grey700, purple, blue} from 'theme'
 import CreateComment from 'mutations/CreateComment'
 import DeleteComment from 'mutations/DeleteComment'
 import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
@@ -69,6 +69,9 @@ class SingleComment extends Component {
           inputStyle={{
             color: grey700,
             fontSize: '16px'
+          }}
+          underlineFocusStyle={{
+            borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple 
           }}
         />
       )

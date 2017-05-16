@@ -217,6 +217,9 @@ class ProjectNew extends Component {
 
             />
             <Button
+              style={{
+                marginTop: '20px'
+              }}
               primary={true}
               disabled={(!titleUnique || !title || !tracksIds || !genres)}
               label={'Create Project'}

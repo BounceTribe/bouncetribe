@@ -28,7 +28,9 @@ import MenuItem from 'material-ui/MenuItem'
 import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
+import DeleteProject from 'mutations/DeleteProject'
 import ImageEditor from 'components/ImageEditor'
+import FlatButton from 'material-ui/FlatButton'
 
 class Project extends Component {
 
@@ -378,24 +380,50 @@ class Project extends Component {
             open={this.state.edit}
             onRequestClose={()=>{this.setState({edit:false})}}
             title={'Edit Project'}
-            actions={<BtFlatButton
-              label={'Save'}
-              onClick={()=>{
-                let project = {
-                  id: this.props.viewer.allProjects.edges[0].node.id,
-                  privacy: this.state.privacy,
-                  title: this.state.title,
-                  description: this.state.description,
+            actionsContainerStyle={{
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+            actions={[
+              <FlatButton
+                label={"Delete Project"}
+                labelStyle={{
+                  color: 'red'
+                }}
+                onClick={
+                  ()=>{
+                    this.props.relay.commitUpdate(
+                      new DeleteProject({
+                        id: this.props.viewer.allProjects.edges[0].node.id,
+                      }),{
+                        onSuccess: ()=>{
+                          this.props.router.push(`/${this.props.viewer.user.handle}/projects`)
+                        }
+                      }
+                    )
+
+                  }
                 }
-                this.props.relay.commitUpdate(
-                  new UpdateProject({
-                    project,
-                    genresIds: this.state.genre
-                  })
-                )
-                this.setState({edit: false})
-              }}
-            />}
+              />,
+              <BtFlatButton
+              label={'Save'}
+                onClick={()=>{
+                  let project = {
+                    id: this.props.viewer.allProjects.edges[0].node.id,
+                    privacy: this.state.privacy,
+                    title: this.state.title,
+                    description: this.state.description,
+                  }
+                  this.props.relay.commitUpdate(
+                    new UpdateProject({
+                      project,
+                      genresIds: this.state.genre
+                    })
+                  )
+                  this.setState({edit: false})
+                }}
+              />
+            ]}
           >
             <TextField
               floatingLabelText={'Title'}
