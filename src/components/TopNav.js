@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Bar, Logo, NavList, NavLink, Portrait, NavText} from 'styled/TopNav'
+import {Bar, Logo, NavList, NavLink, Portrait, NavText, Notification} from 'styled/TopNav'
 import {BtFlatButton} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
@@ -8,11 +8,15 @@ import Headphones from 'icons/Headphones'
 import Alerts from 'icons/Alerts'
 import {Dropdown, DropdownMenuItem, DropHr} from 'components/Dropdown'
 import auth from 'utils/auth'
+import IconMenu from 'material-ui/IconMenu'
+import IconButton from 'material-ui/IconButton'
+import MenuItem from 'material-ui/MenuItem'
 
 class TopNav extends Component {
 
   state = {
-    dropdownOpen: false
+    dropdownOpen: false,
+    notificationMenu: false
   }
 
 
@@ -44,9 +48,48 @@ class TopNav extends Component {
             </NavText>
           </NavLink>
           <NavLink>
-            <Alerts
-              alerts={false}
-            />
+            <IconMenu
+              iconButtonElement={(
+                <IconButton>
+                  <Alerts
+                      alerts={(user.notifications.edges.length > 0)}
+                  />
+                </IconButton>
+              )}
+              value={this.state.notificationMenu}
+              onChange={()=>{
+                this.setState((prevState) => {
+                  return {
+                    notificationMenu: !prevState.notificationMenu
+                  }
+                })
+              }}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right'
+              }}
+              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+            >
+              {(user.notifications.edges.length > 0) ?
+                user.notifications.edges.map(edge=>{
+                  return (
+                    <Notification
+                      key={edge.node.id}
+                      notification={edge.node}
+                    />
+                  )
+                })
+                :
+                <MenuItem
+                  secondaryText={"No notifications"}
+                />
+              }
+              <MenuItem
+                secondaryText={"View all notifications"}
+              />
+            </IconMenu>
+
+
           </NavLink>
           <Portrait
             src={portraitUrl}

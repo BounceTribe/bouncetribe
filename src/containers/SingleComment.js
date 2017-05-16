@@ -35,7 +35,8 @@ class SingleComment extends Component {
             projectId: this.props.comment.project.id,
             type: this.props.comment.type,
             timestamp: this.props.comment.timestamp,
-            text: this.state.text
+            text: this.state.text,
+            sessionId: this.props.sessionId
           })
         )
         this.props.commentCreated()
@@ -71,7 +72,7 @@ class SingleComment extends Component {
             fontSize: '16px'
           }}
           underlineFocusStyle={{
-            borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple 
+            borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple
           }}
         />
       )

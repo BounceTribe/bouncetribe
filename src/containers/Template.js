@@ -49,6 +49,36 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
+            notifications (
+              first: 8
+              filter: {
+                checked: false
+              }
+              orderBy: createdAt_DESC
+            ) {
+              edges {
+                node {
+                  id
+                  type
+                  triggeredBy {
+                    id
+                    handle
+                  }
+                  notificationFor {
+                    id
+                    handle
+                  }
+                  createdAt
+                  project {
+                    id
+                    title
+                  }
+                  session {
+                    id
+                  }
+                }
+              }
+            }
             id
             handle
             portrait {

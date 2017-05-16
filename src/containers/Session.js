@@ -568,6 +568,7 @@ class Session extends Component {
                     userId={this.props.viewer.user.id}
                     tabs={'view'}
                     commentCreated={()=>{this.setState({new: false})}}
+                    sessionId={this.props.viewer.Session.id}
                   /> :
                   null
                 }
