@@ -29,7 +29,7 @@ class ProjectTribeList extends Component {
 
   toggleSelection = (handle) => {
     // let {title, creator} = this.props.project
-    if (this.props.selection) {
+    if (this.props.selection === handle) {
       // this.props.router.replace({
       //   pathname: `/${creator.handle}/${title}/view`
       // })
