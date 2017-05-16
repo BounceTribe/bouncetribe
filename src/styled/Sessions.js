@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {grey200, grey300, grey700, grey800, purple} from 'theme'
+import {grey200, grey300, grey500, grey600, grey700, grey800, purple} from 'theme'
 
 export const MatchList = styled.div`
   display: flex;
@@ -208,4 +208,39 @@ export const MessageDivider = styled.hr`
   background-color: ${grey200};
   height: 1px;
   border: 0;
+`
+
+export const NoProjectsCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+`
+
+export const NoProjectMsg = styled.h2`
+  color: ${grey800};
+  font-weight: 400;
+  text-align: center;
+  font-size: 36px;
+`
+
+
+export const NoProjectQuote = styled.h4`
+  color: ${grey600};
+  font-weight: 400;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  font-size: 24px;
+`
+export const NoProjectAuthor = styled.h4`
+  color: ${grey500};
+  font-weight: 400;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+  font-size: 18px;
 `

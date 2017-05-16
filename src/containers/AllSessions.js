@@ -11,7 +11,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import Headphones from 'icons/Headphones'
 import {white, grey700} from 'theme'
 import {findMatches} from 'utils/graphql'
-import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle, ListProject, ListScore, ProjectArtThumb, ThumbLink, CardArtWrapper, ButtonWrapper, Round} from 'styled/Sessions'
+import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle, ListProject, ListScore, ProjectArtThumb, ThumbLink, CardArtWrapper, ButtonWrapper, Round, NoProjectsCol, NoProjectMsg, NoProjectQuote, NoProjectAuthor} from 'styled/Sessions'
 import LocationIcon from 'icons/Location'
 import CreateSession from 'mutations/CreateSession'
 import Bolt from 'icons/Bolt'
@@ -188,82 +188,101 @@ class AllSessions extends Component {
         })
 
         let matches = await findMatches(currentProject, currentSessions)
-        matches = matches.map( (project) => {
-          return (
-            <MatchCard
-              key={project.id}
-            >
+        if (matches.length === 0 ) {
+          matches = (
+            <NoProjectsCol>
+              <NoProjectMsg>
+                Come back later to find more projects
+              </NoProjectMsg>
+              <NoProjectQuote>
+                "Without music, life would be a mistake"
+                <br/>
+                <NoProjectAuthor>
+                  –Friedrich Nietzche
+                </NoProjectAuthor>
+              </NoProjectQuote>
 
-              <CardArtWrapper
+            </NoProjectsCol>
+          )
+        } else {
+          matches = matches.map( (project) => {
+            return (
+              <MatchCard
+                key={project.id}
               >
 
-                <ButtonWrapper
-                  title={`Start Session`}
-                  onClick={()=>{
-                    let projectsIds = []
-                    projectsIds.push(project.id)
-                    projectsIds.push(currentProject.id)
-                    this.props.relay.commitUpdate(
-                      new CreateSession({
-                        projectsIds
-                      }),{
-                        onSuccess: (success) => {
-                          let {id: sessionId} = success.createSession.session
-                          this.props.router.push(`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`)
-                        }
-                      }
-                    )
-                  }}
+                <CardArtWrapper
                 >
-                  <Round>
-                    <Logo
-                      fill={white}
-                      style={{
-                        height: '60px',
-                        width: '60px'
-                      }}
-                    />
-                  </Round>
 
-                </ButtonWrapper>
+                  <ButtonWrapper
+                    title={`Start Session`}
+                    onClick={()=>{
+                      let projectsIds = []
+                      projectsIds.push(project.id)
+                      projectsIds.push(currentProject.id)
+                      this.props.relay.commitUpdate(
+                        new CreateSession({
+                          projectsIds
+                        }),{
+                          onSuccess: (success) => {
+                            let {id: sessionId} = success.createSession.session
+                            this.props.router.push(`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`)
+                          }
+                        }
+                      )
+                    }}
+                  >
+                    <Round>
+                      <Logo
+                        fill={white}
+                        style={{
+                          height: '60px',
+                          width: '60px'
+                        }}
+                      />
+                    </Round>
 
-                <CardArt
-                  src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
-                />
+                  </ButtonWrapper>
+
+                  <CardArt
+                    src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+                  />
 
 
-              </CardArtWrapper>
-              <BtLink
-                to={`/${project.creator.handle}`}
-              >
-                <CreatorPortrait
-                  src={(project.creator.portrait) ? project.creator.portrait.url : `${url}/logo.png`}
-                  style={{
-                    marginLeft: '10px'
-                  }}
-                />
-              </BtLink>
-              <CreatorInfo>
-                <Handle
+                </CardArtWrapper>
+                <BtLink
                   to={`/${project.creator.handle}`}
                 >
-                  {project.creator.handle}
-                </Handle>
-                <Location>
-                  <LocationIcon
+                  <CreatorPortrait
+                    src={(project.creator.portrait) ? project.creator.portrait.url : `${url}/logo.png`}
                     style={{
-                      marginRight: '4px',
-                      display: (project.creator.placename) ? '' : 'none'
+                      marginLeft: '10px'
                     }}
                   />
-                  {project.creator.placename}
-                </Location>
-              </CreatorInfo>
+                </BtLink>
+                <CreatorInfo>
+                  <Handle
+                    to={`/${project.creator.handle}`}
+                  >
+                    {project.creator.handle}
+                  </Handle>
+                  <Location>
+                    <LocationIcon
+                      style={{
+                        marginRight: '4px',
+                        display: (project.creator.placename) ? '' : 'none'
+                      }}
+                    />
+                    {project.creator.placename}
+                  </Location>
+                </CreatorInfo>
 
 
-            </MatchCard>
-          )
-        })
+              </MatchCard>
+            )
+          })
+        }
+
         this.setState({matches: (
           <MatchList>
             {matches}
