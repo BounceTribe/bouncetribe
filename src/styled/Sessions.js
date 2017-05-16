@@ -22,6 +22,11 @@ export const MatchCard = styled.div`
   border-radius: 10px;
   padding-bottom: 10px;
   overflow: hidden;
+  transition: .5s all;
+  &:hover {
+    box-shadow: 5px 5px 5px ${grey300};
+    margin-top: -10px;
+  }
 `
 
 export const CardArt = styled.img`
