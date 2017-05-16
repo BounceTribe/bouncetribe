@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {grey500, grey600} from 'theme'
 
 export const Background = styled.div`
   width: 100%;
@@ -36,4 +37,14 @@ export const Lock = styled.div`
   display: flex;
   min-height: 380px;
   min-width: 200px;
+`
+
+export const Legal = styled.span`
+  margin-top: 10px;
+  font-size: 12px;
+  color: ${grey500};
+`
+
+export const LegalLink = styled.a`
+  color: ${grey600};
 `

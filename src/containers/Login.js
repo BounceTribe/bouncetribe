@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Background, Container, Lock, Header} from 'styled/Login'
+import {Background, Container, Lock, Header, Legal, LegalLink} from 'styled/Login'
 import Logo from 'icons/Logo'
 import {purple} from 'theme'
 
@@ -50,6 +50,19 @@ class Login extends Component {
           <Lock
             id='lock'
           />
+          <Legal>
+            <LegalLink
+              href={"http://bouncetribe.com/terms-of-service/"}
+            >
+              Our Terms
+            </LegalLink>
+              &nbsp;&&nbsp;
+            <LegalLink
+              href={"http://bouncetribe.com/privacy-policy/"}
+            >
+               Privacy Policy
+            </LegalLink>
+          </Legal>
 
         </Container>
       </Background>
