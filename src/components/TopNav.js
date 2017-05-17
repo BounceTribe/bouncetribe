@@ -1,22 +1,24 @@
 import React, {Component} from 'react'
-import {Bar, Logo, NavList, NavLink, Portrait, NavText, Notification} from 'styled/TopNav'
+import Relay from 'react-relay'
+import {Bar, Logo, NavList, NavLink, Portrait, NavText, Notification, NotifyContainer, NotifyMessage} from 'styled/TopNav'
 import {BtFlatButton} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
 import Music from 'icons/Music'
 import Headphones from 'icons/Headphones'
 import Alerts from 'icons/Alerts'
-import {Dropdown, DropdownMenuItem, DropHr} from 'components/Dropdown'
+import {DropdownMenuItem, DropHr} from 'components/Dropdown'
 import auth from 'utils/auth'
 import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
-import MenuItem from 'material-ui/MenuItem'
+import UpdateNotification from 'mutations/UpdateNotification'
 
 class TopNav extends Component {
 
   state = {
     dropdownOpen: false,
-    notificationMenu: false
+    notificationMenu: false,
+    portraitMenu: false
   }
 
 
@@ -47,17 +49,38 @@ class TopNav extends Component {
               Projects
             </NavText>
           </NavLink>
-          <NavLink>
+          <NavLink
+            style={{
+              paddingRight: 0,
+              height: '19px'
+            }}
+          >
             <IconMenu
               iconButtonElement={(
-                <IconButton>
+                <IconButton
+                  style={{
+                    padding: 0
+                  }}
+                >
                   <Alerts
-                      alerts={(user.notifications.edges.length > 0)}
+                    alerts={(user.notifications.edges.length > 0) ? user.notifications.edges.length : false}
                   />
                 </IconButton>
               )}
-              value={this.state.notificationMenu}
-              onChange={()=>{
+              open={this.state.notificationMenu}
+              onRequestChange={()=>{
+                if (!this.state.notificationMenu) {
+                  user.notifications.edges.forEach( (edge) => {
+                    if (!edge.node.checked) {
+                      Relay.Store.commitUpdate(
+                        new UpdateNotification({
+                          id: edge.node.id,
+                          checked: true
+                        })
+                      )
+                    }
+                  })
+                }
                 this.setState((prevState) => {
                   return {
                     notificationMenu: !prevState.notificationMenu
@@ -80,18 +103,70 @@ class TopNav extends Component {
                   )
                 })
                 :
-                <MenuItem
-                  secondaryText={"No notifications"}
-                />
+                <NotifyContainer
+                  style={{
+                    border: 0
+                  }}
+                >
+                  <NotifyMessage>
+                    No new notifications
+                  </NotifyMessage>
+                </NotifyContainer>
               }
-              <MenuItem
-                secondaryText={"View all notifications"}
-              />
             </IconMenu>
 
 
           </NavLink>
-          <Portrait
+          <IconMenu
+            iconButtonElement={(
+              <IconButton
+                style={{
+                  padding: 0,
+                  overflow: 'visible',
+                  margin: '0 15px'
+                }}
+              >
+                <Portrait
+                  src={portraitUrl}
+                />
+              </IconButton>
+            )}
+            open={this.state.portraitMenu}
+            onRequestChange={()=>{
+              this.setState((prevState) => {
+                return {
+                  portraitMenu: !prevState.portraitMenu
+                }
+              })
+            }}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left'
+            }}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+          >
+            <DropdownMenuItem
+              text="View Profile"
+              to={`/${handle}`}
+            />
+            <DropdownMenuItem
+              text="My Tribe"
+              to={`/${handle}/tribe`}
+            />
+            <DropHr/>
+            <DropdownMenuItem
+              text="Settings"
+            />
+            <DropdownMenuItem
+              text="Help"
+            />
+            <DropHr/>
+            <DropdownMenuItem
+              text="Log Out"
+              onClick={auth.logout}
+            />
+          </IconMenu>
+          {/* <Portrait
             src={portraitUrl}
             onClick={()=>{
               this.setState((prevState) => {
@@ -144,7 +219,7 @@ class TopNav extends Component {
               text="Log Out"
               onClick={auth.logout}
             />
-          </Dropdown>
+          </Dropdown> */}
 
           <BtFlatButton
             label={'New Project'}

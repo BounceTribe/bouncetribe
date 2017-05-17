@@ -72,7 +72,7 @@ export const NavImg = styled.img`
 
 export const ImgLink = styled(BtLink)`
   color: ${white};
-  padding: 0 30px 0 15px;
+  padding: 0;
 `
 
 export const Portrait = (props) => {
@@ -114,6 +114,7 @@ export const NotifyMessage = styled.div`
   margin-bottom: 10px;
 `
 
+
 export const NotifyDate = styled.div`
   font-size: 9px;
   color: ${grey500};
@@ -127,12 +128,16 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
 
   switch (type) {
     case 'FRIEND_REQUEST': {
-
+      header = "Tribe Request"
+      message = `${triggeredBy.handle} has invited you.`
+      link = `/${triggeredBy.handle}`
       break
     }
     case 'FRIEND_REQUEST_ACCEPTED': {
+      header = "Request Accepted"
+      message = `${triggeredBy.handle} has accepted.`
+      link = `/${triggeredBy.handle}`
       break
-
     }
     case 'SESSION_FEEDBACK_RECEIVED': {
       header = 'Feedback Received'
