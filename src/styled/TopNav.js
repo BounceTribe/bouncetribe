@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {white, grey40, grey70, grey700, grey500, grey300, purple} from 'theme'
+import {white, grey40, grey70, grey700, grey500, grey300, purple, size} from 'theme'
 // import Header from 'icons/Header'
 import {url} from 'config'
 
@@ -15,6 +15,9 @@ export const Bar = styled.div`
   height: 50px;
   background-color: ${grey40};
   box-sizing: border-box;
+  ${size.m`
+    display: none;
+  `}
 `
 
 
@@ -45,7 +48,7 @@ export const Title = styled(BtLink)`
 // `
 
 export const LogoImg = styled.div`
-  width: 159px;
+  width: 166px;
   height: 19px;
   background-image: url(${url}/header.png);
   background-repeat: no-repeat;

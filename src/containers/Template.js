@@ -28,14 +28,28 @@ class Template extends Component {
     }
   }
 
+  get mobileUserOnly () {
+    let {
+      user
+    } = this.props.viewer
+    if (user) {
+      return (
+        <MobileNav
+          user={user}
+
+        />
+      )
+    }
+  }
+
   render () {
     return (
       <MuiThemeProvider
         muiTheme={btTheme}
       >
         <Main>
-          <MobileNav/>
           {this.userOnly}
+          {this.mobileUserOnly}
           {this.props.children}
         </Main>
       </MuiThemeProvider>

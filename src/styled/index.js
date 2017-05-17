@@ -19,6 +19,10 @@ export const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  ${size.m`
+    display: block;
+    width: 100%;
+  `}
 `
 
 export const View = styled.section`
@@ -173,4 +177,11 @@ export const Bubble = styled.div`
   height: 30px;
   width: 30px;
   border-radius: 30px;
+`
+
+export const MobileOnly = styled.div`
+  display: none;
+  ${size.m`
+    display: block;
+  `}
 `

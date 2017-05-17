@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {purple, grey600, grey200, grey800, white} from 'theme'
+import {purple, grey600, grey200, grey800, white, size} from 'theme'
 
 export const Container = styled.div`
   display: flex;
@@ -9,6 +9,9 @@ export const Container = styled.div`
   width: 660px;
   margin: auto;
   align-items: center;
+  ${size.m`
+    width: 90%;
+  `}
 `
 
 export const Paper = styled.div`
@@ -46,6 +49,11 @@ const LargeImage = styled.img`
   width: 600px;
   object-fit: cover;
   margin: 20px 0;
+  ${size.m`
+    height: 250px;
+    width: 250px;
+    margin: 20px auto;
+  `}
 `
 
 
