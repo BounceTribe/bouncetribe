@@ -11,6 +11,8 @@ import {
 import {graphCool} from 'config'
 import auth from 'utils/auth'
 
+
+
 const createHeaders = (idToken) => {
   if (idToken) {
     return {
