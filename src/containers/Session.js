@@ -17,13 +17,17 @@ import CommentMarkers from 'components/CommentMarkers'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
-import {Appreciate, AppreciateText, MessageContainer, Messages, MessageText, SenderHandle, MessagePortrait, MessageNamePortraitRow, MessageDivider} from 'styled/Sessions'
-import AddToAppreciatedFeedback from 'mutations/AddToAppreciatedFeedback'
+import { MessageContainer, Messages, MessageText, SenderHandle, MessagePortrait, MessageNamePortraitRow, MessageDivider, FeedbackImage, HelpfulQuestion} from 'styled/Sessions'
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
 import AddToScore from 'mutations/AddToScore'
 
+import UpdateSession from 'mutations/UpdateSession'
+
+import good from 'icons/GOOD.png'
+import great from 'icons/GREAT.png'
+import bad from 'icons/BAD.png'
 
 class Session extends Component {
 
@@ -287,6 +291,38 @@ class Session extends Component {
 
   }
 
+  appreciate = (score) => {
+    let self = this.props.viewer.user
+    let otherProject = this.props.viewer.Session.projects.edges.find((edge)=>{
+      return edge.node.creator.id !== self.id
+    })
+
+    otherProject = otherProject.node
+    let otherUser = otherProject.creator
+    let {feedback} = this.props.viewer.Session
+    if (!feedback[this.props.viewer.user.id]) {
+      let newFeedback = {
+        ...feedback,
+        [this.props.viewer.user.id]: score
+      }
+      this.props.relay.commitUpdate(
+        new UpdateSession({
+          id: this.props.viewer.Session.id,
+          feedback: newFeedback
+        }), {
+          onSuccess: (success) => {
+            this.props.relay.commitUpdate(
+              new AddToScore({
+                user: otherUser,
+                plus: score
+              })
+            )
+          }
+        }
+      )
+    }
+  }
+
   render() {
     let self = this.props.viewer.user
     let otherProject = this.props.viewer.Session.projects.edges.find((edge)=>{
@@ -299,9 +335,10 @@ class Session extends Component {
     ownProject = ownProject.node
     let otherUser = otherProject.creator
     let project = (this.props.router.params.tab === 'theirs') ? otherProject : ownProject
-    let appreciated = this.props.viewer.Session.appreciatedFeedback.edges.find((edge) => {
-      return edge.node.id === this.props.viewer.user.id
-    })
+    // let appreciated = this.props.viewer.Session.appreciatedFeedback.edges.find((edge) => {
+    //   return edge.node.id === this.props.viewer.user.id
+    // })
+    let givenFeedback = this.props.viewer.Session.feedback[self.id]
     return (
       <View>
         <ProfContainer>
@@ -516,43 +553,39 @@ class Session extends Component {
               <ButtonRow
                 hide={(this.props.router.params.tab === 'theirs')}
               >
-                <ButtonColumn>
-                  <Appreciate
-                    appreciated={appreciated}
-                    onClick={()=>{
-                      if (!appreciated) {
-                        this.props.relay.commitUpdate(
-                          new AddToAppreciatedFeedback({
-                            appreciatedFeedbackUserId: this.props.viewer.user.id,
-                            appreciatedFeedbackSessionId: this.props.viewer.Session.id
-                          }), {
-                            onSuccess: (success) => {
-                              this.props.relay.commitUpdate(
-                                new AddToScore({
-                                  user: otherUser,
-                                  plus: 10
-                                })
-                              )
-                            }
-                          }
-                        )
-                      }
+                <HelpfulQuestion>
+                  Was this feedback helpful?
+                </HelpfulQuestion>
+              </ButtonRow>
+              <ButtonRow
+                hide={(this.props.router.params.tab === 'theirs')}
+              >
 
-                    }}
-                  >
-                    <Bolt
-                      style={{
-                        height: '50px',
-                        width: '50px'
-                      }}
-                      fill={white}
-                    />
-                  </Appreciate>
-                  <AppreciateText
-                    appreciated={appreciated}
-                  >
-                    {(appreciated) ? "Appreciated!" : 'Appreciate Feedback'}
-                  </AppreciateText>
+                <ButtonColumn>
+                  <FeedbackImage
+                    src={bad}
+                    onClick={()=>{this.appreciate(0)}}
+                    selected={(givenFeedback === 0)}
+                    disabled={givenFeedback}
+                  />
+                </ButtonColumn>
+                <ButtonColumn>
+                  <FeedbackImage
+                    src={good}
+                    onClick={()=>{this.appreciate(5)}}
+                    selected={(givenFeedback === 5)}
+                    disabled={givenFeedback}
+
+                  />
+                </ButtonColumn>
+                <ButtonColumn>
+                  <FeedbackImage
+                    src={great}
+                    onClick={()=>{this.appreciate(10)}}
+                    selected={(givenFeedback === 10)}
+                    disabled={givenFeedback}
+
+                  />
                 </ButtonColumn>
               </ButtonRow>
               <CommentScroller>
@@ -668,6 +701,7 @@ export default Relay.createContainer(
             id: $sessionId
           ) {
             id
+            feedback
             messages (
               first: 999
               orderBy: createdAt_ASC

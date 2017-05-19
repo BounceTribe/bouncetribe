@@ -244,3 +244,34 @@ export const NoProjectAuthor = styled.h4`
   margin: auto;
   font-size: 18px;
 `
+
+export const FeedbackImage = styled.img`
+  opacity: .5;
+  transition: all .2s;
+  &:hover {
+    opacity: ${({disabled, selected}) => (disabled && !selected) ? .5 : 1};
+    transform: ${({disabled}) => (disabled) ? 'scale(1)' : 'scale(1.3)' };
+  }
+  ${({disabled, selected}) => {
+    if (selected) {
+      return "opacity: 1;"
+    } else if (disabled && !selected) {
+      return "opacity: .5;"
+    }
+  }}
+  cursor: ${({disabled, selected}) => {
+    if (disabled) {
+      return ''
+    } else {
+      return 'pointer'
+    }
+  }};
+  transform: ${({selected}) => (selected) ? 'scale(1.3)' : 'scale(1)' };
+
+`
+
+export const HelpfulQuestion = styled.div`
+  font-size: 18px;
+  font-weight: 400;
+  color: ${grey500};
+`
