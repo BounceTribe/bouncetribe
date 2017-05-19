@@ -173,6 +173,9 @@ class Project extends Component {
 
     return this.filteredComments().map((edge, index)=>{
       let {node: comment} = edge
+      if (comment.id === 'new') {
+        return null
+      }
       return (
         <SingleComment
           index={index + 1}
