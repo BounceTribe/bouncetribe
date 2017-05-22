@@ -18,6 +18,7 @@ export const MatchCard = styled.div`
   align-items: flex-start;
   width: 30%;
   margin-left: 2%;
+  margin-bottom: 40px;
   border: 1px solid ${grey300};
   border-radius: 10px;
   padding-bottom: 10px;
@@ -250,7 +251,7 @@ export const FeedbackImage = styled.img`
   transition: all .2s;
   &:hover {
     opacity: ${({disabled, selected}) => (disabled && !selected) ? .5 : 1};
-    transform: ${({disabled}) => (disabled) ? 'scale(1)' : 'scale(1.3)' };
+    transform: ${({disabled, selected}) => (disabled && !selected) ? 'scale(1)' : 'scale(1.3)' };
   }
   ${({disabled, selected}) => {
     if (selected) {

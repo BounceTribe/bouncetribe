@@ -339,6 +339,10 @@ class Session extends Component {
     //   return edge.node.id === this.props.viewer.user.id
     // })
     let givenFeedback = this.props.viewer.Session.feedback[self.id]
+    let commentsReceived = ownProject.comments.edges.find((edge) =>{
+      return edge.node.author.id === otherUser.id
+    })
+
     return (
       <View>
         <ProfContainer>
@@ -551,14 +555,14 @@ class Session extends Component {
                 </ButtonColumn>
               </ButtonRow>
               <ButtonRow
-                hide={(this.props.router.params.tab === 'theirs')}
+                hide={(this.props.router.params.tab === 'theirs' || !commentsReceived)}
               >
                 <HelpfulQuestion>
                   Was this feedback helpful?
                 </HelpfulQuestion>
               </ButtonRow>
               <ButtonRow
-                hide={(this.props.router.params.tab === 'theirs')}
+                hide={(this.props.router.params.tab === 'theirs' || !commentsReceived)}
               >
 
                 <ButtonColumn>
