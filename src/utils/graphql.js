@@ -3,7 +3,7 @@ import auth from 'utils/auth'
 
 
 
-export const findMatches = (project, currentSessions) => {
+export const findMatches = (project, currentSessions, friendsIds) => {
   return fetch(graphCool.simple, {
       method: 'POST',
       headers: {
@@ -20,6 +20,7 @@ export const findMatches = (project, currentSessions) => {
               }
               creator: {
                 id_not: "${project.creator.id}"
+                id_not_in: [${friendsIds.toString()}]
               }
               sessions_every: {
                 id_not_in: [${currentSessions.toString()}]

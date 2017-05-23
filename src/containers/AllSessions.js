@@ -186,8 +186,12 @@ class AllSessions extends Component {
         currentProject.sessions.edges.forEach((edge) => {
           currentSessions.push(`"${edge.node.id}"`)
         })
+        let self = this.props.viewer.user
+        let friendsIds = user.friends.edges.map( (node) => {
+          return node.id
+        })
 
-        let matches = await findMatches(currentProject, currentSessions)
+        let matches = await findMatches(currentProject, currentSessions, friendsIds)
         if (matches.length === 0 ) {
           matches = (
             <NoProjectsCol>
@@ -405,6 +409,15 @@ export default Relay.createContainer(
           user {
             id
             handle
+            friends (
+              first: 999
+            ) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
             projects (
               first: 999
               orderBy: title_ASC
