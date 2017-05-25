@@ -42,6 +42,7 @@ class Project extends Component {
     edit: false,
     artworkEditorOpen: false,
     selection: false,
+    delete: false
   }
 
   static childContextTypes = {
@@ -386,18 +387,22 @@ class Project extends Component {
           </Info>
 
           <Dialog
-            open={this.state.edit}
-            onRequestClose={()=>{this.setState({edit:false})}}
-            title={'Edit Project'}
-            actionsContainerStyle={{
-              display: 'flex',
-              justifyContent: 'space-between'
+            modal={false}
+            open={this.state.delete}
+            onRequestClose={()=>{
+              this.setState({delete: false})
             }}
             actions={[
               <FlatButton
-                label={"Delete Project"}
+                label={"Cancel"}
+                onClick={()=>{
+                  this.setState({delete: false})
+                }}
+              />,
+              <FlatButton
+                label={"Delete"}
                 labelStyle={{
-                  color: 'red'
+                  color: '#DF5151'
                 }}
                 onClick={
                   ()=>{
@@ -413,6 +418,30 @@ class Project extends Component {
 
                   }
                 }
+              />
+            ]}
+          >
+            Are you sure you want to permanently delete this project?
+          </Dialog>
+
+
+          <Dialog
+            open={this.state.edit}
+            onRequestClose={()=>{this.setState({edit:false})}}
+            title={'Edit Project'}
+            actionsContainerStyle={{
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+            actions={[
+              <FlatButton
+                label={"Delete Project"}
+                labelStyle={{
+                  color: '#DF5151'
+                }}
+                onClick={()=>{
+                  this.setState({edit: false, delete: true})
+                }}
               />,
               <BtFlatButton
               label={'Save'}
