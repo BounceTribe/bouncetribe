@@ -56,20 +56,18 @@ const DropdownItem = styled.li`
   align-self: flex-start;
   flex-wrap: nowrap;
   background-color: ${white};
-  margin-right: 20px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 25px;
-
+  box-sizing: border-box;
+  padding: 8px 20px 8px 25px;
+  color: ${grey700};
+  &:hover {
+    background-color: ${purple};
+    color: ${white}
+  }
 `
 
 const DropLink = styled(BtLink)`
   font-size: 14px;
-  color: ${grey700};
-  &:hover {
-    font-weight: 400;
-    color: ${purple};
-  }
+  color: inherit;
 `
 
 class DropdownMenuItem extends Component {
