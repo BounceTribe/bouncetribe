@@ -323,17 +323,30 @@ class ProjectNew extends Component {
             </IconTextContainer>
         </Header>
 
-        {this.uploader}
+        {
+          (this.props.viewer.user.projects.edges.length < 9) ?
+          (
+            <div>
+              {this.uploader}
 
-        <LinearProgress
-          mode={'determinate'}
-          value={progress}
-          style={{
-            display: (!audioProgress || audioProgress === 'COMPLETE') ? 'none' : ''
-          }}
-        />
+              <LinearProgress
+                mode={'determinate'}
+                value={progress}
+                style={{
+                  display: (!audioProgress || audioProgress === 'COMPLETE') ? 'none' : ''
+                }}
+              />
 
-        {this.form}
+              {this.form}
+            </div>
+          ) : (
+            <h4>
+              Sorry, you've reached your 10 project limit.
+            </h4>
+          )
+        }
+
+
 
       </ProjectNewView>
     )
@@ -351,6 +364,15 @@ export default Relay.createContainer(
             handle
             score
             ${AudioUploader.getFragment('self')}
+            projects (
+              first: 999
+            ) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
           }
         }
       `,
