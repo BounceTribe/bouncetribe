@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
-// import Divider from 'material-ui/Divider'
-import {grey200, purple, grey700} from 'theme'
+import Divider from 'material-ui/Divider'
+import {grey200, purple, grey700, blue} from 'theme'
 import Avatar from 'material-ui/Avatar'
 // import Toggle from 'material-ui/Toggle'
 
@@ -13,62 +13,21 @@ class ProjectTribeList extends Component {
     showAll: true,
   }
 
-  componentWillMount () {
-    // let {query} = this.props.router.location
-    // let selections = []
-    // if (Array.isArray(query.in)) {
-    //   selections.push(...query.in)
-    // } else if (typeof query.in === 'string') {
-    //   selections.push(query.in)
-    // }
-    // this.setState({selections})
-    if (this.props.router.location.query.in) {
-      this.setState({selections: [this.props.router.location.query.in]})
-    }
-  }
+
 
   toggleSelection = (handle) => {
-    // let {title, creator} = this.props.project
     if (this.props.selection === handle) {
-      // this.props.router.replace({
-      //   pathname: `/${creator.handle}/${title}/view`
-      // })
+
       this.setState({
         selections: []
       })
       this.props.handleSelection(false)
     } else {
-      // this.props.router.replace({
-      //   pathname: `/${creator.handle}/${title}/view`,
-      //   query: {
-      //     in: handle
-      //   }
-      // })
-      // this.setState({
-      //   selections: [handle]
-      // })
+
       this.props.handleSelection(handle)
     }
 
 
-    // this.setState((prevState) => {
-    //   let {selections} = prevState
-    //   if (selections.includes(handle)) {
-    //     selections = selections.filter((item) => item !== handle )
-    //   } else {
-    //     selections.push(handle)
-    //   }
-    //   this.props.router.replace({
-    //     pathname: `/${creator.handle}/${title}/`,
-    //     query: {
-    //       in: selections,
-    //       showAll: false
-    //     }
-    //   })
-    //   return {
-    //     selections
-    //   }
-    // })
   }
 
 
@@ -85,17 +44,19 @@ class ProjectTribeList extends Component {
     let uniqueAuthors = []
 
 
-
-    this.props.recentCommenters.forEach( (recent) => {
-      if (!uniqueAuthorIds.includes(recent.node.author.id)){
-        uniqueAuthorIds.push(recent.node.author.id)
-        uniqueAuthors.push(recent)
-      }
+    let comments = this.props.project.comments.edges.map((edge) => {
+      return edge.node
     })
 
+
+    comments.forEach( (comment) => {
+      if (!uniqueAuthorIds.includes(comment.author.id) && !comment.session){
+        uniqueAuthorIds.push(comment.author.id)
+        uniqueAuthors.push(comment)
+      }
+    })
     return uniqueAuthors.map((recent, index) => {
-      let {author} = recent.node
-      //let {selections} = this.state
+      let {author} = recent
       return (
         <ListItem
           key={index}
@@ -122,20 +83,56 @@ class ProjectTribeList extends Component {
     })
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   let {query} = nextProps.router.location
-  //   if (query.showAll === 'false') {
-  //     this.setState({
-  //       showAll: false
-  //     })
-  //   } else {
-  //     this.setState({
-  //       showAll: true
-  //     })
-  //   }
-  // }
+
+  sessionCommentAuthors = () => {
+    let uniqueAuthorIds = []
+    let uniqueAuthors = []
+
+
+    let comments = this.props.project.comments.edges.map((edge) => {
+      return edge.node
+    })
+
+
+    comments.forEach( (comment) => {
+      if (!uniqueAuthorIds.includes(comment.author.id) && comment.session){
+        uniqueAuthorIds.push(comment.author.id)
+        uniqueAuthors.push(comment)
+      }
+    })
+
+    return uniqueAuthors.map((recent, index) => {
+      let {author} = recent
+      return (
+        <ListItem
+          key={index}
+          primaryText={author.handle}
+          leftAvatar={
+            <Avatar
+              src={author.portrait.url}
+              style={{
+                objectFit: 'cover'
+              }}
+            />
+          }
+          style={{
+            color: (this.props.selection === author.handle) ? purple : grey700,
+          }}
+          innerDivStyle={{
+            marginLeft: '0px',
+            fontSize: '14px',
+            fontWeight: '400'
+          }}
+          onClick={()=>{this.toggleSelection(author.handle)}}
+        />
+      )
+    })
+  }
+
 
   render() {
+    let nestedItems = this.nestedItems()
+    let sessionCommentAuthors = this.sessionCommentAuthors()
     return (
       <List
         style={{
@@ -170,22 +167,29 @@ class ProjectTribeList extends Component {
           primaryText={'Tribe Members'}
           style={{
             fontSize: '16px',
-            color: purple
+            color: purple,
+            display: (nestedItems.length > 0) ? '' : 'none'
           }}
           initiallyOpen={true}
-          nestedItems={this.nestedItems()}
+          nestedItems={nestedItems}
         />
 
-        {/*
-        <Divider/>
+
+        <Divider
+          style={{
+            display: (this.props.self.id === this.props.project.creator.id && nestedItems.length > 0) ? '' : 'none'
+          }}
+        />
         <ListItem
           primaryText={'Session Feedback'}
           style={{
             fontSize: '16px',
-            color: blue
+            color: blue,
+            display: (this.props.self.id === this.props.project.creator.id && sessionCommentAuthors.length > 0) ? '' : 'none'
           }}
-          initiallyOpen={false}
-        /> */}
+          initiallyOpen={true}
+          nestedItems={sessionCommentAuthors}
+        />
       </List>
     )
   }

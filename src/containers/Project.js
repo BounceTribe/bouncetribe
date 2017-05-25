@@ -248,6 +248,12 @@ class Project extends Component {
       })
     }
 
+    if (this.props.viewer.user.id !== this.props.viewer.allProjects.edges[0].node.creator.id) {
+      comments = comments.filter( (comment) => {
+        return comment.node.session
+      })
+    }
+
 
     return comments
   }
@@ -557,6 +563,7 @@ class Project extends Component {
             hide={( (this.state.tabs === 'listen') && (!ownProject) )}
           >
             <ProjectTribeList
+              self={this.props.viewer.user}
               project={project}
               tribe={this.props.viewer.User.friends.edges}
               recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
@@ -705,6 +712,7 @@ export default Relay.createContainer(
                 privacy
                 creator {
                   handle
+                  id
                 }
                 genres (
                   first: 3
@@ -736,6 +744,9 @@ export default Relay.createContainer(
                 ) {
                   edges {
                     node {
+                      session {
+                        id
+                      }
                       text
                       type
                       id
