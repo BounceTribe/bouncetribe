@@ -10,46 +10,53 @@ import UploadTrack from 'icons/UploadTrack'
 class AudioUploader extends Component {
 
   onAudioDrop = (files, rejectedFile) => {
-    let file = files[0]
 
-    let title = ''
+    if (rejectedFile) {
+      window.alert("Your file is too large for us to handle! Files must be less than 15mb.")
+    } else {
+      let file = files[0]
 
-    if (file.name.split('.')[0]) {
-      title = file.name.split('.')[0]
+      let title = ''
+
+      if (file.name.split('.')[0]) {
+        title = file.name.split('.')[0]
+      }
+
+      this.props.audioDropped({
+        audioProgress: 'GENERATING',
+        title,
+        size: file.size
+      })
+      createVisualization(file).then(visualization=>{
+        this.props.audioDropped({
+          audioProgress: 'UPLOADING',
+          title: false,
+        })
+        uploadFile(file).then(fileId=>{
+          this.props.relay.commitUpdate(
+            new UpdateFile({
+              self: this.props.self,
+              fileId: fileId,
+              visualization: visualization
+            }), {
+              onSuccess: (transaction) => {
+                let {file} = transaction.updateFile
+                this.props.audioSuccess(file)
+                this.props.audioDropped({
+                  audioProgress: 'COMPLETE',
+                  title: false,
+                })
+              },
+              onFailure: (response) => {
+                console.log('updateFile failure', response)
+              }
+            }
+          )
+        })
+      })
     }
 
-    this.props.audioDropped({
-      audioProgress: 'GENERATING',
-      title,
-      size: file.size
-    })
-    createVisualization(file).then(visualization=>{
-      this.props.audioDropped({
-        audioProgress: 'UPLOADING',
-        title: false,
-      })
-      uploadFile(file).then(fileId=>{
-        this.props.relay.commitUpdate(
-          new UpdateFile({
-            self: this.props.self,
-            fileId: fileId,
-            visualization: visualization
-          }), {
-            onSuccess: (transaction) => {
-              let {file} = transaction.updateFile
-              this.props.audioSuccess(file)
-              this.props.audioDropped({
-                audioProgress: 'COMPLETE',
-                title: false,
-              })
-            },
-            onFailure: (response) => {
-              console.log('updateFile failure', response)
-            }
-          }
-        )
-      })
-    })
+
 
   }
 
