@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {View, Button, BtLink} from 'styled'
+import {View, Button, BtLink, BtFlatButton} from 'styled'
 import {Container, Header, HeaderOptions} from 'styled/list'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
@@ -9,7 +9,7 @@ import Avatar from 'material-ui/Avatar'
 import {url} from 'config'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import Headphones from 'icons/Headphones'
-import {white, grey700} from 'theme'
+import {white, grey700, purple} from 'theme'
 import {findMatches} from 'utils/graphql'
 import {MatchList, MatchCard, CardArt, CreatorPortrait, CreatorInfo, Handle, Location, ListHandle, ListProject, ListScore, ProjectArtThumb, ThumbLink, CardArtWrapper, ButtonWrapper, Round, NoProjectsCol, NoProjectMsg, NoProjectQuote, NoProjectAuthor} from 'styled/Sessions'
 import LocationIcon from 'icons/Location'
@@ -17,6 +17,8 @@ import CreateSession from 'mutations/CreateSession'
 import Bolt from 'icons/Bolt'
 import Checkbox from 'material-ui/Checkbox'
 import Logo from 'icons/Logo'
+import Upload from 'icons/Upload'
+
 
 class AllSessions extends Component {
 
@@ -94,53 +96,86 @@ class AllSessions extends Component {
           }
         })
       })
-      return (
-        <Table
-          style={{
-            width: '90%',
-            margin: 'auto',
-            marginTop: '40px'
-          }}
-        >
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={false}
-          >
-            <TableRow>
-              <TableHeaderColumn
-                style={{width: '50px'}}
-              >
-                {/*portrait*/}
-              </TableHeaderColumn>
-              <TableHeaderColumn>
-                Name
-              </TableHeaderColumn>
-              <TableHeaderColumn
-                style={{width: '50px'}}
-              >
-                Rating
-              </TableHeaderColumn>
-              <TableHeaderColumn
-                style={{width: '50px'}}
-              >
-                {/*portrait*/}
-              </TableHeaderColumn>
-              <TableHeaderColumn>
-                Project
-              </TableHeaderColumn>
-              <TableHeaderColumn>
-                Created
-              </TableHeaderColumn>
-            </TableRow>
 
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}
+
+      if (sessions.length > 0 ) {
+        return (
+          <Table
+            style={{
+              width: '90%',
+              margin: 'auto',
+              marginTop: '40px',
+            }}
           >
-            {sessions}
-          </TableBody>
-        </Table>
-      )
+            <TableHeader
+              displaySelectAll={false}
+              adjustForCheckbox={false}
+            >
+              <TableRow>
+                <TableHeaderColumn
+                  style={{width: '50px'}}
+                >
+                  {/*portrait*/}
+                </TableHeaderColumn>
+                <TableHeaderColumn>
+                  Name
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  style={{width: '50px'}}
+                >
+                  Rating
+                </TableHeaderColumn>
+                <TableHeaderColumn
+                  style={{width: '50px'}}
+                >
+                  {/*portrait*/}
+                </TableHeaderColumn>
+                <TableHeaderColumn>
+                  Project
+                </TableHeaderColumn>
+                <TableHeaderColumn>
+                  Created
+                </TableHeaderColumn>
+              </TableRow>
+
+            </TableHeader>
+            <TableBody
+              displayRowCheckbox={false}
+            >
+              {sessions}
+            </TableBody>
+          </Table>
+        )
+      } else {
+        return (
+          <NoProjectsCol
+            style={{
+              marginTop: '50px'
+            }}
+          >
+            <NoProjectQuote>
+              Ready to exchange some feedback?
+            </NoProjectQuote>
+            <Button
+              label={'Find Session'}
+              icon={
+                <Headphones
+                  fill={white}
+                />
+              }
+              primary
+              style={{
+                margin: '20px auto',
+                display: (this.props.router.location.pathname.includes('/find')) ? 'none' : ''
+              }}
+              onTouchTap={()=>{
+                let {router} = this.props
+                router.push(`/${router.params.userHandle}/sessions/${this.currentProject().title}/find`)
+              }}
+            />
+          </NoProjectsCol>
+        )
+      }
     }
   }
 
@@ -323,6 +358,9 @@ class AllSessions extends Component {
               iconButtonElement={this.headerProject()}
               anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
               targetOrigin={{horizontal: 'left', vertical: 'top'}}
+              style={{
+                display: (this.props.viewer.user.projects.edges.length < 1) ? 'none' : ''
+              }}
             >
               {this.props.viewer.user.projects.edges.map(edge => {
                 let {node: project} = edge
@@ -350,7 +388,12 @@ class AllSessions extends Component {
 
 
             <HeaderOptions
-              style={{height: '100%', alignItems: 'center'}}
+              style={{
+                height: '100%',
+                alignItems: 'center',
+                display: (this.props.viewer.user.projects.edges.length < 1) ? 'none' : ''
+
+              }}
             >
               <Button
                 label={'Find Session'}
@@ -394,6 +437,33 @@ class AllSessions extends Component {
             </HeaderOptions>
           </Header>
           { this.matches()}
+          {(this.props.viewer.user.projects.edges.length < 1) ? (
+            <NoProjectsCol
+              style={{
+                marginTop: '50px'
+              }}
+            >
+              <NoProjectMsg>
+                Ready to exchange some feedback?
+              </NoProjectMsg>
+              <NoProjectQuote>
+                Upload a new project first!
+              </NoProjectQuote>
+              <BtFlatButton
+                label={'New Project'}
+                labelStyle={{
+                  color: white,
+                  fontSize: '13px',
+                  fontWeight: '400'
+                }}
+                backgroundColor={purple}
+                to={`/${this.props.viewer.user.handle}/projects/new`}
+                icon={<Upload/>}
+                style={{borderRadius: '8px'}}
+              />
+
+            </NoProjectsCol>
+          ) : null}
         </Container>
       </View>
     )

@@ -215,7 +215,7 @@ export const NoProjectsCol = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
 `
 
 export const NoProjectMsg = styled.h2`
