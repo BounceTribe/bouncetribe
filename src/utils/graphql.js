@@ -12,7 +12,7 @@ export const findMatches = (project, currentSessions, friendsIds) => {
       body: JSON.stringify({
         query: `{
           allProjects (
-            first: 999
+            first: 6
             filter: {
               privacy: PUBLIC
               genres_some: {

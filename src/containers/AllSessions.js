@@ -34,6 +34,7 @@ class AllSessions extends Component {
       let sessions =  []
       currentProject.sessions.edges.forEach( (edge) => {
         let sessionId = edge.node.id
+        let createdAt = edge.node.createdAt
         edge.node.projects.edges.forEach((edge) => {
           let {node: project} = edge
           if (project.id !== currentProject.id) {
@@ -89,7 +90,7 @@ class AllSessions extends Component {
                   </ListProject>
                 </TableRowColumn>
                 <TableRowColumn>
-                  {`${new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {month: 'long', 'day': 'numeric'})}`}
+                  {`${new Date(Date.parse(createdAt)).toLocaleDateString('en-US', {month: 'long', 'day': 'numeric'})}`}
                 </TableRowColumn>
               </TableRow>
             )
@@ -515,10 +516,12 @@ export default Relay.createContainer(
                   }
                   sessions (
                     first: 999
+                    orderBy: createdAt_DESC
                   ) {
                     edges {
                       node {
                         id
+                        createdAt
                         projects (
                           first: 999
                         ) {

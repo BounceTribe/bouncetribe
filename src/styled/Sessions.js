@@ -162,6 +162,7 @@ export const MessageContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   width: 85%;
+  margin-top: 60px;
 `
 
 export const Messages = styled.div`
