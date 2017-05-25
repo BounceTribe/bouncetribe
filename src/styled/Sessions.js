@@ -9,6 +9,7 @@ export const MatchList = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   margin-top: 40px;
+  width: 100%;
 `
 
 export const MatchCard = styled.div`
