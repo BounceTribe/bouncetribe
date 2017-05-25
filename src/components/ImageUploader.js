@@ -107,7 +107,7 @@ export default class ImageUploader extends Component {
 
           />
           <Button
-            label="Done"
+            label="Save"
             onClick={this.uploadImage}
             primary
             disabled={!this.state.pixel}

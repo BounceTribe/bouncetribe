@@ -187,7 +187,7 @@ class AllSessions extends Component {
           currentSessions.push(`"${edge.node.id}"`)
         })
         let self = this.props.viewer.user
-        let friendsIds = user.friends.edges.map( (node) => {
+        let friendsIds = self.friends.edges.map( (node) => {
           return node.id
         })
 
