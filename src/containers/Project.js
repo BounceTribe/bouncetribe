@@ -251,7 +251,7 @@ class Project extends Component {
 
     if (this.props.viewer.user.id !== this.props.viewer.allProjects.edges[0].node.creator.id) {
       comments = comments.filter( (comment) => {
-        return comment.node.session
+        return !comment.node.session
       })
     }
 

@@ -11,9 +11,9 @@ class AudioUploader extends Component {
 
   onAudioDrop = (files, rejectedFile) => {
 
-    if (rejectedFile) {
-      window.alert("Your file is too large for us to handle! Files must be less than 15mb.")
-    } else {
+    // if (rejectedFile) {
+    //   window.alert("Your file is too large for us to handle! Files must be less than 15mb.")
+    // } else {
       let file = files[0]
 
       let title = ''
@@ -54,7 +54,7 @@ class AudioUploader extends Component {
           )
         })
       })
-    }
+    // }
 
 
 
