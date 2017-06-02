@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {ProjectNewView, Button, RoundButton, IconText, IconTextContainer} from 'styled'
-import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop, TrackContainer} from 'styled/ProjectNew'
+import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop, TrackContainer, Container} from 'styled/ProjectNew'
 import {Header} from 'styled/list'
 import AudioUploader from 'components/AudioUploader'
 import SelectField from 'material-ui/SelectField'
@@ -326,7 +326,8 @@ class ProjectNew extends Component {
         {
           (this.props.viewer.user.projects.edges.length < 9) ?
           (
-            <div>
+            <Container>
+
               {this.uploader}
 
               <LinearProgress
@@ -338,7 +339,8 @@ class ProjectNew extends Component {
               />
 
               {this.form}
-            </div>
+
+            </Container>
           ) : (
             <h4>
               Sorry, you've reached your 10 project limit.

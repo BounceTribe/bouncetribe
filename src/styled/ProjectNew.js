@@ -64,3 +64,10 @@ export const ArtworkDrop = styled.img`
   width: 350px;
   cursor: pointer;
 `
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`
