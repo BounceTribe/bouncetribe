@@ -63,7 +63,11 @@ class TopNav extends Component {
                   }}
                 >
                   <Alerts
-                    alerts={(user.notifications.edges.length > 0) ? user.notifications.edges.length : false}
+                    alerts={(user.notifications.edges.filter(edge => {
+                      return !edge.node.checked
+                    }).length > 0) ? user.notifications.edges.filter(edge => {
+                      return !edge.node.checked
+                    }).length : false}
                   />
                 </IconButton>
               )}

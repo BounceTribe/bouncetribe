@@ -16,7 +16,7 @@ export default class UpdateNotification extends Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on UpdateNotificationPayload {
-        notification
+        viewer
       }
     `
   }
@@ -25,8 +25,8 @@ export default class UpdateNotification extends Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        notification: this.props.id,
-      },
+        viewer: 'viewer-fixed'
+      }
     }]
   }
 

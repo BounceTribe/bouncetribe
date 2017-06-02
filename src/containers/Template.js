@@ -64,16 +64,14 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             notifications (
-              first: 8
-              filter: {
-                checked: false
-              }
+              first: 5
               orderBy: createdAt_DESC
             ) {
               edges {
                 node {
                   id
                   type
+                  checked
                   triggeredBy {
                     id
                     handle
