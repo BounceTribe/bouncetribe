@@ -218,6 +218,7 @@ export const NoProjectsCol = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
 `
 
 export const NoProjectMsg = styled.h2`
