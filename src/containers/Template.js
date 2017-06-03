@@ -8,6 +8,7 @@ import TopNav from 'components/TopNav'
 import MobileNav from 'components/MobileNav'
 import {btTheme} from 'theme'
 import {url} from 'config'
+import Footer from 'components/Footer'
 
 injectTapEventPlugin()
 
@@ -51,6 +52,7 @@ class Template extends Component {
           {this.userOnly}
           {this.mobileUserOnly}
           {this.props.children}
+          <Footer/>
         </Main>
       </MuiThemeProvider>
     )
