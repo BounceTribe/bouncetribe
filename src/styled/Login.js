@@ -24,13 +24,9 @@ export const Container = styled.div`
   padding: 35px 75px;
 `
 
-export const Header = styled.div`
+export const Header = styled.img`
   display: flex;
-  font-family: 'Montserrat-Bold', 'Helvetica Neue', sans-serif;
-  font-size: 48px;
-  color: #333333;
-  letter-spacing: -1.61px;
-  text-transform: uppercase;
+  margin: 20px;
 `
 
 export const Lock = styled.div`

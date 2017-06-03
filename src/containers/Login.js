@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Background, Container, Lock, Header, Legal, LegalLink} from 'styled/Login'
 import Logo from 'icons/Logo'
+import LoginLogo from 'icons/LoginLogo.png'
 import {purple} from 'theme'
 
 class Login extends Component {
@@ -43,9 +44,9 @@ class Login extends Component {
             fill={'white'}
           />
 
-          <Header>
-            <b>Bounce</b>Tribe
-          </Header>
+          <Header
+            src={LoginLogo}
+          />
 
           <Lock
             id='lock'
