@@ -32,7 +32,10 @@ import {ProfileProjectItem, Left as ProjectLeft, ProfileArtwork, Info, ProfilePr
 import {url} from 'config'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
-
+import Settings from 'icons/Settings'
+import Dialog from 'material-ui/Dialog'
+import {Button} from 'styled'
+import Checkbox from 'material-ui/Checkbox'
 
 class Profile extends Component {
 
@@ -66,7 +69,8 @@ class Profile extends Component {
       },
     ],
     notification: false,
-    tabs: 'projects'
+    tabs: 'projects',
+    settings: false
 
   }
 
@@ -525,6 +529,47 @@ class Profile extends Component {
 
         />
         <Top>
+            <Settings
+              onClick={()=>{
+                this.setState({settings: true})
+              }}
+              style={{
+                alignSelf: 'flex-end',
+                marginRight: '20px',
+                display: (ownProfile) ? '' : 'none',
+                cursor: 'pointer'
+              }}
+              title="Settings"
+            />
+            <Dialog
+              title={"Settings"}
+              actions={[
+                <Button
+                  label={"Close"}
+                  onClick={()=>{
+                    this.setState({settings: false})
+                  }}
+                />
+              ]}
+              open={this.state.settings}
+              modal={true}
+            >
+              <h3>
+                Email
+              </h3>
+              <Checkbox
+                label={"Disable all emails"}
+                checked={user.doNotEmail}
+                onCheck={(e, isChecked) => {
+                  this.props.relay.commitUpdate(
+                    new UpdateUser({
+                      userId: this.props.viewer.user.id,
+                      doNotEmail: isChecked
+                    })
+                  )
+                }}
+              />
+            </Dialog>
             <Row>
               <SubRow>
                 <Portrait
@@ -851,6 +896,7 @@ export default Relay.createContainer(
                 }
               }
             }
+            doNotEmail
             sentRequests (
               filter: {
                 accepted: false
