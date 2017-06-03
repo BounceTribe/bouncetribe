@@ -163,6 +163,7 @@ class TopNav extends Component {
             />
             <DropdownMenuItem
               text="Help"
+              href={"http://bouncetribe.com/support/"}
             />
             <DropHr/>
             <DropdownMenuItem

@@ -16,6 +16,7 @@ const Col = styled.div`
 const Link = styled.a`
   color: ${grey500};
   margin-right: 5px;
+  text-decoration: none;
 `
 
 const LinkRow = styled.div`
@@ -31,12 +32,25 @@ export default class Footer extends Component {
       <Col>
         <Link>&#xA9; BounceTribe {new Date(Date.now()).toLocaleDateString('en-US', {year: 'numeric'})}</Link>
         <LinkRow>
-          <Link>About | </Link>
-          <Link>Press | </Link>
-          <Link>Blog | </Link>
-          <Link>Support | </Link>
-          <Link>Terms of Use | </Link>
-          <Link>Privacy Policy </Link>
+          <Link
+            href={"http://bouncetribe.com/about/"}
+          >About | </Link>
+          <Link
+            href={"http://bouncetribe.com/support/"}
+
+          >Press | </Link>
+          <Link
+            href={"http://bouncetribe.com/blog/"}
+          >Blog | </Link>
+          <Link
+            href={"http://bouncetribe.com/support/"}
+          >Support | </Link>
+          <Link
+            href={"http://bouncetribe.com/terms-of-service/"}
+          >Terms of Use | </Link>
+          <Link
+            href={"http://bouncetribe.com/privacy-policy/"}
+          >Privacy Policy </Link>
 
 
         </LinkRow>

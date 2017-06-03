@@ -79,6 +79,7 @@ class DropdownMenuItem extends Component {
       >
         <DropLink
           to={this.props.to}
+          href={this.props.href}
         >
         {this.props.text}
       </DropLink>
