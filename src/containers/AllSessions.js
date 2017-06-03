@@ -351,6 +351,7 @@ class AllSessions extends Component {
   }
 
   render() {
+    let currentProject = this.currentProject()
     return (
       <View>
         <Container>
@@ -384,6 +385,7 @@ class AllSessions extends Component {
                     }}
                   />
                 )
+
               })}
             </IconMenu>
 
@@ -409,8 +411,10 @@ class AllSessions extends Component {
                 }}
                 onTouchTap={()=>{
                   let {router} = this.props
-                  router.push(`/${router.params.userHandle}/sessions/${this.currentProject().title}/find`)
+                  router.push(`/${router.params.userHandle}/sessions/${currentProject.title}/find`)
                 }}
+                disabled={(currentProject.privacy !== "PUBLIC")}
+                title={(currentProject.privacy !== "PUBLIC") ? "Change this project's privacy to public to find sessions" : false}
               />
               <Checkbox
                 label={"Search Nearby"}
@@ -504,6 +508,7 @@ export default Relay.createContainer(
                   artwork {
                     url
                   }
+                  privacy
                   genres (
                     first: 999
                   ) {
@@ -533,6 +538,7 @@ export default Relay.createContainer(
                               artwork {
                                 url
                               }
+                              privacy
                               creator {
                                 handle
                                 score
