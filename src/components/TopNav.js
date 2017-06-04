@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Bar, Logo, NavList, NavLink, Portrait, NavText, Notification, NotifyContainer, NotifyMessage} from 'styled/TopNav'
-import {BtFlatButton} from 'styled'
+import {BtFlatButton, Button} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
 import Music from 'icons/Music'
@@ -12,13 +12,18 @@ import auth from 'utils/auth'
 import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
 import UpdateNotification from 'mutations/UpdateNotification'
+import Dialog from 'material-ui/Dialog'
+import Checkbox from 'material-ui/Checkbox'
+
+import UpdateUser from 'mutations/UpdateUser'
 
 class TopNav extends Component {
 
   state = {
     dropdownOpen: false,
     notificationMenu: false,
-    portraitMenu: false
+    portraitMenu: false,
+    settings: false
   }
 
 
@@ -27,6 +32,35 @@ class TopNav extends Component {
     let {handle, portraitUrl, user} = this.props
     return (
       <Bar>
+        <Dialog
+          title={"Settings"}
+          actions={[
+            <Button
+              label={"Close"}
+              onClick={()=>{
+                this.setState({settings: false})
+              }}
+            />
+          ]}
+          open={this.state.settings}
+          modal={true}
+        >
+          <h3>
+            Email Notifications
+          </h3>
+          <Checkbox
+            label={"Disable all"}
+            checked={user.doNotEmail}
+            onCheck={(e, isChecked) => {
+              Relay.Store.commitUpdate(
+                new UpdateUser({
+                  userId: user.id,
+                  doNotEmail: isChecked
+                })
+              )
+            }}
+          />
+        </Dialog>
           <Logo
             to={'/'}
           />
@@ -160,6 +194,9 @@ class TopNav extends Component {
             <DropHr/>
             <DropdownMenuItem
               text="Settings"
+              onClick={()=>{
+                this.setState({settings: true})
+              }}
             />
             <DropdownMenuItem
               text="Help"

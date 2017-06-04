@@ -555,10 +555,10 @@ class Profile extends Component {
               modal={true}
             >
               <h3>
-                Email
+                Email Notifications
               </h3>
               <Checkbox
-                label={"Disable all emails"}
+                label={"Disable all"}
                 checked={user.doNotEmail}
                 onCheck={(e, isChecked) => {
                   this.props.relay.commitUpdate(

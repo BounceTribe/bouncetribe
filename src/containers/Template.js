@@ -65,6 +65,7 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
+            doNotEmail
             notifications (
               first: 5
               orderBy: createdAt_DESC
