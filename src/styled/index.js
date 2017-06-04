@@ -19,6 +19,7 @@ export const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 110vh;
   ${size.m`
     display: block;
     width: 100%;
@@ -36,7 +37,6 @@ export const View = styled.section`
   border-radius: 10px;
   min-height: 80vh;
   margin-bottom: 50px;
-  padding-bottom: 50px;
 `
 export const FeedView = styled(View)`
   width: 65%;
