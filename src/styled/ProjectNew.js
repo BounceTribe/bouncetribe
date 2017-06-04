@@ -12,6 +12,7 @@ export const Row = styled.div`
   justify-content: space-between;
   align-items: stretch;
   width: 100%;
+  padding-bottom: 50px;
 `
 
 export const Left = styled.div`

@@ -44,7 +44,7 @@ export const FeedView = styled(View)`
 
 export const ProjectNewView = styled(View)`
   min-height: 85vh;
-
+  
 `
 
 export const IconTextContainer = styled(BtLink)`
