@@ -20,7 +20,7 @@ export default class UpdateProject extends Mutation {
   getFatQuery () {
     return Relay.QL`
       fragment on UpdateProjectPayload {
-        project
+        viewer
       }
     `
   }
@@ -29,8 +29,8 @@ export default class UpdateProject extends Mutation {
     return [{
       type: 'FIELDS_CHANGE',
       fieldIDs: {
-        project: this.props.project.id,
-      },
+        viewer: 'viewer-fixed'
+      }
     }]
   }
 

@@ -101,6 +101,9 @@ export default Relay.createContainer(
             projects (
               first: 1
               orderBy: createdAt_DESC
+              filter: {
+                privacy: PUBLIC
+              }
             ) {
               edges {
                 node {

@@ -413,8 +413,7 @@ class AllSessions extends Component {
                   let {router} = this.props
                   router.push(`/${router.params.userHandle}/sessions/${currentProject.title}/find`)
                 }}
-                disabled={(currentProject.privacy !== "PUBLIC")}
-                title={(currentProject.privacy !== "PUBLIC") ? "Change this project's privacy to public to find sessions" : false}
+
               />
               <Checkbox
                 label={"Search Nearby"}
@@ -463,7 +462,9 @@ class AllSessions extends Component {
                 }}
                 backgroundColor={purple}
                 to={`/${this.props.viewer.user.handle}/projects/new`}
-                icon={<Upload/>}
+                icon={<Upload
+                  fill={white}
+                />}
                 style={{borderRadius: '8px'}}
               />
 
@@ -496,6 +497,9 @@ export default Relay.createContainer(
             projects (
               first: 999
               orderBy: title_ASC
+              filter: {
+                privacy: PUBLIC
+              }
             ) {
               edges {
                 node {
