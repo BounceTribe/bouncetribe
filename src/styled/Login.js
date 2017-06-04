@@ -44,3 +44,9 @@ export const Legal = styled.span`
 export const LegalLink = styled.a`
   color: ${grey600};
 `
+
+export const LogoImg = styled.img`
+  height: 70px;
+  width: 70px;
+  object-fit: cover;
+`
