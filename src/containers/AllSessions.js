@@ -226,8 +226,17 @@ class AllSessions extends Component {
         let friendsIds = self.friends.edges.map( (node) => {
           return node.id
         })
+        let sessionUsers = []
+        currentProject.sessions.edges.forEach(edge => {
+          edge.node.projects.edges.forEach(project => {
+            if (project.node.creator.id !== self.id) {
+              sessionUsers.push(`"${project.node.creator.id}"`)
+            }
+          })
+        })
+        let excludeUserIds = [...sessionUsers, ...friendsIds]
 
-        let matches = await findMatches(currentProject, currentSessions, friendsIds)
+        let matches = await findMatches(currentProject, currentSessions, excludeUserIds)
         if (matches.length === 0 ) {
           matches = (
             <NoProjectsCol>
@@ -547,6 +556,7 @@ export default Relay.createContainer(
                               }
                               privacy
                               creator {
+                                id
                                 handle
                                 score
                                 portrait {
