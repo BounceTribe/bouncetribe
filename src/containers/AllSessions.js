@@ -451,7 +451,7 @@ class AllSessions extends Component {
                 Ready to exchange some feedback?
               </NoProjectMsg>
               <NoProjectQuote>
-                Upload a new project first!
+                Upload a public project!
               </NoProjectQuote>
               <BtFlatButton
                 label={'New Project'}
@@ -465,7 +465,10 @@ class AllSessions extends Component {
                 icon={<Upload
                   fill={white}
                 />}
-                style={{borderRadius: '8px'}}
+                style={{
+                  borderRadius: '8px',
+                  marginTop: '20px'
+                }}
               />
 
             </NoProjectsCol>
