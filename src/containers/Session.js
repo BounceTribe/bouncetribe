@@ -209,6 +209,16 @@ class Session extends Component {
       }
 
     })
+    comments = comments.filter((edge) => {
+      if (!edge.node.session) {
+        return false
+      } else if (edge.node.session.id !== this.props.viewer.Session.id) {
+        return false
+      } else {
+        return true
+      }
+    })
+
     return comments
   }
 
@@ -339,9 +349,7 @@ class Session extends Component {
     //   return edge.node.id === this.props.viewer.user.id
     // })
     let givenFeedback = this.props.viewer.Session.feedback[self.id]
-    let commentsReceived = ownProject.comments.edges.find((edge) =>{
-      return edge.node.author.id === otherUser.id
-    })
+    let commentsReceived = (this.comments.length > 0)
 
     return (
       <View>
@@ -783,6 +791,9 @@ export default Relay.createContainer(
                           }
                         }
                         project {
+                          id
+                        }
+                        session {
                           id
                         }
                         timestamp
