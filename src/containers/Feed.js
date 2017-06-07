@@ -173,6 +173,7 @@ class Feed extends Component {
   render () {
     return (
       <Container>
+        <h2>THIS IS RYAN'S VERSION</h2>
         {this.feed()}
       </Container>
     )
