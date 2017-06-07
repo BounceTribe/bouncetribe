@@ -8,6 +8,7 @@ export const ProjectItem = styled(Item)`
   height: 200px;
   align-items: center;
   padding: 20px 40px;
+  border-top: none;
   border-right: none;
   border-left: none;
   border-radius: 0;

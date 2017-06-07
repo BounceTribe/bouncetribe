@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Background, Container, Lock, Header} from 'styled/Login'
-import Logo from 'icons/Logo'
-import {purple} from 'theme'
+import {Background, Container, Lock, Header, Legal, LegalLink, LogoImg} from 'styled/Login'
+// import Logo from 'icons/Logo'
+import LoginLogo from 'icons/LoginLogo.png'
+// import {purple} from 'theme'
+import {url} from 'config'
 
 class Login extends Component {
 
@@ -30,7 +32,11 @@ class Login extends Component {
 
         <Container>
 
-          <Logo
+          <LogoImg
+            src={`${url}/logo.png`}
+          />
+
+          {/* <Logo
             style={{
               display: 'flex',
               backgroundColor: purple,
@@ -41,15 +47,28 @@ class Login extends Component {
 
             }}
             fill={'white'}
-          />
+          /> */}
 
-          <Header>
-            <b>Bounce</b>Tribe
-          </Header>
+          <Header
+            src={LoginLogo}
+          />
 
           <Lock
             id='lock'
           />
+          <Legal>
+            <LegalLink
+              href={"http://bouncetribe.com/terms-of-service/"}
+            >
+              Our Terms
+            </LegalLink>
+              &nbsp;&&nbsp;
+            <LegalLink
+              href={"http://bouncetribe.com/privacy-policy/"}
+            >
+               Privacy Policy
+            </LegalLink>
+          </Legal>
 
         </Container>
       </Background>

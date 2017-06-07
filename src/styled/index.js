@@ -19,6 +19,11 @@ export const Main = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 110vh;
+  ${size.m`
+    display: block;
+    width: 100%;
+  `}
 `
 
 export const View = styled.section`
@@ -32,7 +37,6 @@ export const View = styled.section`
   border-radius: 10px;
   min-height: 80vh;
   margin-bottom: 50px;
-  padding-bottom: 50px;
 `
 export const FeedView = styled(View)`
   width: 65%;
@@ -40,7 +44,7 @@ export const FeedView = styled(View)`
 
 export const ProjectNewView = styled(View)`
   min-height: 85vh;
-
+  
 `
 
 export const IconTextContainer = styled(BtLink)`
@@ -173,4 +177,11 @@ export const Bubble = styled.div`
   height: 30px;
   width: 30px;
   border-radius: 30px;
+`
+
+export const MobileOnly = styled.div`
+  display: none;
+  ${size.m`
+    display: block;
+  `}
 `

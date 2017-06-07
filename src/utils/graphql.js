@@ -1,6 +1,58 @@
 import { graphCool } from 'config'
 import auth from 'utils/auth'
 
+
+
+export const findMatches = (project, currentSessions, excludeUserIds) => {
+  return fetch(graphCool.simple, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: `{
+          allProjects (
+            first: 6
+            filter: {
+              privacy: PUBLIC
+              genres_some: {
+                id: "${project.genres.edges[0].node.id}"
+              }
+              creator: {
+                id_not: "${project.creator.id}"
+                id_not_in: [${excludeUserIds.toString()}]
+              }
+              sessions_every: {
+                id_not_in: [${currentSessions.toString()}]
+              }
+            }
+          ) {
+            id
+            title
+            createdAt
+            creator {
+              id
+              handle
+              portrait {
+                url
+              }
+              placename
+            }
+            artwork {
+              url
+            }
+          }
+        }`
+      }),
+    }).then(result=>result.json()).then(json => {
+
+      console.log("json.data.allProjects", json.data.allProjects )
+      return json.data.allProjects
+    })
+}
+
+
+
 export const findUserIds = (ids) => {
   return fetch(graphCool.simple, {
       method: 'POST',

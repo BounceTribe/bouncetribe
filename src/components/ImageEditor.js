@@ -12,8 +12,9 @@ export default class ImageEditor extends Component {
         onRequestClose={this.props.onRequestClose}
         contentStyle={{
           height: '800px',
-          width: '800px'
+          width: '800px',
         }}
+        autoScrollBodyContent
       >
         <ImageUploader
           self={this.props.user}

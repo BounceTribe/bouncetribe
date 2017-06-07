@@ -8,7 +8,7 @@ import formatTime from 'utils/formatTime'
 import TextField from 'material-ui/TextField'
 import UpdateComment from 'mutations/UpdateComment'
 import Relay from 'react-relay'
-import {white, grey700} from 'theme'
+import {white, grey700, purple, blue} from 'theme'
 import CreateComment from 'mutations/CreateComment'
 import DeleteComment from 'mutations/DeleteComment'
 import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
@@ -35,7 +35,8 @@ class SingleComment extends Component {
             projectId: this.props.comment.project.id,
             type: this.props.comment.type,
             timestamp: this.props.comment.timestamp,
-            text: this.state.text
+            text: this.state.text,
+            sessionId: this.props.sessionId
           })
         )
         this.props.commentCreated()
@@ -69,6 +70,9 @@ class SingleComment extends Component {
           inputStyle={{
             color: grey700,
             fontSize: '16px'
+          }}
+          underlineFocusStyle={{
+            borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple
           }}
         />
       )
@@ -155,7 +159,7 @@ class SingleComment extends Component {
             </BotLink>
             <UpVote
               secondary={(type==='COMMENT')}
-              hideLink={(this.props.tabs === 'listen')}
+              hideLink={(this.props.tabs === 'listen' || this.props.session)}
               onClick={()=>{
                 Relay.Store.commitUpdate(
                   new AddToCommentUpvotes({

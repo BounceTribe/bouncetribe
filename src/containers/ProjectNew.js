@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {ProjectNewView, Button, RoundButton, IconText, IconTextContainer} from 'styled'
-import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop, TrackContainer} from 'styled/ProjectNew'
+import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop, TrackContainer, Container} from 'styled/ProjectNew'
 import {Header} from 'styled/list'
 import AudioUploader from 'components/AudioUploader'
 import SelectField from 'material-ui/SelectField'
@@ -217,6 +217,9 @@ class ProjectNew extends Component {
 
             />
             <Button
+              style={{
+                marginTop: '20px'
+              }}
               primary={true}
               disabled={(!titleUnique || !title || !tracksIds || !genres)}
               label={'Create Project'}
@@ -320,17 +323,32 @@ class ProjectNew extends Component {
             </IconTextContainer>
         </Header>
 
-        {this.uploader}
+        {
+          (this.props.viewer.user.projects.edges.length < 9) ?
+          (
+            <Container>
 
-        <LinearProgress
-          mode={'determinate'}
-          value={progress}
-          style={{
-            display: (!audioProgress || audioProgress === 'COMPLETE') ? 'none' : ''
-          }}
-        />
+              {this.uploader}
 
-        {this.form}
+              <LinearProgress
+                mode={'determinate'}
+                value={progress}
+                style={{
+                  display: (!audioProgress || audioProgress === 'COMPLETE') ? 'none' : ''
+                }}
+              />
+
+              {this.form}
+
+            </Container>
+          ) : (
+            <h4>
+              Sorry, you've reached your 10 project limit.
+            </h4>
+          )
+        }
+
+
 
       </ProjectNewView>
     )
@@ -348,6 +366,15 @@ export default Relay.createContainer(
             handle
             score
             ${AudioUploader.getFragment('self')}
+            projects (
+              first: 999
+            ) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
           }
         }
       `,

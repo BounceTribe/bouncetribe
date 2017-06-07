@@ -8,6 +8,7 @@ import TopNav from 'components/TopNav'
 import MobileNav from 'components/MobileNav'
 import {btTheme} from 'theme'
 import {url} from 'config'
+import Footer from 'components/Footer'
 
 injectTapEventPlugin()
 
@@ -21,7 +22,22 @@ class Template extends Component {
       return (
         <TopNav
           handle={user.handle}
+          user={user}
           portraitUrl={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
+        />
+      )
+    }
+  }
+
+  get mobileUserOnly () {
+    let {
+      user
+    } = this.props.viewer
+    if (user) {
+      return (
+        <MobileNav
+          user={user}
+
         />
       )
     }
@@ -33,9 +49,10 @@ class Template extends Component {
         muiTheme={btTheme}
       >
         <Main>
-          <MobileNav/>
           {this.userOnly}
+          {this.mobileUserOnly}
           {this.props.children}
+          <Footer/>
         </Main>
       </MuiThemeProvider>
     )
@@ -48,10 +65,52 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
+            doNotEmail
+            notifications (
+              first: 5
+              orderBy: createdAt_DESC
+            ) {
+              edges {
+                node {
+                  id
+                  type
+                  checked
+                  triggeredBy {
+                    id
+                    handle
+                  }
+                  notificationFor {
+                    id
+                    handle
+                  }
+                  createdAt
+                  project {
+                    id
+                    title
+                  }
+                  session {
+                    id
+                  }
+                }
+              }
+            }
             id
             handle
             portrait {
               url
+            }
+            projects (
+              first: 1
+              orderBy: createdAt_DESC
+              filter: {
+                privacy: PUBLIC
+              }
+            ) {
+              edges {
+                node {
+                  title
+                }
+              }
             }
           }
         }

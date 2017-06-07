@@ -28,7 +28,9 @@ import MenuItem from 'material-ui/MenuItem'
 import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
+import DeleteProject from 'mutations/DeleteProject'
 import ImageEditor from 'components/ImageEditor'
+import FlatButton from 'material-ui/FlatButton'
 
 class Project extends Component {
 
@@ -38,7 +40,9 @@ class Project extends Component {
     markers: [],
     active: [],
     edit: false,
-    artworkEditorOpen: false
+    artworkEditorOpen: false,
+    selection: false,
+    delete: false
   }
 
   static childContextTypes = {
@@ -147,7 +151,6 @@ class Project extends Component {
   }
 
   activate = (index) => {
-    console.log("activate", index )
     this.setState( (prevState) => {
       let {active} = prevState
       active.push(index)
@@ -168,8 +171,12 @@ class Project extends Component {
   }
 
   get comments () {
-    return this.props.viewer.allProjects.edges[0].node.comments.edges.map((edge, index)=>{
+
+    return this.filteredComments().map((edge, index)=>{
       let {node: comment} = edge
+      if (comment.id === 'new') {
+        return null
+      }
       return (
         <SingleComment
           index={index + 1}
@@ -202,6 +209,9 @@ class Project extends Component {
     },1000)
   }
 
+  handleSelection = (selection) => {
+    this.setState({selection})
+  }
 
   artworkSuccess = (file) => {
     this.setState({artworkEditorOpen: false})
@@ -232,6 +242,19 @@ class Project extends Component {
         return comment.node.author.id === this.props.viewer.user.id
       })
     }
+
+    if (this.state.selection) {
+      comments = comments.filter( (comment) => {
+        return comment.node.author.handle === this.state.selection
+      })
+    }
+
+    if (this.props.viewer.user.id !== this.props.viewer.allProjects.edges[0].node.creator.id) {
+      comments = comments.filter( (comment) => {
+        return !comment.node.session
+      })
+    }
+
 
     return comments
   }
@@ -364,27 +387,81 @@ class Project extends Component {
           </Info>
 
           <Dialog
+            modal={false}
+            open={this.state.delete}
+            onRequestClose={()=>{
+              this.setState({delete: false})
+            }}
+            actions={[
+              <FlatButton
+                label={"Cancel"}
+                onClick={()=>{
+                  this.setState({delete: false})
+                }}
+              />,
+              <FlatButton
+                label={"Delete"}
+                labelStyle={{
+                  color: '#DF5151'
+                }}
+                onClick={
+                  ()=>{
+                    this.props.relay.commitUpdate(
+                      new DeleteProject({
+                        id: this.props.viewer.allProjects.edges[0].node.id,
+                      }),{
+                        onSuccess: ()=>{
+                          this.props.router.push(`/${this.props.viewer.user.handle}/projects`)
+                        }
+                      }
+                    )
+
+                  }
+                }
+              />
+            ]}
+          >
+            Are you sure you want to permanently delete this project?
+          </Dialog>
+
+
+          <Dialog
             open={this.state.edit}
             onRequestClose={()=>{this.setState({edit:false})}}
             title={'Edit Project'}
-            actions={<BtFlatButton
+            actionsContainerStyle={{
+              display: 'flex',
+              justifyContent: 'space-between'
+            }}
+            actions={[
+              <FlatButton
+                label={"Delete Project"}
+                labelStyle={{
+                  color: '#DF5151'
+                }}
+                onClick={()=>{
+                  this.setState({edit: false, delete: true})
+                }}
+              />,
+              <BtFlatButton
               label={'Save'}
-              onClick={()=>{
-                let project = {
-                  id: this.props.viewer.allProjects.edges[0].node.id,
-                  privacy: this.state.privacy,
-                  title: this.state.title,
-                  description: this.state.description,
-                }
-                this.props.relay.commitUpdate(
-                  new UpdateProject({
-                    project,
-                    genresIds: this.state.genre
-                  })
-                )
-                this.setState({edit: false})
-              }}
-            />}
+                onClick={()=>{
+                  let project = {
+                    id: this.props.viewer.allProjects.edges[0].node.id,
+                    privacy: this.state.privacy,
+                    title: this.state.title,
+                    description: this.state.description,
+                  }
+                  this.props.relay.commitUpdate(
+                    new UpdateProject({
+                      project,
+                      genresIds: this.state.genre
+                    })
+                  )
+                  this.setState({edit: false})
+                }}
+              />
+            ]}
           >
             <TextField
               floatingLabelText={'Title'}
@@ -515,10 +592,13 @@ class Project extends Component {
             hide={( (this.state.tabs === 'listen') && (!ownProject) )}
           >
             <ProjectTribeList
+              self={this.props.viewer.user}
               project={project}
               tribe={this.props.viewer.User.friends.edges}
               recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
               router={this.props.router}
+              handleSelection={this.handleSelection}
+              selection={this.state.selection}
             />
           </LeftList>
           <CommentContainer>
@@ -661,6 +741,7 @@ export default Relay.createContainer(
                 privacy
                 creator {
                   handle
+                  id
                 }
                 genres (
                   first: 3
@@ -692,6 +773,9 @@ export default Relay.createContainer(
                 ) {
                   edges {
                     node {
+                      session {
+                        id
+                      }
                       text
                       type
                       id
