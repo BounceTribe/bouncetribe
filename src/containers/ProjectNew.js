@@ -58,7 +58,13 @@ class ProjectNew extends Component {
         user,
       }), {
         onSuccess: success => {
-          this.props.router.push(`/${user.handle}/${project.title}`)
+
+          if (project.privacy === 'PUBLIC') {
+            this.props.router.push(`/${user.handle}/sessions/${project.title}/find`)
+          } else  {
+            this.props.router.push(`/${user.handle}/${project.title}`)
+          }
+
         }
       }
     )
