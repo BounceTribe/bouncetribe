@@ -97,6 +97,14 @@ class Project extends Component {
     }
   }
 
+  componentDidMount(){
+    let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
+    let projectOwnerId = this.props.viewer.User.id
+    if (!friendIds.includes(projectOwnerId)) {
+      this.setState({disableComments: true})
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     // let focus
     // let oldComments = this.props.viewer.allProjects.edges[0].node.comments.edges.map(edge=>edge.node.id)
@@ -622,7 +630,7 @@ class Project extends Component {
               duration={this.state.duration}
             />
             <ButtonRow
-              hide={(ownProject || this.state.tabs === 'view')}
+              hide={(ownProject || this.state.tabs === 'view' || this.state.disableComments)}
             >
               <ButtonColumn>
                 <RoundButton
