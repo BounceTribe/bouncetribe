@@ -40,7 +40,7 @@ class AllSessions extends Component {
           if (project.id !== currentProject.id) {
             sessions.push(
               <TableRow
-                key={project.id}
+                key={sessionId}
               >
                 <TableRowColumn
                   style={{width: '50px'}}
