@@ -130,6 +130,13 @@ export const BtFlatButton = (props) => {
 }
 
 export const RoundButton = (props) => {
+
+  let tooltipLength = 0
+  if (props.tooltip) {
+    tooltipLength = props.tooltip.length
+  }
+
+
   return (
     <ButtonLink
       to={props.to}
@@ -146,8 +153,8 @@ export const RoundButton = (props) => {
           marginTop: "18px",
           left: "0",
           right: "0",
-          fontSize: (props.tooltip.length > 10) ? "9px" : "10px",
-          paddingLeft: (props.tooltip.length > 10) ? "2px" : "8px",
+          fontSize: (tooltipLength > 10) ? "9px" : "10px",
+          paddingLeft: (tooltipLength > 10) ? "2px" : "8px",
 
         }}
       >
