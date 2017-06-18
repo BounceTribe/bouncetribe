@@ -218,25 +218,10 @@ class AllSessions extends Component {
   matchCards = async (currentProject) => {
     try {
       if (!this.state.matches) {
-        let currentSessions = []
-        currentProject.sessions.edges.forEach((edge) => {
-          currentSessions.push(`"${edge.node.id}"`)
-        })
-        let self = this.props.viewer.user
-        let friendsIds = self.friends.edges.map( (node) => {
-          return node.id
-        })
-        let sessionUsers = []
-        currentProject.sessions.edges.forEach(edge => {
-          edge.node.projects.edges.forEach(project => {
-            if (project.node.creator.id !== self.id) {
-              sessionUsers.push(`"${project.node.creator.id}"`)
-            }
-          })
-        })
-        let excludeUserIds = [...sessionUsers, ...friendsIds]
 
-        let matches = await findMatches(currentProject, currentSessions, excludeUserIds)
+        let self = this.props.viewer.user
+
+        let matches = await findMatches({user: self, project: currentProject})
         if (matches.length === 0 ) {
           matches = (
             <NoProjectsCol>
