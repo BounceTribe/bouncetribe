@@ -131,6 +131,7 @@ export const DuoItem = styled(TrioItem)`
 export const ButtonRow = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  min-width: 220px;
 `

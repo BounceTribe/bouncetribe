@@ -106,9 +106,10 @@ class ProjectList extends Component {
 
             </Left>
             <ButtonRow>
+
               <RoundButton
+                tooltip="Private"
                 backgroundColor={(project.privacy === 'PRIVATE') ? purple : grey300}
-                title={'Set project privacy.'}
                 icon={
                   <Lock
                     fill={white}
@@ -124,8 +125,8 @@ class ProjectList extends Component {
                 onClick={()=>this.setPrivacy(project,'PRIVATE')}
               />
               <RoundButton
+                tooltip="Tribe Only"
                 backgroundColor={(project.privacy === 'TRIBE') ? purple : grey300}
-                title={'Set project privacy.'}
                 icon={
                   <Tribe
                     fill={white}
@@ -138,14 +139,12 @@ class ProjectList extends Component {
                     width={50}
                   />
                 }
-                style={{
-                  marginLeft: '20px',
-                }}
+
                 onClick={()=>this.setPrivacy(project, 'TRIBE')}
               />
               <RoundButton
+                tooltip="Find Sessions"
                 backgroundColor={(project.privacy === 'PUBLIC') ? purple : grey300}
-                title={'Set project privacy.'}
                 icon={
                   <Logo
                     fill={white}
@@ -158,9 +157,6 @@ class ProjectList extends Component {
                   />
                 }
                 onClick={()=>this.setPrivacy(project, 'PUBLIC')}
-                style={{
-                  marginLeft: '20px',
-                }}
               />
             </ButtonRow>
 
