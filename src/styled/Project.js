@@ -108,6 +108,7 @@ export const CommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
   width: 100%;
+  padding-bottom: 60px;
 `
 
 export const ProfContainer = styled.div`

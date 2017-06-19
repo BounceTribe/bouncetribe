@@ -67,7 +67,8 @@ class Project extends Component {
   }
 
   componentWillMount () {
-    if (this.props.viewer.user.id === this.props.viewer.User.id) {
+    let {id: ownId} = this.props.viewer.user
+    if (ownId === this.props.viewer.User.id) {
       this.setState({
         ownProject:true,
         title: this.props.viewer.allProjects.edges[0].node.title,
@@ -79,7 +80,30 @@ class Project extends Component {
     } else {
       this.setState({ownProject:false})
     }
-    // this.setState({markers: this.props.viewer.allProjects.edges[0].node.comments.edges})
+    let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
+    let project = this.props.viewer.allProjects.edges[0].node
+    let projectOwnerId = this.props.viewer.User.id
+
+    if (
+      // (
+      //   // !friendIds.includes(projectOwnerId)
+      //   // project.privacy !== "PUBLIC"
+      // ) ||
+      (
+        ownId !== projectOwnerId &&
+        project.privacy === "PRIVATE"
+      )
+    ) {
+      this.props.router.push(`/`)
+    }
+  }
+
+  componentDidMount(){
+    let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
+    let projectOwnerId = this.props.viewer.User.id
+    if (!friendIds.includes(projectOwnerId)) {
+      this.setState({disableComments: true})
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -382,6 +406,7 @@ class Project extends Component {
             <Summary
 
             >
+
               {project.description}
             </Summary>
           </Info>
@@ -607,7 +632,7 @@ class Project extends Component {
               duration={this.state.duration}
             />
             <ButtonRow
-              hide={(ownProject || this.state.tabs === 'view')}
+              hide={(ownProject || this.state.tabs === 'view' || this.state.disableComments)}
             >
               <ButtonColumn>
                 <RoundButton
@@ -693,6 +718,15 @@ export default Relay.createContainer(
           user {
             id
             handle
+            friends (
+              first: 999
+            ) {
+              edges {
+                node {
+                  id
+                }
+              }
+            }
           }
           User (handle: $userHandle) {
             id

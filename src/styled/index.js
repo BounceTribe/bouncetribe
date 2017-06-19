@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import IconButton from 'material-ui/IconButton'
 
 
 export const BtLink = styled(Link)`
@@ -44,7 +45,7 @@ export const FeedView = styled(View)`
 
 export const ProjectNewView = styled(View)`
   min-height: 85vh;
-  
+
 `
 
 export const IconTextContainer = styled(BtLink)`
@@ -129,10 +130,34 @@ export const BtFlatButton = (props) => {
 }
 
 export const RoundButton = (props) => {
+
+  let tooltipLength = 0
+  if (props.tooltip) {
+    tooltipLength = props.tooltip.length
+  }
+
+
   return (
     <ButtonLink
       to={props.to}
+      title={props.title}
     >
+      <IconButton
+        tooltip={props.tooltip}
+        style={{
+          height: '60px',
+          width: '60px',
+          padding: '0px'
+        }}
+        tooltipStyles={{
+          marginTop: "18px",
+          left: "0",
+          right: "0",
+          fontSize: (tooltipLength > 10) ? "9px" : "10px",
+          paddingLeft: (tooltipLength > 10) ? "2px" : "8px",
+
+        }}
+      >
       <MuiThemeProvider
         muiTheme={
           (props.big) ? bigTheme : btTheme
@@ -151,6 +176,7 @@ export const RoundButton = (props) => {
           {props.icon}
         </FloatingActionButton>
       </MuiThemeProvider>
+    </IconButton>
 
     </ButtonLink>
   )

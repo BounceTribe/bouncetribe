@@ -9,6 +9,8 @@ export const CommentContainer = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   width: 100%;
+  margin-bottom: 60px;
+
 `
 export const ButtonRow = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
