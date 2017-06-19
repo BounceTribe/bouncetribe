@@ -34,7 +34,7 @@ class AudioPlayer extends Component {
     audio.addEventListener('timeupdate', (e) => {
       this.setState( (prevState,props) => {
         if (this.props.currentTime) {
-          this.props.currentTime(audio.currentTime)          
+          this.props.currentTime(audio.currentTime)
         }
         return {
           time: audio.currentTime
@@ -62,6 +62,13 @@ class AudioPlayer extends Component {
       this.pause()
     } else {
       this.play()
+    }
+  }
+
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.track.url !== this.props.track.url) {
+      console.log("this.audio", this.audio )
     }
   }
 

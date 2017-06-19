@@ -12,6 +12,7 @@ export const Row = styled.div`
   justify-content: space-between;
   align-items: stretch;
   width: 100%;
+  padding-bottom: 60px;
 `
 
 export const Left = styled.div`
@@ -63,4 +64,11 @@ export const ArtworkDrop = styled.img`
   height: 350px;
   width: 350px;
   cursor: pointer;
+`
+
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 `

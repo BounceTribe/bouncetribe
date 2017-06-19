@@ -247,6 +247,32 @@ const createRoutes = () => {
           onEnter={userOnly}
           render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />}
         />
+
+        <Route
+          path={'/:userHandle/sessions'}
+        >
+          <IndexRoute
+            onEnter={userOnly}
+            component={AllSessions}
+            queries={ViewerQuery}
+            render={({ props }) => props ? <AllSessions {...props} /> : <Loading />}
+          />
+          <Route
+            path={'/:userHandle/sessions/:project'}
+            onEnter={userOnly}
+            component={AllSessions}
+            queries={ViewerQuery}
+            render={({ props }) => props ? <AllSessions {...props} /> : <Loading />}
+          />
+          <Route
+            path={'/:userHandle/sessions/:project/find'}
+            onEnter={userOnly}
+            component={AllSessions}
+            queries={ViewerQuery}
+            render={({ props }) => props ? <AllSessions {...props} /> : <Loading />}
+          />
+        </Route>
+
         <Route
           path={'/:userHandle/:projectTitle'}
           onEnter={userOnly}
@@ -270,26 +296,14 @@ const createRoutes = () => {
 
         </Route>
         <Route
-          path={'/:ownHandle/:ownProject/:otherHandle/:otherProject'}
+          path={'/:userHandle/session/:sessionId/:tab'}
           onEnter={userOnly}
           component={Session}
           queries={ViewerQuery}
           render={({ props }) => props ? <Session {...props} /> : <Loading />}
         />
 
-        <Route
-          path={'/:userHandle/sessions'}
-        >
-          <IndexRoute
-            onEnter={userOnly}
-            component={AllSessions}
-            queries={ViewerQuery}
-            render={({ props }) => props ? <AllSessions {...props} /> : <Loading />}
-          />
-          <Route
-            path={'/:userHandle/sessions/find'}
-          />
-        </Route>
+
       </Route>
 
 

@@ -45,10 +45,11 @@ export const Genre = styled.span`
   line-height: 12px;
   color: ${white};
   background-color: ${purple};
-  padding: 5px 10px;
-  border-radius: 3px;
+  padding: 4px 10px;
+  border-radius: 4px;
   vertical-align: middle;
   margin-left: 15px;
+  flex-wrap: nowrap;
 `
 
 export const Summary = styled.p`
@@ -107,6 +108,7 @@ export const CommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
   width: 100%;
+  padding-bottom: 60px;
 `
 
 export const ProfContainer = styled.div`

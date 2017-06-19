@@ -8,6 +8,7 @@ export const ProjectItem = styled(Item)`
   height: 200px;
   align-items: center;
   padding: 20px 40px;
+  border-top: none;
   border-right: none;
   border-left: none;
   border-radius: 0;
@@ -130,6 +131,7 @@ export const DuoItem = styled(TrioItem)`
 export const ButtonRow = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  min-width: 220px;
 `

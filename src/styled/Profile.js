@@ -101,7 +101,7 @@ export const Input = styled.input`
 
 export const Handle = styled(Input)`
   font-size: 30px;
-  width: ${(props)=>inputWidth(props,15)}px;
+  width: ${(props)=>inputWidth(props,17)}px;
   margin-left: 0;
 `
 

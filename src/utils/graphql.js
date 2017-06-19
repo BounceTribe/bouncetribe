@@ -1,6 +1,108 @@
 import { graphCool } from 'config'
 import auth from 'utils/auth'
 
+
+
+export const findMatches = async ({user, project}) => {
+  try {
+
+    let genre = project.genres.edges[0].node.id
+
+    let projectsToExclude = []
+    let usersToExclude = []
+
+    user.projects.edges.forEach((projectEdge) => {
+      projectEdge.node.sessions.edges.forEach((sessionEdge) => {
+        sessionEdge.node.projects.edges.forEach((edge) => {
+          let {
+            id: projectId,
+            creator: {
+              handle: creatorHandle
+            }
+          } = edge.node
+          if (projectId !== project.id) {
+            projectsToExclude.push(`"${projectId}"`)
+            usersToExclude.push(`"${creatorHandle}"`)
+          }
+        })
+      })
+    })
+
+
+    usersToExclude.push(`"${user.id}"`)
+
+    user.friends.edges.forEach((friendEdge) => {
+      usersToExclude.push(`"${friendEdge.node.id}"`)
+    })
+
+
+    let response = await fetch(graphCool.simple, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          query: `{
+            allProjects (
+              first: 20
+              filter: {
+                privacy: PUBLIC
+                genres_some: {
+                  id: "${genre}"
+                }
+                creator: {
+                  handle_not_in: [${usersToExclude.toString()}]
+                }
+                id_not_in: [${projectsToExclude.toString()}]
+              }
+            ) {
+              id
+              title
+              createdAt
+              creator {
+                id
+                handle
+                score
+                portrait {
+                  url
+                }
+                placename
+              }
+              artwork {
+                url
+              }
+            }
+          }`
+        }),
+      })
+      let json = await response.json()
+
+      let {allProjects} = json.data
+
+      let uniqueCreatorIds = []
+      let uniqueProjects = []
+
+      allProjects.forEach( project => {
+        if (!uniqueCreatorIds.includes(project.creator.id)) {
+          uniqueCreatorIds.push(project.creator.id)
+          uniqueProjects.push(project)
+        }
+      })
+
+      uniqueProjects.sort((a, b) => {
+        return b.creator.score - a.creator.score
+      })
+
+
+
+      return uniqueProjects.slice(0,6)
+  } catch (e) {
+    console.log("findMatches error", e)
+  }
+}
+
+
+
 export const findUserIds = (ids) => {
   return fetch(graphCool.simple, {
       method: 'POST',

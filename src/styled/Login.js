@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import {grey500, grey600} from 'theme'
 
 export const Background = styled.div`
   width: 100%;
@@ -23,17 +24,29 @@ export const Container = styled.div`
   padding: 35px 75px;
 `
 
-export const Header = styled.div`
+export const Header = styled.img`
   display: flex;
-  font-family: 'Montserrat-Bold', 'Helvetica Neue', sans-serif;
-  font-size: 48px;
-  color: #333333;
-  letter-spacing: -1.61px;
-  text-transform: uppercase;
+  margin: 20px;
 `
 
 export const Lock = styled.div`
   display: flex;
   min-height: 380px;
   min-width: 200px;
+`
+
+export const Legal = styled.span`
+  margin-top: 10px;
+  font-size: 12px;
+  color: ${grey500};
+`
+
+export const LegalLink = styled.a`
+  color: ${grey600};
+`
+
+export const LogoImg = styled.img`
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
 `

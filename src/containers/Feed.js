@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Bubble} from 'styled'
-import {Container, Paper, Profile, Left, Col, Portrait, Artwork, Title, Handle, Genre, Row, Value} from 'styled/Feed'
+import {Bubble, Button} from 'styled'
+import {Container, Paper, Profile, Left, Col, Portrait, Artwork, Title, Handle, Genre, Row, Value, EmptyContainer, Welcome, StartBy} from 'styled/Feed'
 // import {fetchFeed} from 'utils/graphql'
 import Music from 'icons/Music'
 import Comment from 'icons/Comment'
 import Heart from 'icons/Heart'
+import Upload from 'icons/Upload'
 
 import {white} from 'theme'
 import {Loading} from 'styled/Spinner'
@@ -72,11 +73,12 @@ class Feed extends Component {
         feed.push(projectEdge.node)
       })
     })
-    let {handle} = this.props.viewer.user
+    //let {handle} = this.props.viewer.user
     feed.sort( (a, b) => {
       return  Date.parse(b.createdAt) - Date.parse(a.createdAt)
     })
-    if (feed) {
+    console.log(feed)
+    if (feed.length > 0) {
       return feed.map(project=>{
         return (
           <Paper
@@ -86,7 +88,7 @@ class Feed extends Component {
               <Left>
                 <Portrait
                   src={project.creator.portrait.url}
-                  to={`/${project.creator.handle}/${handle}`}
+                  to={`/${project.creator.handle}`}
                 />
                 <Col>
                   <Title
@@ -112,7 +114,7 @@ class Feed extends Component {
             </Profile>
             <Artwork
               src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
-              to={`/${project.creator.handle}/'${project.title}'`}
+              to={`/${project.creator.handle}/${project.title}`}
 
             />
             <Row>
@@ -142,6 +144,27 @@ class Feed extends Component {
           </Paper>
         )
       })
+    } else if (feed.length < 1){
+      return (
+        <EmptyContainer>
+          <Welcome>
+            Welcome to BounceTribe
+          </Welcome>
+          <StartBy>
+            Start by uploading your music!
+          </StartBy>
+          <Button
+            to={`/${this.props.viewer.user.handle}/projects/new`}
+            icon={
+              <Upload
+                fill={white}
+              />
+            }
+            label={'New Project'}
+            primary
+          />
+        </EmptyContainer>
+      )
     } else {
       return (<Loading/>)
     }
