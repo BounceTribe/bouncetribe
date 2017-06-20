@@ -83,6 +83,7 @@ class Project extends Component {
     let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
     let project = this.props.viewer.allProjects.edges[0].node
     let projectOwnerId = this.props.viewer.User.id
+
     console.log("friendIds",friendIds)
     if (
       (
@@ -407,6 +408,7 @@ class Project extends Component {
             <Summary
 
             >
+
               {project.description}
             </Summary>
           </Info>
