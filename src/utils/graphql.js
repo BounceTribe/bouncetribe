@@ -11,6 +11,12 @@ export const findMatches = async ({user, project}) => {
     let projectsToExclude = []
     let usersToExclude = []
 
+    usersToExclude.push(`"${user.handle}"`)
+
+    user.friends.edges.forEach((friendEdge) => {
+      usersToExclude.push(`"${friendEdge.node.id}"`)
+    })
+
     user.projects.edges.forEach((projectEdge) => {
       projectEdge.node.sessions.edges.forEach((sessionEdge) => {
         sessionEdge.node.projects.edges.forEach((edge) => {
@@ -29,11 +35,9 @@ export const findMatches = async ({user, project}) => {
     })
 
 
-    usersToExclude.push(`"${user.id}"`)
 
-    user.friends.edges.forEach((friendEdge) => {
-      usersToExclude.push(`"${friendEdge.node.id}"`)
-    })
+
+
 
 
     let response = await fetch(graphCool.simple, {
