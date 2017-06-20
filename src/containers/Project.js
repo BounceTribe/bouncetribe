@@ -91,7 +91,6 @@ class Project extends Component {
         !friendIds.includes(projectOwnerId) &&
         project.privacy !== "PUBLIC"
       ) ||
->>>>>>> 32a913ca15396298e9ff7fe7175abacdebe0b37a
       (
         ownId !== projectOwnerId &&
         project.privacy === "PRIVATE"
