@@ -29,10 +29,10 @@ export const findMatches = async ({user, project}) => {
     })
 
 
-    usersToExclude.push(`"${user.id}"`)
+    usersToExclude.push(`"${user.handle}"`)
 
     user.friends.edges.forEach((friendEdge) => {
-      usersToExclude.push(`"${friendEdge.node.id}"`)
+      usersToExclude.push(`"${friendEdge.node.handle}"`)
     })
 
 

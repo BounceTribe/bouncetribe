@@ -724,6 +724,7 @@ export default Relay.createContainer(
               edges {
                 node {
                   id
+                  handle
                 }
               }
             }
