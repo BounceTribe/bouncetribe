@@ -185,7 +185,7 @@ class ProjectNew extends Component {
   }
 
   get form () {
-    let {title, tracksIds, audioProgress, privacy, genres, titleUnique} = this.state
+    let {title, tracksIds, audioProgress, privacy, titleUnique, genre} = this.state
     if (audioProgress  && audioProgress !== 'GENERATING') {
       return (
         <Row>
@@ -227,7 +227,7 @@ class ProjectNew extends Component {
                 marginTop: '20px'
               }}
               primary={true}
-              disabled={(!titleUnique || !title || !tracksIds || !genres)}
+              disabled={(!titleUnique || !title || !tracksIds || !genre)}
               label={'Create Project'}
               onClick={this.createProject}
               icon={
