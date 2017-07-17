@@ -614,7 +614,7 @@ class Project extends Component {
 
         <Bot>
           <LeftList
-            hide={( (this.state.tabs === 'listen') && (!ownProject) )}
+            hide={( (this.state.tabs === 'listen') && (!ownProject) ) || (this.state.disableComments)}
           >
             <ProjectTribeList
               self={this.props.viewer.user}
