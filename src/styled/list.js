@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {grey230, grey40} from 'theme'
+import {grey230, grey40, size} from 'theme'
 import {Link} from 'react-router'
 
 export const Container = styled.div`
@@ -19,6 +19,9 @@ export const Header = styled.div`
   padding: 20px ${xPadding}px;
   width: 100%;
   box-sizing: border-box;
+  ${size.m`
+    display: none;
+  `}
 `
 
 export const HeaderOptions = styled.span`
@@ -34,6 +37,9 @@ export const List = styled.div`
   padding: 40px ${xPadding}px;
   width: 100%;
   box-sizing: border-box;
+  ${size.m`
+    padding: 0;
+  `}
 `
 
 export const PList = styled(List)`

@@ -38,6 +38,12 @@ export const View = styled.section`
   border-radius: 10px;
   min-height: 80vh;
   margin-bottom: 50px;
+  ${size.m`
+    margin-top: 0;
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+  `}
 `
 export const FeedView = styled(View)`
   width: 65%;
