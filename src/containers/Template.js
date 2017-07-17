@@ -37,7 +37,8 @@ class Template extends Component {
       return (
         <MobileNav
           user={user}
-
+          router={this.props.router}
+          location={this.props.location}
         />
       )
     }

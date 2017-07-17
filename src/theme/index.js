@@ -45,6 +45,10 @@ export const btTheme = getMuiTheme({
     buttonSize: 60,
     secondaryColor: blue,
     miniSize: 40
+  },
+  appBar: {
+    color: white,
+    textColor: black
   }
 })
 
