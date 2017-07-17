@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <meta name="robots" content="noindex">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
     <!--
@@ -19,7 +20,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>BounceTribe</title>
   </head>
   <body>
     <noscript>
@@ -36,5 +37,12 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+
+    <script id="roadmap-widget" src="https://drofij53yrdlb.cloudfront.net/init.js"></script>
+    <script>
+      window.onload = function() {
+        RoadmapSettings.load({id: "5914c8c0864eaf7deec0ab0e" });
+      };
+    </script>
   </body>
 </html>

@@ -1,0 +1,199 @@
+# project: bt-api
+# version: 45
+
+type Artist implements Node {
+  createdAt: DateTime
+  id: ID! @isUnique
+  imageUrl: String!
+  influencedUsers: [User!]! @relation(name: "UserArtistInfluence")
+  name: String!
+  spotifyId: String! @isUnique
+  updatedAt: DateTime
+}
+
+enum COMMENT_TYPE {
+  LIKE
+  COMMENT
+}
+
+type Comment implements Node {
+  author: User @relation(name: "UserComments")
+  children: [Comment!]! @relation(name: "CommentParentChildren")
+  createdAt: DateTime
+  id: ID! @isUnique
+  new: Boolean @defaultValue(value: true)
+  parent: Comment @relation(name: "CommentParentChildren")
+  project: Project @relation(name: "ProjectComments")
+  session: Session @relation(name: "CommentOnSession")
+  text: String!
+  timestamp: Float! @defaultValue(value: 0.0)
+  type: COMMENT_TYPE! @defaultValue(value: COMMENT)
+  updatedAt: DateTime
+  upvotes: [User!]! @relation(name: "CommentUpvotes")
+}
+
+type File implements Node {
+  artworkProject: Project @relation(name: "ProjectArt")
+  contentType: String!
+  createdAt: DateTime
+  id: ID! @isUnique
+  name: String!
+  pictureOwner: User @relation(name: "UserPicture")
+  portraitOwner: User @relation(name: "UserPortrait")
+  portraitSmallOwner: User @relation(name: "UserPortraitSmall")
+  secret: String! @isUnique
+  size: Int!
+  trackProject: Project @relation(name: "ProjectTracks")
+  updatedAt: DateTime
+  uploader: User @relation(name: "UserFiles")
+  url: String! @isUnique
+  visualization: [Float!]
+}
+
+type FriendRequest implements Node {
+  accepted: Boolean! @defaultValue(value: false)
+  actor: User @relation(name: "UserRequests")
+  createdAt: DateTime
+  id: ID! @isUnique
+  ignored: Boolean! @defaultValue(value: false)
+  recipient: User @relation(name: "UserInvitations")
+  updatedAt: DateTime
+}
+
+type Genre implements Node {
+  createdAt: DateTime
+  id: ID! @isUnique
+  name: String!
+  parentGenre: [Genre!]! @relation(name: "GenreGenre")
+  projects: [Project!]! @relation(name: "ProjectsGenres")
+  subgenres: [Genre!]! @relation(name: "GenreGenre")
+  updatedAt: DateTime
+  users: [User!]! @relation(name: "UserGenres")
+}
+
+type Message implements Node {
+  createdAt: DateTime!
+  id: ID! @isUnique
+  recipient: User @relation(name: "MessageOnUser1")
+  sender: User @relation(name: "MessageOnUser")
+  sessionParent: Session @relation(name: "MessageOnSession")
+  text: String
+  updatedAt: DateTime!
+}
+
+enum NOTIFICATION_TYPE {
+  FRIEND_REQUEST
+  FRIEND_REQUEST_ACCEPTED
+  PROJECT_FEEDBACK_RECEIVED
+  SESSION_FEEDBACK_RECEIVED
+  SESSION_FEEDBACK_APPRECIATED
+  FB_FRIEND_JOINED
+  MESSAGE
+  BOUNCED
+}
+
+type Notification implements Node {
+  checked: Boolean! @defaultValue(value: false)
+  createdAt: DateTime!
+  id: ID! @isUnique
+  notificationFor: User @relation(name: "NotificationOnUser1")
+  project: Project @relation(name: "NotificationOnProject")
+  session: Session @relation(name: "NotificationOnSession")
+  triggeredBy: User @relation(name: "NotificationOnUser")
+  type: NOTIFICATION_TYPE!
+  updatedAt: DateTime!
+}
+
+enum PROJECT_PRIVACY {
+  PRIVATE
+  PUBLIC
+  TRIBE
+}
+
+type Project implements Node {
+  artwork: File @relation(name: "ProjectArt")
+  comments: [Comment!]! @relation(name: "ProjectComments")
+  createdAt: DateTime
+  creator: User @relation(name: "UserProjects")
+  description: String
+  genres: [Genre!]! @relation(name: "ProjectsGenres")
+  id: ID! @isUnique
+  notifications: [Notification!]! @relation(name: "NotificationOnProject")
+  privacy: PROJECT_PRIVACY! @defaultValue(value: PUBLIC)
+  sessions: [Session!]! @relation(name: "SessionOnProject")
+  title: String!
+  tracks: [File!]! @relation(name: "ProjectTracks")
+  updatedAt: DateTime
+}
+
+type Session implements Node {
+  appreciatedFeedback: [User!]! @relation(name: "AppreciatedFeedback")
+  comments: [Comment!]! @relation(name: "CommentOnSession")
+  createdAt: DateTime!
+  feedback: Json! @defaultValue(value: "{}")
+  id: ID! @isUnique
+  messages: [Message!]! @relation(name: "MessageOnSession")
+  notifications: [Notification!]! @relation(name: "NotificationOnSession")
+  projects: [Project!]! @relation(name: "SessionOnProject")
+  updatedAt: DateTime!
+}
+
+type Skill implements Node {
+  createdAt: DateTime
+  id: ID! @isUnique
+  name: String
+  updatedAt: DateTime
+  users: [User!]! @relation(name: "UserSkills")
+}
+
+type Tag implements Node {
+  createdAt: DateTime
+  id: ID! @isUnique
+  updatedAt: DateTime
+}
+
+enum USER_EXPERIENCE {
+  NOVICE
+  PROFESSIONAL
+  BEGINNER
+  SKILLED
+  ACCOMPLISHED
+  VETERAN
+}
+
+type User implements Node {
+  appreciatedFeedback: [Session!]! @relation(name: "AppreciatedFeedback")
+  artistInfluences: [Artist!]! @relation(name: "UserArtistInfluence")
+  auth0UserId: String @isUnique
+  comments: [Comment!]! @relation(name: "UserComments")
+  createdAt: DateTime
+  doNotEmail: Boolean @defaultValue(value: false)
+  email: String! @isUnique
+  experience: USER_EXPERIENCE
+  facebookId: String @defaultValue(value: "")
+  files: [File!]! @relation(name: "UserFiles")
+  friends: [User!]! @relation(name: "Friends")
+  genres: [Genre!]! @relation(name: "UserGenres")
+  handle: String! @isUnique
+  id: ID! @isUnique
+  invitations: [FriendRequest!]! @relation(name: "UserInvitations")
+  latitude: Float
+  longitude: Float
+  name: String
+  notifications: [Notification!]! @relation(name: "NotificationOnUser1")
+  pictures: [File!]! @relation(name: "UserPicture")
+  placename: String
+  portrait: File @relation(name: "UserPortrait")
+  portraitSmall: File @relation(name: "UserPortraitSmall")
+  projects: [Project!]! @relation(name: "UserProjects")
+  receivedMessages: [Message!]! @relation(name: "MessageOnUser1")
+  score: Int @defaultValue(value: 0)
+  sentMessages: [Message!]! @relation(name: "MessageOnUser")
+  sentRequests: [FriendRequest!]! @relation(name: "UserRequests")
+  skills: [Skill!]! @relation(name: "UserSkills")
+  summary: String
+  triggeredNotifications: [Notification!]! @relation(name: "NotificationOnUser")
+  updatedAt: DateTime
+  upvotes: [Comment!]! @relation(name: "CommentUpvotes")
+  website: String
+}
