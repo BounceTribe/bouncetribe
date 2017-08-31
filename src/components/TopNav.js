@@ -84,6 +84,13 @@ class TopNav extends Component {
             </NavText>
           </NavLink>
           <NavLink
+            style={{ height: '19px'}}
+            to={`/${handle}/notificationPage`} >
+            <NavText>
+              Notifications
+            </NavText>
+          </NavLink>
+          <NavLink
             style={{
               paddingRight: 0,
               height: '19px'
