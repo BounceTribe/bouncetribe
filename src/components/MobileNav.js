@@ -72,7 +72,7 @@ class MobileNav extends Component {
         >
           <Row>
             <Portrait
-              src={user.portrait.url}
+              src={((user || {}).portrait || {}).url}
             />
             <Handle
               to={`/${user.handle}`}

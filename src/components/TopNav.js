@@ -66,7 +66,7 @@ class TopNav extends Component {
           />
         <NavList>
           <NavLink
-            to={(user.projects.edges.length > 0) ? `/${handle}/sessions/${user.projects.edges[0].node.title}` : `/${handle}/sessions`}
+            to={((((user || {}).project || {}).edges || []).length > 0) ? `/${handle}/sessions/${user.projects.edges[0].node.title}` : `/${handle}/sessions`}
           >
             <Headphones/>
             <NavText>
@@ -97,11 +97,7 @@ class TopNav extends Component {
                   }}
                 >
                   <Alerts
-                    alerts={(user.notifications.edges.filter(edge => {
-                      return !edge.node.checked
-                    }).length > 0) ? user.notifications.edges.filter(edge => {
-                      return !edge.node.checked
-                    }).length : false}
+                    alerts={ (((user || {}).notifications || {}).edges || []).filter(edge => !edge.node.checked).length }
                   />
                 </IconButton>
               )}
@@ -131,7 +127,7 @@ class TopNav extends Component {
               }}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
             >
-              {(user.notifications.edges.length > 0) ?
+              {((((user || {}).notifications || {}).edges || []).length > 0) ?
                 user.notifications.edges.map(edge=>{
                   return (
                     <Notification
