@@ -81,8 +81,8 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
   }
 
   return (
-    <BtLink to={link} className="nbt">
-      <NotifyContainer className='notCont'>
+    <BtLink to={link}>
+      <NotifyContainer>
         <NotifyHeader>
           {header}
         </NotifyHeader>

@@ -6,10 +6,8 @@ import {Notification} from 'styled/NotificationList'
 import Alerts from 'icons/Alerts'
 import {purple} from 'theme'
 
-
 class NotificationList extends Component {
   get notifications () {
-    console.log('noti props', this.props);
     return this.props.viewer.User.notifications.edges.map( edge => (
       <Notification
         key={edge.node.id}
@@ -18,7 +16,6 @@ class NotificationList extends Component {
   }
 
   render () {
-    console.log('notifications', this.notifications);
     return (
       <View>
         <Container>
@@ -32,7 +29,7 @@ class NotificationList extends Component {
               </IconText>
             </IconTextContainer>
           </Header>
-          <NList className="nlist">
+          <NList>
             {this.notifications}
           </NList>
         </Container>
@@ -41,45 +38,44 @@ class NotificationList extends Component {
   }
 }
 
-export default Relay.createContainer(
-  NotificationList, {
-    initialVariables: {
-      userHandle: ''
-    },
-    fragments: {
-      viewer: () => Relay.QL`
-        fragment on Viewer {
-          user {
-            id
-            handle
-          }
-          User (handle: $userHandle) {
-            handle
-            id
-            email
-            notifications (first: 20) {
-              edges {
-                node {
-                  checked
-                  createdAt
+export default Relay.createContainer(NotificationList, {
+  initialVariables: {
+    userHandle: ''
+  },
+  fragments: {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        user {
+          id
+          handle
+        }
+        User (handle: $userHandle) {
+          handle
+          id
+          email
+          notifications (first: 20) {
+            edges {
+              node {
+                checked
+                createdAt
+                id
+                triggeredBy {
                   id
-                  triggeredBy {
-                    id
-                    handle
-                  }
-                  notificationFor {
-                    id
-                    handle
-                  }
-                  project
-                  session
-                  type
+                  handle
                 }
+                notificationFor {
+                  id
+                  handle
+                }
+                project
+                session
+                type
               }
             }
           }
         }
-      `,
-    }
+      }
+    `,
   }
+}
 )
