@@ -94,9 +94,19 @@ export const NavText = styled.span`
   display: flex;
   margin-left: 4px;
 `
+export const NotifyViewAll = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  border-bottom: 1px solid ${grey300};
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 10px 20px;
+`
 
 export const NotifyContainer = styled.div`
   display: flex;
+  width: 100%;
   flex-direction: column;
   border-bottom: 1px solid ${grey300};
   justify-content: flex-start;
@@ -117,11 +127,25 @@ export const NotifyMessage = styled.div`
   margin-bottom: 10px;
 `
 
-
 export const NotifyDate = styled.div`
   font-size: 9px;
   color: ${grey500};
 `
+
+const ViewAllContainer = styled(NotifyContainer)`
+  padding: 0 20px;
+`
+
+export const ViewAll = ({to}) => (
+  <BtLink to={to}>
+    <ViewAllContainer>
+      <NotifyHeader>
+        View All
+      </NotifyHeader>
+    </ViewAllContainer>
+  </BtLink>
+);
+
 
 export const Notification = ({notification: {type, triggeredBy, createdAt, notificationFor, project, session}}) => {
 

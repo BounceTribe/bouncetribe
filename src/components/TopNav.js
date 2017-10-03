@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Bar, Logo, NavList, NavLink, Portrait, NavText, Notification, NotifyContainer, NotifyMessage} from 'styled/TopNav'
+import {Bar, Logo, NavList, NavLink, Portrait, NavText, Notification, NotifyContainer, NotifyMessage, ViewAll} from 'styled/TopNav'
 import {BtFlatButton, Button} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
@@ -37,17 +37,13 @@ class TopNav extends Component {
           actions={[
             <Button
               label={"Close"}
-              onClick={()=>{
-                this.setState({settings: false})
-              }}
+              onClick={() => this.setState({settings: false})}
             />
           ]}
           open={this.state.settings}
           modal={true}
         >
-          <h3>
-            Email Notifications
-          </h3>
+          <h3>Email Notifications</h3>
           <Checkbox
             label={"Disable all"}
             checked={user.doNotEmail}
@@ -61,27 +57,17 @@ class TopNav extends Component {
             }}
           />
         </Dialog>
-          <Logo
-            to={'/'}
-          />
+        <Logo to={'/'} />
         <NavList>
           <NavLink
             to={((((user || {}).project || {}).edges || []).length > 0) ? `/${handle}/sessions/${user.projects.edges[0].node.title}` : `/${handle}/sessions`}
           >
-            <Headphones/>
-            <NavText>
-              Sessions
-            </NavText>
+            <Headphones />
+            <NavText>Sessions</NavText>
           </NavLink>
-          <NavLink
-            to={`/${handle}/projects`}
-          >
-            <Music
-              height={18}
-            />
-            <NavText>
-              Projects
-            </NavText>
+          <NavLink to={`/${handle}/projects`}>
+            <Music height={18} />
+            <NavText>Projects</NavText>
           </NavLink>
           <NavLink
             style={{
@@ -91,11 +77,7 @@ class TopNav extends Component {
           >
             <IconMenu
               iconButtonElement={(
-                <IconButton
-                  style={{
-                    padding: 0
-                  }}
-                >
+                <IconButton style={{padding: 0}} >
                   <Alerts
                     alerts={ (((user || {}).notifications || {}).edges || []).filter(edge => !edge.node.checked).length }
                   />
@@ -115,11 +97,9 @@ class TopNav extends Component {
                     }
                   })
                 }
-                this.setState((prevState) => {
-                  return {
-                    notificationMenu: !prevState.notificationMenu
-                  }
-                })
+                this.setState((prevState) =>
+                    ({notificationMenu: !prevState.notificationMenu})
+                )
               }}
               anchorOrigin={{
                 vertical: 'bottom',
@@ -127,24 +107,14 @@ class TopNav extends Component {
               }}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
             >
+              <ViewAll to={`/${handle}/notificationPage`}>View All</ViewAll>
               {((((user || {}).notifications || {}).edges || []).length > 0) ?
-                user.notifications.edges.map(edge=>{
-                  return (
-                    <Notification
-                      key={edge.node.id}
-                      notification={edge.node}
-                    />
-                  )
-                })
+                user.notifications.edges.map(edge=>(
+                  <Notification key={edge.node.id} notification={edge.node} />
+                ) )
                 :
-                <NotifyContainer
-                  style={{
-                    border: 0
-                  }}
-                >
-                  <NotifyMessage>
-                    No new notifications
-                  </NotifyMessage>
+                <NotifyContainer style={{border: 0}}>
+                  <NotifyMessage>No new notifications</NotifyMessage>
                 </NotifyContainer>
               }
             </IconMenu>
@@ -160,18 +130,14 @@ class TopNav extends Component {
                   margin: '0 15px'
                 }}
               >
-                <Portrait
-                  src={portraitUrl}
-                />
+                <Portrait src={portraitUrl} />
               </IconButton>
             )}
             open={this.state.portraitMenu}
             onRequestChange={()=>{
-              this.setState((prevState) => {
-                return {
-                  portraitMenu: !prevState.portraitMenu
-                }
-              })
+              this.setState((prevState) => (
+                {portraitMenu: !prevState.portraitMenu}
+              ) )
             }}
             anchorOrigin={{
               vertical: 'bottom',

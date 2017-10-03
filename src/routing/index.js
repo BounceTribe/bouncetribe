@@ -17,6 +17,8 @@ import Login from 'containers/Login'
 import Connect from 'containers/Connect'
 import Session from 'containers/Session'
 import AllSessions from 'containers/AllSessions'
+import NotificationList from 'containers/NotificationList'
+
 
 import {Loading} from 'styled/Spinner'
 
@@ -196,6 +198,12 @@ const createRoutes = () => {
           component={Profile}
           queries={ViewerQuery}
           render={({ props }) => props ? <Profile {...props} /> : <Loading />}
+        />
+        <Route
+          path={'/:userHandle/notificationPage'}
+          component={NotificationList}
+          queries={ViewerQuery}
+          render={({ props }) => props ? <NotificationList {...props} /> : <Loading />}
         />
         <Route
           path={'/:userHandle/tribe'}

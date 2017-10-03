@@ -42,6 +42,13 @@ export const List = styled.div`
   `}
 `
 
+export const NList = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 40px;
+`
+
 export const PList = styled(List)`
   padding-top: 100px;
 `
