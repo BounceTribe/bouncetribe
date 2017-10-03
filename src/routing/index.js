@@ -3,7 +3,7 @@ import Relay from 'react-relay'
 import {Route, IndexRoute} from 'react-router'
 import auth from 'utils/auth'
 import Template from 'containers/Template'
-import Feed from 'containers/Feed'
+// import Feed from 'containers/Feed'
 import Profile from 'containers/Profile'
 import Project from 'containers/Project'
 import ProjectList from 'containers/ProjectList'
@@ -17,6 +17,7 @@ import Login from 'containers/Login'
 import Connect from 'containers/Connect'
 import Session from 'containers/Session'
 import AllSessions from 'containers/AllSessions'
+import Dashboard from 'containers/Dashboard'
 
 import {Loading} from 'styled/Spinner'
 
@@ -169,10 +170,10 @@ const createRoutes = () => {
       queries={ViewerQuery}
     >
       <IndexRoute
-        component={Feed}
+        component={Dashboard}
         queries={ViewerQuery}
         onEnter={userOnly}
-        render={({ props }) => props ? <Feed {...props} /> : <Loading />}
+        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
       />
 
       <Route

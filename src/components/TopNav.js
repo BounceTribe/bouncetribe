@@ -14,6 +14,8 @@ import IconButton from 'material-ui/IconButton'
 import UpdateNotification from 'mutations/UpdateNotification'
 import Dialog from 'material-ui/Dialog'
 import Checkbox from 'material-ui/Checkbox'
+import {Container} from 'styled/list'
+
 
 import UpdateUser from 'mutations/UpdateUser'
 
@@ -65,6 +67,16 @@ class TopNav extends Component {
             to={'/'}
           />
         <NavList>
+          <NavLink
+            to={`/${handle}/TribeFind`}
+          >
+            <Headphones
+              height={18}
+            />
+            <NavText>
+              Find Your Mentor
+            </NavText>
+          </NavLink>
           <NavLink
             to={(user.projects.edges.length > 0) ? `/${handle}/sessions/${user.projects.edges[0].node.title}` : `/${handle}/sessions`}
           >
