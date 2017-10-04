@@ -1,26 +1,87 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-
-import {ProfileView, TopPanel, LeftPanel, RightPanel} from 'styled/Dashboard'
+import Bolt from 'icons/Bolt'
+import {View, Button, IconTextContainer, IconText} from 'styled'
+import {Container, Header, HeaderOptions} from 'styled/list'
+import Headphones from 'icons/Headphones'
+import {Tabs, Tab} from 'material-ui/Tabs'
+import {purple, grey200} from 'theme'
+import {MyTribe, ProfileView, Row, SubRow, TopPanel, LeftPanel, RightPanel, BotLeft, BotRow, BotRight, Divider} from 'styled/Dashboard'
+import Notifications from 'icons/Notifications'
+import Lock from 'icons/Lock'
 
 class Dashboard extends Component {
+  
   render () {
     return (
       <div>
+        <MyTribe>
+          <Headphones 
+          />
+          <h3>My Tribe</h3>
+        </MyTribe>
+        <Divider />
         <ProfileView>
           <TopPanel>
-            <h4>BounceTribe!</h4>
+            <h1>This is a header</h1>
+          <Bolt
+              style={{
+                alignSelf: 'flex-end',
+                marginRight: '20px',
+              }}
+              title="Settings"
+            />
           </TopPanel>
-          <LeftPanel>
-            <h4>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-            The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</h4>
-          </LeftPanel>
-          <RightPanel>
-            <h4>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-            The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</h4>
-          </RightPanel>
+          <BotRow>
+            <BotLeft>
+              <h4>Bottom Left Panel</h4>
+             </BotLeft>
+              <BotRight
+                style={{
+                  marginLeft: '20px'
+                }}  
+              >
+                <h4>Bottom Right Panel</h4>
+                  <Tabs
+                    style={{
+                      width: '100%',
+                      padding: '10px 200px 10px 10px',
+                      margin: '60px 0px'
+                    }}
+                    inkBarStyle={{
+                      backgroundColor: purple
+                    }}
+                  >
+                    <Tab
+                      label={'Projects'}
+                      value={0}
+                      style={{
+                       borderBottom: `2px solid ${grey200}`
+                      }}
+                    />
+                    <Tab
+                      icon={(
+                        <Notifications
+                        />
+                      )}
+                      label={'Bounces'}
+                      value={1}
+                    />
+                    <Tab
+                      icon={(
+                        <Lock
+                        />
+                      )}
+                      label={'Messages'}
+                      value={2}
+                      disabled={true}
+                      style={{
+                        cursor: 'not-allowed'
+                      }}
+                    />
+                   </Tabs>
+              </BotRight>
+          </BotRow> 
         </ProfileView>
       </div>
     )

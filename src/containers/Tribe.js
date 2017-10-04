@@ -8,7 +8,6 @@ import AddFriend from 'icons/AddFriend'
 import TribeIcon from 'icons/Tribe'
 import Notifications from 'icons/Notifications'
 import Lock from 'icons/Lock'
-// import {Container} from 'styled/list'
 
 
 class Tribe extends Component {
