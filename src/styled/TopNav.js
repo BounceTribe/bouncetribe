@@ -55,15 +55,12 @@ export const LogoImg = styled.div`
   background-position: center;
 `
 
-export const Logo = (props) =>{
-  return (
-    <Title
-      {...props}
-    >
-      <LogoImg/>
-    </Title>
-  )
-}
+export const Logo = (props) => (
+  <Title {...props} >
+    <LogoImg/>
+  </Title>
+)
+
 
 export const NavImg = styled.img`
   display: flex;
@@ -78,17 +75,12 @@ export const ImgLink = styled(BtLink)`
   padding: 0;
 `
 
-export const Portrait = (props) => {
-  return (
-    <ImgLink
-      {...props}
-    >
-      <NavImg
-        {...props}
-      />
-    </ImgLink>
-  )
-}
+export const Portrait = (props) => (
+  <ImgLink {...props} >
+    <NavImg {...props} />
+  </ImgLink>
+)
+
 
 export const NavText = styled.span`
   display: flex;
@@ -183,18 +175,14 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
     }
     case 'FB_FRIEND_JOINED': {
       break
-
     }
     case 'MESSAGE': {
       break
-
     }
     case 'BOUNCED': {
       break
-
     }
     default: {
-
     }
   }
 
