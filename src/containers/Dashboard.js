@@ -6,7 +6,6 @@ import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
 import Dialog from 'material-ui/Dialog'
 import {Button} from 'styled'
-import AddButton from 'icons/AddButton'
 
 
 class Dashboard extends Component {
@@ -18,7 +17,7 @@ class Dashboard extends Component {
             <h4>BounceTribe!</h4>
             <div onClick={()=>{ this.setState({invite: true}) }} >
               <InviteContainer
-                // onClick={()=>{ self.setState({invite: true}) }}
+                // onClick={()=>{ this.setState({invite: true}) }}
                 // onClick={()=>{ console.log('click') }}
                 title="Invite to Your Tribe"
               />
