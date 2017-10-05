@@ -1,22 +1,53 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {BtLink} from 'styled'
 import {ProfileView, TopPanel, LeftPanel, RightPanel} from 'styled/Dashboard'
-import AddButton from 'icons/AddButton'
+import {InviteContainer} from 'styled/Dashboard'
 import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
+import Dialog from 'material-ui/Dialog'
+import {Button} from 'styled'
+import AddButton from 'icons/AddButton'
 
 
 class Dashboard extends Component {
+  state = { invite: false }
   render () {
     return (
-      <div>
         <ProfileView>
           <TopPanel>
             <h4>BounceTribe!</h4>
-            <BtLink>
-              Invite Member<AddButton />
-            </BtLink>
+            <div onClick={()=>{ this.setState({invite: true}) }} >
+              <InviteContainer
+                // onClick={()=>{ self.setState({invite: true}) }}
+                // onClick={()=>{ console.log('click') }}
+                title="Invite to Your Tribe"
+              />
+            </div>
+            <Dialog
+              title={"Invite to Your Tribe"}
+              actions={[
+                <Button
+                  label={"Close"}
+                  onClick={()=>{ this.setState({invite: false}) }}
+                />
+              ]}
+              open={this.state.invite}
+              modal={true}
+            >
+              <h3>Invite to Your Tribe</h3>
+              {/* <Checkbox
+                label={"Disable all"}
+                checked={user.doNotEmail}
+                onCheck={(e, isChecked) => {
+                  this.props.relay.commitUpdate(
+                    new UpdateUser({
+                      userId: this.props.viewer.user.id,
+                      doNotEmail: isChecked
+                    })
+                  )
+                }}
+              /> */}
+            </Dialog>
           </TopPanel>
           <Row>
             <Column>
@@ -35,7 +66,6 @@ class Dashboard extends Component {
           </Column>
         </Row>
         </ProfileView>
-      </div>
     )
   }
  }

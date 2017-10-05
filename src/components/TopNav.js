@@ -20,15 +20,12 @@ import Checkbox from 'material-ui/Checkbox'
 import UpdateUser from 'mutations/UpdateUser'
 
 class TopNav extends Component {
-
   state = {
     dropdownOpen: false,
     notificationMenu: false,
     portraitMenu: false,
     settings: false
   }
-
-
 
   render() {
     let {handle, portraitUrl, user} = this.props

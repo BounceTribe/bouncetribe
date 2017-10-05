@@ -1,6 +1,9 @@
 import styled from 'styled-components'
-// import React from 'react'
+import React from 'react'
 import {View, BtLink} from 'styled'
+import AddButton from 'icons/AddButton'
+import {grey500} from 'theme'
+
 
 export const ProfileView = styled(View)`
   background-color: transparent;
@@ -36,11 +39,23 @@ export const RightPanel = styled.div`
   padding-right: 50px;
   background-color: white;
   border-radius: 5px;
-
 `
 
-export const AddMemberTop = styled(BtLink)`
+
+const InviteMember = styled.div`
   display: flex;
-  text-decoration: none;
+  justify-content: space-between;
+  align-items: center;
+  font-family: "Helvetica Neue";
+  font-size: 12pt;
+  width: 140px;
+  height: 40px;
   cursor: pointer;
+  color: ${grey500};
 `
+export const InviteContainer = () => (
+  <InviteMember>
+    <span>Invite Member</span>
+    <AddButton/>
+  </InviteMember>
+)
