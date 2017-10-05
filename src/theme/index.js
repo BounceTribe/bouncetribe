@@ -26,6 +26,7 @@ export const grey40 = 'rgb(40,40,40)'
 export const grey70 = 'rgb(70,70,70)'
 export const grey150 = 'rgb(150,150,150)'
 export const grey215 = 'rgb(215,215,215)'
+export const grey222 = 'rgb(222,222,222)'
 export const grey230 = 'rgb(230,230,230)'
 export const grey250 = 'rgb(250,250,250)'
 
