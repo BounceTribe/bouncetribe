@@ -36,8 +36,6 @@ import Settings from 'icons/Settings'
 import Dialog from 'material-ui/Dialog'
 import {Button} from 'styled'
 import Checkbox from 'material-ui/Checkbox'
-import {TopPanel} from 'styled/Dashboard'
-
 
 class Profile extends Component {
 
@@ -527,11 +525,9 @@ class Profile extends Component {
           onActionTouchTap={this.closeSnackbar}
           bodyStyle={{ backgroundColor: purple }}
         />
-        <TopPanel>
+        <Top>
           <Settings
-            // onClick={()=>{ this.setState({settings: true}) }}
-            onClick={()=>{ console.log('click') }}
-
+            onClick={()=>{ this.setState({settings: true}) }}
             style={{
               alignSelf: 'flex-end',
               marginRight: '20px',
@@ -685,7 +681,7 @@ class Profile extends Component {
               </InputRow>
             </Right>
           </Row>
-        </TopPanel>
+        </Top>
         <BotRow>
           <BotLeft>
             <Tabs

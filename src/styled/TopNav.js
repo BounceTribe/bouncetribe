@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import {BtLink} from 'styled'
 import {white, grey40, grey70, grey700, grey500, grey300, purple, size} from 'theme'
-// import Header from 'icons/Header'
 import {url} from 'config'
 
 export const Bar = styled.div`
