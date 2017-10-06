@@ -8,10 +8,46 @@ import TextField from 'material-ui/TextField'
 import {Button, BtFlatButton} from 'styled'
 import {white, purple, grey400} from 'theme'
 import Send from 'icons/Send'
+import {suggestedFriends} from 'utils/graphql'
+import {SearchUser} from 'styled/Tribe'
+import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
 
 class Dashboard extends Component {
   state = { invite: false, searching: false }
+
+
+  createFriendRequest = (recipientId) => {
+    let {id: actorId} = this.props.viewer.user
+    this.props.relay.commitUpdate(
+      new CreateFriendRequest({
+        actorId,
+        recipientId,
+      })
+    )
+  }
+
+  componentWillMount() {
+    this.findFriends()
+  }
+
+  findFriends = () => {
+    console.log('props', this.props);
+    suggestedFriends(this.props.viewer.user.id).then(suggestions=>{
+      this.setState((prevState, props)=>{
+        let users = suggestions.map(user => (
+          <SearchUser
+            key={user.id}
+            user={user}
+            createFriendRequest={()=>this.createFriendRequest(user.id)}
+          />
+        ))
+        console.log('users, suggestions:', users, suggestions)
+        return { suggestions: users }
+      })
+    })
+  }
+
   render () {
     let {User, user} = this.props.viewer
     let person = (User) ? (User) : (user)
