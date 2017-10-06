@@ -44,3 +44,27 @@ export const AddMemberTop = styled(BtLink)`
   text-decoration: none;
   cursor: pointer;
 `
+
+export const ProfileImg = styled.img`
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  padding: 1em;
+`
+
+export const UserName = styled.h1`
+  font-size: 1.5em; 
+  color: #555555;
+  float: left;
+`
+
+export const NavLink = styled(BtLink)`
+display: flex;
+align-items: center;
+text-decoration: none;
+color: #777777;
+padding: 0 15px;
+cursor: pointer;
+font-size: 14px;
+font-weight: Light;
+`

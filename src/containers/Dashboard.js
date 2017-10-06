@@ -1,19 +1,27 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {BtLink} from 'styled'
-import {ProfileView, TopPanel, LeftPanel, RightPanel} from 'styled/Dashboard'
+import {ProfileView, TopPanel, LeftPanel, RightPanel, ProfileImg, UserName, NavList, NavLink, NavText} from 'styled/Dashboard'
 import AddButton from 'icons/AddButton'
 import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
 
 
 class Dashboard extends Component {
+
   render () {
+    let user = this.props.viewer.user
+
+    console.log('props:', user.portrait.url)
     return (
       <div>
         <ProfileView>
           <TopPanel>
-            <h4>BounceTribe!</h4>
+            <ProfileImg src={user.portrait.url} />
+            <UserName>{user.handle}</UserName> 
+            <NavLink to={`/${user.handle}`}>
+              Edit Profile
+            </NavLink>
             <BtLink>
               Invite Member<AddButton />
             </BtLink>
@@ -51,6 +59,8 @@ class Dashboard extends Component {
           user {
             id
             handle
+            email
+            portrait {url}
             friends (
               first: 999
             ) {
