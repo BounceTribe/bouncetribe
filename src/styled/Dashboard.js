@@ -1,9 +1,9 @@
 import styled from 'styled-components'
 import React from 'react'
 import {Link} from 'react-router'
-import {View, BtLink} from 'styled'
+import {View} from 'styled'
 import AddButton from 'icons/AddButton'
-import {grey500, grey40, grey400} from 'theme'
+import {grey500, grey40} from 'theme'
 
 export const ModalTitle = styled(Link)`
   text-decoration: none;

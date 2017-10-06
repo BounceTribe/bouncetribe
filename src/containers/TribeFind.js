@@ -50,7 +50,6 @@ class TribeFind extends Component {
   }
 
   findFriends = () => {
-    console.log('TribeFind props', this.props);
     suggestedFriends(this.props.viewer.user.id).then(suggestions=>{
       this.setState((prevState, props)=>{
         let users = suggestions.map(user => (

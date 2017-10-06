@@ -1,8 +1,6 @@
 import { graphCool } from 'config'
 import auth from 'utils/auth'
 
-
-
 export const findMatches = async ({user, project}) => {
   try {
 
@@ -38,21 +36,15 @@ export const findMatches = async ({user, project}) => {
 
     let response = await fetch(graphCool.simple, {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          query: `{
+          query: /* GraphQL */`{
             allProjects (
               first: 20
               filter: {
                 privacy: PUBLIC
-                genres_some: {
-                  id: "${genre}"
-                }
-                creator: {
-                  handle_not_in: [${usersToExclude.toString()}]
-                }
+                genres_some: { id: "${genre}" }
+                creator: { handle_not_in: [${usersToExclude.toString()}] }
                 id_not_in: [${projectsToExclude.toString()}]
               }
             ) {
@@ -63,14 +55,10 @@ export const findMatches = async ({user, project}) => {
                 id
                 handle
                 score
-                portrait {
-                  url
-                }
+                portrait { url }
                 placename
               }
-              artwork {
-                url
-              }
+              artwork { url }
             }
           }`
         }),
@@ -89,11 +77,7 @@ export const findMatches = async ({user, project}) => {
         }
       })
 
-      uniqueProjects.sort((a, b) => {
-        return b.creator.score - a.creator.score
-      })
-
-
+      uniqueProjects.sort((a, b) => b.creator.score - a.creator.score )
 
       return uniqueProjects.slice(0,6)
   } catch (e) {
@@ -106,11 +90,9 @@ export const findMatches = async ({user, project}) => {
 export const findUserIds = (ids) => {
   return fetch(graphCool.simple, {
       method: 'POST',
-      headers: {
-        'content-type': 'application/json'
-      },
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
-        query: `{
+        query: /* GraphQL */`{
           allUsers (filter: {
             auth0UserId_in: [${ids.toString()}]
           }) {
@@ -121,11 +103,55 @@ export const findUserIds = (ids) => {
           }
         }`
       }),
-    }).then(result=>result.json()).then(json => {
+    }).then(result=>result.json())
+      .then(json => {
+        console.log('useridsjson', json);
       return json.data.allUsers.map(user => user.id)
     })
 }
 
+
+export const suggestedInvites = (userId) => {
+  return new Promise((resolve, reject) => {
+    auth.getUserInfo().then( profile => {
+      let friends = profile.context.mutual_friends.data
+      console.log('gql profile', profile);
+      let facebookIds = []
+      for (let index in friends) {
+        if (index) {
+          facebookIds.push(`"${friends[index].id}"`)
+        }
+      }
+      return fetch(graphCool.simple, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          query: /* GraphQL */`{
+            allUsers (
+              first: 5
+              filter: { facebookId_in: [${facebookIds.toString()}] }
+            ) {
+              id
+              handle
+              portrait { url }
+              score
+            }
+            User (id: "${userId}") {
+              friends (first: 999) { id }
+            }
+          }`
+        }),
+      }).then(result=>result.json()).then(json => {
+        let fbFriends = json.data.allUsers.map(user=>user)
+        let btFriends = json.data.User.friends.map(user => user.id)
+        let suggestedInvites = fbFriends.filter((fbFriend)=>{
+          return !btFriends.includes(fbFriend.id)
+        })
+        resolve(suggestedInvites)
+      })
+    })
+  })
+}
 
 export const suggestedFriends = (userId) => {
   return new Promise((resolve, reject) => {
@@ -139,28 +165,20 @@ export const suggestedFriends = (userId) => {
       }
       return fetch(graphCool.simple, {
         method: 'POST',
-        headers: {
-          'content-type': 'application/json'
-        },
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          query: `{
+          query: /* GraphQL */`{
             allUsers (
               first: 10
-              filter: {
-                facebookId_in: [${facebookIds.toString()}]
-              }
+              filter: { facebookId_in: [${facebookIds.toString()}] }
             ) {
               id
               handle
-              portrait {
-                url
-              }
+              portrait { url }
               score
             }
             User (id: "${userId}") {
-              friends (first: 999) {
-                id
-              }
+              friends (first: 999) { id }
             }
           }`
         }),
@@ -176,7 +194,6 @@ export const suggestedFriends = (userId) => {
   })
 }
 
-
 export const getAllGenres = () => {
   return fetch(graphCool.simple, {
     method: 'POST',
@@ -184,7 +201,7 @@ export const getAllGenres = () => {
       'content-type': 'application/json'
     },
     body: JSON.stringify({
-      query: `{
+      query: /* GraphQL */`{
         allGenres (
           first: 300
           orderBy: name_ASC
@@ -207,7 +224,7 @@ export const getAllSkills = () => {
       'content-type': 'application/json'
     },
     body: JSON.stringify({
-      query: `{
+      query: /* GraphQL */`{
         allSkills (first: 300) {
           id
           name
@@ -230,7 +247,7 @@ export const ensureBtArtistExists = (artist) => {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        query: `{
+        query: /* GraphQL */`{
           Artist (
             spotifyId: "${spotifyId}"
           ) {
@@ -253,7 +270,7 @@ export const ensureBtArtistExists = (artist) => {
             'content-type': 'application/json'
           },
           body: JSON.stringify({
-            query: `
+            query: /* GraphQL */`
               mutation {
                 createArtist(
                   imageUrl: "${imageUrl}"
@@ -286,7 +303,7 @@ export const ensureUsersProjectTitleUnique = (userId, projectTitle)=> {
       'content-type': 'application/json'
     },
     body: JSON.stringify({
-      query: `{
+      query: /* GraphQL */`{
         User (id: "${userId}") {
           projects (
             first: 1
@@ -314,39 +331,25 @@ export const ensureUsersProjectTitleUnique = (userId, projectTitle)=> {
 export const fetchFeed = (handle) => {
   return fetch(graphCool.simple, {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
-      query: `{
+      query: /* GraphQL */`{
         User (handle: "${handle}") {
           friends (first: 999) {
             projects (
               first: 2
-              filter: {
-                privacy_not: PRIVATE
-              }
+              filter: { privacy_not: PRIVATE }
               orderBy: createdAt_ASC
             ) {
               id
               title
-              genres (
-                first: 999
-              ) {
-                name
-              }
-              artwork {
-                url
-              }
+              genres ( first: 999 ) { name }
+              artwork { url }
               creator {
                 handle
-                portrait {
-                  url
-                }
+                portrait { url }
               }
-              comments (first: 999) {
-                type
-              }
+              comments (first: 999) { type }
             }
           }
         }
@@ -366,7 +369,7 @@ export const getProjectId = (handle, title) => {
       'content-type': 'application/json'
     },
     body: JSON.stringify({
-      query: `{
+      query: /* GraphQL */`{
         allProjects (
           filter: {
             creator: {
