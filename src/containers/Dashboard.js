@@ -77,25 +77,19 @@ class Dashboard extends Component {
 
  export default Relay.createContainer(
   Dashboard, {
-    initialVariables: {
-      handle: "",
-    },
+    initialVariables: { handle: "", },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
             id
             handle
-            friends (
-              first: 999
-            ) {
+            friends (first: 999) {
               edges {
                 node {
                   projects (
                     first: 999
-                    filter: {
-                      privacy_not: PRIVATE
-                    }
+                    filter: {privacy_not: PRIVATE}
                     orderBy: createdAt_DESC
                   ) {
                     edges {
@@ -103,31 +97,19 @@ class Dashboard extends Component {
                         createdAt
                         id
                         title
-                        genres (
-                          first: 999
-                        ) {
+                        genres (first: 999) {
                           edges {
-                            node {
-                              name
-                            }
+                            node {name}
                           }
                         }
-                        artwork {
-                          url
-                        }
+                        artwork {url}
                         creator {
                           handle
-                          portrait {
-                            url
-                          }
+                          portrait {url}
                         }
-                        comments (
-                          first: 999
-                        ) {
+                        comments (first: 999) {
                           edges {
-                            node {
-                              type
-                            }
+                            node {type}
                           }
                         }
                       }

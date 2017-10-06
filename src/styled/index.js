@@ -51,7 +51,6 @@ export const FeedView = styled(View)`
 
 export const ProjectNewView = styled(View)`
   min-height: 85vh;
-
 `
 
 export const IconTextContainer = styled(BtLink)`
@@ -65,7 +64,6 @@ export const IconText = styled.span`
   margin-left: 12px;
   color: ${grey800};
 `
-
 
 export const ButtonLink = styled(Link)`
   color: none;
@@ -100,9 +98,7 @@ export const CroppedImage = styled.img`
 
 export const Button = (props) => {
   return (
-    <ButtonLink
-      to={props.to}
-    >
+    <ButtonLink to={props.to} >
       <RaisedButton
         {...props}
         labelStyle={{
@@ -118,9 +114,7 @@ export const Button = (props) => {
 
 export const BtFlatButton = (props) => {
   return (
-    <ButtonLink
-      to={props.to}
-    >
+    <ButtonLink to={props.to} >
       <FlatButton
         {...props}
         labelStyle={{
@@ -130,7 +124,6 @@ export const BtFlatButton = (props) => {
       >
         {props.children}
       </FlatButton>
-
     </ButtonLink>
   )
 }
@@ -161,7 +154,6 @@ export const RoundButton = (props) => {
           right: "0",
           fontSize: (tooltipLength > 10) ? "9px" : "10px",
           paddingLeft: (tooltipLength > 10) ? "2px" : "8px",
-
         }}
       >
       <MuiThemeProvider
@@ -183,7 +175,6 @@ export const RoundButton = (props) => {
         </FloatingActionButton>
       </MuiThemeProvider>
     </IconButton>
-
     </ButtonLink>
   )
 }

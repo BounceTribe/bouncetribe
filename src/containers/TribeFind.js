@@ -60,9 +60,7 @@ class TribeFind extends Component {
           />
         ))
         console.log(users)
-        return {
-          suggestions: users
-        }
+        return { suggestions: users }
       })
     })
   }
@@ -74,12 +72,8 @@ class TribeFind extends Component {
       <View>
         <Container>
           <Header>
-            <IconTextContainer
-              to={`/${user.handle}/tribe`}
-            >
-              <Tribe
-                fill={purple}
-              />
+            <IconTextContainer to={`/${user.handle}/tribe`} >
+              <Tribe fill={purple} />
               <IconText>
                 Add to Tribe
               </IconText>
@@ -90,11 +84,7 @@ class TribeFind extends Component {
                 labelColor={white}
                 backgroundColor={fbBlue}
                 onClick={(user.facebookId) ? this.share : this.connect}
-                icon={
-                  <Facebook
-                    fill={white}
-                  />
-                }
+                icon={ <Facebook fill={white} /> }
               />
             </HeaderOptions>
           </Header>
