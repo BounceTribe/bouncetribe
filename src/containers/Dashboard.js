@@ -1,25 +1,28 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, TopPanel, LeftPanel, RightPanel} from 'styled/Dashboard'
-import {InviteContainer} from 'styled/Dashboard'
+import {ProfileView, TopPanel, LeftPanel, RightPanel, InviteContainer} from 'styled/Dashboard'
 import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
 import Dialog from 'material-ui/Dialog'
-import {Button} from 'styled'
+import TextField from 'material-ui/TextField'
+import {View, IconText, IconTextContainer, Button} from 'styled'
+import {FindH3} from 'styled/Tribe'
+import {white} from 'theme'
+import Send from 'icons/Send'
 
 
 class Dashboard extends Component {
-  state = { invite: false }
+  state = { invite: false, searching: false }
   render () {
+    let {User, user} = this.props.viewer
+    let person = (User) ? (User) : (user)
+    let {handle} = person
+    // let {router} = this.props
     return (
       <ProfileView>
         <TopPanel>
           <h4>BounceTribe!</h4>
-          <InviteContainer
-            onClick={()=>{ this.setState({invite: true}) }}
-            // onClick={()=>{ console.log('click') }}
-            title="Invite to Your Tribe"
-          />
+          <InviteContainer onClick={()=>{this.setState({invite: true})}}/>
           <Dialog
             title={"Invite to Your Tribe"}
             actions={[
@@ -31,19 +34,24 @@ class Dashboard extends Component {
             open={this.state.invite}
             modal={true}
           >
-            <h3>Invite to Your Tribe</h3>
-            {/* <Checkbox
-              label={"Disable all"}
-              checked={user.doNotEmail}
-              onCheck={(e, isChecked) => {
-                this.props.relay.commitUpdate(
-                  new UpdateUser({
-                    userId: this.props.viewer.user.id,
-                    doNotEmail: isChecked
-                  })
-                )
-              }}
-            /> */}
+            <FindH3>
+              Email
+              <TextField
+                label={'Email'}
+                name={'email'}
+                onChange={()=>{ this.setState({searching: true}) }}
+                placeholder={'enter email here'}
+              />
+              <Button
+                to={{
+                  pathname: `/${handle}/tribe/find/`,
+                  query: { ownId: user.id },
+                }}
+                icon={ <Send fill={white} /> }
+                label={'Send Invite'}
+                primary
+              />
+            </FindH3>
           </Dialog>
         </TopPanel>
         <Row>

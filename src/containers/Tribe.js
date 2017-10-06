@@ -50,14 +50,10 @@ class Tribe extends Component {
               <Button
                 to={{
                   pathname: `/${handle}/tribe/find/`,
-                  query: {
-                    ownId: user.id
-                  },
+                  query: { ownId: user.id },
                 }}
                 icon={
-                  <AddFriend
-                    fill={white}
-                  />
+                  <AddFriend fill={white} />
                 }
                 label={'Add Members'}
                 primary
