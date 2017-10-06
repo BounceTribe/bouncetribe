@@ -542,11 +542,7 @@ class Project extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'TRIBE'})}
                   backgroundColor={(this.state.privacy === 'TRIBE') ? purple : grey300}
-                  icon={
-                    <Tribe
-                      fill={white}
-                    />
-                  }
+                  icon={ <Tribe fill={white} /> }
                 />
                 <ChoiceText>
                   Tribe Only
@@ -556,18 +552,13 @@ class Project extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'PUBLIC'})}
                   backgroundColor={(this.state.privacy === 'PUBLIC') ? purple : grey300}
-                  icon={
-                    <Logo
-                      fill={white}
-                    />
-                  }
+                  icon={ <Logo fill={white} /> }
                 />
                 <ChoiceText>
                   Find Sessions
                 </ChoiceText>
               </Choice>
             </SharingModal>
-
           </Dialog>
         </Top>
         <Tabs
@@ -577,30 +568,20 @@ class Project extends Component {
             display: (ownProject) ? 'none' : '',
             marginBottom: '25px',
           }}
-          inkBarStyle={{
-            backgroundColor: purple
-          }}
+          inkBarStyle={{ backgroundColor: purple }}
           value={this.state.tabs}
         >
           <Tab
             label={'Listen & Give'}
             value={'listen'}
-            onActive={()=>{
-              this.setState({tabs: 'listen'})
-            }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
-            }}
+            onActive={()=>{ this.setState({tabs: 'listen'}) }}
+            style={{ borderBottom: `2px solid ${grey200}` }}
           />
           <Tab
             label={'View Feedback'}
             value={'view'}
-            onActive={()=>{
-              this.setState({tabs: 'view'})
-            }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
-            }}
+            onActive={()=>{ this.setState({tabs: 'view'}) }}
+            style={{ borderBottom: `2px solid ${grey200}` }}
           />
         </Tabs>
         <TrackContainer>

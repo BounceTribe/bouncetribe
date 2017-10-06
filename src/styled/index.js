@@ -101,13 +101,10 @@ export const Button = (props) => {
     <ButtonLink to={props.to} >
       <RaisedButton
         {...props}
-        labelStyle={{
-          textTransform: 'none',
-        }}
+        labelStyle={{ textTransform: 'none', }}
       >
         {props.children}
       </RaisedButton>
-
     </ButtonLink>
   )
 }

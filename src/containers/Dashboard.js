@@ -1,13 +1,12 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, TopPanel, LeftPanel, RightPanel, InviteContainer} from 'styled/Dashboard'
+import {FindEmail, ProfileView, TopPanel, LeftPanel, RightPanel, InviteContainer} from 'styled/Dashboard'
 import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
-import {View, IconText, IconTextContainer, Button} from 'styled'
-import {FindH3} from 'styled/Tribe'
-import {white} from 'theme'
+import {Button, BtFlatButton} from 'styled'
+import {white, purple, grey400} from 'theme'
 import Send from 'icons/Send'
 
 
@@ -25,33 +24,52 @@ class Dashboard extends Component {
           <InviteContainer onClick={()=>{this.setState({invite: true})}}/>
           <Dialog
             title={"Invite to Your Tribe"}
+            titleStyle={{
+              fontSize: '24pt',
+              borderBottom:'0.5px solid ' + grey400,
+              padding: '16px 27px 13.5px 27px',
+              fontFamily: 'Helvetica Neue'
+            }}
+            bodyStyle={{
+              borderBottom:'0.5px solid ' + grey400
+            }}
             actions={[
               <Button
                 label={"Close"}
                 onClick={()=>{ this.setState({invite: false}) }}
               />
+              //TODO FACEBOOOK FRIENDS HERE
             ]}
             open={this.state.invite}
             modal={true}
           >
-            <FindH3>
-              Email
+            <FindEmail>
               <TextField
                 label={'Email'}
                 name={'email'}
                 onChange={()=>{ this.setState({searching: true}) }}
-                placeholder={'enter email here'}
+                placeholder={'Email'}
               />
-              <Button
-                to={{
-                  pathname: `/${handle}/tribe/find/`,
-                  query: { ownId: user.id },
-                }}
-                icon={ <Send fill={white} /> }
+              <BtFlatButton
                 label={'Send Invite'}
-                primary
+                backgroundColor={purple}
+                labelStyle={{
+                  color: white,
+                  fontSize: '14pt',
+                  fontWeight: 'bold',
+                  fontFamily: 'Helvetica Neue'
+                }}
+                icon={ <Send fill={white} height={14} /> }
+                onClick={()=>{ this.props.sendInvite() }}
+                style={{
+                  border: `1px solid ${grey400}`,
+                  borderRadius: '5px',
+                  width: '223px',
+                  height: '41px',
+                  marginTop: '18px'
+                }}
               />
-            </FindH3>
+            </FindEmail>
           </Dialog>
         </TopPanel>
         <Row>
