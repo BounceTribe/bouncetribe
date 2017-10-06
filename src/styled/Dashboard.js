@@ -65,6 +65,6 @@ text-decoration: none;
 color: #777777;
 padding: 0 15px;
 cursor: pointer;
-font-size: 14px;
+font-size: .875em;
 font-weight: Light;
 `
