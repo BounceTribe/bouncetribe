@@ -130,7 +130,7 @@ export const findUserIds = (ids) => {
 export const suggestedFriends = (userId) => {
   return new Promise((resolve, reject) => {
     auth.getUserInfo().then( profile =>{
-      let friends = profile.context.mutualFriends.data
+      let friends = profile.context.mutual_friends.data
       let facebookIds = []
       for (let index in friends) {
         if (index) {
