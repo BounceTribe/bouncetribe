@@ -15,16 +15,20 @@ class Dashboard extends Component {
     console.log('props:', user.portrait.url)
     return (
       <div>
+        <Row>
+          <BtLink>
+                Invite Member<AddButton />
+          </BtLink>
+        </Row>
         <ProfileView>
           <TopPanel>
+            <Column>
             <ProfileImg src={user.portrait.url} />
             <UserName>{user.handle}</UserName> 
             <NavLink to={`/${user.handle}`}>
               Edit Profile
             </NavLink>
-            <BtLink>
-              Invite Member<AddButton />
-            </BtLink>
+            </Column>
           </TopPanel>
           <Row>
             <Column>

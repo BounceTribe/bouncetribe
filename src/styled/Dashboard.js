@@ -46,8 +46,8 @@ export const AddMemberTop = styled(BtLink)`
 `
 
 export const ProfileImg = styled.img`
-  height: 80px;
-  width: 80px;
+  height: 5em;
+  width: 5em;
   border-radius: 50%;
   padding: 1em;
 `
