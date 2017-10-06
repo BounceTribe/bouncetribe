@@ -53,8 +53,8 @@ const InviteMember = styled.div`
   cursor: pointer;
   color: ${grey500};
 `
-export const InviteContainer = () => (
-  <InviteMember>
+export const InviteContainer = ({onClick}) => (
+  <InviteMember onClick={onClick}>
     <span>Invite Member</span>
     <AddButton/>
   </InviteMember>
