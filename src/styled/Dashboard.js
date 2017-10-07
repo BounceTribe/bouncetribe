@@ -1,17 +1,8 @@
 import styled from 'styled-components'
 import React from 'react'
-import {Link} from 'react-router'
 import {View} from 'styled'
 import AddButton from 'icons/AddButton'
-import {grey500, grey40} from 'theme'
-
-export const ModalTitle = styled(Link)`
-  text-decoration: none;
-  color: ${grey40};
-  cursor: pointer;
-  font-size: 25px;
-  font-weight: 200;
-`
+import {grey500} from 'theme'
 
 export const FindEmail = styled.div`
   display: flex;

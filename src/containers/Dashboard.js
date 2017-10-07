@@ -8,30 +8,10 @@ import TextField from 'material-ui/TextField'
 import {Button} from 'styled'
 import {white, purple, grey400} from 'theme'
 import Send from 'icons/Send'
-import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import FlatButton from 'material-ui/FlatButton'
 
 class Dashboard extends Component {
   state = { invite: false, email: null }
-
-
-  createFriendRequest = (recipientId) => {
-    let {id: actorId} = this.props.viewer.user
-    this.props.relay.commitUpdate(
-      new CreateFriendRequest({
-        actorId,
-        recipientId,
-      })
-    )
-  }
-
-  componentWillMount() {
-    this.findFriends()
-  }
-
-  findFriends = () => {
-    console.log('dash props', this.props);
-  }
 
   sendInvite = () => {
     console.log('event', this.state.email);

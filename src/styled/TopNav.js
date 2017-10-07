@@ -41,10 +41,6 @@ export const Title = styled(BtLink)`
   display: flex;
   color: ${white};
 `
-// const Bold = styled.span`
-//   display: flex;
-//   font-weight: 400;
-// `
 
 export const LogoImg = styled.div`
   width: 166px;
@@ -186,9 +182,7 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
   }
 
   return (
-    <BtLink
-      to={link}
-    >
+    <BtLink to={link} >
       <NotifyContainer>
         <NotifyHeader>
           {header}
