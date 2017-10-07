@@ -176,7 +176,7 @@ const createRoutes = () => {
         onEnter={userOnly}
         render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
       />
-
+      
       <Route
         path={'/login'}
         component={Login}

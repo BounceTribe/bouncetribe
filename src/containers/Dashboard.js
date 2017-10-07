@@ -56,6 +56,7 @@ class Dashboard extends Component {
               fontFamily: 'Helvetica Neue'
             }}
             bodyStyle={{borderBottom:'0.5px solid ' + grey400}}
+            contentStyle={{borderRadius: '5px', overflow: 'hidden'}}
             actions={[
               <Button
                 label={"Cancel"}
@@ -64,7 +65,6 @@ class Dashboard extends Component {
               //TODO FACEBOOOK FRIENDS HERE
             ]}
             open={this.state.invite}
-            modal={true}
           >
             <FindEmail>
               <TextField
@@ -97,6 +97,7 @@ class Dashboard extends Component {
                   marginTop: '18px'
                 }}
               />
+              <br />
             </FindEmail>
           </Dialog>
         </TopPanel>
