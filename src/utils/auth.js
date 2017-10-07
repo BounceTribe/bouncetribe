@@ -58,14 +58,10 @@ class AuthService {
 
   fbOptions = (primaryAuthId) => {
     return {
-      allowedConnections: [
-        'facebook'
-      ],
+      allowedConnections: ['facebook'],
       rememberLastLogin: false,
       languageDictionary: {
-        signin: {
-          title: 'Link your Facebook account'
-        }
+        signin: {title: 'Link your Facebook account'}
       },
       auth: {
         params: {

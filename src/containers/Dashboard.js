@@ -5,21 +5,43 @@ import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
-import {Button, BtFlatButton} from 'styled'
+import {Button} from 'styled'
 import {white, purple, grey400} from 'theme'
 import Send from 'icons/Send'
-
+import CreateFriendRequest from 'mutations/CreateFriendRequest'
+import FlatButton from 'material-ui/FlatButton'
 
 class Dashboard extends Component {
-  state = { invite: false, searching: false }
+  state = { invite: false, email: null }
+
+
+  createFriendRequest = (recipientId) => {
+    let {id: actorId} = this.props.viewer.user
+    this.props.relay.commitUpdate(
+      new CreateFriendRequest({
+        actorId,
+        recipientId,
+      })
+    )
+  }
+
+  componentWillMount() {
+    this.findFriends()
+  }
+
+  findFriends = () => {
+    console.log('dash props', this.props);
+  }
+
+  sendInvite = () => {
+    console.log('event', this.state.email);
+    this.setState({invite: false})
+  }
 
   render () {
-    let {User, user} = this.props.viewer
-    console.log('User, user', User, user);
-    let person = (User) ? (User) : (user)
-    let {handle} = person
+    let user = this.props.viewer
+    console.log('user',  user);
 
-    // let {router} = this.props
     return (
       <ProfileView>
         <TopPanel>
@@ -28,17 +50,15 @@ class Dashboard extends Component {
           <Dialog
             title={"Invite to Your Tribe"}
             titleStyle={{
-              fontSize: '24pt',
+              fontSize: '28px',
               borderBottom:'0.5px solid ' + grey400,
               padding: '16px 27px 13.5px 27px',
               fontFamily: 'Helvetica Neue'
             }}
-            bodyStyle={{
-              borderBottom:'0.5px solid ' + grey400
-            }}
+            bodyStyle={{borderBottom:'0.5px solid ' + grey400}}
             actions={[
               <Button
-                label={"Close"}
+                label={"Cancel"}
                 onClick={()=>{ this.setState({invite: false}) }}
               />
               //TODO FACEBOOOK FRIENDS HERE
@@ -50,20 +70,25 @@ class Dashboard extends Component {
               <TextField
                 label={'Email'}
                 name={'email'}
-                onChange={()=>{ this.setState({searching: true}) }}
+                onChange={(ev, em)=>{this.setState({email: em})}}
                 placeholder={'Email'}
               />
-              <BtFlatButton
+              <FlatButton
                 label={'Send Invite'}
                 backgroundColor={purple}
                 labelStyle={{
                   color: white,
-                  fontSize: '14pt',
-                  fontWeight: 'bold',
-                  fontFamily: 'Helvetica Neue'
+                  fontSize: '14px',
+                  fontFamily: 'Helvetica Neue',
+                  textTransform: 'none'
                 }}
-                icon={ <Send fill={white} height={14} /> }
-                onClick={()=>{ this.props.sendInvite() }}
+                icon={
+                  <Send
+                    fill={white}
+                    height={14}
+                    style={{vertialAlign: 'middle', lineHeight: '41px'}}
+                  /> }
+                onClick={()=>{ this.sendInvite() }}
                 style={{
                   border: `1px solid ${grey400}`,
                   borderRadius: '5px',
@@ -106,6 +131,7 @@ class Dashboard extends Component {
             id
             handle
             email
+            portrait { url }
             friends (first: 999) {
               edges {
                 node {
@@ -124,10 +150,10 @@ class Dashboard extends Component {
                             node {name}
                           }
                         }
-                        artwork {url}
+                        artwork { url }
                         creator {
                           handle
-                          portrait {url}
+                          portrait { url }
                         }
                         comments (first: 999) {
                           edges {

@@ -3,9 +3,7 @@ import auth from 'utils/auth'
 
 export const findMatches = async ({user, project}) => {
   try {
-
     let genre = project.genres.edges[0].node.id
-
     let projectsToExclude = []
     let usersToExclude = []
 
@@ -14,9 +12,7 @@ export const findMatches = async ({user, project}) => {
         sessionEdge.node.projects.edges.forEach((edge) => {
           let {
             id: projectId,
-            creator: {
-              handle: creatorHandle
-            }
+            creator: { handle: creatorHandle }
           } = edge.node
           if (projectId !== project.id) {
             projectsToExclude.push(`"${projectId}"`)
@@ -26,13 +22,11 @@ export const findMatches = async ({user, project}) => {
       })
     })
 
-
     usersToExclude.push(`"${user.handle}"`)
 
     user.friends.edges.forEach((friendEdge) => {
       usersToExclude.push(`"${friendEdge.node.handle}"`)
     })
-
 
     let response = await fetch(graphCool.simple, {
         method: 'POST',
@@ -89,68 +83,20 @@ export const findMatches = async ({user, project}) => {
 
 export const findUserIds = (ids) => {
   return fetch(graphCool.simple, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        query: /* GraphQL */`{
-          allUsers (filter: {
-            auth0UserId_in: [${ids.toString()}]
-          }) {
-            id
-            email
-            placename
-            score
-          }
-        }`
-      }),
-    }).then(result=>result.json())
-      .then(json => {
-        console.log('useridsjson', json);
-      return json.data.allUsers.map(user => user.id)
-    })
-}
-
-
-export const suggestedInvites = (userId) => {
-  return new Promise((resolve, reject) => {
-    auth.getUserInfo().then( profile => {
-      let friends = profile.context.mutual_friends.data
-      console.log('gql profile', profile);
-      let facebookIds = []
-      for (let index in friends) {
-        if (index) {
-          facebookIds.push(`"${friends[index].id}"`)
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      query: /* GraphQL */`{
+        allUsers ( filter: { auth0UserId_in: [${ids.toString()}] } ) {
+          id
+          email
+          placename
+          score
         }
-      }
-      return fetch(graphCool.simple, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          query: /* GraphQL */`{
-            allUsers (
-              first: 5
-              filter: { facebookId_in: [${facebookIds.toString()}] }
-            ) {
-              id
-              handle
-              portrait { url }
-              score
-            }
-            User (id: "${userId}") {
-              friends (first: 999) { id }
-            }
-          }`
-        }),
-      }).then(result=>result.json()).then(json => {
-        let fbFriends = json.data.allUsers.map(user=>user)
-        let btFriends = json.data.User.friends.map(user => user.id)
-        let suggestedInvites = fbFriends.filter((fbFriend)=>{
-          return !btFriends.includes(fbFriend.id)
-        })
-        resolve(suggestedInvites)
-      })
-    })
-  })
+      }`
+    }),
+  }).then(result => result.json())
+    .then(json => json.data.allUsers.map(user => user.id) )
 }
 
 export const suggestedFriends = (userId) => {

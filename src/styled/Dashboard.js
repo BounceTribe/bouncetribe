@@ -16,7 +16,7 @@ export const ModalTitle = styled(Link)`
 export const FindEmail = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   box-sizing: border-box;
   width: 100%;
   padding: 30px 0;
@@ -57,7 +57,6 @@ export const RightPanel = styled.div`
   background-color: white;
   border-radius: 5px;
 `
-
 
 const InviteMember = styled.div`
   display: flex;
