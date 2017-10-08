@@ -68,3 +68,16 @@ cursor: pointer;
 font-size: .875em;
 font-weight: Light;
 `
+
+export const LogoText = styled.h2`
+font-size: 1.5em; 
+color: #777777;
+float: left !important;
+font-weight: light;
+`
+
+export const Divider = styled.hr`
+border: .5px solid #E5E5E5;
+height: .5px;
+width: 90%;
+`

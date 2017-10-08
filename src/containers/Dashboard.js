@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {BtLink} from 'styled'
-import {ProfileView, TopPanel, LeftPanel, RightPanel, ProfileImg, UserName, NavList, NavLink, NavText} from 'styled/Dashboard'
+import {ProfileView, TopPanel, LeftPanel, RightPanel, ProfileImg, UserName, NavList, NavLink, NavText, LogoText, Divider} from 'styled/Dashboard'
 import AddButton from 'icons/AddButton'
 import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
+import Logo from 'icons/Headphones'
 
 
 class Dashboard extends Component {
@@ -16,10 +17,14 @@ class Dashboard extends Component {
     return (
       <div>
         <Row>
+            <Logo
+            />
+            <LogoText>My Tribe</LogoText>
           <BtLink>
                 Invite Member<AddButton />
           </BtLink>
         </Row>
+        <Divider />
         <ProfileView>
           <TopPanel>
             <Column>
