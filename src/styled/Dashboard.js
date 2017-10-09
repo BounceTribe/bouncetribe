@@ -2,6 +2,14 @@ import styled from 'styled-components'
 // import React from 'react'
 import {View, BtLink} from 'styled'
 
+export const DashHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 40px;
+`
+
 export const ProfileView = styled(View)`
   background-color: transparent;
   border: none;
@@ -15,7 +23,7 @@ export const TopPanel = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 5px;
-  border: solid black .5px;
+  border: solid #DEDEDE .5px;
   padding-top: 40px;
 `
 
@@ -27,6 +35,7 @@ export const LeftPanel = styled.div`
   padding-left: 20px;
   background-color: white;
   border-radius: 5px;
+  border: solid #DEDEDE .5px;
 `
 
 export const RightPanel = styled.div`
@@ -36,7 +45,7 @@ export const RightPanel = styled.div`
   padding-right: 50px;
   background-color: white;
   border-radius: 5px;
-
+  border: solid #DEDEDE .5px;
 `
 
 export const AddMemberTop = styled(BtLink)`
@@ -72,8 +81,8 @@ font-weight: Light;
 export const LogoText = styled.h2`
 font-size: 1.5em; 
 color: #777777;
-float: left !important;
-font-weight: light;
+font-weight: lighter;
+padding-right: 120vmin;
 `
 
 export const Divider = styled.hr`

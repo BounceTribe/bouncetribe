@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {BtLink} from 'styled'
-import {ProfileView, TopPanel, LeftPanel, RightPanel, ProfileImg, UserName, NavList, NavLink, NavText, LogoText, Divider} from 'styled/Dashboard'
+import {DashHeader, ProfileView, TopPanel, LeftPanel, RightPanel, ProfileImg, UserName, NavList, NavLink, NavText, LogoText, Divider} from 'styled/Dashboard'
 import AddButton from 'icons/AddButton'
 import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
 import Logo from 'icons/Headphones'
+import Bolt from 'icons/Bolt'
 
 
 class Dashboard extends Component {
@@ -16,24 +17,41 @@ class Dashboard extends Component {
     console.log('props:', user.portrait.url)
     return (
       <div>
-        <Row>
+        <DashHeader>  
+          <Row>
             <Logo
             />
-            <LogoText>My Tribe</LogoText>
-          <BtLink>
-                Invite Member<AddButton />
-          </BtLink>
-        </Row>
+            <LogoText
+              style={{
+                alignSelf: 'flex-end'
+              }}
+            >My Tribe</LogoText>
+            <BtLink>
+              Invite Member<AddButton />
+            </BtLink>
+          </Row>
+        </DashHeader>
         <Divider />
         <ProfileView>
           <TopPanel>
             <Column>
             <ProfileImg src={user.portrait.url} />
-            <UserName>{user.handle}</UserName> 
+            </Column>
+            <Column>
+            <UserName
+              style={{
+                marginRight: '124vmin'
+              }}
+            >{user.handle}</UserName> 
             <NavLink to={`/${user.handle}`}>
               Edit Profile
             </NavLink>
             </Column>
+            <Bolt 
+              style={{
+                marginRight: '10px'
+              }}  
+            />
           </TopPanel>
           <Row>
             <Column>
