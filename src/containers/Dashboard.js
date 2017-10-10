@@ -60,6 +60,7 @@ class Dashboard extends Component {
     this.props.router.push('/' + tabAction.props.value + '/' + this.state.selectedUser.handle)
     console.log('route set to', this.props.router.location);
     window.scrollTo(0, document.body.scrollHeight)
+    console.log('tab', this.props.router.params.tab);
   }
 
   render () {
@@ -125,6 +126,7 @@ class Dashboard extends Component {
         </TopPanel>
         <BotRow>
           <DashLeft>
+            {/* JOEY YOUR COMPONENT GOES HERE */}
             <h4>Select a friend</h4>
             {this.friends(this.props.viewer.user.friends)}
           </DashLeft>
@@ -182,9 +184,14 @@ class Dashboard extends Component {
                 onActive={(e)=>{this.setTab(e)}}
               />
             </Tabs>
-            {/* {
-              INDIVIDUAL TAB COMPONENT VIEWS GO HERE!!!
-            } */}
+            {/*
+              CHECK THE URL AND DISPLAY THR CORRECT component
+                {
+                  if(this.params.router.params.tab === 'projects') {
+                    //display the correct component
+                  }
+                }
+            */}
             {/* {selectedUser.id ? (<DirectMessages {...this.props}/>) : (<div/>) } */}
           </DashRight>
         </BotRow>
