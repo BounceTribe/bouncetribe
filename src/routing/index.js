@@ -19,6 +19,7 @@ import Session from 'containers/Session'
 import AllSessions from 'containers/AllSessions'
 import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
+import DirectMessages from 'components/DirectMessages'
 
 import {Loading} from 'styled/Spinner'
 
@@ -157,9 +158,7 @@ const tribeSearch = (params, {location})=>{
 
 const userOnly = (nextState, replace) => {
   if (!auth.getToken()) {
-    replace({
-      pathname: '/login'
-    })
+    replace({ pathname: '/login' })
   }
 }
 
@@ -176,7 +175,24 @@ const createRoutes = () => {
         onEnter={userOnly}
         render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
       />
-
+      <Route
+        path={'/projects'}
+        component={Dashboard}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
+      />
+      <Route
+        path={'/bounces'}
+        component={Dashboard}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
+      />
+      <Route
+        path={'/messages/:userHandle'}
+        component={Dashboard}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
+      />
       <Route
         path={'/login'}
         component={Login}

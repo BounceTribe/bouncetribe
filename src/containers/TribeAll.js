@@ -60,7 +60,6 @@ class TribeAll extends Component {
             </TableRowColumn> */}
             <TableRowColumn>
               <Projects>
-
                 {friend.projects.edges.length}
               </Projects>
             </TableRowColumn>

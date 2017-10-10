@@ -1,26 +1,59 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FindEmail, ProfileView, TopPanel, LeftPanel, RightPanel, InviteContainer} from 'styled/Dashboard'
-import {Row} from 'styled/Profile'
-import {Column} from 'styled/list'
+import {FindEmail, ProfileView, TopPanel, DashLeft, DashRight, InviteContainer} from 'styled/Dashboard'
+import {BotRow} from 'styled/Profile'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
 import {Button} from 'styled'
-import {white, purple, grey400} from 'theme'
+import {white, purple, grey200, grey400} from 'theme'
 import Send from 'icons/Send'
+import {Tabs, Tab} from 'material-ui/Tabs'
+import { ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
+import {formatEnum} from 'utils/strings'
+import Experience from 'icons/Experience'
+import Location from 'icons/Location'
+import Bolt from 'icons/Bolt'
+import {url} from 'config'
 import FlatButton from 'material-ui/FlatButton'
+import DirectMessages from 'components/DirectMessages'
 
 class Dashboard extends Component {
-  state = { invite: false, email: null }
+
+  constructor() {
+    super();
+    this.state = { invite: false, email: null, selectedUser: {} }
+  }
+
+  selectUser = (selectedUser) => {
+    this.setState({selectedUser})
+    console.log('e', selectedUser);
+  }
 
   sendInvite = () => {
     console.log('event', this.state.email);
     this.setState({invite: false})
   }
 
+  friends = (list) => (
+    <ul>
+      {list.edges.map( friend => (
+        <li
+          onClick={()=>this.selectUser(friend.node)}
+          key={friend.node.id}
+        >
+        {friend.node.handle}
+        </li>
+      ))}
+    </ul>
+  )
+
+
   render () {
+    //for testing: remove later
     let user = this.props.viewer
     console.log('user',  user);
+    console.log('props', this.props);
+    console.log('state', this.state);
 
     return (
       <ProfileView>
@@ -81,22 +114,93 @@ class Dashboard extends Component {
             </FindEmail>
           </Dialog>
         </TopPanel>
-        <Row>
-          <Column>
-            <LeftPanel>
-              <h4>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-              The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</h4>
-            </LeftPanel>
-          </Column>
-          <Column>
-            <RightPanel>
-              <h4>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-              The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.</h4>
-            </RightPanel>
-          </Column>
-        </Row>
+        <BotRow>
+          <DashLeft>
+            {this.friends(this.props.viewer.user.friends)}
+          </DashLeft>
+          <DashRight>
+            <ProfContainer>
+              <ProfTop>
+                <ProfLeft>
+                  <Portrait
+                    src={(this.state.selectedUser.portrait) ? this.state.selectedUser.portrait.url : `${url}/logo.png`}
+                    to={`/${this.state.selectedUser.handle}`}
+                  />
+                  <ProfCol>
+                    <ProfHandle to={`/${this.state.selectedUser.handle}`} >
+                      {this.state.selectedUser.handle}
+                    </ProfHandle>
+                    <Score>
+                      <Bolt style={{ marginRight: '5px' }} />
+                      {this.state.selectedUser.score}
+                    </Score>
+                  </ProfCol>
+                </ProfLeft>
+                <MoreInfo>
+                  <Location
+                    fill={purple}
+                    height={20}
+                    width={20}
+                    style={{
+                      marginLeft: '15px',
+                      marginRight: '5px',
+                      display: (this.state.selectedUser.placename) ? '': 'none'
+                    }}
+                  />
+                  {this.state.selectedUser.placename}
+                  <Experience
+                    height={18}
+                    width={18}
+                    style={{
+                      marginLeft: '15px',
+                      marginRight: '5px',
+                      display: (this.state.selectedUser.experience) ? '': 'none'
+                    }}
+                  />
+                  {formatEnum(this.state.selectedUser.experience)}
+                </MoreInfo>
+              </ProfTop>
+            </ProfContainer>
+            <Tabs
+              style={{ marginTop: '6px', marginBottom: '25px', }}
+              inkBarStyle={{ backgroundColor: purple }}
+              value={this.props.router.params.tab}
+            >
+              <Tab
+                label={'Projects'}
+                value={'projects'}
+                onActive={()=>{
+                  this.props.router.replace(`/projects/`)
+                  window.scrollTo(0, document.body.scrollHeight)
+                }}
+                style={{ borderBottom: `2px solid ${grey200}` }}
+              />
+              <Tab
+                label={'bounces'}
+                value={'bounces'}
+                onActive={()=>{
+                  this.props.router.replace(`/bounces/`)
+                  window.scrollTo(0, document.body.scrollHeight)
+                }}
+                style={{ borderBottom: `2px solid ${grey200}` }}
+              />
+              <Tab
+                label={'Messages'}
+                value={'messages'}
+                onActive={()=>{
+                  this.props.router.replace(`/messages/${this.state.selectedUser.handle}`)
+                  window.scrollTo(0, document.body.scrollHeight)
+                }}
+                style={{ borderBottom: `2px solid ${grey200}` }}
+              />
+            </Tabs>
+            {
+              this.state.selectedUser.id
+              ? (<DirectMessages/>)
+              : (<div/>)
+            }
+          </DashRight>
+        </BotRow>
       </ProfileView>
     )
   }
@@ -104,7 +208,6 @@ class Dashboard extends Component {
 
  export default Relay.createContainer(
   Dashboard, {
-    initialVariables: { handle: "", },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -116,6 +219,9 @@ class Dashboard extends Component {
             friends (first: 999) {
               edges {
                 node {
+                  id
+                  handle
+                  portrait { url }
                   projects (
                     first: 999
                     filter: {privacy_not: PRIVATE}

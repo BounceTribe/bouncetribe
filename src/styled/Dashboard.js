@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import React from 'react'
 import {View} from 'styled'
 import AddButton from 'icons/AddButton'
-import {grey500} from 'theme'
+import {grey500, grey400} from 'theme'
 
 export const FindEmail = styled.div`
   display: flex;
@@ -13,10 +13,38 @@ export const FindEmail = styled.div`
   padding: 30px 0;
 `
 
+export const DashLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  background-color: white;
+  min-height: 50vh;
+  width: 25%;
+  border: solid ${grey400} .5px;
+  border-radius: 10px;
+  margin-right: 15px;
+  padding-bottom: 40px;
+`
+
+export const DashRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  background-color: white;
+  min-height: 50vh;
+  width: 75%;
+  border: solid ${grey400} .5px;
+  border-radius: 10px;
+  padding: 0 20px;
+  margin-left: 15px;
+  padding-bottom: 40px;
+`
+
 export const ProfileView = styled(View)`
   background-color: transparent;
   border: none;
   padding: 60px;
+  justify-content: flex-start;
 `
 
 export const TopPanel = styled.div`
@@ -28,25 +56,6 @@ export const TopPanel = styled.div`
   border-radius: 5px;
   border: solid black .5px;
   padding-top: 40px;
-`
-
-export const LeftPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-  ${'' /* justify-content: center; */}
-  ${'' /* width: 30%; */}
-  padding-left: 20px;
-  background-color: white;
-  border-radius: 5px;
-`
-
-export const RightPanel = styled.div`
-  display: flex;
-  flex-direction: column;
-  ${'' /* width: 70%; */}
-  padding-right: 50px;
-  background-color: white;
-  border-radius: 5px;
 `
 
 const InviteMember = styled.div`

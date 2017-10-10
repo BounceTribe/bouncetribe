@@ -320,17 +320,11 @@ class Session extends Component {
                 to={`/${otherUser.handle}`}
               />
               <ProfCol>
-                <ProfHandle
-                  to={`/${otherUser.handle}`}
-                >
+                <ProfHandle to={`/${otherUser.handle}`} >
                   {otherUser.handle}
                 </ProfHandle>
                 <Score>
-                  <Bolt
-                    style={{
-                      marginRight: '5px'
-                    }}
-                  />
+                  <Bolt style={{ marginRight: '5px' }} />
                   {otherUser.score}
                 </Score>
               </ProfCol>
@@ -439,10 +433,7 @@ class Session extends Component {
               </Summary>
             </Info>
           </Top>)
-            :
-            (
-              <div/>
-            )
+            : ( <div/> )
           }
           {(this.props.router.params.tab === 'theirs') ? (
             <TrackContainer>
@@ -453,9 +444,7 @@ class Session extends Component {
                 getDuration={this.getDuration}
               />
             </TrackContainer>
-            ) : (
-              <div/>
-            )
+            ) : ( <div/> )
           }
 
           {(this.props.router.params.tab === 'mine') ? (
@@ -467,9 +456,7 @@ class Session extends Component {
                 getDuration={this.getDuration}
               />
             </TrackContainer>
-            ) : (
-              <div/>
-            )
+            ) : ( <div/> )
           }
 
         {(this.props.router.params.tab === 'theirs' || this.props.router.params.tab === 'mine') ? (
@@ -648,9 +635,7 @@ export default Relay.createContainer(
           user {
             id
             handle
-            artistInfluences (
-              first: 999
-            ) {
+            artistInfluences ( first: 999 ) {
               edges {
                 node {
                   id
@@ -659,9 +644,7 @@ export default Relay.createContainer(
               }
             }
           }
-          Session (
-            id: $sessionId
-          ) {
+          Session ( id: $sessionId ) {
             id
             feedback
             messages (
@@ -675,33 +658,23 @@ export default Relay.createContainer(
                   sender {
                     id
                     handle
-                    portrait {
-                      url
-                    }
+                    portrait { url }
                   }
                 }
               }
             }
-            appreciatedFeedback (
-              first: 2
-            ) {
+            appreciatedFeedback ( first: 2 ) {
               edges {
-                node {
-                  id
-                }
+                node { id }
               }
             }
-            projects (
-              first: 999
-            ) {
+            projects ( first: 999 ) {
               edges {
                 node {
                   id
                   title
                   description
-                  genres (
-                    first: 999
-                  ) {
+                  genres ( first: 999 ) {
                     edges {
                       node {
                         id
@@ -709,9 +682,7 @@ export default Relay.createContainer(
                       }
                     }
                   }
-                  tracks (
-                    first: 1
-                  ){
+                  tracks ( first: 1 ){
                     edges {
                       node {
                         id
@@ -720,9 +691,7 @@ export default Relay.createContainer(
                       }
                     }
                   }
-                  artwork {
-                    url
-                  }
+                  artwork { url }
                   comments (
                     first: 999
                     orderBy: timestamp_ASC
@@ -736,40 +705,26 @@ export default Relay.createContainer(
                           id
                           handle
                           score
-                          portrait {
-                            url
-                          }
+                          portrait { url }
                         }
-                        project {
-                          id
-                        }
-                        session {
-                          id
-                        }
+                        project { id }
+                        session { id }
                         timestamp
-                        children (
-                          first: 999
-                        ) {
+                        children ( first: 999 ) {
                           edges {
                             node {
                               id
                               text
                               author {
                                 handle
-                                portrait {
-                                  url
-                                }
+                                portrait { url }
                               }
                             }
                           }
                         }
-                        upvotes (
-                          first: 999
-                        ) {
+                        upvotes ( first: 999 ) {
                           edges {
-                            node {
-                              id
-                            }
+                            node { id }
                           }
                         }
                       }
@@ -778,9 +733,7 @@ export default Relay.createContainer(
                   creator {
                     id
                     score
-                    artistInfluences (
-                      first: 999
-                    ) {
+                    artistInfluences ( first: 999 ) {
                       edges {
                         node {
                           id
@@ -789,17 +742,11 @@ export default Relay.createContainer(
                       }
                     }
                     handle
-                    portrait {
-                      url
-                    }
+                    portrait { url }
                     placename
-                    friends (
-                      first: 999
-                    ) {
+                    friends ( first: 999 ) {
                       edges {
-                        node {
-                          id
-                        }
+                        node { id }
                       }
                     }
                   }
