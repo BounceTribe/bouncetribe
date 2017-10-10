@@ -175,7 +175,7 @@ const createRoutes = () => {
         render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
       />
       <Route
-        path={'/:tab/:userHandle'}
+        path={'/:tab/dash/:userHandle'}
         component={Dashboard}
         queries={ViewerQuery}
       />

@@ -27,7 +27,7 @@ class Dashboard extends Component {
   componentDidMount() {
     let selectedUser = this.props.viewer.user.friends.edges[0].node;
     this.setState({selectedUser})
-    this.props.router.replace('/messages/' + selectedUser.handle)
+    this.props.router.replace('/projects/dash/' + selectedUser.handle)
     window.scrollTo(0, document.body.scrollHeight)
   }
 
@@ -57,14 +57,21 @@ class Dashboard extends Component {
   )
 
   setTab = (tabAction) => {
-    this.props.router.push('/' + tabAction.props.value + '/' + this.state.selectedUser.handle)
+    this.props.router.replace('/' + tabAction.props.value + '/dash/' + this.state.selectedUser.handle)
     console.log('route set to', this.props.router.location);
     window.scrollTo(0, document.body.scrollHeight)
     console.log('tab', this.props.router.params.tab);
   }
 
   render () {
+    const DASHBOARD_STATES = {
+      //JIM YOUR COMPONENT GOES BELOW
+      projects: (<div>projects View</div>)/*<DashProjects />*/,
+      bounces: (<div>bounces view</div>)/*<Bounces />*/,
+      messages: (<div>direct message view</div>)/*<DirectMessages  {...this.props} />*/
+    }
     let selectedUser = this.state.selectedUser;
+    console.log('render - this', this);
     return (
       <ProfileView>
         <TopPanel>
@@ -172,8 +179,7 @@ class Dashboard extends Component {
               style={{ marginTop: '6px', marginBottom: '25px', }}
               tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
               inkBarStyle={{ backgroundColor: purple }}
-              value={this.props.router.params.tab}
-            >
+              value={this.props.router.params.tab} >
               <Tab label={'projects'} value={'projects'}
                 onActive={(e)=>{this.setTab(e)}}
               />
@@ -184,15 +190,7 @@ class Dashboard extends Component {
                 onActive={(e)=>{this.setTab(e)}}
               />
             </Tabs>
-            {/*
-              CHECK THE URL AND DISPLAY THR CORRECT component
-                {
-                  if(this.params.router.params.tab === 'projects') {
-                    //display the correct component
-                  }
-                }
-            */}
-            {/* {selectedUser.id ? (<DirectMessages {...this.props}/>) : (<div/>) } */}
+              {DASHBOARD_STATES[this.props.router.params.tab]}
           </DashRight>
         </BotRow>
       </ProfileView>

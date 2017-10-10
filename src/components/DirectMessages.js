@@ -84,7 +84,7 @@ class DirectMessages extends Component {
 
   messages = () => {
     let messages = []
-    this.state.messages.forEach( (message, index) =>{
+    (this.state.messages || []).forEach( (message, index) =>{
       if (index === 0) {
         messages.push(
           <MessageNamePortraitRow key={`portrait${message.node.id}`} >
