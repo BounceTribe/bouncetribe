@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import Relay from 'react-relay'
+import React, {Component} from 'react'
+// import Relay from 'react-relay'
 import { MessageContainer, Messages, MessageText, SenderHandle, MessagePortrait, MessageNamePortraitRow, MessageDivider} from 'styled/Sessions'
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
@@ -15,18 +15,17 @@ class DirectMessages extends Component {
     )
 
     this.state = {
-      duration: 0,
       active: [],
-      messages: []
+      receivedMessages: [],
+      sentMessages: [],
+      message: ''
     }
 
     this.feedSub.subscribe(
       {
         query: /* GraphQL */`subscription createMessage {
           Message (
-            filter: {
-              mutation_in: [CREATED]
-            }
+            filter: { mutation_in: [CREATED] }
           ) {
             node {
               sender {
@@ -52,24 +51,11 @@ class DirectMessages extends Component {
     )
   }
 
-
-
-  static childContextTypes = {
-    duration: PropTypes.number,
-    time: PropTypes.number
-  }
-
   componentWillMount() {
     console.log('DM props', this.props);
-    let {edges: messages} = this.props.viewer.user.receivedMessages
+    let messages = this.props.viewer.user.receivedMessages
     this.setState({ messages })
-  }
-
-  getChildContext() {
-    return {
-      duration: this.state.duration,
-      time: this.state.time
-    }
+    console.log('DM state', this.state);
   }
 
   currentTime = (time) => this.setState({ time })
@@ -96,7 +82,7 @@ class DirectMessages extends Component {
     }
   }
 
-  get messages() {
+  messages = () => {
     let messages = []
     this.state.messages.forEach( (message, index) =>{
       if (index === 0) {
@@ -131,10 +117,10 @@ class DirectMessages extends Component {
 
   render() {
     console.log('DM props', this.props);
-
+    console.log('messages', this.messages);
     return (
       <MessageContainer>
-        {this.messages}
+        {this.messages()}
         <TextField
           multiLine
           name="message"
@@ -163,33 +149,4 @@ class DirectMessages extends Component {
 }
 
 
-export default Relay.createContainer(
-  DirectMessages, {
-    initialVariables: {
-      userHandle: ''
-    },
-    fragments: {
-      viewer: () => Relay.QL`
-        fragment on Viewer {
-          user {
-            id
-            handle
-          }
-          User (handle: $userHandle) {
-            receivedMessages (
-              first: 20
-            ) {
-              edges {
-                node {
-                  text
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
-      		}
-        }
-      `
-    }
-  }
-)
+export default DirectMessages

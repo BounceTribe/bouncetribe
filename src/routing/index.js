@@ -19,7 +19,6 @@ import Session from 'containers/Session'
 import AllSessions from 'containers/AllSessions'
 import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
-import DirectMessages from 'components/DirectMessages'
 
 import {Loading} from 'styled/Spinner'
 
@@ -176,13 +175,12 @@ const createRoutes = () => {
         render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
       />
       <Route
-        path={'/projects'}
+        path={'/:tab/:userHandle'}
         component={Dashboard}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
       />
-      <Route
-        path={'/bounces'}
+      {/* <Route
+        path={'/bounces/:userHandle'}
         component={Dashboard}
         queries={ViewerQuery}
         render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
@@ -192,7 +190,7 @@ const createRoutes = () => {
         component={Dashboard}
         queries={ViewerQuery}
         render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
-      />
+      /> */}
       <Route
         path={'/login'}
         component={Login}

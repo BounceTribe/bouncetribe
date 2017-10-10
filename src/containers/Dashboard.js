@@ -19,14 +19,23 @@ import DirectMessages from 'components/DirectMessages'
 
 class Dashboard extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { invite: false, email: null, selectedUser: {} }
   }
 
-  selectUser = (selectedUser) => {
+  componentDidMount() {
+    let selectedUser = this.props.viewer.user.friends.edges[0].node;
     this.setState({selectedUser})
-    console.log('e', selectedUser);
+    this.props.router.replace('/messages/' + selectedUser.handle)
+    window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  selectUser = (selectedUser) => {
+    let location = this.props.location.pathname
+    location = location.replace(this.state.selectedUser.handle, selectedUser.handle)
+    this.props.router.replace(location)
+    this.setState({selectedUser})
   }
 
   sendInvite = () => {
@@ -47,14 +56,14 @@ class Dashboard extends Component {
     </ul>
   )
 
+  setTab = (tabAction) => {
+    this.props.router.push('/' + tabAction.props.value + '/' + this.state.selectedUser.handle)
+    console.log('route set to', this.props.router.location);
+    window.scrollTo(0, document.body.scrollHeight)
+  }
 
   render () {
-    //for testing: remove later
-    let user = this.props.viewer
-    console.log('user',  user);
-    console.log('props', this.props);
-    console.log('state', this.state);
-
+    let selectedUser = this.state.selectedUser;
     return (
       <ProfileView>
         <TopPanel>
@@ -116,6 +125,7 @@ class Dashboard extends Component {
         </TopPanel>
         <BotRow>
           <DashLeft>
+            <h4>Select a friend</h4>
             {this.friends(this.props.viewer.user.friends)}
           </DashLeft>
           <DashRight>
@@ -123,82 +133,59 @@ class Dashboard extends Component {
               <ProfTop>
                 <ProfLeft>
                   <Portrait
-                    src={(this.state.selectedUser.portrait) ? this.state.selectedUser.portrait.url : `${url}/logo.png`}
-                    to={`/${this.state.selectedUser.handle}`}
+                    src={(selectedUser.portrait) ? selectedUser.portrait.url : `${url}/logo.png`}
+                    to={`/${selectedUser.handle}`}
                   />
                   <ProfCol>
-                    <ProfHandle to={`/${this.state.selectedUser.handle}`} >
-                      {this.state.selectedUser.handle}
+                    <ProfHandle to={`/${selectedUser.handle}`} >
+                      {selectedUser.handle}
                     </ProfHandle>
                     <Score>
                       <Bolt style={{ marginRight: '5px' }} />
-                      {this.state.selectedUser.score}
+                      {selectedUser.score}
                     </Score>
                   </ProfCol>
                 </ProfLeft>
                 <MoreInfo>
-                  <Location
-                    fill={purple}
-                    height={20}
-                    width={20}
+                  <Location fill={purple} height={20} width={20}
                     style={{
                       marginLeft: '15px',
                       marginRight: '5px',
-                      display: (this.state.selectedUser.placename) ? '': 'none'
+                      display: (selectedUser.placename) ? '': 'none'
                     }}
                   />
-                  {this.state.selectedUser.placename}
-                  <Experience
-                    height={18}
-                    width={18}
+                  {selectedUser.placename}
+                  <Experience height={18} width={18}
                     style={{
                       marginLeft: '15px',
                       marginRight: '5px',
-                      display: (this.state.selectedUser.experience) ? '': 'none'
+                      display: (selectedUser.experience) ? '': 'none'
                     }}
                   />
-                  {formatEnum(this.state.selectedUser.experience)}
+                  {formatEnum(selectedUser.experience)}
                 </MoreInfo>
               </ProfTop>
             </ProfContainer>
             <Tabs
               style={{ marginTop: '6px', marginBottom: '25px', }}
+              tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
               inkBarStyle={{ backgroundColor: purple }}
               value={this.props.router.params.tab}
             >
-              <Tab
-                label={'Projects'}
-                value={'projects'}
-                onActive={()=>{
-                  this.props.router.replace(`/projects/`)
-                  window.scrollTo(0, document.body.scrollHeight)
-                }}
-                style={{ borderBottom: `2px solid ${grey200}` }}
+              <Tab label={'projects'} value={'projects'}
+                onActive={(e)=>{this.setTab(e)}}
               />
-              <Tab
-                label={'bounces'}
-                value={'bounces'}
-                onActive={()=>{
-                  this.props.router.replace(`/bounces/`)
-                  window.scrollTo(0, document.body.scrollHeight)
-                }}
-                style={{ borderBottom: `2px solid ${grey200}` }}
+              <Tab label={'bounces'} value={'bounces'}
+                onActive={(e)=>{this.setTab(e)}}
               />
-              <Tab
-                label={'Messages'}
-                value={'messages'}
-                onActive={()=>{
-                  this.props.router.replace(`/messages/${this.state.selectedUser.handle}`)
-                  window.scrollTo(0, document.body.scrollHeight)
-                }}
-                style={{ borderBottom: `2px solid ${grey200}` }}
+              <Tab label={'messages'} value={'messages'}
+                onActive={(e)=>{this.setTab(e)}}
               />
             </Tabs>
-            {
-              this.state.selectedUser.id
-              ? (<DirectMessages/>)
-              : (<div/>)
-            }
+            {/* {
+              INDIVIDUAL TAB COMPONENT VIEWS GO HERE!!!
+            } */}
+            {/* {selectedUser.id ? (<DirectMessages {...this.props}/>) : (<div/>) } */}
           </DashRight>
         </BotRow>
       </ProfileView>
@@ -206,10 +193,9 @@ class Dashboard extends Component {
   }
  }
 
- export default Relay.createContainer(
-  Dashboard, {
-    fragments: {
-      viewer: () => Relay.QL`
+ export default Relay.createContainer( Dashboard, {
+    initialVariables: { userHandle: '' },
+    fragments: { viewer: () => Relay.QL`
         fragment on Viewer {
           user {
             id
@@ -250,6 +236,30 @@ class Dashboard extends Component {
                       }
                     }
                   }
+                }
+              }
+            }
+            sentMessages (
+              first: 20
+            ) {
+              edges {
+                node {
+                  text
+                  sender
+                  createdAt
+                  updatedAt
+                }
+              }
+            }
+          }
+          User (handle: $userHandle) {
+            receivedMessages (first: 20) {
+              edges {
+                node {
+                  text
+                  sender
+                  createdAt
+                  updatedAt
                 }
               }
             }

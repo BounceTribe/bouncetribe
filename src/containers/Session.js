@@ -312,7 +312,6 @@ class Session extends Component {
     return (
       <View>
         <ProfContainer>
-
           <ProfTop>
             <ProfLeft>
               <Portrait
@@ -341,9 +340,7 @@ class Session extends Component {
                 }}
               />
               {otherUser.placename}
-              <Experience
-                height={18}
-                width={18}
+              <Experience height={18} width={18}
                 style={{
                   marginLeft: '15px',
                   marginRight: '5px',
@@ -351,9 +348,7 @@ class Session extends Component {
                 }}
               />
               {formatEnum(otherUser.experience)}
-              <Tribe
-                height={15}
-                width={15}
+              <Tribe height={15} width={15}
                 style={{
                   marginLeft: '15px',
                   marginRight: '5px'
@@ -373,6 +368,7 @@ class Session extends Component {
             marginTop: '6px',
             marginBottom: '25px',
           }}
+          tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
           inkBarStyle={{ backgroundColor: purple }}
           value={this.props.router.params.tab}
         >
@@ -382,7 +378,6 @@ class Session extends Component {
             onActive={()=>{
               this.props.router.push(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/theirs`)
             }}
-            style={{ borderBottom: `2px solid ${grey200}` }}
           />
           <Tab
             label={'MY PROJECT'}
@@ -390,7 +385,6 @@ class Session extends Component {
             onActive={()=>{
               this.props.router.push(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/mine`)
             }}
-            style={{ borderBottom: `2px solid ${grey200}` }}
           />
           <Tab
             label={'Messages'}
@@ -398,9 +392,6 @@ class Session extends Component {
             onActive={()=>{
               this.props.router.replace(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/messages`)
               window.scrollTo(0, document.body.scrollHeight)
-            }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
             }}
           />
         </Tabs>
