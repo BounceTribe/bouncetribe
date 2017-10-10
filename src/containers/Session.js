@@ -35,21 +35,17 @@ class Session extends Component {
     super(props)
     this.feedSub = new SubscriptionClient(
       'wss://subscriptions.graph.cool/v1/bt-api',
-      {
-        reconnect: true,
-      }
+      { reconnect: true, }
     )
 
     this.feedSub.subscribe(
       {
-        query: `subscription createMessage {
+        query: /* GraphQL */`subscription createMessage {
           Message (
             filter: {
               mutation_in: [CREATED]
               node: {
-                sessionParent: {
-                  id: "${this.props.viewer.Session.id}"
-                }
+                sessionParent: { id: "${this.props.viewer.Session.id}" }
               }
             }
           ) {
@@ -57,26 +53,21 @@ class Session extends Component {
               sender {
                 id
                 handle
-                portrait {
-                  url
-                }
+                portrait { url }
               }
               text
               id
             }
           }
         }`
-      },
-      (error, result) => {
+      }, (error, result) => {
         if (result) {
           let newMessage = result.Message
           this.setState( (prevState) => {
             let {messages} = prevState
             messages.push(newMessage)
-            return {
-              messages
-            }
-          })
+            return { messages }
+          } )
         }
       }
     )
@@ -96,9 +87,7 @@ class Session extends Component {
 
   componentWillMount() {
     let {edges: messages} = this.props.viewer.Session.messages
-    this.setState({
-      messages
-    })
+    this.setState({ messages })
   }
 
   getChildContext() {
@@ -108,11 +97,8 @@ class Session extends Component {
     }
   }
 
-  currentTime = (time) => {
-    this.setState({
-      time
-    })
-  }
+  currentTime = (time) => this.setState({ time })
+
 
   dropMarker = (type) => {
     let self = this.props.viewer.user
@@ -157,10 +143,8 @@ class Session extends Component {
     })
 
 
-    return commonInfluences.map((edge)=> (
-      <InfluenceChip
-        key={edge.node.id}
-      >
+    return commonInfluences.map( (edge)=> (
+      <InfluenceChip key={edge.node.id}>
         {edge.node.name}
       </InfluenceChip>
     ))
@@ -170,9 +154,7 @@ class Session extends Component {
     this.setState( (prevState) => {
       let {active} = prevState
       active.push(index)
-      return {
-        active
-      }
+      return {active}
     })
   }
 
@@ -180,9 +162,7 @@ class Session extends Component {
     this.setState( (prevState) => {
       let {active} = prevState
       active.splice(active.indexOf(index),1)
-      return {
-        active
-      }
+      return {active}
     })
   }
 
@@ -218,7 +198,6 @@ class Session extends Component {
         return true
       }
     })
-
     return comments
   }
 
@@ -247,16 +226,9 @@ class Session extends Component {
     this.state.messages.forEach( (message, index) =>{
       if (index === 0) {
         messages.push(
-          <MessageNamePortraitRow
-            key={`portrait${message.node.id}`}
-          >
-            <MessagePortrait
-              src={message.node.sender.portrait.url}
-            />
-            <SenderHandle
-              key={`handle${message.node.id}`}
-
-            >
+          <MessageNamePortraitRow key={`portrait${message.node.id}`} >
+            <MessagePortrait src={message.node.sender.portrait.url} />
+            <SenderHandle key={`handle${message.node.id}`} >
               {message.node.sender.handle}
             </SenderHandle>
           </MessageNamePortraitRow>
@@ -264,38 +236,24 @@ class Session extends Component {
       } else if (message.node.sender.id !== this.state.messages[index - 1].node.sender.id) {
         messages.push(<MessageDivider/>)
         messages.push(
-          <MessageNamePortraitRow
-            key={`portrait${message.node.id}`}
-          >
-            <MessagePortrait
-              src={message.node.sender.portrait.url}
-            />
-            <SenderHandle
-              key={`handle${message.node.id}`}
-
-            >
+          <MessageNamePortraitRow key={`portrait${message.node.id}`} >
+            <MessagePortrait src={message.node.sender.portrait.url} />
+            <SenderHandle key={`handle${message.node.id}`} >
               {message.node.sender.handle}
             </SenderHandle>
           </MessageNamePortraitRow>
-
         )
       }
       messages.push(
-        <MessageText
-          key={`text${message.node.id}`}
-        >
+        <MessageText key={`text${message.node.id}`} >
           {message.node.text}
         </MessageText>
       )
-
     })
 
     return (
-      <Messages
-        id={'messages'}
-      >
+      <Messages id={'messages'} >
         {messages}
-
       </Messages>
     )
 
@@ -421,9 +379,7 @@ class Session extends Component {
             marginTop: '6px',
             marginBottom: '25px',
           }}
-          inkBarStyle={{
-            backgroundColor: purple
-          }}
+          inkBarStyle={{ backgroundColor: purple }}
           value={this.props.router.params.tab}
         >
           <Tab
@@ -432,9 +388,7 @@ class Session extends Component {
             onActive={()=>{
               this.props.router.push(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/theirs`)
             }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
-            }}
+            style={{ borderBottom: `2px solid ${grey200}` }}
           />
           <Tab
             label={'MY PROJECT'}
@@ -442,9 +396,7 @@ class Session extends Component {
             onActive={()=>{
               this.props.router.push(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/mine`)
             }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
-            }}
+            style={{ borderBottom: `2px solid ${grey200}` }}
           />
           <Tab
             label={'Messages'}
@@ -527,9 +479,7 @@ class Session extends Component {
                 comments={this.includeNew()}
                 duration={this.state.duration}
               />
-              <ButtonRow
-                hide={(this.props.router.params.tab === 'mine')}
-              >
+              <ButtonRow hide={(this.props.router.params.tab === 'mine')} >
                 <ButtonColumn>
                   <RoundButton
                     big
