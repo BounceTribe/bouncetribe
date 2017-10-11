@@ -52,6 +52,7 @@ class TribeFind extends Component {
   findFriends = () => {
     suggestedFriends(this.props.viewer.user.id).then(suggestions=>{
       this.setState((prevState, props)=>{
+
         let users = suggestions.map(user => (
           <SearchUser
             key={user.id}
@@ -60,6 +61,7 @@ class TribeFind extends Component {
           />
         ))
         console.log(users)
+        
         return { suggestions: users }
       })
     })

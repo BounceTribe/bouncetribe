@@ -16,8 +16,9 @@ class DirectMessages extends Component {
 
     this.state = {
       active: [],
-      receivedMessages: [],
-      sentMessages: [],
+      received: [],
+      sent: [],
+      messages: [],
       message: ''
     }
 
@@ -53,27 +54,14 @@ class DirectMessages extends Component {
 
   componentWillMount() {
     console.log('DM props', this.props);
-    let messages = this.props.viewer.user.receivedMessages
+    let received = this.props.viewer.User.receivedMessages.edges
+    let sent = this.props.viewer.user.sentMessages.edges
+    let messages = received.concat(sent)
     this.setState({ messages })
     console.log('DM state', this.state);
   }
 
   currentTime = (time) => this.setState({ time })
-
-  activate = (index) => {
-    this.setState( (prevState) => {
-      let {active} = prevState
-      active.push(index)
-      return {active}
-    })
-  }
-  deactivate = (index) => {
-    this.setState( (prevState) => {
-      let {active} = prevState
-      active.splice(active.indexOf(index),1)
-      return {active}
-    })
-  }
 
   componentDidMount(){
     console.log('DM props', this.props);
@@ -82,11 +70,12 @@ class DirectMessages extends Component {
     }
   }
 
-  messages = () => {
-    let messages = []
-    (this.state.messages || []).forEach( (message, index) =>{
+  messageDisplay = (messages) => {
+    let msgList = []
+    console.log('state in messages', this.state);
+    (messages || []).forEach( (message, index) =>{
       if (index === 0) {
-        messages.push(
+        msgList.push(
           <MessageNamePortraitRow key={`portrait${message.node.id}`} >
             <MessagePortrait src={message.node.sender.portrait.url} />
             <SenderHandle key={`handle${message.node.id}`} >
@@ -94,10 +83,9 @@ class DirectMessages extends Component {
             </SenderHandle>
           </MessageNamePortraitRow>
         )
-      } else if (message.node.sender.id !== this.state.messages[index - 1].node.sender.id) {
-        messages.push(<MessageDivider key={`portrait${message.node.id}`}/>)
-        messages.push(
-          <MessageNamePortraitRow key={`portrait${message.node.id}`} >
+      } else if (message.node.sender.id !== messages[index - 1].node.sender.id) {
+        msgList.push(<MessageDivider key={`portrait${message.node.id}`}/>)
+        msgList.push(<MessageNamePortraitRow key={`portrait${message.node.id}`} >
             <MessagePortrait src={message.node.sender.portrait.url} />
             <SenderHandle key={`handle${message.node.id}`} >
               {message.node.sender.handle}
@@ -105,14 +93,13 @@ class DirectMessages extends Component {
           </MessageNamePortraitRow>
         )
       }
-      messages.push(
+      msgList.push(
         <MessageText key={`text${message.node.id}`} >
           {message.node.text}
         </MessageText>
       )
     })
-
-    return (<Messages id={'messages'}>{messages}</Messages>)
+    return (<Messages id={'messages'}>{msgList}</Messages>)
   }
 
   render() {
@@ -120,7 +107,7 @@ class DirectMessages extends Component {
     console.log('messages', this.messages);
     return (
       <MessageContainer>
-        {this.messages()}
+        {this.messageDisplay(this.state.messages)}
         <TextField
           multiLine
           name="message"

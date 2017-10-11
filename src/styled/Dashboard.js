@@ -2,15 +2,42 @@ import styled from 'styled-components'
 import React from 'react'
 import {View} from 'styled'
 import AddButton from 'icons/AddButton'
-import {grey500, grey400} from 'theme'
+import { grey500, grey400} from 'theme'
 
-export const FindEmail = styled.div`
+export const DialogRow = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: stretch;
   box-sizing: border-box;
   width: 100%;
-  padding: 30px 0;
+  padding: 25px 0;
+  border-bottom: 0.5px solid ${grey400};
+`
+export const FbDialogRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+`
+export const DialogSpacer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding-left: 27px;
+  box-sizing: border-box;
+`
+export const TopCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 30px;
+`
+export const DialogRow2 = styled(DialogRow)`
+  justify-content: space-between;
 `
 
 export const DashLeft = styled.div`
