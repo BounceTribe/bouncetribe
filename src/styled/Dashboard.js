@@ -54,16 +54,6 @@ export const SendInviteBtn = ({onClick}) => (
   />
 )
 
-
-
-
-// styled(FlatButton)`
-//   border: 1px solid ${grey400};
-//   border-radius: 5px;
-//   width: 60px;
-//   height: 4 0px;
-//   background-color: ${white};
-// `
 export const DialogSpacer = styled.div`
   display: flex;
   flex-direction: column;
