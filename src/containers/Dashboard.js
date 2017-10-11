@@ -25,6 +25,7 @@ class Dashboard extends Component {
     this.state = {
       invite: false,
       email: null,
+      maxSuggestedFriends: 2,
       selectedUser: {},
       suggestions: []
     }
@@ -34,14 +35,14 @@ class Dashboard extends Component {
     let selectedUser = this.props.viewer.user.friends.edges[0].node;
     this.setState( {selectedUser} )
     this.props.router.replace('/projects/dash/' + selectedUser.handle)
-    this.suggestFriends(5);
+    this.suggestFriends(this.state.maxSuggestedFriends);
   }
 
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
         //uncomment below to double suggestion list for testing
-        // suggestions = suggestions.concat(suggestions);
+        suggestions = suggestions.concat(suggestions);
         // suggestions = suggestions.concat(suggestions);
         let list = suggestions.slice(0, max).map( friend =>
           <FbList
