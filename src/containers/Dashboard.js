@@ -4,7 +4,7 @@ import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, D
 import {BotRow} from 'styled/Profile'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
-import {white, purple, grey200, grey400} from 'theme'
+import {purple, grey200, grey400} from 'theme'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import { ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
 import {formatEnum} from 'utils/strings'
@@ -12,7 +12,7 @@ import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import {url} from 'config'
-import DirectMessages from 'components/DirectMessages'
+// import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
@@ -34,16 +34,20 @@ class Dashboard extends Component {
     let selectedUser = this.props.viewer.user.friends.edges[0].node;
     this.setState( {selectedUser} )
     this.props.router.replace('/projects/dash/' + selectedUser.handle)
-    this.suggestFriends();
+    this.suggestFriends(5);
   }
 
-  suggestFriends = () => {
+  suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
         //uncomment below to double suggestion list for testing
         // suggestions = suggestions.concat(suggestions);
-        let list = suggestions.map( friend =>
-          <FbList key={Math.random()} friend={friend} />
+        // suggestions = suggestions.concat(suggestions);
+        let list = suggestions.slice(0, max).map( friend =>
+          <FbList
+            key={Math.random()}
+            createFriendRequest={() => this.createFriendRequest(friend.id)}
+            friend={friend} />
         )
         return {suggestions: list}
       })
@@ -62,9 +66,8 @@ class Dashboard extends Component {
     this.setState({invite: false})
   }
 
-  addToTribe = () => {
+  createFriendRequest = (recipientId) => {
     let {id: actorId} = this.props.viewer.user
-    let {id: recipientId} = this.props.viewer.User
     this.props.relay.commitUpdate(
       new CreateFriendRequest({
         actorId,

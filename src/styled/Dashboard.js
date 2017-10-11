@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React from 'react'
+import React, {Component} from 'react'
 import {View} from 'styled'
 import AddButton from 'icons/AddButton'
 import Send from 'icons/Send'
@@ -11,7 +11,6 @@ import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
 import {url} from 'config'
 
-
 export const DialogRow = styled.div`
   display: flex;
   flex-direction: column;
@@ -19,6 +18,7 @@ export const DialogRow = styled.div`
   width: 100%;
   padding: 25px 0;
   border-bottom: 0.5px solid ${grey400};
+
 `
 const FbDialogRow = styled.div`
   display: flex;
@@ -146,26 +146,38 @@ export const InviteContainer = ({onClick}) => (
   </InviteMember>
 )
 
-export const FbList= ({friend}) => {
-  console.log('FRIEND', friend);
-  return (<FbDialogRow user={friend} >
-    <SubRow>
-      <SmallPic
-        src={friend.portrait ? friend.portrait.url : `${url}/logo.png`}
-        to={`/${friend.handle}`} />
-      <Name style={{lineHeight:'55px'}} to={`/${friend.handle}`}>{friend.handle}</Name>
-    </SubRow>
-    <BtFlatButton
-      to={`/${friend.handle}/tribe`}
-      backgroundColor={white}
-      labelStyle={{ color: `${white}` }}
-      icon={ <AddFriend fill={purple} height={16} /> }
-      style={{
-        border: `1px solid ${grey400}`,
-        borderRadius: '5px',
-        width: '60px',
-        height: '4 0px'
-      }}
-    />
-  </FbDialogRow>)
+export class FbList extends Component {
+  state = { invited: false, }
+  render () {
+    let {friend, createFriendRequest} = this.props
+    let {invited} = this.state
+    return (
+      <FbDialogRow user={friend} >
+        <SubRow>
+          <SmallPic
+            src={friend.portrait ? friend.portrait.url : `${url}/logo.png`}
+            to={`/${friend.handle}`} />
+          <Name style={{lineHeight:'55px'}} to={`/${friend.handle}`}>
+            {friend.handle}
+          </Name>
+        </SubRow>
+        <BtFlatButton
+          onClick={()=>{
+            this.setState({ invited: true, })
+            createFriendRequest()
+          }}
+          backgroundColor={white}
+          labelStyle={{ color: `${white}` }}
+          icon={ <AddFriend fill={(invited) ? white : purple} height={16} /> }
+          style={{
+            border: `1px solid ${grey400}`,
+            borderRadius: '5px',
+            width: '60px',
+            height: '4 0px'
+          }}
+          disabled={invited}
+        />
+      </FbDialogRow>
+    )
+}
 }
