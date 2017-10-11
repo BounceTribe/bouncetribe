@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FbDialogRow, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteContainer} from 'styled/Dashboard'
-import {BotRow, TopCol, SubRow, FriendButtonCol} from 'styled/Profile'
+import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteContainer} from 'styled/Dashboard'
+import {BotRow} from 'styled/Profile'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
 import {white, purple, grey200, grey400} from 'theme'
-import Send from 'icons/Send'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import { ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
 import {formatEnum} from 'utils/strings'
@@ -13,13 +12,9 @@ import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import {url} from 'config'
-import FlatButton from 'material-ui/FlatButton'
 import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
-// import CreateFriendRequest from 'mutations/CreateFriendRequest'
-import {SmallPic, Name} from 'styled/Tribe'
-import {BtFlatButton} from 'styled'
-import AddFriend from 'icons/AddFriend'
+import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
 
 
@@ -37,35 +32,18 @@ class Dashboard extends Component {
 
   componentDidMount() {
     let selectedUser = this.props.viewer.user.friends.edges[0].node;
-    this.setState({selectedUser})
+    this.setState( {selectedUser} )
     this.props.router.replace('/projects/dash/' + selectedUser.handle)
     this.suggestFriends();
   }
 
   suggestFriends = () => {
-    suggestedFriends(this.props.viewer.user.id).then(suggestions=>{
-      this.setState((prevState, props)=>{
-        suggestions = suggestions.concat(suggestions);
-        console.log('suggestions', suggestions);
-        let list = suggestions.map(friend =>
-          <FbDialogRow key={Math.random()} user={friend} >
-            <SubRow>
-              <SmallPic src={friend.portrait.url} to={`/${friend.handle}`} />
-              <Name style={{lineHeight:'55px'}} to={`/${friend.handle}`}>{friend.handle}</Name>
-            </SubRow>
-            <BtFlatButton
-              to={`/${friend.handle}/tribe`}
-              backgroundColor={white}
-              labelStyle={{ color: `${white}` }}
-              icon={ <AddFriend fill={purple} height={16} /> }
-              style={{
-                border: `1px solid ${grey400}`,
-                borderRadius: '5px',
-                width: '60px',
-                height: '4 0px'
-              }}
-            />
-          </FbDialogRow>
+    suggestedFriends(this.props.viewer.user.id).then( suggestions => {
+      this.setState( (prevState, props) => {
+        //uncomment below to double suggestion list for testing
+        // suggestions = suggestions.concat(suggestions);
+        let list = suggestions.map( friend =>
+          <FbList key={Math.random()} friend={friend} />
         )
         return {suggestions: list}
       })
@@ -82,6 +60,17 @@ class Dashboard extends Component {
   sendInvite = () => {
     console.log('event', this.state.email);
     this.setState({invite: false})
+  }
+
+  addToTribe = () => {
+    let {id: actorId} = this.props.viewer.user
+    let {id: recipientId} = this.props.viewer.User
+    this.props.relay.commitUpdate(
+      new CreateFriendRequest({
+        actorId,
+        recipientId,
+      })
+    )
   }
 
   friends = (list) => (
@@ -131,8 +120,7 @@ class Dashboard extends Component {
               borderBottom:`0.5px solid ${grey400}`,
               padding: '16px 27px 13.5px 27px',
               fontFamily: 'Helvetica Neue'
-            }}
-          >
+            }} >
             <DialogRow>
               <DialogSpacer>
                 <TextField
@@ -141,32 +129,10 @@ class Dashboard extends Component {
                   onChange={(ev, em)=>{this.setState({email: em})}}
                   placeholder={'Email'}
                 />
-                <FlatButton
-                  label={'Send Invite'}
-                  backgroundColor={purple}
-                  labelStyle={{
-                    color: `${white}`,
-                    fontSize: '14px',
-                    fontFamily: 'Helvetica Neue',
-                    textTransform: 'none'
-                  }}
-                  icon={
-                    <Send fill={white} height={14}
-                      style={{vertialAlign: 'middle', lineHeight: '41px'}}
-                    /> }
-                  onClick={()=>{ this.sendInvite() }}
-                  style={{
-                    border: `1px solid ${grey400}`,
-                    borderRadius: '5px',
-                    width: '223px',
-                    height: '41px',
-                    marginTop: '18px'
-                  }}
-                />
+                <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
               </DialogSpacer>
             </DialogRow>
             <DialogRow>{this.state.suggestions}</DialogRow>
-
           </Dialog>
         </TopPanel>
 

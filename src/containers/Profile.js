@@ -523,9 +523,7 @@ class Profile extends Component {
           autoHideDuration={2000}
           onRequestClose={this.closeSnackbar}
           onActionTouchTap={this.closeSnackbar}
-          bodyStyle={{
-            backgroundColor: purple
-          }}
+          bodyStyle={{ backgroundColor: purple }}
 
         />
         <Top>
@@ -718,9 +716,7 @@ class Profile extends Component {
               <Tab
                 label={'Activity'}
                 value={'activity'}
-                style={{
-                  borderBottom: `2px solid ${grey200}`
-                }}
+                style={{ borderBottom: `2px solid ${grey200}` }}
                 disabled={true}
 
               >
@@ -731,79 +727,50 @@ class Profile extends Component {
               <Tab
                 label={'Projects'}
                 value={'projects'}
-                style={{
-                  borderBottom: `2px solid ${grey200}`
-                }}
+                style={{ borderBottom: `2px solid ${grey200}` }}
               >
-                <List>
-                  {this.projects}
-                </List>
+                <List> {this.projects} </List>
 
               </Tab>
               <Tab
                 label={'Bounces'}
                 value={'bounces'}
-                style={{
-                  borderBottom: `2px solid ${grey200}`
-                }}
-                icon={(
-                  <Lock
-                  />
-                )}
-                disabled={true}
-              />
+                style={{ borderBottom: `2px solid ${grey200}` }}
+                icon={( <Lock /> )} disabled={true} />
             </Tabs>
 
           </BotLeft>
           <BotRight>
-            <Label
-              hide={(!ownProfile && experience.length < 1)}
-            >
+            <Label hide={(!ownProfile && experience.length < 1)} >
               Experience
             </Label>
             {(ownProfile) ? (
               <ExperienceRow>
                 <ExperienceIcon
-                  style={{
-                    marginRight: '5px'
-                  }}
-                />
+                  style={{ marginRight: '5px' }} />
                 <SelectField
                   value={experience}
                   fullWidth={true}
-                  onChange={(e, index, value)=>{
-                    this.experienceChange(value)
-                  }}
+                  onChange={(e, index, value)=>{ this.experienceChange(value) }}
                   disabled={(!ownProfile)}
                   hintText={'add your experience'}
-                  selectedMenuItemStyle={{
-                    color: purple
-                  }}
+                  selectedMenuItemStyle={{ color: purple }}
                 >
                   {experiences}
                 </SelectField>
               </ExperienceRow>
             ) : (
-              <ExperienceRow
-                hide={(!ownProfile && experience.length < 1)}
-              >
-                <ExperienceIcon
-                  style={{
-                    marginRight: '5px'
-                  }}
-                />
+              <ExperienceRow hide={(!ownProfile && experience.length < 1)} >
+                <ExperienceIcon style={{ marginRight: '5px' }} />
                 <Experience
                   value={formatEnum(experience)}
                   disabled={true}
                   placeholder={'experience'}
                 />
               </ExperienceRow>
-
             )}
 
-            <Label
-              hide={(!ownProfile && genres.length < 1)}
-            >
+            <Label hide={(!ownProfile && genres.length < 1)} >
               Genres
             </Label>
             <Async
@@ -814,13 +781,9 @@ class Profile extends Component {
               className={(ownProfile) ? 'async' : 'async others'}
               disabled={!ownProfile}
               placeholder={'add your genres'}
-              style={{
-                display: (!ownProfile && genres.length < 1) ? 'none' : ''
-              }}
+              style={{ display:(!ownProfile && genres.length < 1) ? 'none':''}}
             />
-            <Label
-              hide={(!ownProfile && skills.length < 1)}
-            >
+            <Label hide={(!ownProfile && skills.length < 1)} >
               Skills
             </Label>
             <Async

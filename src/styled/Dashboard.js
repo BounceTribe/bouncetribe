@@ -2,7 +2,15 @@ import styled from 'styled-components'
 import React from 'react'
 import {View} from 'styled'
 import AddButton from 'icons/AddButton'
-import { grey500, grey400} from 'theme'
+import Send from 'icons/Send'
+import {white, grey500, grey400, purple} from 'theme'
+import {BtFlatButton} from 'styled'
+import {SmallPic, Name} from 'styled/Tribe'
+import {SubRow} from 'styled/Profile'
+import AddFriend from 'icons/AddFriend'
+import FlatButton from 'material-ui/FlatButton'
+import {url} from 'config'
+
 
 export const DialogRow = styled.div`
   display: flex;
@@ -12,7 +20,7 @@ export const DialogRow = styled.div`
   padding: 25px 0;
   border-bottom: 0.5px solid ${grey400};
 `
-export const FbDialogRow = styled.div`
+const FbDialogRow = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -21,6 +29,41 @@ export const FbDialogRow = styled.div`
   padding: 10px 20px;
   box-sizing: border-box;
 `
+export const SendInviteBtn = ({onClick}) => (
+  <FlatButton
+    label={'Send Invite'}
+    backgroundColor={purple}
+    labelStyle={{
+      color: `${white}`,
+      fontSize: '14px',
+      fontFamily: 'Helvetica Neue',
+      textTransform: 'none'
+    }}
+    icon={
+      <Send fill={white} height={14}
+        style={{vertialAlign: 'middle', lineHeight: '41px'}}
+      /> }
+    onClick={onClick}
+    style={{
+      border: `1px solid ${grey400}`,
+      borderRadius: '5px',
+      width: '223px',
+      height: '41px',
+      marginTop: '18px'
+    }}
+  />
+)
+
+
+
+
+// styled(FlatButton)`
+//   border: 1px solid ${grey400};
+//   border-radius: 5px;
+//   width: 60px;
+//   height: 4 0px;
+//   background-color: ${white};
+// `
 export const DialogSpacer = styled.div`
   display: flex;
   flex-direction: column;
@@ -102,3 +145,27 @@ export const InviteContainer = ({onClick}) => (
     <AddButton/>
   </InviteMember>
 )
+
+export const FbList= ({friend}) => {
+  console.log('FRIEND', friend);
+  return (<FbDialogRow user={friend} >
+    <SubRow>
+      <SmallPic
+        src={friend.portrait ? friend.portrait.url : `${url}/logo.png`}
+        to={`/${friend.handle}`} />
+      <Name style={{lineHeight:'55px'}} to={`/${friend.handle}`}>{friend.handle}</Name>
+    </SubRow>
+    <BtFlatButton
+      to={`/${friend.handle}/tribe`}
+      backgroundColor={white}
+      labelStyle={{ color: `${white}` }}
+      icon={ <AddFriend fill={purple} height={16} /> }
+      style={{
+        border: `1px solid ${grey400}`,
+        borderRadius: '5px',
+        width: '60px',
+        height: '4 0px'
+      }}
+    />
+  </FbDialogRow>)
+}
