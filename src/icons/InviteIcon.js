@@ -1,10 +1,10 @@
 import React from 'react'
 
-const AddButton = ({style, fill}) => {
+const InviteIcon = ({style, fill}) => {
   return (
     <svg style={style} width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <defs>
-            <circle id="path-1" cx="20" cy="20" r="20"></circle>
+            <circle id="path-1" cx="20" cy="20" r="19"></circle>
         </defs>
         <g id="Web-Screens" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
             <g id="TRIBE-DASHBOARD" transform="translate(-1265.000000, -149.000000)">
@@ -29,4 +29,4 @@ const AddButton = ({style, fill}) => {
 
   )
 }
-export default AddButton
+export default InviteIcon

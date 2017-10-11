@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
 import {View} from 'styled'
-import AddButton from 'icons/AddButton'
+import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import {white, grey500, grey400, purple} from 'theme'
 import {BtFlatButton} from 'styled'
@@ -128,22 +128,25 @@ export const TopPanel = styled.div`
   padding-top: 40px;
 `
 
-const InviteMember = styled.div`
+const InviteStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: "Helvetica Neue";
   font-size: 12pt;
-  width: 140px;
   height: 40px;
   cursor: pointer;
   color: ${grey500};
 `
-export const InviteContainer = ({onClick}) => (
-  <InviteMember onClick={onClick}>
-    <span>Invite Member</span>
-    <AddButton/>
-  </InviteMember>
+
+const Span7pxRight = styled.span`
+  margin-right: 7px;
+`
+export const InviteButton = ({onClick, text}) => (
+  <InviteStyled onClick={onClick}>
+    {text && <Span7pxRight>{text}</Span7pxRight>}
+    <InviteIcon/>
+  </InviteStyled>
 )
 
 export class FbList extends Component {

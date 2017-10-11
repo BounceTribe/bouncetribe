@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteContainer} from 'styled/Dashboard'
+import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton} from 'styled/Dashboard'
 import {BotRow} from 'styled/Profile'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
@@ -109,7 +109,9 @@ class Dashboard extends Component {
       <ProfileView>
         <TopPanel>
           <h4>BounceTribe!</h4>
-          <InviteContainer onClick={()=>{this.setState({invite: true})}}/>
+          <InviteButton
+            onClick={()=>{this.setState({invite: true})}}
+            text={'Invite Member'} />
           <Dialog
             title={"Invite to Your Tribe"}
             modal={false}
