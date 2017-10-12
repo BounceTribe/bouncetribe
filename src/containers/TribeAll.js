@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
-import {SmallPic, Name, Projects, NoTribe, TableScore} from 'styled/Tribe'
+import {Name, Projects, NoTribe, TableScore} from 'styled/Tribe'
 import Bolt from 'icons/Bolt'
+import {BtAvatar} from 'styled'
 
 
 class TribeAll extends Component {
@@ -20,12 +21,9 @@ class TribeAll extends Component {
       let friends = this.props.viewer.User.friends.edges.map(edge=>{
         let {node:friend} = edge
         return (
-          <TableRow key={friend.id} style={{height: '48px '}}>
-            <TableRowColumn style={{width: '50px'}} >
-              <SmallPic
-                src={friend.portrait.url}
-                to={`/${friend.handle}`}
-              />
+          <TableRow key={friend.id} >
+            <TableRowColumn style={{width: '50px', padding: '10px 0 6px 0'}} >
+              <BtAvatar user={friend} size={50} online={true/*TODO*/} />
             </TableRowColumn>
             <TableRowColumn>
               <Name to={`/${friend.handle}`} >
