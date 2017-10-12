@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {View, BtAvatar, BtLink} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
-import {grey500, grey400, purple, white} from 'theme'
+import {grey500, grey400, grey222, purple, white} from 'theme'
 import {BtFlatButton} from 'styled'
 import {Name} from 'styled/Tribe'
 import {SubRow} from 'styled/Profile'
@@ -55,7 +55,7 @@ export const DashLeft = styled.div`
   background-color: white;
   min-height: 50vh;
   width: 25%;
-  border: solid ${grey400} .5px;
+  border: solid ${grey222} .5px;
   border-radius: 10px;
   margin-right: 15px;
   padding-bottom: 40px;
@@ -68,7 +68,7 @@ export const DashRight = styled.div`
   background-color: white;
   min-height: 50vh;
   width: 75%;
-  border: solid ${grey400} .5px;
+  border: solid ${grey222} .5px;
   border-radius: 10px;
   padding: 0 20px;
   margin-left: 15px;
@@ -89,7 +89,7 @@ export const TopPanel = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 5px;
-  border: solid #DEDEDE .5px;
+  border: solid ${grey222} .5px;
   padding-top: 40px;
   margin-top: 10px;
 `

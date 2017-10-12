@@ -3,7 +3,7 @@ import Relay from 'react-relay'
 import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, ProfileImg, LogoText, Divider, UserName, NavLink} from 'styled/Dashboard'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
-import {purple, grey200, grey400} from 'theme'
+import {purple, grey200, grey222, grey400} from 'theme'
 import { ProfContainer, ProfTop, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
 import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
@@ -136,38 +136,38 @@ class Dashboard extends Component {
       <ProfileView>
         <DashHeader>
           <Row>
-          <BtAvatar user={selectedUser} size={60} />
-          <LogoText>My Tribe</LogoText>
-          <InviteButton
-            onClick={()=>{this.setState({invite: true})}}
-            text={'Invite Member'} />
-          <Dialog
-            title={"Invite to Your Tribe"}
-            modal={false}
-            open={this.state.invite}
-            onRequestClose={()=>{ this.setState({invite: false}) }}
-            autoScrollBodyContent={true}
-            bodyStyle={{padding: '0'}}
-            contentStyle={{borderRadius: '5px'}}
-            titleStyle={{
-              fontSize: '28px',
-              borderBottom:`0.5px solid ${grey400}`,
-              padding: '16px 27px 13.5px 27px',
-              fontFamily: 'Helvetica Neue'
-            }} >
-            <DialogRow>
-              <DialogSpacer>
-                <TextField
-                  label={'Email'}
-                  name={'email'}
-                  onChange={(ev, em)=>{this.setState({email: em})}}
-                  placeholder={'Email'}
-                />
-                <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
-              </DialogSpacer>
-            </DialogRow>
-            <DialogRow>{this.state.suggestions}</DialogRow>
-          </Dialog>
+            <BtAvatar user={selectedUser} size={60} />
+            <LogoText>My Tribe</LogoText>
+            <InviteButton
+              onClick={()=>{this.setState({invite: true})}}
+              text={'Invite Member'} />
+            <Dialog
+              title={"Invite to Your Tribe"}
+              modal={false}
+              open={this.state.invite}
+              onRequestClose={()=>{ this.setState({invite: false}) }}
+              autoScrollBodyContent={true}
+              bodyStyle={{padding: '0'}}
+              contentStyle={{borderRadius: '5px'}}
+              titleStyle={{
+                fontSize: '28px',
+                borderBottom:`0.5px solid ${grey400}`,
+                padding: '16px 27px 13.5px 27px',
+                fontFamily: 'Helvetica Neue'
+              }} >
+              <DialogRow>
+                <DialogSpacer>
+                  <TextField
+                    label={'Email'}
+                    name={'email'}
+                    onChange={(ev, em)=>{this.setState({email: em})}}
+                    placeholder={'Email'}
+                  />
+                  <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
+                </DialogSpacer>
+              </DialogRow>
+              <DialogRow>{this.state.suggestions}</DialogRow>
+            </Dialog>
           </Row>
         </DashHeader>
         <Divider />
@@ -185,11 +185,7 @@ class Dashboard extends Component {
               Edit Profile
             </NavLink>
           </Column>
-            <Bolt 
-              style={{
-                marginRight: '10px'
-              }}  
-            /> 
+          <Bolt style={{justifyContent:'space-between'}}/>
         </TopPanel>
         <BotRow>
           <DashLeft>
