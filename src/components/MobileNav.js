@@ -48,7 +48,6 @@ class MobileNav extends Component {
     let {router, user} = this.props
     return (
       <MobileOnly>
-        {console.log('mobilenav')}
         <AppBar
           title={"BounceTribe"}
           onLeftIconButtonTouchTap={this.toggle}
