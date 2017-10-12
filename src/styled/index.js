@@ -11,6 +11,30 @@ import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
 
+const PurpleBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center
+  font-weight: bold;
+  background-color: ${purple};
+  color: ${white};
+  font-weight: 400;
+`
+
+// Purple box (or circle) with text - visible only if value is truthy
+export const BtTextMarker=({size, height, width, radius, fontHeight, value})=>(
+  <PurpleBox
+    style={{
+      height: `${height || size || 20}px`,
+      width: `${width || size || 20}px`,
+      borderRadius: `${radius || 6}px`,
+      fontSize: `${fontHeight || 15}px`,
+      visibility: `${value ? 'visible' : 'hidden'}`
+    }}>
+    {value}
+  </PurpleBox>
+)
+
 export const BtAvatar = ({user, size, online}) => {
   const iconSize = size * 18/60
   return  (

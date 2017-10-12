@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Activities, FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton} from 'styled/Dashboard'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
 import {purple, grey200, grey400} from 'theme'
@@ -9,7 +9,7 @@ import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
-import {BtAvatar} from 'styled'
+import {BtTextMarker, BtAvatar} from 'styled'
 // import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
@@ -106,7 +106,6 @@ class Dashboard extends Component {
       <ProfileView>
         <TopPanel>
           <h4>BounceTribe!</h4>
-          <Activities size={20} num={4} />
           <InviteButton
             onClick={()=>{this.setState({invite: true})}}
             text={'Invite Member'} />
