@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, ProfileImg, LogoText, Divider, UserName, NavLink} from 'styled/Dashboard'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
 import {purple, grey200, grey400} from 'theme'
@@ -9,6 +9,9 @@ import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
+import {Row} from 'styled/Profile'
+import {Column} from 'styled/list'
+import Logo from 'icons/Headphones'
 import {BtAvatar} from 'styled'
 // import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
@@ -126,11 +129,15 @@ class Dashboard extends Component {
       messages: (<div>direct message view</div>)/*<DirectMessages  {...this.props} />*/
     }
     let selectedUser = this.state.selectedUser;
+    let user = this.props.viewer.user
+    console.log('user:', user)
     console.log('render - this', this);
     return (
       <ProfileView>
-        <TopPanel>
-          <h4>BounceTribe!</h4>
+        <DashHeader>
+          <Row>
+          <BtAvatar user={selectedUser} size={60} />
+          <LogoText>My Tribe</LogoText>
           <InviteButton
             onClick={()=>{this.setState({invite: true})}}
             text={'Invite Member'} />
@@ -161,6 +168,28 @@ class Dashboard extends Component {
             </DialogRow>
             <DialogRow>{this.state.suggestions}</DialogRow>
           </Dialog>
+          </Row>
+        </DashHeader>
+        <Divider />
+        <TopPanel>
+          <Column>
+            <ProfileImg src={user.portrait.url} />
+          </Column>
+          <Column>
+            <UserName
+              style={{
+                marginRight: '124vmin'
+              }}
+            >{user.handle}</UserName> 
+            <NavLink to={`/${user.handle}`}>
+              Edit Profile
+            </NavLink>
+          </Column>
+            <Bolt 
+              style={{
+                marginRight: '10px'
+              }}  
+            /> 
         </TopPanel>
         <BotRow>
           <DashLeft>

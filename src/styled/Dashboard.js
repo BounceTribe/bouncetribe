@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
-import {View, BtAvatar} from 'styled'
+import {View, BtAvatar, BtLink} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import {grey500, grey400, purple, white} from 'theme'
@@ -89,8 +89,54 @@ export const TopPanel = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 5px;
-  border: solid black .5px;
+  border: solid #DEDEDE .5px;
   padding-top: 40px;
+  margin-top: 10px;
+`
+
+export const DashHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding-top: 40px;
+`
+
+export const ProfileImg = styled.img`
+  height: 5em;
+  width: 5em;
+  border-radius: 50%;
+  padding: 1em;
+`
+
+export const UserName = styled.h1`
+  font-size: 1.5em; 
+  color: #555555;
+  float: left;
+`
+
+export const LogoText = styled.h2`
+  font-size: 1.5em; 
+  color: #777777;
+  font-weight: lighter;
+  padding-right: 120vmin;
+`
+
+export const Divider = styled.hr`
+  border: .5px solid #E5E5E5;
+  height: .5px;
+  width: 90%;
+`
+
+export const NavLink = styled(BtLink)`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #777777;
+  padding: 0 15px;
+  cursor: pointer;
+  font-size: .875em;
+  font-weight: Light;
 `
 
 const InviteStyled = styled.div`
