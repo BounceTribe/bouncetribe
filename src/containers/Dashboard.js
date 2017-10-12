@@ -1,23 +1,18 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton} from 'styled/Dashboard'
+import {Activities, FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton} from 'styled/Dashboard'
 import {BotRow} from 'styled/Profile'
-import Dialog from 'material-ui/Dialog'
-import TextField from 'material-ui/TextField'
+import {Dialog, TextField, Tabs, Tab} from 'material-ui'
 import {purple, grey200, grey400} from 'theme'
-import {Tabs, Tab} from 'material-ui/Tabs'
-import { ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
+import { ProfContainer, ProfTop, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
 import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
-import {url} from 'config'
 import {BtAvatar} from 'styled'
 // import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
-
-
 
 class Dashboard extends Component {
 
@@ -47,7 +42,7 @@ class Dashboard extends Component {
         // suggestions = suggestions.concat(suggestions);
         let list = suggestions.slice(0, max).map( friend =>
           <FbList
-            key={Math.random()}
+            key={friend.id}
             createFriendRequest={() => this.createFriendRequest(friend.id)}
             friend={friend} />
         )
@@ -111,6 +106,7 @@ class Dashboard extends Component {
       <ProfileView>
         <TopPanel>
           <h4>BounceTribe!</h4>
+          <Activities size={20} num={4} />
           <InviteButton
             onClick={()=>{this.setState({invite: true})}}
             text={'Invite Member'} />

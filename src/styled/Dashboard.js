@@ -11,16 +11,29 @@ import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
 import {url} from 'config'
 
-export const Activities = styled.div`
+const ActivitiesBox = styled.div`
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: center
+  font-size: 15px;
+  font-weight: bold;
   background-color: ${purple};
   border-radius: 6px;
   color: ${white};
-  padding: 4px;
-  width: 20px;
   font-weight: 400;
 `
+
+export const Activities = ({size, num}) => (
+  <ActivitiesBox
+    style={{
+      height: `${size || 20}px`,
+      width: `${size || 20}px`,
+      display: `${(num) ? 'flex' : 'none'}`
+    }}
+  >
+    {num}
+  </ActivitiesBox>
+)
 
 export const DialogRow = styled.div`
   display: flex;
