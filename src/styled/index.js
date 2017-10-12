@@ -21,19 +21,23 @@ const PurpleBox = styled.div`
   font-weight: 400;
 `
 
-// Purple box (or circle) with text - visible only if value is truthy
-export const BtTextMarker=({size, height, width, radius, fontHeight, value})=>(
-  <PurpleBox
-    style={{
-      height: `${height || size || 20}px`,
-      width: `${width || size || 20}px`,
-      borderRadius: `${radius || 6}px`,
-      fontSize: `${fontHeight || 15}px`,
-      visibility: `${value ? 'visible' : 'hidden'}`
-    }}>
-    {value}
-  </PurpleBox>
-)
+// Purple box (or circle) with text -
+//visible only if value (or alwaysVis) is truthy
+export const BtTextMarker = (props) => {
+  let {size, height, width, radius, fontHeight, value, alwaysVis} = props;
+  return (
+    <PurpleBox
+      style={{
+        height: `${height || size || 20}px`,
+        width: `${width || size || 20}px`,
+        borderRadius: `${radius || 6}px`,
+        fontSize: `${fontHeight || 15}px`,
+        visibility: `${(alwaysVis || value) ? 'visible' : 'hidden'}`
+      }}>
+      {value}
+    </PurpleBox>
+  )
+}
 
 export const BtAvatar = ({user, size, online}) => {
   const iconSize = size * 18/60
