@@ -8,6 +8,8 @@ import AddFriend from 'icons/AddFriend'
 import TribeIcon from 'icons/Tribe'
 import Notifications from 'icons/Notifications'
 import Lock from 'icons/Lock'
+// import {Container} from 'styled/list'
+
 
 class Tribe extends Component {
 
@@ -15,13 +17,9 @@ class Tribe extends Component {
     let {location, userHandle} = this.props
 
     if (location.pathname === `/${userHandle}/tribe/requests`) {
-        this.setState({
-          tab: 1
-        })
+      this.setState({ tab: 1 })
     } else (
-      this.setState({
-        tab: 0
-      })
+      this.setState({ tab: 0 })
     )
   }
 
@@ -34,12 +32,8 @@ class Tribe extends Component {
       <View>
         <Container>
           <Header>
-            <IconTextContainer
-              to={`/${handle}/tribe`}
-            >
-              <TribeIcon
-                fill={purple}
-              />
+            <IconTextContainer to={`/${handle}/tribe`} >
+              <TribeIcon fill={purple} />
               <IconText>
                 {(user.id === User.id) ? 'My Tribe' : `${User.name}'s Tribe'`}
               </IconText>
@@ -48,15 +42,9 @@ class Tribe extends Component {
               <Button
                 to={{
                   pathname: `/${handle}/tribe/find/`,
-                  query: {
-                    ownId: user.id
-                  },
+                  query: { ownId: user.id },
                 }}
-                icon={
-                  <AddFriend
-                    fill={white}
-                  />
-                }
+                icon={ <AddFriend fill={white} /> }
                 label={'Add Members'}
                 primary
               />
@@ -67,9 +55,7 @@ class Tribe extends Component {
               width: '90%',
               margin: '60px 0px'
             }}
-            inkBarStyle={{
-              backgroundColor: purple
-            }}
+            inkBarStyle={{ backgroundColor: purple }}
             value={this.state.tab}
           >
             <Tab
@@ -77,37 +63,26 @@ class Tribe extends Component {
               value={0}
               onActive={()=>{
                 router.push(`/${handle}/tribe`)
-                this.setState({
-                  tab: 0
-                })
+                this.setState({ tab: 0 })
               }}
             />
             <Tab
               icon={(
-                <Notifications
-                  notifications={person.invitations.edges.length}
-                />
+                <Notifications notifications={person.invitations.edges.length}/>
               )}
               label={'Requests'}
               value={1}
               onActive={()=>{
                 router.push(`/${handle}/tribe/requests`)
-                this.setState({
-                  tab: 1
-                })
+                this.setState({ tab: 1 })
               }}
             />
             <Tab
-              icon={(
-                <Lock
-                />
-              )}
+              icon={( <Lock /> )}
               label={'Messages'}
               value={2}
               disabled={true}
-              style={{
-                cursor: 'not-allowed'
-              }}
+              style={{ cursor: 'not-allowed' }}
             />
           </Tabs>
           {this.props.children}
@@ -119,9 +94,7 @@ class Tribe extends Component {
 
 export default Relay.createContainer(
   Tribe, {
-    initialVariables: {
-      userHandle: ''
-    },
+    initialVariables: { userHandle: '' },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {

@@ -20,32 +20,20 @@ class TribeAll extends Component {
       let friends = this.props.viewer.User.friends.edges.map(edge=>{
         let {node:friend} = edge
         return (
-          <TableRow
-            key={friend.id}
-          >
-            <TableRowColumn
-              style={{width: '50px'}}
-            >
+          <TableRow key={friend.id} style={{height: '48px '}}>
+            <TableRowColumn style={{width: '50px'}} >
               <SmallPic
                 src={friend.portrait.url}
                 to={`/${friend.handle}`}
               />
             </TableRowColumn>
             <TableRowColumn>
-              <Name
-                to={`/${friend.handle}`}
-              >
+              <Name to={`/${friend.handle}`} >
                 {friend.handle}
               </Name>
             </TableRowColumn>
-            <TableRowColumn
-              style={{
-                width: '50px',
-              }}
-            >
-              <Bolt
-                height={18}
-              />
+            <TableRowColumn style={{ width: '50px', }} >
+              <Bolt height={18} />
               <TableScore>
                   {friend.score}
               </TableScore>
@@ -60,7 +48,6 @@ class TribeAll extends Component {
             </TableRowColumn> */}
             <TableRowColumn>
               <Projects>
-
                 {friend.projects.edges.length}
               </Projects>
             </TableRowColumn>

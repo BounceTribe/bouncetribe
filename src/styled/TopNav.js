@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import {BtLink} from 'styled'
 import {white, grey40, grey70, grey700, grey500, grey300, purple, size} from 'theme'
-// import Header from 'icons/Header'
 import {url} from 'config'
 
 export const Bar = styled.div`
@@ -42,10 +41,6 @@ export const Title = styled(BtLink)`
   display: flex;
   color: ${white};
 `
-// const Bold = styled.span`
-//   display: flex;
-//   font-weight: 400;
-// `
 
 export const LogoImg = styled.div`
   width: 166px;
@@ -55,15 +50,12 @@ export const LogoImg = styled.div`
   background-position: center;
 `
 
-export const Logo = (props) =>{
-  return (
-    <Title
-      {...props}
-    >
-      <LogoImg/>
-    </Title>
-  )
-}
+export const Logo = (props) => (
+  <Title {...props} >
+    <LogoImg/>
+  </Title>
+)
+
 
 export const NavImg = styled.img`
   display: flex;
@@ -78,17 +70,12 @@ export const ImgLink = styled(BtLink)`
   padding: 0;
 `
 
-export const Portrait = (props) => {
-  return (
-    <ImgLink
-      {...props}
-    >
-      <NavImg
-        {...props}
-      />
-    </ImgLink>
-  )
-}
+export const Portrait = (props) => (
+  <ImgLink {...props} >
+    <NavImg {...props} />
+  </ImgLink>
+)
+
 
 export const NavText = styled.span`
   display: flex;
@@ -183,25 +170,19 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
     }
     case 'FB_FRIEND_JOINED': {
       break
-
     }
     case 'MESSAGE': {
       break
-
     }
     case 'BOUNCED': {
       break
-
     }
     default: {
-
     }
   }
 
   return (
-    <BtLink
-      to={link}
-    >
+    <BtLink to={link} >
       <NotifyContainer>
         <NotifyHeader>
           {header}

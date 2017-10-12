@@ -3,7 +3,7 @@ import Relay from 'react-relay'
 import {Route, IndexRoute} from 'react-router'
 import auth from 'utils/auth'
 import Template from 'containers/Template'
-import Feed from 'containers/Feed'
+// import Feed from 'containers/Feed'
 import Profile from 'containers/Profile'
 import Project from 'containers/Project'
 import ProjectList from 'containers/ProjectList'
@@ -18,7 +18,7 @@ import Connect from 'containers/Connect'
 import Session from 'containers/Session'
 import AllSessions from 'containers/AllSessions'
 import NotificationList from 'containers/NotificationList'
-
+import Dashboard from 'containers/Dashboard'
 
 import {Loading} from 'styled/Spinner'
 
@@ -157,9 +157,7 @@ const tribeSearch = (params, {location})=>{
 
 const userOnly = (nextState, replace) => {
   if (!auth.getToken()) {
-    replace({
-      pathname: '/login'
-    })
+    replace({ pathname: '/login' })
   }
 }
 
@@ -171,12 +169,28 @@ const createRoutes = () => {
       queries={ViewerQuery}
     >
       <IndexRoute
-        component={Feed}
+        component={Dashboard}
         queries={ViewerQuery}
         onEnter={userOnly}
-        render={({ props }) => props ? <Feed {...props} /> : <Loading />}
+        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
       />
-
+      <Route
+        path={'/:tab/dash/:userHandle'}
+        component={Dashboard}
+        queries={ViewerQuery}
+      />
+      {/* <Route
+        path={'/bounces/:userHandle'}
+        component={Dashboard}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
+      />
+      <Route
+        path={'/messages/:userHandle'}
+        component={Dashboard}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />}
+      /> */}
       <Route
         path={'/login'}
         component={Login}

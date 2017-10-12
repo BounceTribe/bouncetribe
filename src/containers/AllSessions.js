@@ -436,11 +436,7 @@ class AllSessions extends Component {
           </Header>
           { this.matches()}
           {(this.props.viewer.user.projects.edges.length < 1) ? (
-            <NoProjectsCol
-              style={{
-                marginTop: '50px'
-              }}
-            >
+            <NoProjectsCol style={{ marginTop: '50px' }} >
               <NoProjectMsg>
                 Ready to exchange some feedback?
               </NoProjectMsg>
@@ -456,15 +452,9 @@ class AllSessions extends Component {
                 }}
                 backgroundColor={purple}
                 to={`/${this.props.viewer.user.handle}/projects/new`}
-                icon={<Upload
-                  fill={white}
-                />}
-                style={{
-                  borderRadius: '8px',
-                  marginTop: '20px'
-                }}
+                icon={<Upload fill={white} />}
+                style={{ borderRadius: '8px', marginTop: '20px' }}
               />
-
             </NoProjectsCol>
           ) : null}
         </Container>
