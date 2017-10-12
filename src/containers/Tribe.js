@@ -1,15 +1,12 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {View, Button, IconTextContainer, IconText} from 'styled'
+import {View, Button, IconTextContainer, IconText, BtTextMarker} from 'styled'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import {Container, Header, HeaderOptions} from 'styled/list'
 import {purple, white} from 'theme'
 import AddFriend from 'icons/AddFriend'
 import TribeIcon from 'icons/Tribe'
-import Notifications from 'icons/Notifications'
 import Lock from 'icons/Lock'
-// import {Container} from 'styled/list'
-
 
 class Tribe extends Component {
 
@@ -67,10 +64,8 @@ class Tribe extends Component {
               }}
             />
             <Tab
-              icon={(
-                <Notifications notifications={person.invitations.edges.length}/>
-              )}
-              label={'Requests'}
+              label={<span><BtTextMarker fontHeight={13} radius={10}
+                 value={person.invitations.edges.length}/> Requests</span>}
               value={1}
               onActive={()=>{
                 router.push(`/${handle}/tribe/requests`)
@@ -98,9 +93,7 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user {
-            id
-          }
+          user { id }
           User (handle: $userHandle) {
             handle
             id
@@ -114,9 +107,7 @@ export default Relay.createContainer(
               orderBy: createdAt_ASC
             ) {
               edges {
-                node {
-                  id
-                }
+                node { id }
               }
             }
           }
