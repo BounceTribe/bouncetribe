@@ -4,6 +4,7 @@ import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, D
 import {BotRow} from 'styled/Profile'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
+import Avatar from 'material-ui/Avatar'
 import {purple, grey200, grey400} from 'theme'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import { ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
@@ -11,6 +12,7 @@ import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
+import Online from 'icons/Online'
 import {url} from 'config'
 // import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
@@ -99,8 +101,10 @@ class Dashboard extends Component {
 
   render () {
     const DASHBOARD_STATES = {
-      //JIM YOUR COMPONENT GOES BELOW
-      projects: (<div>projects View</div>)/*<DashProjects />*/,
+      //JIM YOUR COMPONENT GOES BELOW. CREATE IN ANOTHER FILE AND IMPORT IT
+      projects: (<div>
+        <Bolt style={{ marginRight: '5px' }} />
+        <Online size={18} /></div>)/*<DashProjects />*/,
       bounces: (<div>bounces view</div>)/*<Bounces />*/,
       messages: (<div>direct message view</div>)/*<DirectMessages  {...this.props} />*/
     }
@@ -152,9 +156,11 @@ class Dashboard extends Component {
             <ProfContainer>
               <ProfTop>
                 <ProfLeft>
-                  <Portrait
+
+                  <Avatar
                     src={(selectedUser.portrait) ? selectedUser.portrait.url : `${url}/logo.png`}
                     to={`/${selectedUser.handle}`}
+                    size={60}
                   />
                   <ProfCol>
                     <ProfHandle to={`/${selectedUser.handle}`} >
@@ -187,20 +193,18 @@ class Dashboard extends Component {
               </ProfTop>
             </ProfContainer>
             <Tabs
-              style={{ marginTop: '6px', marginBottom: '25px', }}
+              style={{ margin: '6px -19.5px 25px -19.5px' }}
               tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
               inkBarStyle={{ backgroundColor: purple }}
               value={this.props.router.params.tab} >
               <Tab label={'projects'} value={'projects'}
-                onActive={(e)=>{this.setTab(e)}}
-              />
+                onActive={(e)=>{this.setTab(e)}} />
               <Tab label={'bounces'} value={'bounces'}
-                onActive={(e)=>{this.setTab(e)}}
-              />
+                onActive={(e)=>{this.setTab(e)}} />
               <Tab label={'messages'} value={'messages'}
-                onActive={(e)=>{this.setTab(e)}}
-              />
+                onActive={(e)=>{this.setTab(e)}} />
             </Tabs>
+
               {DASHBOARD_STATES[this.props.router.params.tab]}
           </DashRight>
         </BotRow>
@@ -223,6 +227,7 @@ class Dashboard extends Component {
                 node {
                   id
                   handle
+                  score
                   portrait { url }
                   projects (
                     first: 999
