@@ -40,6 +40,7 @@ export const BtTextMarker = (props) => {
 }
 
 export const BtAvatar = ({user, size, online}) => {
+  size = size || 50
   const iconSize = size * 18/60
   return  (
     <div>

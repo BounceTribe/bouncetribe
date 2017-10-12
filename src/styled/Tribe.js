@@ -6,14 +6,6 @@ import {purple, white, grey500, grey400, grey700} from 'theme'
 import AddFriend from 'icons/AddFriend'
 import Bolt from 'icons/Bolt'
 
-const SmallPicImg = styled.img`
-  height: 50px;
-  width: 50px;
-  border-radius: 50px;
-  margin: 5px;
-  object-fit: cover;
-`
-
 const MediumPicImg = styled.img`
   height: 100px;
   width: 100px;
@@ -24,13 +16,6 @@ const MediumPicImg = styled.img`
 const SearchUserContainer = styled(Item2)`
   align-items: center;
 `
-
-export const SmallPic = (props) => (
-  <BtLink {...props} >
-    <SmallPicImg {...props} />
-  </BtLink>
-)
-
 
 export const Handle = styled(BtLink)`
   font-weight: 400;
