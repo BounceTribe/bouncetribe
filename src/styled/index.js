@@ -12,7 +12,7 @@ import Online from 'icons/Online'
 import {url} from 'config'
 
 const PurpleBox = styled.div`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center
   font-weight: bold;
@@ -28,8 +28,8 @@ export const BtTextMarker = (props) => {
   return (
     <PurpleBox
       style={{
-        height: `${height || size || 20}px`,
-        width: `${width || size || 20}px`,
+        height: `${height || size || radius * 2 || 20}px`,
+        width: `${width || size || radius * 2 || 20}px`,
         borderRadius: `${radius || 6}px`,
         fontSize: `${fontHeight || 15}px`,
         visibility: `${(alwaysVis || value) ? 'visible' : 'hidden'}`

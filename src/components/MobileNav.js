@@ -38,9 +38,7 @@ const Handle = styled(BtLink)`
 
 class MobileNav extends Component {
 
-  state = {
-    drawer: false
-  }
+  state = { drawer: false }
 
   toggle = () => {
     this.setState((prevState)=>{return {drawer: !prevState.drawer}})
@@ -50,15 +48,12 @@ class MobileNav extends Component {
     let {router, user} = this.props
     return (
       <MobileOnly>
-
         <AppBar
           title={"BounceTribe"}
           onLeftIconButtonTouchTap={this.toggle}
           iconElementLeft={(
             <IconButton>
-              <NavigationIcon
-                color={purple}
-              />
+              <NavigationIcon color={purple} />
             </IconButton>
           )}
         >
@@ -71,45 +66,28 @@ class MobileNav extends Component {
           docked={false}
         >
           <Row>
-            <Portrait
-              src={((user || {}).portrait || {}).url}
-            />
-            <Handle
-              to={`/${user.handle}`}
-            >
+            <Portrait src={((user || {}).portrait || {}).url} />
+            <Handle to={`/${user.handle}`} >
               {user.handle}
             </Handle>
           </Row>
 
           <MenuItem
             primaryText={"My Tribe"}
-            leftIcon={(
-              <Tribe
-                fill={purple}
-              />
+            leftIcon={( <Tribe fill={purple} />
             )}
-            onTouchTap={()=>{
-              router.push(`/${user.handle}/tribe`)
-            }}
+            onTouchTap={()=>{ router.push(`/${user.handle}/tribe`) }}
           />
           <Divider/>
           <MenuItem
             primaryText={"Feed"}
-            leftIcon={(
-              <HomeIcon
-                color={purple}
-              />
-            )}
-            onTouchTap={()=>{
-              router.push(`/`)
-            }}
+            leftIcon={( <HomeIcon color={purple} /> )}
+            onTouchTap={()=>{ router.push(`/`) }}
           />
           <MenuItem
             primaryText={"Sessions"}
             leftIcon={(
-              <Headphones
-                fill={purple}
-              />
+              <Headphones fill={purple} />
             )}
             onTouchTap={()=>{
               router.push((user.projects.edges.length > 0) ? `/${user.handle}/sessions/${user.projects.edges[0].node.title}` : `/${user.handle}/sessions`)
@@ -117,42 +95,24 @@ class MobileNav extends Component {
           />
           <MenuItem
             primaryText={"Projects"}
-            leftIcon={(
-              <Music
-                fill={purple}
-              />
-            )}
-            onTouchTap={()=>{
-              router.push(`/${user.handle}/tribe`)
-            }}
+            leftIcon={( <Music fill={purple} /> )}
+            onTouchTap={()=>{ router.push(`/${user.handle}/tribe`) }}
           />
           <MenuItem
             primaryText={"Notifications"}
-            leftIcon={(
-              <Notifications
-                color={purple}
-              />
-            )}
-            onTouchTap={()=>{
-              router.push(`/${user.handle}/notifications`)
-            }}
+            leftIcon={( <Notifications color={purple} /> )}
+            onTouchTap={()=>{ router.push(`/${user.handle}/notifications`) }}
           />
           <Divider/>
 
           <MenuItem
             primaryText={"Settings"}
-            leftIcon={(
-              <Settings/>
-            )}
-            onTouchTap={()=>{
-              router.push(`/${user.handle}/notifications`)
-            }}
+            leftIcon={( <Settings/> )}
+            onTouchTap={()=>{ router.push(`/${user.handle}/notifications`) }}
           />
           <MenuItem
             primaryText={"Help"}
-            leftIcon={(
-              <Help/>
-            )}
+            leftIcon={( <Help/> )}
           />
           <Divider/>
 

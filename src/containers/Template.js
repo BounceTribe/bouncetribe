@@ -30,9 +30,7 @@ class Template extends Component {
   }
 
   get mobileUserOnly () {
-    let {
-      user
-    } = this.props.viewer
+    let { user } = this.props.viewer
     if (user) {
       return (
         <MobileNav
@@ -46,9 +44,7 @@ class Template extends Component {
 
   render () {
     return (
-      <MuiThemeProvider
-        muiTheme={btTheme}
-      >
+      <MuiThemeProvider muiTheme={btTheme} >
         <Main>
           {this.userOnly}
           {this.mobileUserOnly}
@@ -89,28 +85,20 @@ export default Relay.createContainer(
                     id
                     title
                   }
-                  session {
-                    id
-                  }
+                  session { id }
                 }
               }
             }
             id
             handle
-            portrait {
-              url
-            }
+            portrait { url }
             projects (
               first: 1
               orderBy: createdAt_DESC
-              filter: {
-                privacy: PUBLIC
-              }
+              filter: { privacy: PUBLIC }
             ) {
               edges {
-                node {
-                  title
-                }
+                node { title }
               }
             }
           }
