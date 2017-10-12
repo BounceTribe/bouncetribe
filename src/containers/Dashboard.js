@@ -12,11 +12,7 @@ import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
-<<<<<<< HEAD
 import Online from 'icons/Online'
-=======
-// import Online from 'icons/Online'
->>>>>>> jake-dash-tabs
 import {url} from 'config'
 // import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
@@ -107,13 +103,8 @@ class Dashboard extends Component {
     const DASHBOARD_STATES = {
       //JIM YOUR COMPONENT GOES BELOW. CREATE IN ANOTHER FILE AND IMPORT IT
       projects: (<div>
-<<<<<<< HEAD
         <Bolt style={{ marginRight: '5px' }} />
         <Online size={18} /></div>)/*<DashProjects />*/,
-=======
-        projects view />
-      </div>)/*<DashProjects />*/,
->>>>>>> jake-dash-tabs
       bounces: (<div>bounces view</div>)/*<Bounces />*/,
       messages: (<div>direct message view</div>)/*<DirectMessages  {...this.props} />*/
     }
