@@ -1,15 +1,14 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
-import {View} from 'styled'
+import {View, BtAvatar} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import {grey500, grey400, purple, white} from 'theme'
 import {BtFlatButton} from 'styled'
-import {SmallPic, Name} from 'styled/Tribe'
+import {Name} from 'styled/Tribe'
 import {SubRow} from 'styled/Profile'
 import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
-import {url} from 'config'
 
 export const DialogRow = styled.div`
   display: flex;
@@ -147,10 +146,8 @@ export class FbList extends Component {
     return (
       <FbDialogRow user={friend} >
         <SubRow>
-          <SmallPic
-            src={friend.portrait ? friend.portrait.url : `${url}/logo.png`}
-            to={`/${friend.handle}`} />
-          <Name style={{lineHeight:'55px'}} to={`/${friend.handle}`}>
+          <BtAvatar user={friend} size={50} />
+          <Name style={{lineHeight:'48px', paddingLeft: '7px'}} to={`/${friend.handle}`}>
             {friend.handle}
           </Name>
         </SubRow>

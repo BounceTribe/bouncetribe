@@ -46,6 +46,7 @@ export const BtAvatar = ({user, size, online}) => {
     <div>
       <Avatar
         src={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
+        style={{border: 0, objectFit: 'cover'}}
         to={`/${user.handle}`}
         size={size}
       />

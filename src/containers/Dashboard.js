@@ -14,6 +14,9 @@ import {BtAvatar} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
+import SetUserOnline from 'mutations/SetUserOnline'
+import SetUserOffline from 'mutations/SetUserOffline'
+
 class Dashboard extends Component {
 
   constructor(props) {
@@ -25,13 +28,35 @@ class Dashboard extends Component {
       selectedUser: {},
       suggestions: []
     }
+    this.handleClose = this.handleClose.bind(this);
   }
 
   componentDidMount() {
-    let selectedUser = this.props.viewer.user.friends.edges[0].node;
-    this.setState( {selectedUser} )
-    this.props.router.replace('/projects/dash/' + selectedUser.handle)
-    this.suggestFriends(this.state.maxSuggestedFriends);
+    if (this.props.viewer.user.friends.edges.length) {
+      let selectedUser = this.props.viewer.user.friends.edges[0].node;
+      this.setState( {selectedUser} )
+      this.props.router.replace('/projects/dash/' + selectedUser.handle)
+      this.suggestFriends(this.state.maxSuggestedFriends);
+    }
+    document.addEventListener('onbeforeunload', this.handleClose());
+    this.props.relay.commitUpdate(
+      new SetUserOnline({
+        user: this.props.viewer.user
+      })
+    )
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('onbeforeunload', this.handleClose());
+    this.userOffline();
+  }
+
+  handleClose() {
+    this.props.relay.commitUpdate(
+      new SetUserOffline({
+        user: this.props.viewer.user
+      })
+    )
   }
 
   suggestFriends = (max) => {
@@ -147,7 +172,7 @@ class Dashboard extends Component {
             <ProfContainer>
               <ProfTop>
                 <ProfLeft>
-                  <BtAvatar user={selectedUser} size={60} online={true} />
+                  <BtAvatar user={selectedUser} size={60} />
                   <ProfCol>
                     <ProfHandle to={`/${selectedUser.handle}`} >
                       {selectedUser.handle}
@@ -214,6 +239,7 @@ class Dashboard extends Component {
                   id
                   handle
                   score
+                  isOnline
                   portrait { url }
                   projects (
                     first: 999

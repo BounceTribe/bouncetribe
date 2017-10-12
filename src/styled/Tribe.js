@@ -1,17 +1,10 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
 import {Item2, Left, Right, Column} from 'styled/list'
-import {BtLink, BtFlatButton, Button} from 'styled'
+import {BtAvatar, BtLink, BtFlatButton, Button} from 'styled'
 import {purple, white, grey500, grey400, grey700} from 'theme'
 import AddFriend from 'icons/AddFriend'
 import Bolt from 'icons/Bolt'
-
-const MediumPicImg = styled.img`
-  height: 100px;
-  width: 100px;
-  border-radius: 100px;
-  object-fit: cover;
-`
 
 const SearchUserContainer = styled(Item2)`
   align-items: center;
@@ -58,7 +51,7 @@ export class SearchUser extends Component {
     return (
       <SearchUserContainer>
         <Left>
-          <MediumPicImg src={user.portrait ? user.portrait.url : '/logo.png'} />
+          <BtAvatar user={user} size={100} />
           <Column>
             <Handle to={`/${user.handle}`} >
               {user.handle}
@@ -106,7 +99,7 @@ export const RequestUser = ({user, accept, ignore}) => {
   return (
     <SearchUserContainer>
       <Left>
-        <MediumPicImg src={user.portrait ? user.portrait.url : '/logo.png'} />
+        <BtAvatar user={user} size={100} />
         <Column>
           <Handle to={`/${user.handle}`} >
             {user.handle}

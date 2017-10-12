@@ -23,7 +23,7 @@ class TribeAll extends Component {
         return (
           <TableRow key={friend.id} >
             <TableRowColumn style={{width: '50px', padding: '10px 0 6px 0'}} >
-              <BtAvatar user={friend} size={50} online={true/*TODO*/} />
+              <BtAvatar user={friend} size={50} />
             </TableRowColumn>
             <TableRowColumn>
               <Name to={`/${friend.handle}`} >
@@ -121,6 +121,7 @@ export default Relay.createContainer(
                   handle
                   id
                   score
+                  isOnline
                   portrait {
                     url
                   }
