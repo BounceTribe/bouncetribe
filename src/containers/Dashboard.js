@@ -142,7 +142,6 @@ class Dashboard extends Component {
             <DialogRow>{this.state.suggestions}</DialogRow>
           </Dialog>
         </TopPanel>
-
         <BotRow>
           <DashLeft>
             {/* JOEY YOUR COMPONENT GOES HERE */}
@@ -153,7 +152,7 @@ class Dashboard extends Component {
             <ProfContainer>
               <ProfTop>
                 <ProfLeft>
-                  <BtAvatar user={selectedUser} size={60} online={true}/>
+                  <BtAvatar user={selectedUser} size={60} online={true} />
                   <ProfCol>
                     <ProfHandle to={`/${selectedUser.handle}`} >
                       {selectedUser.handle}
