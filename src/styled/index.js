@@ -11,7 +11,6 @@ import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
 
-
 export const BtAvatar = ({user, size, online}) => {
   const iconSize = size * 18/60
   return  (
