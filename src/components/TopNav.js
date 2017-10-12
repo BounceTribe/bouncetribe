@@ -110,10 +110,7 @@ class TopNav extends Component {
                     ({notificationMenu: !prevState.notificationMenu})
                 )
               }}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
             >
               <ViewAll to={`/${handle}/notificationPage`}>View All</ViewAll>
@@ -154,32 +151,19 @@ class TopNav extends Component {
             }}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-            <DropdownMenuItem
-              text="View Profile"
-              to={`/${handle}`}
-            />
-            <DropdownMenuItem
-              text="My Tribe"
-              to={`/${handle}/tribe`}
-            />
+            <DropdownMenuItem text="View Profile" to={`/${handle}`} />
+            <DropdownMenuItem text="My Tribe" to={`/${handle}/tribe`} />
             <DropHr/>
-            <DropdownMenuItem
-              text="Settings"
-              onClick={()=>{
-                this.setState({settings: true})
-              }}
-            />
-            <DropdownMenuItem
-              text="Help"
+            <DropdownMenuItem text="Settings"
+              onClick={()=>{ this.setState({settings: true}) }} />
+            <DropdownMenuItem text="Help"
               href={"http://bouncetribe.com/support/"}
             />
             <DropHr/>
-            <DropdownMenuItem
-              text="Log Out"
-              onClick={auth.logout}
-            />
+            <DropdownMenuItem text="Log Out" onClick={auth.logout} />
           </IconMenu>
-          {/* <Portrait
+          {/*
+          <Portrait
             src={portraitUrl}
             onClick={()=>{
               this.setState((prevState) => {
@@ -198,8 +182,8 @@ class TopNav extends Component {
                   }
                 }
               })
-            }}
-          />
+            }} />
+
           <Dropdown
             hide={(!this.state.dropdownOpen)}
             close={()=>{
