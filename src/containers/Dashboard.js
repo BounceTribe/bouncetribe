@@ -4,7 +4,6 @@ import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, D
 import {BotRow} from 'styled/Profile'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
-import Avatar from 'material-ui/Avatar'
 import {purple, grey200, grey400} from 'theme'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import { ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
@@ -12,8 +11,8 @@ import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
-import Online from 'icons/Online'
 import {url} from 'config'
+import {BtAvatar} from 'styled'
 // import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
@@ -102,9 +101,7 @@ class Dashboard extends Component {
   render () {
     const DASHBOARD_STATES = {
       //JIM YOUR COMPONENT GOES BELOW. CREATE IN ANOTHER FILE AND IMPORT IT
-      projects: (<div>
-        <Bolt style={{ marginRight: '5px' }} />
-        <Online size={18} /></div>)/*<DashProjects />*/,
+      projects: (<div>project view</div>)/*<DashProjects />*/,
       bounces: (<div>bounces view</div>)/*<Bounces />*/,
       messages: (<div>direct message view</div>)/*<DirectMessages  {...this.props} />*/
     }
@@ -156,12 +153,7 @@ class Dashboard extends Component {
             <ProfContainer>
               <ProfTop>
                 <ProfLeft>
-
-                  <Avatar
-                    src={(selectedUser.portrait) ? selectedUser.portrait.url : `${url}/logo.png`}
-                    to={`/${selectedUser.handle}`}
-                    size={60}
-                  />
+                  <BtAvatar user={selectedUser} size={60} online={true}/>
                   <ProfCol>
                     <ProfHandle to={`/${selectedUser.handle}`} >
                       {selectedUser.handle}

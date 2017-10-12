@@ -7,6 +7,30 @@ import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import IconButton from 'material-ui/IconButton'
+import Avatar from 'material-ui/Avatar'
+import Online from 'icons/Online'
+import {url} from 'config'
+
+
+export const BtAvatar = ({user, size, online}) => {
+  const iconSize = size * 18/60
+  return  (
+    <div>
+      <Avatar
+        src={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
+        to={`/${user.handle}`}
+        size={size}
+      />
+      <Online size={iconSize}
+        style={{
+          marginLeft: `-${iconSize}px`,
+          display: `${online ? 'inline' : 'none'}`
+        }}
+      />
+    </div>
+  )
+}
+
 
 export const BtLink = styled(Link)`
   display: flex;
