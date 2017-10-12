@@ -29,30 +29,6 @@ const FbDialogRow = styled.div`
   padding: 10px 20px;
   box-sizing: border-box;
 `
-export const SendInviteBtn = ({onClick}) => (
-  <FlatButton
-    label={'Send Invite'}
-    backgroundColor={purple}
-    labelStyle={{
-      color: `${white}`,
-      fontSize: '14px',
-      fontFamily: 'Helvetica Neue',
-      textTransform: 'none'
-    }}
-    icon={
-      <Send fill={white} height={14}
-        style={{vertialAlign: 'middle', lineHeight: '41px'}}
-      /> }
-    onClick={onClick}
-    style={{
-      border: `1px solid ${grey400}`,
-      borderRadius: '5px',
-      width: '223px',
-      height: '41px',
-      marginTop: '18px'
-    }}
-  />
-)
 
 export const DialogSpacer = styled.div`
   display: flex;
@@ -128,7 +104,6 @@ const InviteStyled = styled.div`
   cursor: pointer;
   color: ${grey500};
 `
-
 const Span7pxRight = styled.span`
   margin-right: 7px;
 `
@@ -137,6 +112,31 @@ export const InviteButton = ({onClick, text}) => (
     {text && <Span7pxRight>{text}</Span7pxRight>}
     <InviteIcon/>
   </InviteStyled>
+)
+
+export const SendInviteBtn = ({onClick}) => (
+  <FlatButton
+    label={'Send Invite'}
+    backgroundColor={purple}
+    labelStyle={{
+      color: `${white}`,
+      fontSize: '14px',
+      fontFamily: 'Helvetica Neue',
+      textTransform: 'none'
+    }}
+    icon={
+      <Send fill={white} height={14}
+        style={{vertialAlign: 'middle', lineHeight: '41px'}}
+      /> }
+    onClick={onClick}
+    style={{
+      border: `1px solid ${grey400}`,
+      borderRadius: '5px',
+      width: '223px',
+      height: '41px',
+      marginTop: '18px'
+    }}
+  />
 )
 
 export class FbList extends Component {
