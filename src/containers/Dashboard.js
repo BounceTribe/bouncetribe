@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, ProfileImg, LogoText, Divider, UserName, NavLink, UserList} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, ProfileImg, LogoText, Divider, UserName, NavLink} from 'styled/Dashboard'
+import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
 import {purple, grey200, grey222, grey400} from 'theme'
@@ -29,7 +30,10 @@ class Dashboard extends Component {
       email: null,
       maxSuggestedFriends: 2,
       selectedUser: {},
-      suggestions: []
+      suggestions: [],
+      showMentors: true,
+      showTribe: true,
+      showBand: true
     }
     this.handleClose = this.handleClose.bind(this);
   }
@@ -130,8 +134,8 @@ class Dashboard extends Component {
     }
     let selectedUser = this.state.selectedUser;
     let user = this.props.viewer.user
-    console.log('user:', user)
-    console.log('render - this', this);
+    // console.log('user:', user)
+    // console.log('render - this', this);
     return (
       <ProfileView>
         <DashHeader>
@@ -192,10 +196,12 @@ class Dashboard extends Component {
             {/* JOEY YOUR COMPONENT GOES HERE */}
             {/* <h4>Select a friend</h4>
             {this.friends(this.props.viewer.user.friends)} */}
-            <UserList
+            <FriendList
               friends={user.friends}
               category={'Tribe Members'}
-              invite={() => this.setState({invite: true}) }/>
+              invite={() => this.setState({invite: true}) }
+              flip={() => this.setState({showMentors: !this.state.showMentors})}
+              show={this.state.showMentors} />
           </DashLeft>
           <DashRight>
             <ProfContainer>

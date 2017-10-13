@@ -39,8 +39,9 @@ export const BtTextMarker = (props) => {
   )
 }
 
-export const BtAvatar = ({user, size, online}) => {
+export const BtAvatar = ({user, size, hideStatus}) => {
   size = size || 50
+  user = user || {}
   const iconSize = size * 18/60
   return  (
     <div>
@@ -50,10 +51,10 @@ export const BtAvatar = ({user, size, online}) => {
         to={`/${user.handle}`}
         size={size}
       />
-      <Online size={iconSize}
+      <Online size={iconSize} online={user.isOnline}
         style={{
           marginLeft: `-${iconSize}px`,
-          display: `${online ? 'inline' : 'none'}`
+          display: `${(!hideStatus && user.isOnline) ? 'inline' : 'none'}`
         }}
       />
     </div>
