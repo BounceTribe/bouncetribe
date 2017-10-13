@@ -44,7 +44,7 @@ export const BtAvatar = ({user, size, hideStatus}) => {
   user = user || {}
   const iconSize = size * 18/60
   return  (
-    <div>
+    <div style={{height: `${size}px`}}>
       <Avatar
         src={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
         style={{border: 0, objectFit: 'cover'}}

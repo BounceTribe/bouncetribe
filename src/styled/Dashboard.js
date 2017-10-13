@@ -53,12 +53,10 @@ export const DashLeft = styled.div`
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  width: 25%;
-  min-width: 280px;
+  flex: 0 0 285px;
   border: solid ${grey222} .5px;
   border-radius: 10px;
-  margin-right: 15px;
-  padding-bottom: 40px;
+  padding: 8px 15px;
 `
 
 export const DashRight = styled.div`
@@ -67,12 +65,12 @@ export const DashRight = styled.div`
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  width: 75%;
   border: solid ${grey222} .5px;
   border-radius: 10px;
   padding: 0 20px;
   margin-left: 15px;
   padding-bottom: 40px;
+  width: 100%;
 `
 
 export const ProfileView = styled(View)`

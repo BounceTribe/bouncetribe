@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {grey500, purple} from 'theme'
+import {grey600, purple} from 'theme'
 import {BtAvatar, BtTextMarker} from 'styled'
 import {InviteButton} from 'styled/Dashboard'
 import Collapse from 'material-ui-icons/KeyboardArrowUp'
@@ -12,7 +12,7 @@ const FriendRow = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 10px 20px;
+  padding: 8px 0;
   box-sizing: border-box;
 `
 const Handle = styled.span`
@@ -20,7 +20,7 @@ const Handle = styled.span`
   padding: 0 16px;
   font-weight: 400;
   font-size: 15px;
-  color: ${props => props.active ? purple : grey500};
+  color: ${props => props.active ? purple : grey600};
 `
 
 const Header = styled.span`
@@ -52,7 +52,7 @@ export const FriendList = ({friends, category, invite, show, flip}) => {
     <div>
       <FriendRow key='heading'>
         <Header>{category}</Header>
-        {show ? <Collapse onClick={flip}/> : <Expand onClick={flip}/>}
+        {show ? <Collapse color={grey600} onClick={flip}/> : <Expand color={grey600} onClick={flip}/>}
       </FriendRow>
       {show && list}
     </div>
