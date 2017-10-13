@@ -1,14 +1,15 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
-import {View, BtAvatar, BtLink} from 'styled'
+import {View, BtAvatar, BtLink, BtFlatButton, BtTextMarker} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import {grey500, grey400, grey222, purple, white} from 'theme'
-import {BtFlatButton} from 'styled'
 import {Name} from 'styled/Tribe'
 import {SubRow} from 'styled/Profile'
 import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
+import KeyboardArrowUp from 'material-ui-icons/KeyboardArrowUp'
+import KeyboardArrowDown from 'material-ui-icons/KeyboardArrowDown'
 
 export const DialogRow = styled.div`
   display: flex;
@@ -110,13 +111,13 @@ export const ProfileImg = styled.img`
 `
 
 export const UserName = styled.h1`
-  font-size: 1.5em; 
+  font-size: 1.5em;
   color: #555555;
   float: left;
 `
 
 export const LogoText = styled.h2`
-  font-size: 1.5em; 
+  font-size: 1.5em;
   color: #777777;
   font-weight: lighter;
   padding-right: 120vmin;
@@ -183,6 +184,37 @@ export const SendInviteBtn = ({onClick}) => (
     }}
   />
 )
+
+const UserRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  box-sizing: border-box;
+`
+
+export const UserList = ({friends, category, invite}) => {
+  const users = friends.edges.map(edge=>edge.node)
+  const list = users.map( user =>
+    <UserRow key={user.id}>
+      <BtAvatar size={40} user={user} />
+      <span>{user.handle}</span>
+      <BtTextMarker size={20} value={3}/>
+    </UserRow>
+  )
+  return (
+    <div>
+      <UserRow key='heading'>
+        <span>{category}</span>
+        <KeyboardArrowUp />
+      </UserRow>
+      {list}
+      <UserRow key={'invite'}><InviteButton onClick={invite} /></UserRow>
+    </div>
+  )
+}
 
 export class FbList extends Component {
   state = { invited: false, }

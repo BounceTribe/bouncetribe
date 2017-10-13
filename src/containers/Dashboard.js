@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, ProfileImg, LogoText, Divider, UserName, NavLink} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, ProfileImg, LogoText, Divider, UserName, NavLink, UserList} from 'styled/Dashboard'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
 import {purple, grey200, grey222, grey400} from 'theme'
@@ -180,7 +180,7 @@ class Dashboard extends Component {
               style={{
                 marginRight: '124vmin'
               }}
-            >{user.handle}</UserName> 
+            >{user.handle}</UserName>
             <NavLink to={`/${user.handle}`}>
               Edit Profile
             </NavLink>
@@ -190,8 +190,12 @@ class Dashboard extends Component {
         <BotRow>
           <DashLeft>
             {/* JOEY YOUR COMPONENT GOES HERE */}
-            <h4>Select a friend</h4>
-            {this.friends(this.props.viewer.user.friends)}
+            {/* <h4>Select a friend</h4>
+            {this.friends(this.props.viewer.user.friends)} */}
+            <UserList
+              friends={user.friends}
+              category={'Tribe Members'}
+              invite={() => this.setState({invite: true}) }/>
           </DashLeft>
           <DashRight>
             <ProfContainer>
