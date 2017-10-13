@@ -212,9 +212,7 @@ export const Experience = styled(Input)`
 
 export class TribeButton extends Component {
 
-  state = {
-    remove: false
-  }
+  state = { remove: false }
 
 
 
@@ -225,9 +223,7 @@ export class TribeButton extends Component {
         <BtFlatButton
           label={'My Tribe'}
           backgroundColor={purple}
-          labelStyle={{
-            color: white
-          }}
+          labelStyle={{ color: white }}
           icon={
             <Tribe
               fill={white}
@@ -291,9 +287,7 @@ export class TribeButton extends Component {
                 height={16}
               />
             }
-            onClick={()=>{
-              this.props.accept(invite.node.id)
-            }}
+            onClick={()=>{ this.props.accept(invite.node.id) }}
             style={{
               border: `1px solid ${grey400}`,
               borderRadius: '5px',
@@ -306,9 +300,7 @@ export class TribeButton extends Component {
           <BtFlatButton
             label={'Request Sent'}
             backgroundColor={white}
-            labelStyle={{
-              color:purple
-            }}
+            labelStyle={{ color:purple }}
             icon={
               <Tribe
                 fill={purple}
@@ -340,9 +332,7 @@ export class TribeButton extends Component {
                 height={16}
               />
             }
-            onClick={()=>{
-              this.props.addToTribe()
-            }}
+            onClick={()=>{ this.props.addToTribe() }}
             style={{
               border: `1px solid ${grey400}`,
               borderRadius: '5px',

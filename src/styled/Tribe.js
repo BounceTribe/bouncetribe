@@ -1,42 +1,14 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
 import {Item2, Left, Right, Column} from 'styled/list'
-import {BtLink, BtFlatButton, Button} from 'styled'
+import {BtAvatar, BtLink, BtFlatButton, Button} from 'styled'
 import {purple, white, grey500, grey400, grey700} from 'theme'
 import AddFriend from 'icons/AddFriend'
 import Bolt from 'icons/Bolt'
 
-const SmallPicImg = styled.img`
-  height: 50px;
-  width: 50px;
-  border-radius: 50px;
-  margin: 5px;
-  object-fit: cover;
-`
-
-const MediumPicImg = styled.img`
-  height: 100px;
-  width: 100px;
-  border-radius: 100px;
-  object-fit: cover;
-`
-
 const SearchUserContainer = styled(Item2)`
   align-items: center;
 `
-
-export const SmallPic = (props) => {
-  return (
-    <BtLink
-      {...props}
-    >
-      <SmallPicImg
-        {...props}
-      />
-    </BtLink>
-  )
-}
-
 
 export const Handle = styled(BtLink)`
   font-weight: 400;
@@ -61,21 +33,17 @@ export const Value = styled.span`
   font-weight: 400;
 `
 
-const Score = ({score}) => {
-  return (
-    <Pair>
-      <Bolt/>
-      <Value>
-        {score}
-      </Value>
-    </Pair>
-  )
-}
+const Score = ({score}) => (
+  <Pair>
+    <Bolt/>
+    <Value>
+      {score}
+    </Value>
+  </Pair>
+)
 
 export class SearchUser extends Component {
-  state = {
-    invited: false,
-  }
+  state = { invited: false, }
 
   render () {
     let {user, createFriendRequest} = this.props
@@ -83,21 +51,15 @@ export class SearchUser extends Component {
     return (
       <SearchUserContainer>
         <Left>
-          <MediumPicImg
-            src={(user.portrait) ? user.portrait.url : '/logo.png'}
-          />
+          <BtAvatar user={user} size={100} />
           <Column>
-            <Handle
-              to={`/${user.handle}`}
-            >
+            <Handle to={`/${user.handle}`} >
               {user.handle}
             </Handle>
             <Location>
               {user.placename}
             </Location>
-            <Score
-              score={user.score}
-            />
+            <Score score={user.score} />
           </Column>
         </Left>
 
@@ -105,25 +67,16 @@ export class SearchUser extends Component {
           <BtFlatButton
             label={(invited) ? 'Request Sent' : 'Add to Tribe'}
             onClick={()=>{
-              this.setState({
-                invited: true,
-              })
+              this.setState({ invited: true, })
               createFriendRequest()
             }}
             backgroundColor={(invited) ? purple : white}
-            labelStyle={{
-              color: (invited) ? white : purple
-            }}
-            icon={
-              <AddFriend
-                fill={(invited) ? white : purple}
-              />
-            }
+            labelStyle={{ color: (invited) ? white : purple }}
+            icon={ <AddFriend fill={(invited) ? white : purple} /> }
             style={{
               border: `1px solid ${grey400}`,
               borderRadius: '5px',
             }}
-
             disabled={invited}
           />
         </Right>
@@ -142,26 +95,19 @@ const RequestColumn = styled(Column)`
   align-items: center;
 `
 
-
 export const RequestUser = ({user, accept, ignore}) => {
   return (
     <SearchUserContainer>
       <Left>
-        <MediumPicImg
-          src={(user.portrait) ? user.portrait.url : '/logo.png'}
-        />
+        <BtAvatar user={user} size={100} />
         <Column>
-          <Handle
-            to={`/${user.handle}`}
-          >
+          <Handle to={`/${user.handle}`} >
             {user.handle}
           </Handle>
           <Location>
             {user.placename}
           </Location>
-          <Score
-            score={user.score}
-          />
+          <Score score={user.score} />
         </Column>
       </Left>
 
@@ -171,26 +117,14 @@ export const RequestUser = ({user, accept, ignore}) => {
             label={'Accept'}
             onClick={accept}
             backgroundColor={white}
-            labelStyle={{
-              color: purple
-            }}
-            icon={
-              <AddFriend
-                fill={purple}
-              />
-            }
-            style={{
-              border: `1px solid ${grey400}`
-            }}
+            labelStyle={{ color: purple }}
+            icon={ <AddFriend fill={purple} /> }
+            style={{ border: `1px solid ${grey400}` }}
           />
-
-          <Dismiss
-            onClick={ignore}
-          >
+          <Dismiss onClick={ignore} >
             Dismiss Request
           </Dismiss>
         </RequestColumn>
-
       </Right>
     </SearchUserContainer>
   )
@@ -268,11 +202,7 @@ export const NoTribe = ({handle, user}) => {
             ownId: user.id
           },
         }}
-        icon={
-          <AddFriend
-            fill={white}
-          />
-        }
+        icon={ <AddFriend fill={white} /> }
         label={'Add Members'}
         primary
       />

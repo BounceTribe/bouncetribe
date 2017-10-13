@@ -52,20 +52,14 @@ class AuthService {
     this.showLock = this.showLock.bind(this)
   }
 
-  hide = () => {
-    this.lock.hide()
-  }
+  hide = () => this.lock.hide()
 
   fbOptions = (primaryAuthId) => {
     return {
-      allowedConnections: [
-        'facebook'
-      ],
+      allowedConnections: ['facebook'],
       rememberLastLogin: false,
       languageDictionary: {
-        signin: {
-          title: 'Link your Facebook account'
-        }
+        signin: {title: 'Link your Facebook account'}
       },
       auth: {
         params: {

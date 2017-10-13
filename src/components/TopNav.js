@@ -14,19 +14,18 @@ import IconButton from 'material-ui/IconButton'
 import UpdateNotification from 'mutations/UpdateNotification'
 import Dialog from 'material-ui/Dialog'
 import Checkbox from 'material-ui/Checkbox'
+// import {Container} from 'styled/list'
+
 
 import UpdateUser from 'mutations/UpdateUser'
 
 class TopNav extends Component {
-
   state = {
     dropdownOpen: false,
     notificationMenu: false,
     portraitMenu: false,
     settings: false
   }
-
-
 
   render() {
     let {handle, portraitUrl, user} = this.props
@@ -59,6 +58,16 @@ class TopNav extends Component {
         </Dialog>
         <Logo to={'/'} />
         <NavList>
+          <NavLink
+            to={`/${handle}/TribeFind`}
+          >
+            <Headphones
+              height={18}
+            />
+            <NavText>
+              Find Your Mentor
+            </NavText>
+          </NavLink>
           <NavLink
             to={((((user || {}).project || {}).edges || []).length > 0) ? `/${handle}/sessions/${user.projects.edges[0].node.title}` : `/${handle}/sessions`}
           >
@@ -101,10 +110,7 @@ class TopNav extends Component {
                     ({notificationMenu: !prevState.notificationMenu})
                 )
               }}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
             >
               <ViewAll to={`/${handle}/notificationPage`}>View All</ViewAll>
@@ -145,32 +151,20 @@ class TopNav extends Component {
             }}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-            <DropdownMenuItem
-              text="View Profile"
-              to={`/${handle}`}
-            />
-            <DropdownMenuItem
-              text="My Tribe"
-              to={`/${handle}/tribe`}
-            />
+            <DropdownMenuItem text="Home" to={`/`} />
+            <DropdownMenuItem text="View Profile" to={`/${handle}`} />
+            <DropdownMenuItem text="My Tribe" to={`/${handle}/tribe`} />
             <DropHr/>
-            <DropdownMenuItem
-              text="Settings"
-              onClick={()=>{
-                this.setState({settings: true})
-              }}
-            />
-            <DropdownMenuItem
-              text="Help"
+            <DropdownMenuItem text="Settings"
+              onClick={()=>{ this.setState({settings: true}) }} />
+            <DropdownMenuItem text="Help"
               href={"http://bouncetribe.com/support/"}
             />
             <DropHr/>
-            <DropdownMenuItem
-              text="Log Out"
-              onClick={auth.logout}
-            />
+            <DropdownMenuItem text="Log Out" onClick={auth.logout} />
           </IconMenu>
-          {/* <Portrait
+          {/*
+          <Portrait
             src={portraitUrl}
             onClick={()=>{
               this.setState((prevState) => {
@@ -189,8 +183,8 @@ class TopNav extends Component {
                   }
                 }
               })
-            }}
-          />
+            }} />
+
           <Dropdown
             hide={(!this.state.dropdownOpen)}
             close={()=>{

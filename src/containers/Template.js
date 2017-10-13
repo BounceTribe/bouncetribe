@@ -9,15 +9,43 @@ import MobileNav from 'components/MobileNav'
 import {btTheme} from 'theme'
 import {url} from 'config'
 import Footer from 'components/Footer'
+// import SetUserOnline from 'mutations/SetUserOnline'
+// import SetUserOffline from 'mutations/SetUserOffline'
 
 injectTapEventPlugin()
 
 class Template extends Component {
 
+  // constructor(props) {
+  //   super(props);
+  //   this.state = { };
+  //   this.handleClose = this.handleClose.bind(this);
+  // }
+  //
+  // componentDidMount() {
+  //   document.addEventListener('onbeforeunload', this.handleClose());
+  //   this.props.relay.commitUpdate(
+  //     new SetUserOnline({
+  //       user: this.props.viewer.user
+  //     })
+  //   )
+  // }
+  //
+  // componentWillUnmount() {
+  //   document.removeEventListener('onbeforeunload', this.handleClose());
+  //   this.userOffline();
+  // }
+  //
+  // handleClose() {
+  //   this.props.relay.commitUpdate(
+  //     new SetUserOffline({
+  //       user: this.props.viewer.user
+  //     })
+  //   )
+  // }
+
   get userOnly () {
-    let {
-      user
-    } = this.props.viewer
+    let { user } = this.props.viewer
     if (user) {
       return (
         <TopNav
@@ -30,9 +58,7 @@ class Template extends Component {
   }
 
   get mobileUserOnly () {
-    let {
-      user
-    } = this.props.viewer
+    let { user } = this.props.viewer
     if (user) {
       return (
         <MobileNav
@@ -46,9 +72,7 @@ class Template extends Component {
 
   render () {
     return (
-      <MuiThemeProvider
-        muiTheme={btTheme}
-      >
+      <MuiThemeProvider muiTheme={btTheme} >
         <Main>
           {this.userOnly}
           {this.mobileUserOnly}
@@ -89,28 +113,21 @@ export default Relay.createContainer(
                     id
                     title
                   }
-                  session {
-                    id
-                  }
+                  session { id }
                 }
               }
             }
             id
             handle
-            portrait {
-              url
-            }
+            isOnline
+            portrait { url }
             projects (
               first: 1
               orderBy: createdAt_DESC
-              filter: {
-                privacy: PUBLIC
-              }
+              filter: { privacy: PUBLIC }
             ) {
               edges {
-                node {
-                  title
-                }
+                node { title }
               }
             }
           }

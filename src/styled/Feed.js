@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {purple, grey600, grey500, grey200, grey800, white, size} from 'theme'
+import {purple, grey600, grey500, grey200, grey222, grey800, white, size} from 'theme'
 
 export const Container = styled.div`
   display: flex;
@@ -153,4 +153,15 @@ export const StartBy = styled.h4`
   color: ${grey500};
   margin-bottom: 30px;
 
+`
+
+export const Panel = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-size: 24px;
+  color: #777777;
+  background-color: #FFFFFF;
+  border: 1px solid ${grey222};
+  padding: 10px 15px;
 `

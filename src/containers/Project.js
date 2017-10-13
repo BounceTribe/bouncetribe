@@ -469,7 +469,7 @@ class Project extends Component {
                 }}
               />,
               <BtFlatButton
-              label={'Save'}
+                label={'Save'}
                 onClick={()=>{
                   let project = {
                     id: this.props.viewer.allProjects.edges[0].node.id,
@@ -534,9 +534,9 @@ class Project extends Component {
                     />
                   }
                 />
-                  <ChoiceText>
-                    Private
-                  </ChoiceText>
+                <ChoiceText>
+                  Private
+                </ChoiceText>
               </Choice>
               <Choice>
                 <RoundButton

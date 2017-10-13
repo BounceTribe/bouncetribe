@@ -7,6 +7,58 @@ import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import IconButton from 'material-ui/IconButton'
+import Avatar from 'material-ui/Avatar'
+import Online from 'icons/Online'
+import {url} from 'config'
+
+const PurpleBox = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center
+  font-weight: bold;
+  background-color: ${purple};
+  color: ${white};
+  font-weight: 400;
+`
+
+// Purple box (or circle) with text -
+//visible only if value (or alwaysVis) is truthy
+export const BtTextMarker = (props) => {
+  let {size, height, width, radius, fontHeight, value, alwaysVis} = props;
+  return (
+    <PurpleBox
+      style={{
+        height: `${height || size || radius * 2 || 20}px`,
+        width: `${width || size || radius * 2 || 20}px`,
+        borderRadius: `${radius || 6}px`,
+        fontSize: `${fontHeight || 15}px`,
+        visibility: `${(alwaysVis || value) ? 'visible' : 'hidden'}`
+      }}>
+      {value}
+    </PurpleBox>
+  )
+}
+
+export const BtAvatar = ({user, size, online}) => {
+  size = size || 50
+  const iconSize = size * 18/60
+  return  (
+    <div>
+      <Avatar
+        src={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
+        style={{border: 0, objectFit: 'cover'}}
+        to={`/${user.handle}`}
+        size={size}
+      />
+      <Online size={iconSize}
+        style={{
+          marginLeft: `-${iconSize}px`,
+          display: `${online ? 'inline' : 'none'}`
+        }}
+      />
+    </div>
+  )
+}
 
 
 export const BtLink = styled(Link)`
@@ -51,7 +103,6 @@ export const FeedView = styled(View)`
 
 export const ProjectNewView = styled(View)`
   min-height: 85vh;
-
 `
 
 export const IconTextContainer = styled(BtLink)`
@@ -65,7 +116,6 @@ export const IconText = styled.span`
   margin-left: 12px;
   color: ${grey800};
 `
-
 
 export const ButtonLink = styled(Link)`
   color: none;
@@ -100,27 +150,20 @@ export const CroppedImage = styled.img`
 
 export const Button = (props) => {
   return (
-    <ButtonLink
-      to={props.to}
-    >
+    <ButtonLink to={props.to} >
       <RaisedButton
         {...props}
-        labelStyle={{
-          textTransform: 'none',
-        }}
+        labelStyle={{ textTransform: 'none', }}
       >
         {props.children}
       </RaisedButton>
-
     </ButtonLink>
   )
 }
 
 export const BtFlatButton = (props) => {
   return (
-    <ButtonLink
-      to={props.to}
-    >
+    <ButtonLink to={props.to} >
       <FlatButton
         {...props}
         labelStyle={{
@@ -130,7 +173,6 @@ export const BtFlatButton = (props) => {
       >
         {props.children}
       </FlatButton>
-
     </ButtonLink>
   )
 }
@@ -161,7 +203,6 @@ export const RoundButton = (props) => {
           right: "0",
           fontSize: (tooltipLength > 10) ? "9px" : "10px",
           paddingLeft: (tooltipLength > 10) ? "2px" : "8px",
-
         }}
       >
       <MuiThemeProvider
@@ -183,7 +224,6 @@ export const RoundButton = (props) => {
         </FloatingActionButton>
       </MuiThemeProvider>
     </IconButton>
-
     </ButtonLink>
   )
 }
