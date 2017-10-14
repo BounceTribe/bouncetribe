@@ -14,6 +14,7 @@ const FriendRow = styled.div`
   width: 100%;
   padding: 8px 0;
   box-sizing: border-box;
+  border: ${props => props.selected ? `0.5px solid ${purple}` : 'none'};
 `
 const Handle = styled.span`
   flex: 1;
@@ -29,9 +30,10 @@ const Header = styled.span`
   font-size: 14px;
   color: ${purple};
 `
-const makeRows = users => (
+
+const makeRows = (users, select, selected) => (
   users.map( user =>
-    <FriendRow key={user.id}>
+    <FriendRow selected={user.id===selected.id} key={user.id} onClick={()=>select(user)}>
       <BtAvatar size={40} user={user} />
       <Handle active={user.isOnline}>{user.handle}</Handle>
       <BtTextMarker size={20} fontHeight={14} value={3}/>
@@ -39,9 +41,10 @@ const makeRows = users => (
   )
 )
 
-export const FriendList = ({friends, category, invite, show, flip}) => {
+export const FriendList = (props) => {
+  let {friends, category, invite, show, flip, select, selected} = props;
   const users = friends.edges.map(edge=>edge.node)
-  const list = makeRows(users);
+  const list = show ? makeRows(users, select, selected) : [];
   list.push(
     <FriendRow key={'invite'}>
       <InviteButton onClick={invite} />
@@ -52,9 +55,11 @@ export const FriendList = ({friends, category, invite, show, flip}) => {
     <div>
       <FriendRow key='heading'>
         <Header>{category}</Header>
-        {show ? <Collapse color={grey600} onClick={flip}/> : <Expand color={grey600} onClick={flip}/>}
+        {show ?
+           <Collapse color={grey600} onClick={flip}/> :
+           <Expand color={grey600} onClick={flip}/>}
       </FriendRow>
-      {show && list}
+      {list}
     </div>
   )
 }

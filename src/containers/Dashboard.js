@@ -105,19 +105,6 @@ class Dashboard extends Component {
     )
   }
 
-  friends = (list) => (
-    <ul>
-      {list.edges.map( friend => (
-        <li
-          onClick={()=>this.selectUser(friend.node)}
-          key={friend.node.id}
-        >
-        {friend.node.handle}
-        </li>
-      ))}
-    </ul>
-  )
-
   setTab = (tabAction) => {
     this.props.router.replace('/' + tabAction.props.value + '/dash/' + this.state.selectedUser.handle)
     console.log('route set to', this.props.router.location);
@@ -197,10 +184,12 @@ class Dashboard extends Component {
             {/* <h4>Select a friend</h4>
             {this.friends(this.props.viewer.user.friends)} */}
             <FriendList
+              selected={selectedUser}
               friends={user.friends}
               category={'Tribe Members'}
               invite={() => this.setState({invite: true}) }
               flip={() => this.setState({showMentors: !this.state.showMentors})}
+              select={this.selectUser}
               show={this.state.showMentors} />
           </DashLeft>
           <DashRight>
