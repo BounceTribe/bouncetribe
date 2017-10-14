@@ -18,9 +18,9 @@ const FriendRow = styled.div`
 const Handle = styled.span`
   flex: 1;
   padding: 0 16px;
-  font-weight: 400;
   font-size: 15px;
   color: ${props => props.selected ? purple : grey600};
+  font-weight: ${props => props.selected ? 500 : 400};
   cursor: pointer;
 `
 
