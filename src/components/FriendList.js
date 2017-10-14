@@ -53,11 +53,9 @@ export const FriendList = (props) => {
 
   return (
     <div>
-      <FriendRow key='heading'>
+      <FriendRow onClick={flip} key='heading'>
         <Header>{category}</Header>
-        {show ?
-           <Collapse color={grey600} onClick={flip}/> :
-           <Expand color={grey600} onClick={flip}/>}
+        {show ? <Collapse color={grey600}/> : <Expand color={grey600}/>}
       </FriendRow>
       {list}
     </div>
