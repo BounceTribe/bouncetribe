@@ -12,18 +12,20 @@ class Tribe extends Component {
 
   componentWillMount() {
     let {location, userHandle} = this.props
-
+    console.log('TRIBE PROPS', this.props);
     if (location.pathname === `/${userHandle}/tribe/requests`) {
       this.setState({ tab: 1 })
-    } else (
+    } else {
       this.setState({ tab: 0 })
-    )
+    }
   }
 
   render () {
     let {User, user} = this.props.viewer
+    console.log('TRTBE VIEWER ', this.props.viewer);
     let person = (User) ? (User) : (user)
     let {handle} = person
+    console.log('person', person);
     let {router} = this.props
     return (
       <View>
@@ -93,7 +95,45 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user { id }
+          user {
+            id
+            handle
+            friends (first: 999) {
+              edges {
+                node {id}
+              }
+            }
+            invitations (
+              filter: {
+                accepted: false
+                ignored: false
+              }
+              first: 999
+              orderBy: createdAt_ASC
+            ) {
+              edges {
+                node {
+                  id
+                  actor {id}
+                }
+              }
+            }
+            doNotEmail
+            sentRequests (
+              filter: {
+                accepted: false
+                ignored: false
+              }
+              first: 999
+              orderBy: createdAt_ASC
+            ) {
+              edges {
+                node {
+                  recipient {id}
+                }
+              }
+            }
+          }
           User (handle: $userHandle) {
             handle
             id

@@ -55,7 +55,7 @@ class Dashboard extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('onbeforeunload', this.handleClose());
-    this.userOffline();
+    // this.userOffline();
   }
 
   handleClose() {
@@ -164,7 +164,7 @@ class Dashboard extends Component {
         <Divider />
         <TopPanel>
           <Column>
-            <ProfileImg src={user.portrait.url} />
+            <ProfileImg src={(user.portrait || {}).url} />
           </Column>
           <Column>
             <UserName

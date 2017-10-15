@@ -834,13 +834,9 @@ export default Relay.createContainer(
           user {
             id
             handle
-            friends (
-              first: 999
-            ) {
+            friends (first: 999) {
               edges {
-                node {
-                  id
-                }
+                node {id}
               }
             }
             invitations (
@@ -854,9 +850,7 @@ export default Relay.createContainer(
               edges {
                 node {
                   id
-                  actor {
-                    id
-                  }
+                  actor {id}
                 }
               }
             }
@@ -871,9 +865,7 @@ export default Relay.createContainer(
             ) {
               edges {
                 node {
-                  recipient {
-                    id
-                  }
+                  recipient {id}
                 }
               }
             }
@@ -900,13 +892,9 @@ export default Relay.createContainer(
                   id
                   title
                   createdAt
-                  artwork {
-                    url
-                  }
+                  artwork {url}
                   privacy
-                  comments (
-                    first: 999
-                  ) {
+                  comments (first: 999) {
                     edges {
                       node {
                         id
@@ -918,18 +906,12 @@ export default Relay.createContainer(
                 }
               }
             }
-            friends (
-              first: 999
-            ){
+            friends (first: 999){
               edges {
-                node {
-                  id
-                }
+                node {id}
               }
             }
-            genres (
-              first: 20
-            ) {
+            genres (first: 20) {
               edges {
                 node {
                   id
@@ -937,9 +919,7 @@ export default Relay.createContainer(
                 }
               }
             }
-            skills (
-              first: 20
-            ) {
+            skills (first: 20) {
               edges {
                 node {
                   id
@@ -947,9 +927,7 @@ export default Relay.createContainer(
                 }
               }
             }
-            artistInfluences (
-              first: 20
-            ){
+            artistInfluences (first: 20){
               edges {
                 node {
                   id
