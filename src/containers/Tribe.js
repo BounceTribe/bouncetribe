@@ -6,7 +6,6 @@ import {Container, Header, HeaderOptions} from 'styled/list'
 import {purple, white} from 'theme'
 import AddFriend from 'icons/AddFriend'
 import TribeIcon from 'icons/Tribe'
-import Lock from 'icons/Lock'
 import {TabLabel} from 'styled'
 
 class Tribe extends Component {
@@ -74,7 +73,7 @@ class Tribe extends Component {
               }}
             />
             <Tab
-              icon={( <TabLabel text={'Messages'} /> )}
+              icon={( <TabLabel text={'Messages'} locked /> )}
               value={2}
               disabled={true}
               style={{ cursor: 'not-allowed' }}

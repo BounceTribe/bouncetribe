@@ -20,7 +20,7 @@ import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
 import SetUserOnline from 'mutations/SetUserOnline'
 import SetUserOffline from 'mutations/SetUserOffline'
-import TabLabel from 'styled'
+import {TabLabel} from 'styled'
 
 class Dashboard extends Component {
 
@@ -56,7 +56,7 @@ class Dashboard extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('onbeforeunload', this.handleClose());
-    this.userOffline();
+    // this.userOffline();
   }
 
   handleClose() {
@@ -117,7 +117,7 @@ class Dashboard extends Component {
     let selectedUser = this.state.selectedUser;
     let user = this.props.viewer.user
     // console.log('user:', user)
-    console.log('render - this', this);
+    // console.log('render - this', this);
     return (
       <ProfileView>
         <DashHeader>
@@ -224,12 +224,18 @@ class Dashboard extends Component {
               tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
               inkBarStyle={{ backgroundColor: purple }}
               value={this.props.router.params.tab} >
-              <Tab label={'projects'} value={'projects'}
+              <Tab
+                label={'projects'}
+                value={'projects'}
                 onActive={(e)=>{this.setTab(e)}} />
-              <Tab icon={( <TabLabel text={'bounces'} /> )} value={'bounces'}
+              <Tab
+                icon={( <TabLabel text={'bounces'} locked /> )}
+                value={'bounces'}
                 onActive={(e)=>{this.setTab(e)}}
                 style={{ cursor: 'not-allowed' }} disabled />
-              <Tab label={'messages'} value={'messages'}
+              <Tab
+                icon={( <TabLabel text={'bounces'} locked /> )}
+                value={'messages'}
                 onActive={(e)=>{this.setTab(e)}}
                 style={{ cursor: 'not-allowed' }} disabled />
             </Tabs>
@@ -258,40 +264,10 @@ class Dashboard extends Component {
                   score
                   isOnline
                   portrait { url }
-                  projects (
-                    first: 999
-                    filter: {privacy_not: PRIVATE}
-                    orderBy: createdAt_DESC
-                  ) {
-                    edges {
-                      node {
-                        createdAt
-                        id
-                        title
-                        genres (first: 999) {
-                          edges {
-                            node {name}
-                          }
-                        }
-                        artwork { url }
-                        creator {
-                          handle
-                          portrait { url }
-                        }
-                        comments (first: 999) {
-                          edges {
-                            node {type}
-                          }
-                        }
-                      }
-                    }
-                  }
                 }
               }
             }
-            sentMessages (
-              first: 20
-            ) {
+            sentMessages ( first: 20 ) {
               edges {
                 node {
                   text

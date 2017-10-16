@@ -8,8 +8,7 @@ import {url} from 'config'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 
-export const ProjectItemSm = ({users, project, comments, likes}) => {
-  let {User, user} = users
+export const ProjectItemSm = ({User, project, comments, likes}) => {
   return (
   <ProfileProjectItem key={project.id} >
     <ProjectLeft>
