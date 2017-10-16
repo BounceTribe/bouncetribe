@@ -185,7 +185,7 @@ export const MoreInfo = styled.div`
 `
 
 export const Divider = styled.hr`
-  border: .5px solid ${grey200};
+  border: 1px solid ${grey200};
   background-color: ${grey200};
   width: 100%;
 `

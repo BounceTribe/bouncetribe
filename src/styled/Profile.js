@@ -13,9 +13,9 @@ export const ProfileView = styled(View)`
 `
 
 export const Divider = styled.hr`
-  border: .5px solid ${grey200};
+  border: 1px solid ${grey200};
   background-color: ${grey200};
-  height: .5px;
+  height: 1px;
   width: 100%;
 `
 export const Top = styled.div`
@@ -26,7 +26,7 @@ export const Top = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 10px;
-  border: solid ${grey400} .5px;
+  border: solid ${grey400} 1px;
   padding-top: 40px;
 `
 
@@ -162,7 +162,7 @@ export const BotLeft = styled.div`
   background-color: white;
   min-height: 50vh;
   width: 66%;
-  border: solid ${grey400} .5px;
+  border: solid ${grey400} 1px;
   border-radius: 10px;
   margin-right: 15px;
   padding-bottom: 40px;
@@ -175,7 +175,7 @@ export const BotRight = styled.div`
   background-color: white;
   min-height: 50vh;
   width: 33%;
-  border: solid ${grey400} .5px;
+  border: solid ${grey400} 1px;
   border-radius: 10px;
   padding: 0 20px;
   margin-left: 15px;

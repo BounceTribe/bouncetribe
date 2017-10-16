@@ -15,7 +15,7 @@ export const Header = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: baseline;
-  border-bottom: solid ${grey230} .5px;
+  border-bottom: solid ${grey230} 1px;
   padding: 20px ${xPadding}px;
   width: 100%;
   box-sizing: border-box;
@@ -57,7 +57,7 @@ export const Item = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  border: solid ${grey230} .5px;
+  border: solid ${grey230} 1px;
   border-radius: 5px;
   width: 100%;
   margin-bottom: 15px;

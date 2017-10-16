@@ -137,7 +137,7 @@ class ProjectTribeList extends Component {
       <List
         style={{
           width: '100%',
-          border: `.5px solid ${grey200}`,
+          border: `1px solid ${grey200}`,
           borderRadius: `6px`,
           display: (this.props.recentCommenters.length > 0) ? '' : 'none'
         }}

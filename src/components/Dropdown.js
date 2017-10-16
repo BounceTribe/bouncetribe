@@ -19,7 +19,7 @@ const DropdownUl = styled.ul`
   border-radius: 5px;
   min-width: 175px;
   padding: 0;
-  border: .5px solid ${grey300};
+  border: 1px solid ${grey300};
   &:before {
     content: "";
     position: absolute;

@@ -136,8 +136,8 @@ class Dashboard extends Component {
               contentStyle={{borderRadius: '5px'}}
               titleStyle={{
                 fontSize: '28px',
-                borderBottom:`0.5px solid ${grey400}`,
-                padding: '16px 27px 13.5px 27px',
+                borderBottom:`1px solid ${grey400}`,
+                padding: '16px 27px 13px 27px',
                 fontFamily: 'Helvetica Neue'
               }} >
               <DialogRow>
@@ -219,7 +219,7 @@ class Dashboard extends Component {
               </ProfTop>
             </ProfContainer>
             <Tabs
-              style={{ margin: '6px -19.5px 25px -19.5px' }}
+              style={{ margin: '6px -19px 25px -19px' }}
               tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
               inkBarStyle={{ backgroundColor: purple }}
               value={this.props.router.params.tab} >

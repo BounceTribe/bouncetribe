@@ -4,6 +4,7 @@ import {purple} from 'theme'
 
 const SpinBox = styled.div`
   display: flex;
+  align-self: center;
   align-items: center;
 `
 

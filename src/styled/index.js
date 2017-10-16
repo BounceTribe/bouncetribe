@@ -91,7 +91,7 @@ export const View = styled.section`
   align-items: center;
   width: 80%;
   margin-top: 50px;
-  border: solid ${grey230} .5px;
+  border: solid ${grey230} 1px;
   border-radius: 10px;
   min-height: 80vh;
   margin-bottom: 50px;

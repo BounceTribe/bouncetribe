@@ -15,7 +15,7 @@ export const DialogRow = styled.div`
   box-sizing: border-box;
   width: 100%;
   padding: 25px 0;
-  border-bottom: 0.5px solid ${grey400};
+  border-bottom: 1px solid ${grey400};
 
 `
 const FbDialogRow = styled.div`
@@ -54,7 +54,7 @@ export const DashLeft = styled.div`
   background-color: white;
   min-height: 50vh;
   flex: 0 0 285px;
-  border: solid ${grey222} .5px;
+  border: solid ${grey222} 1px;
   border-radius: 10px;
   padding: 8px 15px;
 `
@@ -65,7 +65,7 @@ export const DashRight = styled.div`
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
-  border: solid ${grey222} .5px;
+  border: solid ${grey222} 1px;
   border-radius: 10px;
   padding: 0 20px;
   margin-left: 15px;
@@ -87,7 +87,7 @@ export const TopPanel = styled.div`
   width: 100%;
   background-color: white;
   border-radius: 5px;
-  border: solid ${grey222} .5px;
+  border: solid ${grey222} 1px;
   padding-top: 40px;
   margin-top: 10px;
 `
@@ -121,8 +121,8 @@ export const LogoText = styled.h2`
 `
 
 export const Divider = styled.hr`
-  border: .5px solid #E5E5E5;
-  height: .5px;
+  border: 1px solid #E5E5E5;
+  height: 1px;
   width: 90%;
 `
 
