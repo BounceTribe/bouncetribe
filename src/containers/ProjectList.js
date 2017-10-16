@@ -171,9 +171,8 @@ class ProjectList extends Component {
       <View>
         <Container>
           <Header>
-
               <IconTextContainer
-                to={`/${this.props.viewer.User.handle}/projects`}
+                to={`/projects/${this.props.viewer.User.handle}`}
               >
                 <Music
                   style={{
@@ -188,11 +187,9 @@ class ProjectList extends Component {
               </IconTextContainer>
             <HeaderOptions>
               <Button
-                to={`/${this.props.viewer.user.handle}/projects/new`}
+                to={`/projects/${this.props.viewer.user.handle}/new`}
                 icon={
-                  <Upload
-                    fill={white}
-                  />
+                  <Upload fill={white} />
                 }
                 label={'New Project'}
                 primary

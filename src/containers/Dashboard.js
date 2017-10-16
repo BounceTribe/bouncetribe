@@ -4,7 +4,7 @@ import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, 
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
-import {purple, grey200, grey222, grey400} from 'theme'
+import {purple, grey200, grey400} from 'theme'
 import { ProfContainer, ProfTop, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
 import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
@@ -12,7 +12,6 @@ import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import {Row} from 'styled/Profile'
 import {Column} from 'styled/list'
-import Logo from 'icons/Headphones'
 import {BtAvatar} from 'styled'
 // import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
@@ -43,7 +42,7 @@ class Dashboard extends Component {
     if (this.props.viewer.user.friends.edges.length) {
       let selectedUser = this.props.viewer.user.friends.edges[0].node;
       this.setState( {selectedUser} )
-      this.props.router.replace('/dash/projects/' + selectedUser.handle)
+      this.props.router.replace(`/dash/projects/${selectedUser.handle}`)
       this.suggestFriends(this.state.maxSuggestedFriends);
     }
     document.addEventListener('onbeforeunload', this.handleClose());
@@ -159,7 +158,7 @@ class Dashboard extends Component {
         <Divider />
         <TopPanel>
           <Column>
-            <ProfileImg src={user.portrait.url} />
+            <ProfileImg src={(user.portrait || {}).url} />
           </Column>
           <Column>
             <UserName
@@ -234,7 +233,7 @@ class Dashboard extends Component {
                 onActive={(e)=>{this.setTab(e)}}
                 style={{ cursor: 'not-allowed' }} disabled />
               <Tab
-                icon={( <TabLabel text={'bounces'} locked /> )}
+                icon={( <TabLabel text={'messages'} locked /> )}
                 value={'messages'}
                 onActive={(e)=>{this.setTab(e)}}
                 style={{ cursor: 'not-allowed' }} disabled />

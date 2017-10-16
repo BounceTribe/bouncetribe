@@ -60,7 +60,7 @@ class ProjectNew extends Component {
         onSuccess: success => {
 
           if (project.privacy === 'PUBLIC') {
-            this.props.router.push(`/${user.handle}/sessions/${project.title}/find`)
+            this.props.router.push(`/sessions/${user.handle}/${project.title}/find`)
           } else  {
             this.props.router.push(`/${user.handle}/${project.title}`)
           }

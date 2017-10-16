@@ -155,7 +155,7 @@
 //             Start by uploading your music!
 //           </StartBy>
 //           <Button
-//             to={`/${this.props.viewer.user.handle}/projects/new`}
+//             to={`/projects/${this.props.viewer.user.handle}/new`}
 //             icon={
 //               <Upload
 //                 fill={white}

@@ -27,15 +27,11 @@ import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
-import { List} from 'styled/list'
-import {ProfileProjectItem, Left as ProjectLeft, ProfileArtwork, Info, ProfileProjectTitle, Duo, DuoItem, Bubble, CreatedAt} from 'styled/ProjectList'
-import {url} from 'config'
-import Heart from 'icons/Heart'
-import Comment from 'icons/Comment'
-import Settings from 'icons/Settings'
 import Dialog from 'material-ui/Dialog'
 import {Button} from 'styled'
 import Checkbox from 'material-ui/Checkbox'
+import Settings from 'icons/Settings'
+
 
 class Profile extends Component {
 
@@ -72,6 +68,9 @@ class Profile extends Component {
     tabs: 'projects',
     settings: false
 
+  }
+  componentDidMount = () => {
+    this.props.router.replace(`${this.props.router.params.userHandle}/projects`) 
   }
 
   componentWillMount = () => {
@@ -438,60 +437,15 @@ class Profile extends Component {
     this.setState({tabs:value})
   }
 
-  get projects () {
-    let {User, user} = this.props.viewer
-    return User.projects.edges.map(edge => {
-      let {node:project} = edge
-      if (User.id !== user.id && project.privacy === 'PRIVATE') {
-        return null
-      } else {
-        let comments = project.comments.edges.filter( (edge) => {
-          return edge.node.type === 'COMMENT'
-        })
-        let likes = project.comments.edges.filter( (edge) => {
-          return edge.node.type === 'LIKE'
-        })
-        return (
-          <ProfileProjectItem key={project.id} >
-            <ProjectLeft>
-              <ProfileArtwork
-                src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
-                alt={'Project Artwork'}
-                to={`/${User.handle}/${project.title}`} />
-              <Info>
-                <ProfileProjectTitle
-                  to={`/${User.handle}/${project.title}`} >
-                  {project.title}
-                </ProfileProjectTitle>
-                <CreatedAt>
-                  Created {new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric'
-                  })}
-                </CreatedAt>
-                <Duo>
-                  <DuoItem>
-                    <Bubble secondary >
-                        <Comment height={15} width={15} />
-                    </Bubble>
-                    {comments.length}
-                  </DuoItem>
-                  <DuoItem>
-                    <Bubble>
-                      <Heart height={15} width={15} />
-                    </Bubble>
-                    {likes.length}
-                  </DuoItem>
-                </Duo>
-              </Info>
-            </ProjectLeft>
-          </ProfileProjectItem>
-        )
-      }
-    })
+  setTab = (tabAction) => {
+    this.props.router.replace(`${this.props.router.params.userHandle}/${tabAction.props.value}`)
+    console.log('route set to', this.props.router.location);
+    window.scrollTo(0, document.body.scrollHeight)
+    console.log('tab', this.props.router.params.tab);
   }
 
   render () {
+    console.log('PROFILE PROPS', this.props);
     let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError, experience, experiences, notification, tabs} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
@@ -609,13 +563,9 @@ class Profile extends Component {
                   <ScoreRow>
                     <Bolt/>
                     <Score>{score}</Score>
-                    <Music
-                      height={20}
-                    />
+                    <Music height={20} />
                     <Score>{projects}</Score>
-                    <Tribe
-                      height={20}
-                    />
+                    <Tribe height={20} />
                     <Score>{friends}</Score>
                   </ScoreRow>
                 </TopCol>
@@ -648,9 +598,7 @@ class Profile extends Component {
                 />
               </Left>
               <Right>
-                <InputRow
-                  hide={(!ownProfile)}
-                >
+                <InputRow hide={(!ownProfile)} >
                   <Email/>
                   <Input
                     value={email}
@@ -659,10 +607,7 @@ class Profile extends Component {
                     disabled
                   />
                 </InputRow>
-                <InputRow
-                  hide={(!ownProfile && website.length < 1)}
-
-                >
+                <InputRow hide={(!ownProfile && website.length < 1)}>
                   <Link/>
                   <Input
                     value={website}
@@ -685,13 +630,8 @@ class Profile extends Component {
         <BotRow>
           <BotLeft>
             <Tabs
-              style={{
-                width: '100%',
-                marginTop: '6px',
-              }}
-              inkBarStyle={{
-                backgroundColor: purple
-              }}
+              style={{ width: '100%', marginTop: '6px', }}
+              inkBarStyle={{ backgroundColor: purple }}
               value={tabs}
               onChange={this.tabs}
             >
@@ -699,27 +639,21 @@ class Profile extends Component {
                 label={'Activity'}
                 value={'activity'}
                 style={{ borderBottom: `2px solid ${grey200}` }}
-                disabled={true}
-
-              >
-                <h4>Coming soon!</h4>
-
-              </Tab>
-
+                disabled
+                onActive={(e)=>{this.setTab(e)}} />
               <Tab
                 label={'Projects'}
                 value={'projects'}
                 style={{ borderBottom: `2px solid ${grey200}` }}
-              >
-                <List> {this.projects} </List>
-
-              </Tab>
+                onActive={(e)=>{this.setTab(e)}} />
               <Tab
                 label={'Bounces'}
                 value={'bounces'}
                 style={{ borderBottom: `2px solid ${grey200}` }}
-                icon={( <Lock /> )} disabled={true} />
+                icon={( <Lock /> )} disabled
+                onActive={(e)=>{this.setTab(e)}} />
             </Tabs>
+            {this.props.children}
 
           </BotLeft>
           <BotRight>

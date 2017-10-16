@@ -197,7 +197,7 @@ export const NoTribe = ({handle, user}) => {
       <NoTribeMessage>Add Members to Your Tribe</NoTribeMessage>
       <Button
         to={{
-          pathname: `/${handle}/tribe/find/`,
+          pathname: `/tribe/${handle}/find/`,
           query: {
             ownId: user.id
           },

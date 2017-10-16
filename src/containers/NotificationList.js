@@ -8,7 +8,8 @@ import {purple} from 'theme'
 
 class NotificationList extends Component {
   get notifications () {
-    return this.props.viewer.User.notifications.edges.map( edge => (
+    let notifications = (this.props.viewer.user || {}).notifications;
+    return notifications && notifications.edges.map( edge => (
       <Notification key={edge.node.id} notification={edge.node} />
     ) )
   }
@@ -18,9 +19,7 @@ class NotificationList extends Component {
       <View>
         <Container>
           <Header>
-            <IconTextContainer
-              to={`/${this.props.viewer.User.handle}/notificationPage`}
-            >
+            <IconTextContainer to={`/notifications`} >
               <Alerts fill={purple} />
               <IconText>
                 Notifications
@@ -46,11 +45,6 @@ export default Relay.createContainer(NotificationList, {
         user {
           id
           handle
-        }
-        User (handle: $userHandle) {
-          handle
-          id
-          email
           notifications (first: 20) {
             edges {
               node {

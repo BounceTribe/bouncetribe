@@ -376,21 +376,21 @@ class Session extends Component {
             label={otherUser.handle}
             value={'theirs'}
             onActive={()=>{
-              this.props.router.push(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/theirs`)
+              this.props.router.push(`/session/${this.props.viewer.user.handle}/${this.props.viewer.Session.id}/theirs`)
             }}
           />
           <Tab
             label={'MY PROJECT'}
             value={'mine'}
             onActive={()=>{
-              this.props.router.push(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/mine`)
+              this.props.router.push(`/session/${this.props.viewer.user.handle}/${this.props.viewer.Session.id}/mine`)
             }}
           />
           <Tab
             label={'Messages'}
             value={'messages'}
             onActive={()=>{
-              this.props.router.replace(`/${this.props.viewer.user.handle}/session/${this.props.viewer.Session.id}/messages`)
+              this.props.router.replace(`/session/${this.props.viewer.user.handle}/${this.props.viewer.Session.id}/messages`)
               window.scrollTo(0, document.body.scrollHeight)
             }}
           />

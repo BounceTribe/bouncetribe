@@ -13,7 +13,7 @@ class Tribe extends Component {
   componentWillMount() {
     let {location, userHandle} = this.props
 
-    if (location.pathname === `/${userHandle}/tribe/requests`) {
+    if (location.pathname === `/tribe/${userHandle}/requests`) {
       this.setState({ tab: 1 })
     } else (
       this.setState({ tab: 0 })
@@ -29,7 +29,7 @@ class Tribe extends Component {
       <View>
         <Container>
           <Header>
-            <IconTextContainer to={`/${handle}/tribe`} >
+            <IconTextContainer to={`/tribe/${handle}`} >
               <TribeIcon fill={purple} />
               <IconText>
                 {(user.id === User.id) ? 'My Tribe' : `${User.name}'s Tribe'`}
@@ -38,7 +38,7 @@ class Tribe extends Component {
             <HeaderOptions>
               <Button
                 to={{
-                  pathname: `/${handle}/tribe/find/`,
+                  pathname: `/tribe/${handle}/find/`,
                   query: { ownId: user.id },
                 }}
                 icon={ <AddFriend fill={white} /> }
@@ -59,7 +59,7 @@ class Tribe extends Component {
               label={'Members'}
               value={0}
               onActive={()=>{
-                router.push(`/${handle}/tribe`)
+                router.push(`/tribe/${handle}`)
                 this.setState({ tab: 0 })
               }}
             />
@@ -68,7 +68,7 @@ class Tribe extends Component {
                  value={person.invitations.edges.length}/> Requests</span>}
               value={1}
               onActive={()=>{
-                router.push(`/${handle}/tribe/requests`)
+                router.push(`/tribe/${handle}/requests`)
                 this.setState({ tab: 1 })
               }}
             />

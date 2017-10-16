@@ -58,32 +58,21 @@ class TopNav extends Component {
         </Dialog>
         <Logo to={'/'} />
         <NavList>
-          <NavLink
-            to={`/${handle}/TribeFind`}
-          >
-            <Headphones
-              height={18}
-            />
-            <NavText>
-              Find Your Mentor
-            </NavText>
+          <NavLink to={`/tribe/${handle}/find`} >
+            <Headphones height={18} />
+            <NavText>Find Your Mentor</NavText>
           </NavLink>
           <NavLink
-            to={((((user || {}).project || {}).edges || []).length > 0) ? `/${handle}/sessions/${user.projects.edges[0].node.title}` : `/${handle}/sessions`}
+            to={((((user || {}).project || {}).edges || []).length > 0) ? `/sessions/${handle}/${user.projects.edges[0].node.title}` : `/sessions/${handle}`}
           >
             <Headphones />
             <NavText>Sessions</NavText>
           </NavLink>
-          <NavLink to={`/${handle}/projects`}>
+          <NavLink to={`/projects/${handle}`}>
             <Music height={18} />
             <NavText>Projects</NavText>
           </NavLink>
-          <NavLink
-            style={{
-              paddingRight: 0,
-              height: '19px'
-            }}
-          >
+          <NavLink style={{ paddingRight: 0, height: '19px' }} >
             <IconMenu
               iconButtonElement={(
                 <IconButton style={{padding: 0}} >
@@ -111,9 +100,9 @@ class TopNav extends Component {
                 )
               }}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+              targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
-              <ViewAll to={`/${handle}/notificationPage`}>View All</ViewAll>
+              <ViewAll to={`/notifications`}>View All</ViewAll>
               {((((user || {}).notifications || {}).edges || []).length > 0) ?
                 user.notifications.edges.map(edge=>(
                   <Notification key={edge.node.id} notification={edge.node} />
@@ -130,12 +119,7 @@ class TopNav extends Component {
           <IconMenu
             iconButtonElement={(
               <IconButton
-                style={{
-                  padding: 0,
-                  overflow: 'visible',
-                  margin: '0 15px'
-                }}
-              >
+                style={{ padding: 0, overflow: 'visible', margin: '0 15px' }}>
                 <Portrait src={portraitUrl} />
               </IconButton>
             )}
@@ -145,15 +129,12 @@ class TopNav extends Component {
                 {portraitMenu: !prevState.portraitMenu}
               ) )
             }}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left'
-            }}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
             <DropdownMenuItem text="Home" to={`/`} />
             <DropdownMenuItem text="View Profile" to={`/${handle}`} />
-            <DropdownMenuItem text="My Tribe" to={`/${handle}/tribe`} />
+            <DropdownMenuItem text="My Tribe" to={`/tribe/${handle}`} />
             <DropHr/>
             <DropdownMenuItem text="Settings"
               onClick={()=>{ this.setState({settings: true}) }} />
@@ -161,7 +142,7 @@ class TopNav extends Component {
               href={"http://bouncetribe.com/support/"}
             />
             <DropHr/>
-            <DropdownMenuItem text="Log Out" onClick={auth.logout} />
+            <DropdownMenuItem text="Log Out" to={'/logout'} onClick={auth.logout} />
           </IconMenu>
           {/*
           <Portrait
@@ -203,7 +184,7 @@ class TopNav extends Component {
             />
             <DropdownMenuItem
               text="My Tribe"
-              to={`/${handle}/tribe`}
+              to={`/tribe/${handle}`}
             />
             <DropHr/>
             <DropdownMenuItem
@@ -227,13 +208,11 @@ class TopNav extends Component {
               fontWeight: '400'
             }}
             backgroundColor={purple}
-            to={`/${handle}/projects/new`}
+            to={`projects/${handle}/new`}
             icon={<Plus/>}
             style={{borderRadius: '8px'}}
           />
-
         </NavList>
-
       </Bar>
     )
   }

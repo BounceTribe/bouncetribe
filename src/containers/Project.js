@@ -67,6 +67,7 @@ class Project extends Component {
   }
 
   componentWillMount () {
+    console.log('PROJPROPS', this.props);
     let {id: ownId} = this.props.viewer.user
     if (ownId === this.props.viewer.User.id) {
       this.setState({
@@ -436,7 +437,7 @@ class Project extends Component {
                         id: this.props.viewer.allProjects.edges[0].node.id,
                       }),{
                         onSuccess: ()=>{
-                          this.props.router.push(`/${this.props.viewer.user.handle}/projects`)
+                          this.props.router.push(`/projects/${this.props.viewer.user.handle}`)
                         }
                       }
                     )

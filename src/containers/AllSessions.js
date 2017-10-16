@@ -52,7 +52,7 @@ class AllSessions extends Component {
                 <TableRowColumn>
                   <ListHandle
                     onClick={()=>{
-                      this.props.router.push(`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`)
+                      this.props.router.push(`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`)
                     }}
                   >
                     {project.creator.handle}
@@ -75,7 +75,7 @@ class AllSessions extends Component {
                   style={{width: '50px'}}
                 >
                   <ThumbLink
-                    to={`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`}
+                    to={`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`}
                   >
                     <ProjectArtThumb
                       src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
@@ -84,7 +84,7 @@ class AllSessions extends Component {
                 </TableRowColumn>
                 <TableRowColumn>
                   <ListProject
-                    to={`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`}
+                    to={`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`}
                   >
                     {project.title}
                   </ListProject>
@@ -171,7 +171,7 @@ class AllSessions extends Component {
               }}
               onTouchTap={()=>{
                 let {router} = this.props
-                router.push(`/${router.params.userHandle}/sessions/${this.currentProject().title}/find`)
+                router.push(`sessions/${router.params.userHandle}/${this.currentProject().title}/find`)
               }}
             />
           </NoProjectsCol>
@@ -260,7 +260,7 @@ class AllSessions extends Component {
                         }),{
                           onSuccess: (success) => {
                             let {id: sessionId} = success.createSession.session
-                            this.props.router.push(`/${this.props.viewer.user.handle}/session/${sessionId}/theirs`)
+                            this.props.router.push(`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`)
                           }
                         }
                       )
@@ -372,9 +372,9 @@ class AllSessions extends Component {
                       let {router} = this.props
                       if (router.location.pathname.includes('/find')) {
                         this.setState({matches: false})
-                        router.push(`/${router.params.userHandle}/sessions/${project.title}/find`)
+                        router.push(`sessions/${router.params.userHandle}/${project.title}/find`)
                       } else {
-                        router.push(`/${router.params.userHandle}/sessions/${project.title}`)
+                        router.push(`sessions/${router.params.userHandle}/${project.title}`)
                       }
                     }}
                   />
@@ -405,7 +405,7 @@ class AllSessions extends Component {
                 }}
                 onTouchTap={()=>{
                   let {router} = this.props
-                  router.push(`/${router.params.userHandle}/sessions/${currentProject.title}/find`)
+                  router.push(`sessions/${router.params.userHandle}/${currentProject.title}/find`)
                 }}
 
               />
@@ -451,7 +451,7 @@ class AllSessions extends Component {
                   fontWeight: '400'
                 }}
                 backgroundColor={purple}
-                to={`/${this.props.viewer.user.handle}/projects/new`}
+                to={`/projects/${this.props.viewer.user.handle}/new`}
                 icon={<Upload fill={white} />}
                 style={{ borderRadius: '8px', marginTop: '20px' }}
               />

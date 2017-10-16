@@ -235,7 +235,7 @@ export class TribeButton extends Component {
             borderRadius: '5px',
             width: '160px'
           }}
-          to={`/${user.handle}/tribe`}
+          to={`/tribe/${user.handle}`}
         />
       )
     } else {

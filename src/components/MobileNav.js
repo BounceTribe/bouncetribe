@@ -76,7 +76,7 @@ class MobileNav extends Component {
             primaryText={"My Tribe"}
             leftIcon={( <Tribe fill={purple} />
             )}
-            onTouchTap={()=>{ router.push(`/${user.handle}/tribe`) }}
+            onTouchTap={()=>{ router.push(`/tribe/${user.handle}`) }}
           />
           <Divider/>
           <MenuItem
@@ -90,25 +90,25 @@ class MobileNav extends Component {
               <Headphones fill={purple} />
             )}
             onTouchTap={()=>{
-              router.push((user.projects.edges.length > 0) ? `/${user.handle}/sessions/${user.projects.edges[0].node.title}` : `/${user.handle}/sessions`)
+              router.push((user.projects.edges.length > 0) ? `/sessions/${user.handle}/${user.projects.edges[0].node.title}` : `/sessions/${user.handle}`)
             }}
           />
           <MenuItem
             primaryText={"Projects"}
             leftIcon={( <Music fill={purple} /> )}
-            onTouchTap={()=>{ router.push(`/${user.handle}/tribe`) }}
+            onTouchTap={()=>{ router.push(`/tribe/${user.handle}`) }}
           />
           <MenuItem
             primaryText={"Notifications"}
             leftIcon={( <Notifications color={purple} /> )}
-            onTouchTap={()=>{ router.push(`/${user.handle}/notifications`) }}
+            onTouchTap={()=>{ router.push(`/notifications`) }}
           />
           <Divider/>
 
           <MenuItem
             primaryText={"Settings"}
             leftIcon={( <Settings/> )}
-            onTouchTap={()=>{ router.push(`/${user.handle}/notifications`) }}
+            onTouchTap={()=>{ router.push(`/notifications`) }}
           />
           <MenuItem
             primaryText={"Help"}

@@ -61,7 +61,7 @@ class TribeFind extends Component {
           />
         ))
         console.log(users)
-        
+
         return { suggestions: users }
       })
     })
@@ -74,7 +74,7 @@ class TribeFind extends Component {
       <View>
         <Container>
           <Header>
-            <IconTextContainer to={`/${user.handle}/tribe`} >
+            <IconTextContainer to={`/tribe/${user.handle}`} >
               <Tribe fill={purple} />
               <IconText>
                 Add to Tribe
@@ -118,7 +118,7 @@ class TribeFind extends Component {
                     handle: newValue,
                     ownId: user.id
                   },
-                  pathname: `/${userHandle}/tribe/find/`
+                  pathname: `/tribe/${userHandle}/find/`
                 })
                 this.setState({searching: true})
               }}

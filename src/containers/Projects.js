@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {ProjectItemSm} from 'components/ProjectItemSm'
+import {List} from 'styled/list'
 
 class Projects extends Component {
   edgeFilter = (project, type) => (
@@ -9,30 +10,32 @@ class Projects extends Component {
     )
   )
 
-  render () {
+  makeList = () => {
     let {User, user} = this.props.viewer
+    return User.projects.edges.map(edge => {
+      let {node:project} = edge
+      if (User.id !== user.id && project.privacy === 'PRIVATE') {
+        return null
+      } else {
+        let comments = this.edgeFilter(project, 'COMMENT')
+        let likes = this.edgeFilter(project, 'LIKE')
+        return (
+          <ProjectItemSm
+            key={project.id}
+            User={User}
+            project={project}
+            comments={comments}
+            likes={likes} />
+        )
+      }
+    } )
+  }
+
+  render () {
     return (
-      <div>
-        {
-          User.projects.edges.map(edge => {
-            let {node:project} = edge
-            if (User.id !== user.id && project.privacy === 'PRIVATE') {
-              return null
-            } else {
-              let comments = this.edgeFilter(project, 'COMMENT')
-              let likes = this.edgeFilter(project, 'LIKE')
-              return (
-                <ProjectItemSm
-                  key={project.id}
-                  User={User}
-                  project={project}
-                  comments={comments}
-                  likes={likes} />
-              )
-            }
-          } )
-        }
-      </div>
+      <List>
+        {this.makeList()}
+      </List>
     )
   }
 }
