@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-// import Relay from 'react-relay'
+import Relay from 'react-relay'
 import { MessageContainer, Messages, MessageText, SenderHandle, MessagePortrait, MessageNamePortraitRow, MessageDivider} from 'styled/Sessions'
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'

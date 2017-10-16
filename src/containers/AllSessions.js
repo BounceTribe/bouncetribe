@@ -22,10 +22,7 @@ import Upload from 'icons/Upload'
 
 class AllSessions extends Component {
 
-  state = {
-    matches: null,
-    nearby: false,
-  }
+  state = { matches: null, nearby: false, }
 
   table = () => {
     let {project} = this.props.router.params
@@ -39,12 +36,8 @@ class AllSessions extends Component {
           let {node: project} = edge
           if (project.id !== currentProject.id) {
             sessions.push(
-              <TableRow
-                key={sessionId}
-              >
-                <TableRowColumn
-                  style={{width: '50px'}}
-                >
+              <TableRow key={sessionId} >
+                <TableRowColumn style={{width: '50px'}} >
                   <CreatorPortrait
                     src={(project.creator.portrait) ? project.creator.portrait.url : `${url}/logo.png`}
                   />
@@ -58,22 +51,13 @@ class AllSessions extends Component {
                     {project.creator.handle}
                   </ListHandle>
                 </TableRowColumn>
-                <TableRowColumn
-                  style={{width: '50px'}}
-
-                >
+                <TableRowColumn style={{width: '50px'}} >
                   <ListScore>
-                    <Bolt
-                      style={{
-                        marginRight: '4px'
-                      }}
-                    />
+                    <Bolt style={{ marginRight: '4px' }} />
                     {project.creator.score}
                   </ListScore>
                 </TableRowColumn>
-                <TableRowColumn
-                  style={{width: '50px'}}
-                >
+                <TableRowColumn style={{width: '50px'}} >
                   <ThumbLink
                     to={`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`}
                   >
@@ -98,7 +82,6 @@ class AllSessions extends Component {
         })
       })
 
-
       if (sessions.length > 0 ) {
         return (
           <Table
@@ -108,27 +91,18 @@ class AllSessions extends Component {
               marginTop: '40px',
             }}
           >
-            <TableHeader
-              displaySelectAll={false}
-              adjustForCheckbox={false}
-            >
+            <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
               <TableRow>
-                <TableHeaderColumn
-                  style={{width: '50px'}}
-                >
+                <TableHeaderColumn style={{width: '50px'}} >
                   {/*portrait*/}
                 </TableHeaderColumn>
                 <TableHeaderColumn>
                   Name
                 </TableHeaderColumn>
-                <TableHeaderColumn
-                  style={{width: '50px'}}
-                >
+                <TableHeaderColumn style={{width: '50px'}} >
                   Rating
                 </TableHeaderColumn>
-                <TableHeaderColumn
-                  style={{width: '50px'}}
-                >
+                <TableHeaderColumn style={{width: '50px'}} >
                   {/*portrait*/}
                 </TableHeaderColumn>
                 <TableHeaderColumn>
@@ -138,11 +112,8 @@ class AllSessions extends Component {
                   Created
                 </TableHeaderColumn>
               </TableRow>
-
             </TableHeader>
-            <TableBody
-              displayRowCheckbox={false}
-            >
+            <TableBody displayRowCheckbox={false} >
               {sessions}
             </TableBody>
           </Table>
@@ -150,20 +121,13 @@ class AllSessions extends Component {
       } else {
         return (
           <NoProjectsCol
-            style={{
-              marginTop: '50px'
-            }}
-          >
+            style={{ marginTop: '50px' }} >
             <NoProjectQuote>
               Ready to exchange some feedback?
             </NoProjectQuote>
             <Button
               label={'Find Session'}
-              icon={
-                <Headphones
-                  fill={white}
-                />
-              }
+              icon={ <Headphones fill={white} /> }
               primary
               style={{
                 margin: '20px auto',
@@ -184,7 +148,6 @@ class AllSessions extends Component {
     let {project} = this.props.router.params
     if (project) {
       let headerProject = this.currentProject()
-
       return (
         <MenuItem
           leftIcon={<Avatar
@@ -195,12 +158,8 @@ class AllSessions extends Component {
         />
       )
     }
-
     return (
-      <MenuItem
-        leftIcon={<MoreVertIcon/>}
-        primaryText={'Select a Project'}
-      />
+      <MenuItem leftIcon={<MoreVertIcon/>} primaryText={'Select a Project'} />
     )
   }
 
@@ -218,9 +177,7 @@ class AllSessions extends Component {
   matchCards = async (currentProject) => {
     try {
       if (!this.state.matches) {
-
         let self = this.props.viewer.user
-
         let matches = await findMatches({user: self, project: currentProject})
         if (matches.length === 0 ) {
           matches = (
@@ -235,19 +192,13 @@ class AllSessions extends Component {
                   –Friedrich Nietzche
                 </NoProjectAuthor>
               </NoProjectQuote>
-
             </NoProjectsCol>
           )
         } else {
           matches = matches.map( (project) => {
             return (
-              <MatchCard
-                key={project.id}
-              >
-
-                <CardArtWrapper
-                >
-
+              <MatchCard key={project.id} >
+                <CardArtWrapper>
                   <ButtonWrapper
                     title={`Start Session`}
                     onClick={()=>{
@@ -255,9 +206,7 @@ class AllSessions extends Component {
                       projectsIds.push(project.id)
                       projectsIds.push(currentProject.id)
                       this.props.relay.commitUpdate(
-                        new CreateSession({
-                          projectsIds
-                        }),{
+                        new CreateSession({projectsIds}),{
                           onSuccess: (success) => {
                             let {id: sessionId} = success.createSession.session
                             this.props.router.push(`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`)
@@ -269,35 +218,18 @@ class AllSessions extends Component {
                     <Round>
                       <Logo
                         fill={white}
-                        style={{
-                          height: '60px',
-                          width: '60px'
-                        }}
-                      />
+                        style={{ height: '60px', width: '60px' }} />
                     </Round>
-
                   </ButtonWrapper>
-
-                  <CardArt
-                    src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
-                  />
-
-
+                  <CardArt src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`} />
                 </CardArtWrapper>
-                <BtLink
-                  to={`/${project.creator.handle}`}
-                >
+                <BtLink to={`/${project.creator.handle}`} >
                   <CreatorPortrait
                     src={(project.creator.portrait) ? project.creator.portrait.url : `${url}/logo.png`}
-                    style={{
-                      marginLeft: '10px'
-                    }}
-                  />
+                    style={{ marginLeft: '10px' }} />
                 </BtLink>
                 <CreatorInfo>
-                  <Handle
-                    to={`/${project.creator.handle}`}
-                  >
+                  <Handle to={`/${project.creator.handle}`} >
                     {project.creator.handle}
                   </Handle>
                   <Location>
@@ -310,24 +242,16 @@ class AllSessions extends Component {
                     {project.creator.placename}
                   </Location>
                 </CreatorInfo>
-
-
               </MatchCard>
             )
           })
         }
-
-        this.setState({matches: (
-          <MatchList>
-            {matches}
-          </MatchList>
-        )})
+        this.setState({matches: ( <MatchList>{matches}</MatchList> )})
       }
 
     } catch (e) {
-
+      console.log('create session error', e);
     }
-
   }
 
   matches =  () => {
@@ -346,6 +270,8 @@ class AllSessions extends Component {
 
   render() {
     let currentProject = this.currentProject()
+    let projects = this.props.viewer.user.projects
+    let pathname = this.props.router.location.pathname
     return (
       <View>
         <Container>
@@ -354,11 +280,8 @@ class AllSessions extends Component {
               iconButtonElement={this.headerProject()}
               anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
               targetOrigin={{horizontal: 'left', vertical: 'top'}}
-              style={{
-                display: (this.props.viewer.user.projects.edges.length < 1) ? 'none' : ''
-              }}
-            >
-              {this.props.viewer.user.projects.edges.map(edge => {
+              style={{ display: (projects.edges.length < 1) ? 'none' : '' }} >
+              {projects.edges.map(edge => {
                 let {node: project} = edge
                 return (
                   <MenuItem
@@ -379,29 +302,21 @@ class AllSessions extends Component {
                     }}
                   />
                 )
-
               })}
             </IconMenu>
-
-
             <HeaderOptions
               style={{
                 height: '100%',
                 alignItems: 'center',
-                display: (this.props.viewer.user.projects.edges.length < 1) ? 'none' : ''
-
+                display: (projects.edges.length < 1) ? 'none' : ''
               }}
             >
               <Button
                 label={'Find Session'}
-                icon={
-                  <Headphones
-                    fill={white}
-                  />
-                }
+                icon={ <Headphones fill={white} /> }
                 primary
                 style={{
-                  display: (this.props.router.location.pathname.includes('/find') ? 'none' : '')
+                  display: (pathname.includes('/find') ? 'none' : '')
                 }}
                 onTouchTap={()=>{
                   let {router} = this.props
@@ -412,30 +327,22 @@ class AllSessions extends Component {
               <Checkbox
                 label={"Search Nearby"}
                 style={{
-                  display: (this.props.router.location.pathname.includes('/find') ? 'flex' : 'none'),
+                  display: (pathname.includes('/find') ? 'flex' : 'none'),
                 }}
-                labelStyle={{
-                  width: '150px',
-                  color: grey700
-                }}
-                iconStyle={{
-                  color: grey700,
-                }}
+                labelStyle={{ width: '150px', color: grey700 }}
+                iconStyle={{ color: grey700, }}
                 checked={this.state.nearby}
                 onCheck={()=>{
                   this.setState((prevState)=>{
                     let {nearby} = prevState
-                    return {
-                      nearby: !nearby,
-                      matches: false
-                    }
+                    return { nearby: !nearby, matches: false }
                   })
                 }}
               />
             </HeaderOptions>
           </Header>
           { this.matches()}
-          {(this.props.viewer.user.projects.edges.length < 1) ? (
+          {(projects.edges.length < 1) ? (
             <NoProjectsCol style={{ marginTop: '50px' }} >
               <NoProjectMsg>
                 Ready to exchange some feedback?
@@ -472,13 +379,9 @@ export default Relay.createContainer(
           user {
             id
             handle
-            friends (
-              first: 999
-            ) {
+            friends ( first: 999 ) {
               edges {
-                node {
-                  id
-                }
+                node { id }
               }
             }
             projects (
@@ -496,13 +399,9 @@ export default Relay.createContainer(
                   }
                   id
                   title
-                  artwork {
-                    url
-                  }
+                  artwork { url }
                   privacy
-                  genres (
-                    first: 999
-                  ) {
+                  genres ( first: 999 ) {
                     edges {
                       node {
                         id
@@ -518,25 +417,19 @@ export default Relay.createContainer(
                       node {
                         id
                         createdAt
-                        projects (
-                          first: 999
-                        ) {
+                        projects ( first: 999 ) {
                           edges {
                             node {
                               id
                               createdAt
                               title
-                              artwork {
-                                url
-                              }
+                              artwork { url }
                               privacy
                               creator {
                                 id
                                 handle
                                 score
-                                portrait {
-                                  url
-                                }
+                                portrait { url }
                               }
                             }
                           }
