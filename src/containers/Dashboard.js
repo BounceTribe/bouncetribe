@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, ProfileImg, LogoText, Divider, UserName, NavLink} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, DashHeaderText, ProfileImg, LogoText, Divider, UserName, NavLink, TopColumn} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
@@ -10,8 +10,6 @@ import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
-import {Row} from 'styled/Profile'
-import {Column} from 'styled/list'
 import {BtAvatar} from 'styled'
 // import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
@@ -120,7 +118,7 @@ class Dashboard extends Component {
     return (
       <ProfileView>
         <DashHeader>
-          <Row>
+          <DashHeaderRow>
             <BtAvatar user={selectedUser} size={60} />
             <LogoText>My Tribe</LogoText>
             <InviteButton
@@ -153,14 +151,14 @@ class Dashboard extends Component {
               </DialogRow>
               <DialogRow>{this.state.suggestions}</DialogRow>
             </Dialog>
-          </Row>
+          </DashHeaderRow>
         </DashHeader>
         <Divider />
         <TopPanel>
-          <Column>
+          <TopColumn>
             <ProfileImg src={(user.portrait || {}).url} />
-          </Column>
-          <Column>
+          </TopColumn>
+          <TopColumn>
             <UserName
               style={{
                 marginRight: '124vmin'
@@ -169,8 +167,8 @@ class Dashboard extends Component {
             <NavLink to={`/${user.handle}`}>
               Edit Profile
             </NavLink>
-          </Column>
-          <Bolt style={{justifyContent:'space-between'}}/>
+          </TopColumn>
+          <Bolt style={{justifyContent:'flex-start'}}/>
         </TopPanel>
         <BotRow>
           <DashLeft>

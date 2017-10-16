@@ -83,21 +83,38 @@ export const ProfileView = styled(View)`
 export const TopPanel = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   background-color: white;
   border-radius: 5px;
   border: solid ${grey222} 1px;
-  padding-top: 40px;
-  margin-top: 10px;
+  margin-top: 20px;
+`
+
+export const TopColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
 `
 
 export const DashHeader = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 100%;
   padding-top: 40px;
+`
+
+export const DashHeaderRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width:100%;
+  box-sizing: border-box;
+`
+
+export const DashHeaderText = styled.div`
+  align-items: baseline;
 `
 
 export const ProfileImg = styled.img`
