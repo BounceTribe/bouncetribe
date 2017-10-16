@@ -452,19 +452,15 @@ class Profile extends Component {
           return edge.node.type === 'LIKE'
         })
         return (
-          <ProfileProjectItem
-            key={project.id}
-          >
+          <ProfileProjectItem key={project.id} >
             <ProjectLeft>
               <ProfileArtwork
                 src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
                 alt={'Project Artwork'}
-                to={`/${User.handle}/${project.title}`}
-              />
+                to={`/${User.handle}/${project.title}`} />
               <Info>
                 <ProfileProjectTitle
-                  to={`/${User.handle}/${project.title}`}
-                >
+                  to={`/${User.handle}/${project.title}`} >
                   {project.title}
                 </ProfileProjectTitle>
                 <CreatedAt>
@@ -475,33 +471,20 @@ class Profile extends Component {
                 </CreatedAt>
                 <Duo>
                   <DuoItem>
-                    <Bubble
-                      secondary
-                    >
-                        <Comment
-                          height={15}
-                          width={15}
-                        />
+                    <Bubble secondary >
+                        <Comment height={15} width={15} />
                     </Bubble>
-
                     {comments.length}
                   </DuoItem>
                   <DuoItem>
                     <Bubble>
-                      <Heart
-                        height={15}
-                        width={15}
-                      />
+                      <Heart height={15} width={15} />
                     </Bubble>
-
-
                     {likes.length}
                   </DuoItem>
                 </Duo>
               </Info>
-
             </ProjectLeft>
-
           </ProfileProjectItem>
         )
       }
@@ -524,7 +507,6 @@ class Profile extends Component {
           onRequestClose={this.closeSnackbar}
           onActionTouchTap={this.closeSnackbar}
           bodyStyle={{ backgroundColor: purple }}
-
         />
         <Top>
           <Settings

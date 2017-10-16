@@ -20,6 +20,7 @@ import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
 import SetUserOnline from 'mutations/SetUserOnline'
 import SetUserOffline from 'mutations/SetUserOffline'
+import TabLabel from 'styled'
 
 class Dashboard extends Component {
 
@@ -42,7 +43,7 @@ class Dashboard extends Component {
     if (this.props.viewer.user.friends.edges.length) {
       let selectedUser = this.props.viewer.user.friends.edges[0].node;
       this.setState( {selectedUser} )
-      this.props.router.replace('/projects/dash/' + selectedUser.handle)
+      this.props.router.replace('/dash/projects/' + selectedUser.handle)
       this.suggestFriends(this.state.maxSuggestedFriends);
     }
     document.addEventListener('onbeforeunload', this.handleClose());
@@ -106,23 +107,17 @@ class Dashboard extends Component {
   }
 
   setTab = (tabAction) => {
-    this.props.router.replace('/' + tabAction.props.value + '/dash/' + this.state.selectedUser.handle)
+    this.props.router.replace('/dash/' + tabAction.props.value + '/' + this.state.selectedUser.handle)
     console.log('route set to', this.props.router.location);
     window.scrollTo(0, document.body.scrollHeight)
     console.log('tab', this.props.router.params.tab);
   }
 
   render () {
-    const DASHBOARD_STATES = {
-      //JIM YOUR COMPONENT GOES BELOW. CREATE IN ANOTHER FILE AND IMPORT IT
-      projects: (<div>project view</div>)/*<DashProjects />*/,
-      bounces: (<div>bounces view</div>)/*<Bounces />*/,
-      messages: (<div>direct message view</div>)/*<DirectMessages  {...this.props} />*/
-    }
     let selectedUser = this.state.selectedUser;
     let user = this.props.viewer.user
     // console.log('user:', user)
-    // console.log('render - this', this);
+    console.log('render - this', this);
     return (
       <ProfileView>
         <DashHeader>
@@ -180,9 +175,6 @@ class Dashboard extends Component {
         </TopPanel>
         <BotRow>
           <DashLeft>
-            {/* JOEY YOUR COMPONENT GOES HERE */}
-            {/* <h4>Select a friend</h4>
-            {this.friends(this.props.viewer.user.friends)} */}
             <FriendList
               selected={selectedUser}
               friends={user.friends}
@@ -234,13 +226,14 @@ class Dashboard extends Component {
               value={this.props.router.params.tab} >
               <Tab label={'projects'} value={'projects'}
                 onActive={(e)=>{this.setTab(e)}} />
-              <Tab label={'bounces'} value={'bounces'}
-                onActive={(e)=>{this.setTab(e)}} />
+              <Tab icon={( <TabLabel text={'bounces'} /> )} value={'bounces'}
+                onActive={(e)=>{this.setTab(e)}}
+                style={{ cursor: 'not-allowed' }} disabled />
               <Tab label={'messages'} value={'messages'}
-                onActive={(e)=>{this.setTab(e)}} />
+                onActive={(e)=>{this.setTab(e)}}
+                style={{ cursor: 'not-allowed' }} disabled />
             </Tabs>
-
-              {DASHBOARD_STATES[this.props.router.params.tab]}
+            {this.props.children}
           </DashRight>
         </BotRow>
       </ProfileView>
