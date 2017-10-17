@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import Relay from 'react-relay'
 import {View, RoundButton} from 'styled'
 import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot,  ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'
@@ -77,6 +77,11 @@ class Session extends Component {
     duration: 0,
     active: [],
     messages: []
+  }
+
+  static childContextTypes = {
+    duration: PropTypes.number,
+    time: PropTypes.number
   }
 
 
