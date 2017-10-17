@@ -31,28 +31,25 @@ class Dashboard extends Component {
       suggestions: [],
       showMentors: true,
       showTribe: true,
-      showBand: true,
-      tab: 'projects'
+      showBand: true
     }
   }
 
   componentDidMount() {
-    if (this.props.params.userHandle) {
-      this.setState( {selectedUser: this.props.viewer.User} )
-      console.log('PARAMSuserHandle', this.props.params);
-    }
-    else if (this.props.viewer.user.friends.edges.length) {
+    if (this.props.viewer.user.friends.edges.length) {
       let selectedUser = this.props.viewer.user.friends.edges[0].node;
       this.setState( {selectedUser} )
       this.props.router.push(`/dash/projects/${selectedUser.handle}`)
-      // this.suggestFriends(this.state.maxSuggestedFriends)
+      this.suggestFriends(this.state.maxSuggestedFriends);
     }
-}
+  }
 
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
+        //uncomment below to double suggestion list for testing
         suggestions = suggestions.concat(suggestions);
+        // suggestions = suggestions.concat(suggestions);
         let list = suggestions.slice(0, max).map( friend =>
           <FbList
             key={friend.id}
@@ -87,16 +84,17 @@ class Dashboard extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.replace('/dash/' + tab + '/' + this.state.selectedUser.handle)
-    this.setState({ tab: tab })
+    this.props.router.push('/dash/' + tab + '/' + this.state.selectedUser.handle)
+    console.log('route set to', tab);
     window.scrollTo(0, document.body.scrollHeight)
+    console.log('tab', this.props.router.params.tab)
   }
 
   render () {
     let selectedUser = this.state.selectedUser
     let user = this.props.viewer.user
     // console.log('user:', user)
-    console.log('render - this', this);
+    // console.log('render - this', this);
     return (
       <ProfileView>
         <DashHeader>
@@ -209,7 +207,7 @@ class Dashboard extends Component {
               style={{ margin: '6px 0 25px 0' }}
               tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
               inkBarStyle={{ backgroundColor: purple }}
-              value={this.state.tab} >
+              value={this.props.router.params.tab} >
               <Tab
                 label={'projects'}
                 value={'projects'}
@@ -252,12 +250,28 @@ class Dashboard extends Component {
                 }
               }
             }
+            sentMessages ( first: 20 ) {
+              edges {
+                node {
+                  text
+                  sender
+                  createdAt
+                  updatedAt
+                }
+              }
+            }
           }
           User (handle: $userHandle) {
-            id
-            score
-            handle
-            portrait { url }
+            receivedMessages (first: 20) {
+              edges {
+                node {
+                  text
+                  sender
+                  createdAt
+                  updatedAt
+                }
+              }
+            }
           }
         }
       `,
