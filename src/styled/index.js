@@ -1,6 +1,6 @@
  import React from 'react'
 import styled from 'styled-components'
-import {white, grey230, grey215, size, grey400, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
+import {white, grey230, grey215, size, grey400, grey500, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -15,38 +15,41 @@ import Lock from 'icons/Lock'
 export const MsgsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  justify-content: 'flex-end';
+  padding: 20px 20px 0 20px;
 `
-
 const MsgBubble = styled.div`
-  display: inline-block;
+  display: flex;
   border-radius: 5px;
-  border: solid ${grey400} 1px;
+  border: 1px solid ${grey500};
   background-color: ${props => props.isSender ? white : purple};
-  color: ${props => props.isSender ? 'auto' : white};
-  ${'' /* align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'}; */}
-  padding: 15px;
+  color: ${props => props.isSender ? grey500 : white};
+  padding: 9px 14px;
+  flex-wrap: wrap;
+  word-break: break-word;
 `
 const MsgTime = styled.div`
-  display: inline-block;
+  display: flex;
   align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
-  clear: both;
-  padding: 0 15px;
+  padding: 6px 15px 13px 11px;
+  color: ${grey400};
+  font-size: 14px;
+  text-align: ${props => props.isSender ? 'left' : 'right'};
 `
 const MsgItem = styled.div`
   display: flex;
   align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
-  clear: both;
+  max-width: 49%
   flex-direction: column;
-  text-align: ${props => props.isSender ? 'left' : 'right'};
 `
-
 export const BtMessage = ({isSender, text, time}) => (
   <MsgItem isSender={isSender}>
     <MsgBubble isSender={isSender}>
-      <span>{text}</span>
+      {text}
     </MsgBubble>
-    <MsgTime isSender={isSender}><span>{time}</span></MsgTime>
+    <MsgTime isSender={isSender}>
+      {time}
+    </MsgTime>
   </MsgItem>
 )
 

@@ -69,7 +69,7 @@ export const DashRight = styled.div`
   border-radius: 10px;
   padding: 0 20px;
   margin-left: 15px;
-  padding-bottom: 40px;
+  padding: 0;
   width: 100%;
 `
 

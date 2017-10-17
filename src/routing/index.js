@@ -204,8 +204,11 @@ const createRoutes = () => (
       queries={ViewerQuery}
       onEnter={userOnly}
       render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
-      
-    <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
+
+    <Route path='/dash'
+      component={Dashboard}
+      queries={ViewerQuery}
+      render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} >
       <Route path={'/dash/projects/:userHandle'}
         component={Projects}
         queries={ViewerQuery}

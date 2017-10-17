@@ -31,45 +31,28 @@ class Dashboard extends Component {
       suggestions: [],
       showMentors: true,
       showTribe: true,
-      showBand: true
+      showBand: true,
+      tab: 'projects'
     }
-    this.handleClose = this.handleClose.bind(this);
   }
 
   componentDidMount() {
-    if (this.props.viewer.user.friends.edges.length) {
+    if (this.props.params.userHandle) {
+      this.setState( {selectedUser: this.props.viewer.User} )
+      console.log('PARAMSuserHandle', this.props.params);
+    }
+    else if (this.props.viewer.user.friends.edges.length) {
       let selectedUser = this.props.viewer.user.friends.edges[0].node;
       this.setState( {selectedUser} )
-      this.props.router.replace(`/dash/projects/${selectedUser.handle}`)
-      this.suggestFriends(this.state.maxSuggestedFriends);
+      this.props.router.push(`/dash/projects/${selectedUser.handle}`)
+      // this.suggestFriends(this.state.maxSuggestedFriends)
     }
-    document.addEventListener('onbeforeunload', this.handleClose());
-    this.props.relay.commitUpdate(
-      new SetUserOnline({
-        user: this.props.viewer.user
-      })
-    )
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('onbeforeunload', this.handleClose());
-    // this.userOffline();
-  }
-
-  handleClose() {
-    this.props.relay.commitUpdate(
-      new SetUserOffline({
-        user: this.props.viewer.user
-      })
-    )
-  }
+}
 
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
-        //uncomment below to double suggestion list for testing
         suggestions = suggestions.concat(suggestions);
-        // suggestions = suggestions.concat(suggestions);
         let list = suggestions.slice(0, max).map( friend =>
           <FbList
             key={friend.id}
@@ -83,7 +66,6 @@ class Dashboard extends Component {
 
   selectUser = (selectedUser) => {
     let location = this.props.location.pathname
-    console.log('location');
     location = location.replace(this.state.selectedUser.handle, selectedUser.handle)
     this.props.router.push(location)
     this.setState({selectedUser})
@@ -104,18 +86,17 @@ class Dashboard extends Component {
     )
   }
 
-  setTab = (tabAction) => {
-    this.props.router.replace('/dash/' + tabAction.props.value + '/' + this.state.selectedUser.handle)
-    console.log('route set to', this.props.router.location);
+  setTab = (tab) => {
+    this.props.router.replace('/dash/' + tab + '/' + this.state.selectedUser.handle)
+    this.setState({ tab: tab })
     window.scrollTo(0, document.body.scrollHeight)
-    console.log('tab', this.props.router.params.tab);
   }
 
   render () {
-    let selectedUser = this.state.selectedUser;
+    let selectedUser = this.state.selectedUser
     let user = this.props.viewer.user
     // console.log('user:', user)
-    // console.log('render - this', this);
+    console.log('render - this', this);
     return (
       <ProfileView>
         <DashHeader>
@@ -190,7 +171,7 @@ class Dashboard extends Component {
               show={this.state.showMentors} />
           </DashLeft>
           <DashRight>
-            <ProfContainer>
+            <ProfContainer style={{paddingLeft: '19px'}}>
               <ProfTop>
                 <ProfLeft>
                   <BtAvatar user={selectedUser} size={60} />
@@ -225,23 +206,23 @@ class Dashboard extends Component {
               </ProfTop>
             </ProfContainer>
             <Tabs
-              style={{ margin: '6px -19px 25px -19px' }}
+              style={{ margin: '6px 0 25px 0' }}
               tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
               inkBarStyle={{ backgroundColor: purple }}
-              value={this.props.router.params.tab} >
+              value={this.state.tab} >
               <Tab
                 label={'projects'}
                 value={'projects'}
-                onActive={(e)=>{this.setTab(e)}} />
+                onActive={(e)=>{this.setTab(e.props.value)}} />
               <Tab
                 icon={( <TabLabel text={'bounces'} locked /> )}
                 value={'bounces'}
-                onActive={(e)=>{this.setTab(e)}}
+                onActive={(e)=>{this.setTab(e.props.value)}}
                 style={{ cursor: 'not-allowed' }} disabled />
               <Tab
                 icon={( <TabLabel text={'messages'} locked /> )}
                 value={'messages'}
-                onActive={(e)=>{this.setTab(e)}} />
+                onActive={(e)=>{this.setTab(e.props.value)}} />
             </Tabs>
             {this.props.children}
           </DashRight>
@@ -271,28 +252,12 @@ class Dashboard extends Component {
                 }
               }
             }
-            sentMessages ( first: 20 ) {
-              edges {
-                node {
-                  text
-                  sender
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
           }
           User (handle: $userHandle) {
-            receivedMessages (first: 20) {
-              edges {
-                node {
-                  text
-                  sender
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
+            id
+            score
+            handle
+            portrait { url }
           }
         }
       `,

@@ -9,7 +9,7 @@ import {purple} from 'theme'
 class NotificationList extends Component {
   get notifications () {
     let notifications = (this.props.viewer.user || {}).notifications;
-    return notifications && notifications.edges.map( edge => (
+    return notifications && notifications.edges.reverse().map( edge => (
       <Notification key={edge.node.id} notification={edge.node} />
     ) )
   }
