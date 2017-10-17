@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, DashHeaderText, ProfileImg, LogoText, Divider, UserName, NavLink, TopColumn} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, DashHeaderText, ProfileImg, LogoText, Divider, UserName, NavLink, TopColumn, FeedbackRating} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
@@ -167,8 +167,11 @@ class Dashboard extends Component {
             <NavLink to={`/${user.handle}`}>
               Edit Profile
             </NavLink>
-          </TopColumn>
-          <Bolt style={{justifyContent:'flex-start'}}/>
+            <FeedbackRating style={{justifyContent:'flex-end'}}>
+              <Bolt style={{ marginRight: '5px' }} />
+                {selectedUser.score}
+            </FeedbackRating> 
+          </TopColumn>   
         </TopPanel>
         <BotRow>
           <DashLeft>

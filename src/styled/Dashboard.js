@@ -117,6 +117,14 @@ export const DashHeaderText = styled.div`
   align-items: baseline;
 `
 
+export const FeedbackRating = styled.div`
+display: flex;
+flex-direction: row;
+color: #777777;
+font-size: 30px;
+font-weight: bold;
+`
+
 export const ProfileImg = styled.img`
   height: 5em;
   width: 5em;
