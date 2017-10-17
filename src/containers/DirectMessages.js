@@ -4,6 +4,7 @@ import { MessageContainer, Messages, MessageText, SenderHandle, MessagePortrait,
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
+import {BtMessage, MsgsContainer} from 'styled'
 
 class DirectMessages extends Component {
 
@@ -54,7 +55,7 @@ class DirectMessages extends Component {
   componentWillMount() {
     console.log('DM props', this.props);
     let received = this.props.viewer.user.receivedMessages.edges
-    let sent = this.props.viewer.user.sentMessages.edges
+    let sent = this.props.viewer.User.receivedMessages.edges
     let messages = received.concat(sent)
     this.setState({ messages })
     console.log('DM state', this.state);
@@ -67,35 +68,46 @@ class DirectMessages extends Component {
   }
 
   messageDisplay = (messages) => {
-    let msgList = []
     console.log('state in messages', this.state);
-    (messages || []).forEach( (message, index) =>{
-      if (index === 0) {
-        msgList.push(
-          <MessageNamePortraitRow key={`portrait${message.node.id}`} >
-            <MessagePortrait src={message.node.sender.portrait.url} />
-            <SenderHandle key={`handle${message.node.id}`} >
-              {message.node.sender.handle}
-            </SenderHandle>
-          </MessageNamePortraitRow>
-        )
-      } else if (message.node.sender.id !== messages[index - 1].node.sender.id) {
-        msgList.push(<MessageDivider key={`portrait${message.node.id}`}/>)
-        msgList.push(<MessageNamePortraitRow key={`portrait${message.node.id}`} >
-            <MessagePortrait src={message.node.sender.portrait.url} />
-            <SenderHandle key={`handle${message.node.id}`} >
-              {message.node.sender.handle}
-            </SenderHandle>
-          </MessageNamePortraitRow>
-        )
-      }
-      msgList.push(
-        <MessageText key={`text${message.node.id}`} >
-          {message.node.text}
-        </MessageText>
+    let msgList = messages.map(msg => {
+      msg = msg.node
+      console.log('msg:', msg);
+      return (
+        <BtMessage
+          key={msg.id}
+          text={msg.text}
+          time={msg.createdAt}
+          isSender={msg.sender.id===this.props.viewer.user.id}
+        />
       )
     })
-    return (<Messages id={'messages'}>{msgList}</Messages>)
+    // (messages || []).forEach( (message, index) =>{
+    //   if (index === 0) {
+    //     msgList.push(
+    //       <MessageNamePortraitRow key={`portrait${message.node.id}`} >
+    //         <MessagePortrait src={message.node.sender.portrait.url} />
+    //         <SenderHandle key={`handle${message.node.id}`} >
+    //           {message.node.sender.handle}
+    //         </SenderHandle>
+    //       </MessageNamePortraitRow>
+    //     )
+    //   } else if (message.node.sender.id !== messages[index - 1].node.sender.id) {
+    //     msgList.push(<MessageDivider key={`portrait${message.node.id}`}/>)
+    //     msgList.push(<MessageNamePortraitRow key={`portrait${message.node.id}`} >
+    //         <MessagePortrait src={message.node.sender.portrait.url} />
+    //         <SenderHandle key={`handle${message.node.id}`} >
+    //           {message.node.sender.handle}
+    //         </SenderHandle>
+    //       </MessageNamePortraitRow>
+    //     )
+    //   }
+    //   msgList.push(
+    //     <MessageText key={`text${message.node.id}`} >
+    //       {message.node.text}
+    //     </MessageText>
+    //   )
+    // })
+    return (<MsgsContainer>{msgList}</MsgsContainer>)
   }
 
   render() {
@@ -108,7 +120,7 @@ class DirectMessages extends Component {
           multiLine
           name="message"
           style={{ width: '95%', margin: '15px 0' }}
-          hintText={"Your direct message..."}
+          hintText={"Your Message..."}
           value={this.state.message}
           onChange={(e)=>{ this.setState({message: e.target.value}) }}
           onKeyDown={(e)=>{
@@ -150,27 +162,7 @@ export default Relay.createContainer( DirectMessages, {
            ) {
              edges {
                node {
-                 text
-                 createdAt
-                 sender {
-                   id
-                   handle
-                   portrait { url }
-                 }
-               }
-             }
-           }
-           sentMessages (
-             first: 20
-             orderBy: id_ASC
-             filter: {
-               recipient: {
-                 handle: "lyricandthewhoopingcranes"
-               }
-             }
-           ) {
-             edges {
-               node {
+                 id
                  text
                  createdAt
                  sender {
@@ -186,6 +178,28 @@ export default Relay.createContainer( DirectMessages, {
            id
            handle
            portrait { url }
+           receivedMessages (
+             first: 20
+             orderBy: id_ASC
+             filter: {
+               sender: {
+                 handle: "lyricandthewhoopingcranes"
+               }
+             }
+           ) {
+             edges {
+               node {
+                 id
+                 text
+                 createdAt
+                 sender {
+                   id
+                   handle
+                   portrait { url }
+                 }
+               }
+             }
+           }
          }
        }
      `,

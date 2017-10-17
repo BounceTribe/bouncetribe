@@ -1,6 +1,6 @@
  import React from 'react'
 import styled from 'styled-components'
-import {white, grey230, grey215, size, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
+import {white, grey230, grey215, size, grey400, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -11,6 +11,44 @@ import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
 import Lock from 'icons/Lock'
+
+export const MsgsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`
+
+const MsgBubble = styled.div`
+  display: inline-block;
+  border-radius: 5px;
+  border: solid ${grey400} 1px;
+  background-color: ${props => props.isSender ? white : purple};
+  color: ${props => props.isSender ? 'auto' : white};
+  ${'' /* align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'}; */}
+  padding: 15px;
+`
+const MsgTime = styled.div`
+  display: inline-block;
+  align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
+  clear: both;
+  padding: 0 15px;
+`
+const MsgItem = styled.div`
+  display: flex;
+  align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
+  clear: both;
+  flex-direction: column;
+  text-align: ${props => props.isSender ? 'left' : 'right'};
+`
+
+export const BtMessage = ({isSender, text, time}) => (
+  <MsgItem isSender={isSender}>
+    <MsgBubble isSender={isSender}>
+      <span>{text}</span>
+    </MsgBubble>
+    <MsgTime isSender={isSender}><span>{time}</span></MsgTime>
+  </MsgItem>
+)
 
 export const TabLabel = ({text, locked}) =>
 (<span>{text} {locked && <Lock style={{display: 'inline-flex'}} />}</span>)

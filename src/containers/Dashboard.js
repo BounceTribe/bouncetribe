@@ -83,8 +83,9 @@ class Dashboard extends Component {
 
   selectUser = (selectedUser) => {
     let location = this.props.location.pathname
+    console.log('location');
     location = location.replace(this.state.selectedUser.handle, selectedUser.handle)
-    this.props.router.replace(location)
+    this.props.router.push(location)
     this.setState({selectedUser})
   }
 
@@ -240,8 +241,7 @@ class Dashboard extends Component {
               <Tab
                 icon={( <TabLabel text={'messages'} locked /> )}
                 value={'messages'}
-                onActive={(e)=>{this.setTab(e)}}
-                style={{ cursor: 'not-allowed' }} disabled />
+                onActive={(e)=>{this.setTab(e)}} />
             </Tabs>
             {this.props.children}
           </DashRight>
