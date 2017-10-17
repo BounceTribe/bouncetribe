@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, ProfileImg, Divider, UserName, NavLink, TopColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, ProfileImg, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
@@ -134,21 +134,18 @@ class Dashboard extends Component {
         </DashHeader>
         <Divider widthPercent={100} />
         <TopPanel>
+          <ImgColumn>
+            <BtAvatar user={user} size={80} />
+            {/* <ProfileImg src={(user.portrait || {}).url} /> */}
+          </ImgColumn>
           <TopColumn>
-            <ProfileImg src={(user.portrait || {}).url} />
-          </TopColumn>
-          <TopColumn>
-            <UserName
-              style={{
-                marginRight: '124vmin'
-              }}
-            >{user.handle}</UserName>
+            <UserName>{user.handle}</UserName>
             <NavLink to={`/${user.handle}`}>
               Edit Profile
             </NavLink>
           </TopColumn>
           <FeedbackRating style={{justifyContent:'flex-end'}}>
-              <Bolt style={{ marginRight: '5px' }} />
+              <Bolt style={{ marginRight: '15px' }} />
                 {selectedUser.score}
             </FeedbackRating>
         </TopPanel>

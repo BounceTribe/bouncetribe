@@ -117,10 +117,16 @@ export const TopPanel = styled.div`
   margin-top: 20px;
 `
 
+export const ImgColumn = styled.div`
+flex-direction: column;
+padding: 30px 0 30px 30px;
+align-content: center;
+width: 2vw;
+`
+
 export const TopColumn = styled.div`
   flex-direction: column;
-  padding: 0 0 0 1px;
-  align-content: center;
+  padding: 20px 0 0 70px;
   width: 10vw;
 `
 
@@ -143,6 +149,7 @@ export const UserName = styled.h1`
   font-size: 1.5em;
   color: #555555;
   float: left;
+  font-weight: regular;
 `
 
 export const LogoText = styled.h2`
@@ -164,11 +171,11 @@ export const NavLink = styled(BtLink)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: #777777;
-  padding: 0 15px;
+  color: ${grey119};
+  padding: 0 15px 0 0;
   cursor: pointer;
   font-size: .875em;
-  font-weight: Light;
+  font-weight: light;
 `
 
 const InviteStyled = styled.div`
