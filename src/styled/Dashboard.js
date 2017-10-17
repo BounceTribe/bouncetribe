@@ -81,7 +81,7 @@ export const DashRight = styled.div`
 export const ProfileView = styled(View)`
   background-color: transparent;
   border: none;
-  padding: 60px;
+  padding: 40px;
   justify-content: flex-start;
 `
 
@@ -90,7 +90,7 @@ display: flex;
 flex-direction: row;
 justify-content: flex-start;
 width: 80vw;
-padding-top: 40px;
+padding-top: 0px;
 `
 
 export const DashHeaderRow = styled.div`
