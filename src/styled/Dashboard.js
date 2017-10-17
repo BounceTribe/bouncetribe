@@ -3,7 +3,7 @@ import React, {Component} from 'react'
 import {View, BtAvatar, BtLink, BtFlatButton} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
-import {grey500, grey400, grey222, purple, white} from 'theme'
+import {grey500, grey400, grey119, grey222, purple, white} from 'theme'
 import {Name} from 'styled/Tribe'
 import {SubRow} from 'styled/Profile'
 import AddFriend from 'icons/AddFriend'
@@ -101,15 +101,16 @@ export const DashHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  width: 100%;
+  width: 80vw;
   padding-top: 40px;
 `
 
 export const DashHeaderRow = styled.div`
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width:100%;
+  width: 80vw;
   box-sizing: border-box;
 `
 
@@ -119,10 +120,11 @@ export const DashHeaderText = styled.div`
 
 export const FeedbackRating = styled.div`
 display: flex;
-flex-direction: row;
-color: #777777;
+justify-content: center;
+color: ${grey119};
 font-size: 30px;
 font-weight: bold;
+margin-right: 10vw;
 `
 
 export const ProfileImg = styled.img`
@@ -139,16 +141,18 @@ export const UserName = styled.h1`
 `
 
 export const LogoText = styled.h2`
+  display: flex;
+  flex: 1;
+  margin-left: 5px;
   font-size: 1.5em;
   color: #777777;
   font-weight: lighter;
-  padding-right: 120vmin;
 `
 
 export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
-  width: 90%;
+  width: 80vw;
 `
 
 export const NavLink = styled(BtLink)`
