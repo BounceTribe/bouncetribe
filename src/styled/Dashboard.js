@@ -148,7 +148,7 @@ export const LogoText = styled.h2`
 export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
-  width: 90%;
+  width: ${props => props.widthPercent ? props.widthPercent : 90 }%;
 `
 
 export const NavLink = styled(BtLink)`
