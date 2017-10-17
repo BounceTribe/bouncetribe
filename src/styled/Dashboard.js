@@ -109,8 +109,10 @@ align-items: baseline;
 export const TopPanel = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   align-content: center;
   width: 100%;
+  height: 140px;
   background-color: white;
   border-radius: 5px;
   border: solid ${grey222} 1px;
@@ -118,38 +120,36 @@ export const TopPanel = styled.div`
 `
 
 export const ImgColumn = styled.div`
-flex-direction: column;
-padding: 30px 0 30px 30px;
-align-content: center;
-width: 2vw;
+  padding: 30px 0 30px 15px;
+  align-self: center;
 `
 
 export const TopColumn = styled.div`
-  flex-direction: column;
-  padding: 20px 0 0 70px;
-  width: 10vw;
+  flex-direction: row;
+  justify-content: space-between;
 `
 
 export const FeedbackRating = styled.div`
   color: ${grey119};
   font-size: 30px;
   font-weight: bold;
-  margin-top: 5vh;
-  padding: 0 5px 0 800px;
-`
-
-export const ProfileImg = styled.img`
-  height: 5em;
-  width: 5em;
-  border-radius: 50%;
-  padding: 1em;
+  margin: 50px 50px 0 0;
 `
 
 export const UserName = styled.h1`
   font-size: 1.5em;
   color: #555555;
-  float: left;
-  font-weight: regular;
+  font-weight: normal;
+  margin: -90px 0 0 115px;
+`
+
+export const NavLink = styled(BtLink)`
+  text-decoration: none;
+  color: ${grey119};
+  cursor: pointer;
+  font-size: .875em;
+  font-weight: lighter;
+  margin: 0 0 0 115px;
 `
 
 export const LogoText = styled.h2`
@@ -165,17 +165,6 @@ export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
   width: 80vw;
-`
-
-export const NavLink = styled(BtLink)`
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: ${grey119};
-  padding: 0 15px 0 0;
-  cursor: pointer;
-  font-size: .875em;
-  font-weight: light;
 `
 
 const InviteStyled = styled.div`

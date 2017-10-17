@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, ProfileImg, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
@@ -134,11 +134,11 @@ class Dashboard extends Component {
         </DashHeader>
         <Divider widthPercent={100} />
         <TopPanel>
-          <ImgColumn>
-            <BtAvatar user={user} size={80} />
-            {/* <ProfileImg src={(user.portrait || {}).url} /> */}
-          </ImgColumn>
           <TopColumn>
+            <ImgColumn>
+              <BtAvatar user={user} size={80} />
+            </ImgColumn>
+            {/* <ProfileImg src={(user.portrait || {}).url} /> */}
             <UserName>{user.handle}</UserName>
             <NavLink to={`/${user.handle}`}>
               Edit Profile
