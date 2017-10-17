@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { MessageContainer, Messages, MessageText, SenderHandle, MessagePortrait, MessageNamePortraitRow, MessageDivider} from 'styled/Sessions'
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
+import {grey500} from 'theme'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
+import {BtMessage, MsgsContainer} from 'styled'
+import {Divider} from 'styled/Dashboard'
+import * as moment from 'moment'
 
 class DirectMessages extends Component {
 
@@ -51,82 +54,76 @@ class DirectMessages extends Component {
     )
   }
 
-  componentWillMount() {
-    console.log('DM props', this.props);
+  currentTime = (time) => this.setState({ time })
+
+  componentDidMount(){
     let received = this.props.viewer.user.receivedMessages.edges
-    let sent = this.props.viewer.user.sentMessages.edges
-    let messages = received.concat(sent)
+    let sent = this.props.viewer.User.receivedMessages.edges
+    let messages = received.concat(sent).sort((a, b) => a.node.id - b.node.id)
     this.setState({ messages })
     console.log('DM state', this.state);
   }
 
-  currentTime = (time) => this.setState({ time })
-
-  componentDidMount(){
-    console.log('DM props', this.props);
-  }
-
   messageDisplay = (messages) => {
-    let msgList = []
     console.log('state in messages', this.state);
-    (messages || []).forEach( (message, index) =>{
-      if (index === 0) {
-        msgList.push(
-          <MessageNamePortraitRow key={`portrait${message.node.id}`} >
-            <MessagePortrait src={message.node.sender.portrait.url} />
-            <SenderHandle key={`handle${message.node.id}`} >
-              {message.node.sender.handle}
-            </SenderHandle>
-          </MessageNamePortraitRow>
-        )
-      } else if (message.node.sender.id !== messages[index - 1].node.sender.id) {
-        msgList.push(<MessageDivider key={`portrait${message.node.id}`}/>)
-        msgList.push(<MessageNamePortraitRow key={`portrait${message.node.id}`} >
-            <MessagePortrait src={message.node.sender.portrait.url} />
-            <SenderHandle key={`handle${message.node.id}`} >
-              {message.node.sender.handle}
-            </SenderHandle>
-          </MessageNamePortraitRow>
-        )
+    let msgList = messages.map(msg => {
+      msg = msg.node
+      let time
+      let created = moment.default(msg.createdAt)
+      if (created.add(1, 'days') > moment.now()) {
+        time = created.subtract(1, 'days').format('h:mm a')
+      } else {
+        time = created.subtract(1, 'days').format('MMMM Do h:mm a')
       }
-      msgList.push(
-        <MessageText key={`text${message.node.id}`} >
-          {message.node.text}
-        </MessageText>
+      return (
+        <BtMessage
+          key={msg.id}
+          text={msg.text}
+          time={time}
+          isSender={msg.sender.id===this.props.viewer.user.id}
+        />
       )
     })
-    return (<Messages id={'messages'}>{msgList}</Messages>)
+    return msgList
   }
 
   render() {
     console.log('DM props', this.props);
-    console.log('messages', this.messages);
     return (
-      <MessageContainer>
-        {this.messageDisplay(this.state.messages)}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-end'
+      }}>
+        <MsgsContainer>
+          {this.messageDisplay(this.state.messages)}
+        </MsgsContainer>
         <TextField
           multiLine
           name="message"
-          style={{ width: '95%', margin: '15px 0' }}
-          hintText={"Your direct message..."}
+          style={{padding: '0 15px 0 15px'}}
+          underlineShow={false}
+          hintText={'Your message...'}
           value={this.state.message}
           onChange={(e)=>{ this.setState({message: e.target.value}) }}
           onKeyDown={(e)=>{
-            if (e.keyCode === 13) {
+            if (e.keyCode === 13 && e.shiftKey!==true) {
+              let savedText = this.state.message
+              this.setState({message: ''})
               this.props.relay.commitUpdate(
                 new CreateMessage({
-                  text: this.state.message,
+                  text: savedText,
                   senderId: this.props.viewer.user.id,
-                  recipientId: this.props.viewer.User.id,
-                  sessionParentId: this.props.params.sessionId
+                  recipientId: this.props.viewer.User.id
                 }), {
-                  onSuccess: (success) => { this.setState({message: ''}) }
+                  onSuccess: (success) => { this.setState({message: savedText}) }
+                  //display error message in snackbar?
                 }
               )
             }
           } }
         />
-      </MessageContainer>
+      </div>
     )
   }
 }
@@ -138,39 +135,20 @@ export default Relay.createContainer( DirectMessages, {
          user {
            id
            handle
+           score
            portrait { url }
            receivedMessages (
              first: 20
              orderBy: id_ASC
              filter: {
                sender: {
-                 handle: "subliminal_lime"
-               }
-             }
-           ) {
-             edges {
-               node {
-                 text
-                 createdAt
-                 sender {
-                   id
-                   handle
-                   portrait { url }
-                 }
-               }
-             }
-           }
-           sentMessages (
-             first: 20
-             orderBy: id_ASC
-             filter: {
-               recipient: {
                  handle: "lyricandthewhoopingcranes"
                }
              }
            ) {
              edges {
                node {
+                 id
                  text
                  createdAt
                  sender {
@@ -186,6 +164,28 @@ export default Relay.createContainer( DirectMessages, {
            id
            handle
            portrait { url }
+           receivedMessages (
+             first: 20
+             orderBy: id_ASC
+             filter: {
+               sender: {
+                 handle: "subliminal_lime"
+               }
+             }
+           ) {
+             edges {
+               node {
+                 id
+                 text
+                 createdAt
+                 sender {
+                   id
+                   handle
+                   portrait { url }
+                 }
+               }
+             }
+           }
          }
        }
      `,

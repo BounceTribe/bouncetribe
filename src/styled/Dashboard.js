@@ -9,6 +9,11 @@ import {SubRow} from 'styled/Profile'
 import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
 
+export const DashProfile = styled.div`
+  display: flex;
+  padding: 31px;
+`
+
 export const DialogRow = styled.div`
   display: flex;
   flex-direction: column;
@@ -69,7 +74,7 @@ export const DashRight = styled.div`
   border-radius: 10px;
   padding: 0 20px;
   margin-left: 15px;
-  padding-bottom: 40px;
+  padding: 0;
   width: 100%;
 `
 
