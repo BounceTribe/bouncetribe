@@ -13,7 +13,6 @@ class DirectMessages extends Component {
       'wss://subscriptions.graph.cool/v1/bt-api',
       { reconnect: true, }
     )
-
     this.state = {
       active: [],
       received: [],
@@ -54,7 +53,7 @@ class DirectMessages extends Component {
 
   componentWillMount() {
     console.log('DM props', this.props);
-    let received = this.props.viewer.User.receivedMessages.edges
+    let received = this.props.viewer.user.receivedMessages.edges
     let sent = this.props.viewer.user.sentMessages.edges
     let messages = received.concat(sent)
     this.setState({ messages })
@@ -65,9 +64,6 @@ class DirectMessages extends Component {
 
   componentDidMount(){
     console.log('DM props', this.props);
-    if (this.props.router.params.tab === 'messages') {
-      window.scrollTo(0, document.body.scrollHeight)
-    }
   }
 
   messageDisplay = (messages) => {
@@ -142,69 +138,54 @@ export default Relay.createContainer( DirectMessages, {
          user {
            id
            handle
-           email
            portrait { url }
-           friends (first: 999) {
+           receivedMessages (
+             first: 20
+             orderBy: id_ASC
+             filter: {
+               sender: {
+                 handle: "subliminal_lime"
+               }
+             }
+           ) {
              edges {
                node {
-                 id
-                 handle
-                 portrait { url }
-                 projects (
-                   first: 999
-                   filter: {privacy_not: PRIVATE}
-                   orderBy: createdAt_DESC
-                 ) {
-                   edges {
-                     node {
-                       createdAt
-                       id
-                       title
-                       genres (first: 999) {
-                         edges {
-                           node {name}
-                         }
-                       }
-                       artwork { url }
-                       creator {
-                         handle
-                         portrait { url }
-                       }
-                       comments (first: 999) {
-                         edges {
-                           node {type}
-                         }
-                       }
-                     }
-                   }
+                 text
+                 createdAt
+                 sender {
+                   id
+                   handle
+                   portrait { url }
                  }
                }
              }
            }
            sentMessages (
              first: 20
+             orderBy: id_ASC
+             filter: {
+               recipient: {
+                 handle: "lyricandthewhoopingcranes"
+               }
+             }
            ) {
              edges {
                node {
                  text
-                 sender
                  createdAt
-                 updatedAt
+                 sender {
+                   id
+                   handle
+                   portrait { url }
+                 }
                }
              }
            }
          }
          User (handle: $userHandle) {
-           receivedMessages (first: 20) {
-             edges {
-               node {
-                 text
-                 sender
-                 createdAt
-                 updatedAt
-               }
-             }
-           }
+           id
+           handle
+           portrait { url }
          }
        }
      `,
