@@ -135,7 +135,7 @@ class AllSessions extends Component {
               }}
               onTouchTap={()=>{
                 let {router} = this.props
-                router.push(`sessions/${router.params.userHandle}/${this.currentProject().title}/find`)
+                router.push(`/sessions/${router.params.userHandle}/${this.currentProject().title}/find`)
               }}
             />
           </NoProjectsCol>
@@ -150,10 +150,11 @@ class AllSessions extends Component {
       let headerProject = this.currentProject()
       return (
         <MenuItem
-          leftIcon={<Avatar
-            style={{borderRadius: 0}}
-            src={(headerProject.artwork) ? headerProject.artwork.url : `${url}/artwork.png`}
-          />}
+          leftIcon={
+            <Avatar
+              style={{borderRadius: 0}}
+              src={(headerProject.artwork || {}).url || `${url}/artwork.png`}
+            />}
           primaryText={headerProject.title}
         />
       )
@@ -295,13 +296,14 @@ class AllSessions extends Component {
                       let {router} = this.props
                       if (router.location.pathname.includes('/find')) {
                         this.setState({matches: false})
-                        router.push(`sessions/${router.params.userHandle}/${project.title}/find`)
+                        router.push(`/sessions/${router.params.userHandle}/${project.title}/find`)
                       } else {
-                        router.push(`sessions/${router.params.userHandle}/${project.title}`)
+                        router.push(`/sessions/${router.params.userHandle}/${project.title}`)
                       }
                     }}
                   />
                 )
+
               })}
             </IconMenu>
             <HeaderOptions
@@ -320,7 +322,7 @@ class AllSessions extends Component {
                 }}
                 onTouchTap={()=>{
                   let {router} = this.props
-                  router.push(`sessions/${router.params.userHandle}/${currentProject.title}/find`)
+                  router.push(`/sessions/${router.params.userHandle}/${currentProject.title}/find`)
                 }}
 
               />

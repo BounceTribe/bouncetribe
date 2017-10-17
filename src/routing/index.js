@@ -163,142 +163,129 @@ const userOnly = (nextState, replace) => {
   }
 }
 
-const createRoutes = () => {
-  return (
-    <Route
-      path='/'
-      component={Template}
-      queries={ViewerQuery} >
+const createRoutes = () => (
+  <Route
+    path='/'
+    component={Template}
+    queries={ViewerQuery} >
+    <IndexRoute component={Dashboard}
+      queries={ViewerQuery}
+      onEnter={userOnly}
+      render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} />
+    <Route path={'/login'} component={Login} queries={ViewerQuery} auth={auth} />
+    <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
+    <Route path={'/notifications'}
+      component={NotificationList}
+      queries={ViewerQuery}
+      render={({ props }) => props ? <NotificationList {...props} /> : <Loading />} />
+    <Route path={'/sessions/:userHandle'} onEnter={userOnly}>
       <IndexRoute
-        component={Dashboard}
-        queries={ViewerQuery}
-        onEnter={userOnly}
-        render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} />
-
-      <Route path={'/login'} component={Login} queries={ViewerQuery} auth={auth} />
-
-      <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
-
-      <Route path={'/notifications'}
-        component={NotificationList}
-        queries={ViewerQuery}
-        render={({ props }) => props ? <NotificationList {...props} /> : <Loading />} />
-      <Route path={'/sessions/:userHandle'}
         component={AllSessions}
-        queries={ViewerQuery}>
-        <IndexRoute
-          onEnter={userOnly}
-          component={AllSessions}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
-        <Route
-          path={'/sessions/:userHandle/:project'}
-          onEnter={userOnly}
-          component={AllSessions}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
-        <Route
-          path={'/sessions/:userHandle/:project/find'}
-          onEnter={userOnly}
-          component={AllSessions}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
-      </Route>
-      <Route path={'/projects/:userHandle'}
-        component={ProjectList}
         queries={ViewerQuery}
-        onEnter={userOnly}
-        render={({ props }) => props ? <ProjectList {...props} /> : <Loading />} />
-      <Route path={'/projects/:ownHandle/new'}
-        component={ProjectNew}
-        queries={ViewerQuery}
-        onEnter={userOnly}
-        render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
-      <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
-        <Route path={'/dash/projects/:userHandle'}
-          component={Projects}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <Projects {...props} /> : <Loading />} />
-        <Route path={'/dash/messages/:userHandle'}
-          component={DirectMessages}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <DirectMessages {...props} /> : <Loading />} />
-        {/* <Route path={'/dash/bounces/:userHandle'}
-          component={Bounces}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <Bounces {...props} /> : <Loading />} /> */}
-      </Route>
-
-      <Route path={'/:userHandle'} onEnter={userOnly} component={Profile} queries={ViewerQuery} >
-        <Route path={'/:userHandle/projects'}
-          component={Projects}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <Projects {...props} /> : <Loading />} />
-        {/* <Route path={'/:userHandle/bounces'}
-          component={Bounces}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <Bounces {...props} /> : <Loading />} />
-        <Route path={'/:userHandle/activities'}
-          component={Activities}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <Activities {...props} /> : <Loading />} /> */}
-      </Route>
-      <Route path={'/tribe/:userHandle'}
-        component={Tribe}
-        queries={ViewerQuery}
-        render={({ props }) => props ? <Tribe {...props} /> : <Loading />} >
-        <IndexRoute component={TribeAll}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <TribeAll {...props} /> : <Loading />} />
-        <Route path={'/tribe/:userHandle/requests'}
-          component={TribeRequests}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <TribeRequests {...props} /> : <Loading />} />
-      </Route>
-      <Route path={'/tribe/:userHandle/find/*'}
-        component={TribeFind}
-        queries={ViewerQuery}
-        render={({ props }) => props ? <TribeFind {...props} /> : <Loading />}
-        auth={auth}
-        ignoreScrollBehavior >
-        <IndexRoute
-          component={TribeSearchResults}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <TribeSearchResults {...props} /> : <Loading />}
-          prepareParams={tribeSearch}
-          ignoreScrollBehavior />
-      </Route>
-
+        render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
       <Route
-        path={'/:userHandle/:projectTitle'}
-        onEnter={userOnly}
-        component={Project}
+        path={'/sessions/:userHandle/:project'}
+        component={AllSessions}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Project {...props} /> : <Loading />} >
-        {/* <Route
-          path={'/:userHandle/:projectTitle/view'}
-          component={Comments}
-          queries={ViewerQuery}
-          prepareParams={commentFilter} />
-        <Route
-          path={'/:userHandle/:projectTitle/:handle'}
-          component={Comments}
-          queries={ViewerQuery}
-          prepareParams={ownCommentsFilter} /> */}
-        </Route>
-        <Route
-          path={'/session/:userHandle/:sessionId/:tab'}
-          onEnter={userOnly}
-          component={Session}
-          queries={ViewerQuery}
-          render={({ props }) => props ? <Session {...props} /> : <Loading />} />
+        render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
+      <Route
+        path={'/sessions/:userHandle/:project/find'}
+        component={AllSessions}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
+    </Route>
+    <Route path={'/projects/:userHandle'}
+      component={ProjectList}
+      queries={ViewerQuery}
+      onEnter={userOnly}
+      render={({ props }) => props ? <ProjectList {...props} /> : <Loading />} />
+    <Route path={'/projects/:ownHandle/new'}
+      component={ProjectNew}
+      queries={ViewerQuery}
+      onEnter={userOnly}
+      render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
+    <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
+      <Route path={'/dash/projects/:userHandle'}
+        component={Projects}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Projects {...props} /> : <Loading />} />
+      <Route path={'/dash/messages/:userHandle'}
+        component={DirectMessages}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <DirectMessages {...props} /> : <Loading />} />
+      {/* <Route path={'/dash/bounces/:userHandle'}
+        component={Bounces}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Bounces {...props} /> : <Loading />} /> */}
+    </Route>
 
+    <Route path={'/:userHandle'} onEnter={userOnly} component={Profile} queries={ViewerQuery} >
+      <Route path={'/:userHandle/projects'}
+        component={Projects}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Projects {...props} /> : <Loading />} />
+      {/* <Route path={'/:userHandle/bounces'}
+        component={Bounces}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Bounces {...props} /> : <Loading />} />
+      <Route path={'/:userHandle/activities'}
+        component={Activities}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Activities {...props} /> : <Loading />} /> */}
+    </Route>
+    <Route path={'/tribe/:userHandle'}
+      component={Tribe}
+      queries={ViewerQuery}
+      render={({ props }) => props ? <Tribe {...props} /> : <Loading />} >
+      <IndexRoute component={TribeAll}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <TribeAll {...props} /> : <Loading />} />
+      <Route path={'/tribe/:userHandle/requests'}
+        component={TribeRequests}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <TribeRequests {...props} /> : <Loading />} />
+    </Route>
+    <Route path={'/tribe/:userHandle/find/*'}
+      component={TribeFind}
+      queries={ViewerQuery}
+      render={({ props }) => props ? <TribeFind {...props} /> : <Loading />}
+      auth={auth}
+      ignoreScrollBehavior >
+      <IndexRoute
+        component={TribeSearchResults}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <TribeSearchResults {...props} /> : <Loading />}
+        prepareParams={tribeSearch}
+        ignoreScrollBehavior />
+    </Route>
 
+    <Route
+      path={'/:userHandle/:projectTitle'}
+      onEnter={userOnly}
+      component={Project}
+      queries={ViewerQuery}
+      render={({ props }) => props ? <Project {...props} /> : <Loading />} >
+      {/* <Route
+        path={'/:userHandle/:projectTitle/view'}
+        component={Comments}
+        queries={ViewerQuery}
+        prepareParams={commentFilter} />
+      <Route
+        path={'/:userHandle/:projectTitle/:handle'}
+        component={Comments}
+        queries={ViewerQuery}
+        prepareParams={ownCommentsFilter} /> */}
       </Route>
+      <Route
+        path={'/session/:userHandle/:sessionId/:tab'}
+        onEnter={userOnly}
+        component={Session}
+        queries={ViewerQuery}
+        render={({ props }) => props ? <Session {...props} /> : <Loading />} />
+    </Route>
 
 
-  )
-}
+)
 
 const Routing = createRoutes()
 

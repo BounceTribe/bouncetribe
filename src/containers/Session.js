@@ -293,6 +293,8 @@ class Session extends Component {
 
   render() {
     let self = this.props.viewer.user
+    let params = this.props.router.params
+    let Session = this.props.viewer.Session
     let otherProject = this.props.viewer.Session.projects.edges.find((edge)=>{
       return edge.node.creator.id !== self.id
     })
@@ -302,7 +304,7 @@ class Session extends Component {
     otherProject = otherProject.node
     ownProject = ownProject.node
     let otherUser = otherProject.creator
-    let project = (this.props.router.params.tab === 'theirs') ? otherProject : ownProject
+    let project = (params.tab === 'theirs') ? otherProject : ownProject
     // let appreciated = this.props.viewer.Session.appreciatedFeedback.edges.find((edge) => {
     //   return edge.node.id === this.props.viewer.user.id
     // })
@@ -349,11 +351,7 @@ class Session extends Component {
               />
               {formatEnum(otherUser.experience)}
               <Tribe height={15} width={15}
-                style={{
-                  marginLeft: '15px',
-                  marginRight: '5px'
-                }}
-              />
+                style={{ marginLeft: '15px', marginRight: '5px' }} />
               {otherUser.friends.edges.length}
             </MoreInfo>
           </ProfTop>
@@ -370,32 +368,32 @@ class Session extends Component {
           }}
           tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
           inkBarStyle={{ backgroundColor: purple }}
-          value={this.props.router.params.tab}
+          value={params.tab}
         >
           <Tab
             label={otherUser.handle}
             value={'theirs'}
             onActive={()=>{
-              this.props.router.push(`/session/${this.props.viewer.user.handle}/${this.props.viewer.Session.id}/theirs`)
+              this.props.router.push(`/session/${self.handle}/${this.props.viewer.Session.id}/theirs`)
             }}
           />
           <Tab
             label={'MY PROJECT'}
             value={'mine'}
             onActive={()=>{
-              this.props.router.push(`/session/${this.props.viewer.user.handle}/${this.props.viewer.Session.id}/mine`)
+              this.props.router.push(`/session/${self.handle}/${this.props.viewer.Session.id}/mine`)
             }}
           />
           <Tab
             label={'Messages'}
             value={'messages'}
             onActive={()=>{
-              this.props.router.replace(`/session/${this.props.viewer.user.handle}/${this.props.viewer.Session.id}/messages`)
+              this.props.router.replace(`/session/${self.handle}/${this.props.viewer.Session.id}/messages`)
               window.scrollTo(0, document.body.scrollHeight)
             }}
           />
         </Tabs>
-        {(this.props.router.params.tab === 'theirs' || this.props.router.params.tab === 'mine' ) ? (
+        {(params.tab === 'theirs' || params.tab === 'mine' ) ? (
           <Top>
             <Art
               src={ (project.artwork) ? project.artwork.url : `${url}/artwork.png`}
@@ -426,7 +424,7 @@ class Session extends Component {
           </Top>)
             : ( <div/> )
           }
-          {(this.props.router.params.tab === 'theirs') ? (
+          {(params.tab === 'theirs') ? (
             <TrackContainer>
               <AudioPlayer
                 track={otherProject.tracks.edges[0].node}
@@ -438,7 +436,7 @@ class Session extends Component {
             ) : ( <div/> )
           }
 
-          {(this.props.router.params.tab === 'mine') ? (
+          {(params.tab === 'mine') ? (
             <TrackContainer>
               <AudioPlayer
                 track={ownProject.tracks.edges[0].node}
@@ -450,14 +448,14 @@ class Session extends Component {
             ) : ( <div/> )
           }
 
-        {(this.props.router.params.tab === 'theirs' || this.props.router.params.tab === 'mine') ? (
+        {(params.tab === 'theirs' || params.tab === 'mine') ? (
           <Bot>
             <CommentContainer>
               <CommentMarkers
                 comments={this.includeNew()}
                 duration={this.state.duration}
               />
-              <ButtonRow hide={(this.props.router.params.tab === 'mine')} >
+              <ButtonRow hide={(params.tab === 'mine')} >
                 <ButtonColumn>
                   <RoundButton
                     big
@@ -491,14 +489,14 @@ class Session extends Component {
                 </ButtonColumn>
               </ButtonRow>
               <ButtonRow
-                hide={(this.props.router.params.tab === 'theirs' || !commentsReceived)}
+                hide={(params.tab === 'theirs' || !commentsReceived)}
               >
                 <HelpfulQuestion>
                   Was this feedback helpful?
                 </HelpfulQuestion>
               </ButtonRow>
               <ButtonRow
-                hide={(this.props.router.params.tab === 'theirs' || !commentsReceived)}
+                hide={(params.tab === 'theirs' || !commentsReceived)}
               >
 
                 <ButtonColumn>
@@ -538,7 +536,7 @@ class Session extends Component {
                     active={(this.state.active.includes('new'))}
                     activate={this.activate}
                     deactivate={this.deactivate}
-                    userId={this.props.viewer.user.id}
+                    userId={self.id}
                     tabs={'view'}
                     commentCreated={()=>{this.setState({new: false})}}
                     sessionId={this.props.viewer.Session.id}
@@ -557,7 +555,7 @@ class Session extends Component {
                       active={(this.state.active.includes(index+1))}
                       activate={this.activate}
                       deactivate={this.deactivate}
-                      userId={this.props.viewer.user.id}
+                      userId={self.id}
                       tabs={this.state.tabs}
                       session
                     />
@@ -590,7 +588,7 @@ class Session extends Component {
                   this.props.relay.commitUpdate(
                     new CreateMessage({
                       text: this.state.message,
-                      senderId: this.props.viewer.user.id,
+                      senderId: self.id,
                       recipientId: otherUser.id,
                       sessionParentId: this.props.viewer.Session.id
                     }), {
