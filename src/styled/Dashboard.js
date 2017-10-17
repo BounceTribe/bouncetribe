@@ -80,10 +80,31 @@ export const ProfileView = styled(View)`
   justify-content: flex-start;
 `
 
+export const DashHeader = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: flex-start;
+width: 80vw;
+padding-top: 40px;
+`
+
+export const DashHeaderRow = styled.div`
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+align-items: center;
+width: 80vw;
+box-sizing: border-box;
+`
+
+export const DashHeaderText = styled.div`
+align-items: baseline;
+`
+
 export const TopPanel = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  align-content: center;
   width: 100%;
   background-color: white;
   border-radius: 5px;
@@ -92,39 +113,18 @@ export const TopPanel = styled.div`
 `
 
 export const TopColumn = styled.div`
-  display: flex;
   flex-direction: column;
-  margin-left: 15px;
-`
-
-export const DashHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  width: 80vw;
-  padding-top: 40px;
-`
-
-export const DashHeaderRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 80vw;
-  box-sizing: border-box;
-`
-
-export const DashHeaderText = styled.div`
-  align-items: baseline;
+  padding: 0 0 0 1px;
+  align-content: center;
+  width: 10vw;
 `
 
 export const FeedbackRating = styled.div`
-display: flex;
-justify-content: center;
-color: ${grey119};
-font-size: 30px;
-font-weight: bold;
-margin-right: 10vw;
+  color: ${grey119};
+  font-size: 30px;
+  font-weight: bold;
+  margin-top: 5vh;
+  padding: 0 5px 0 800px;
 `
 
 export const ProfileImg = styled.img`
@@ -152,11 +152,7 @@ export const LogoText = styled.h2`
 export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
-<<<<<<< HEAD
   width: 80vw;
-=======
-  width: ${props => props.widthPercent ? props.widthPercent : 90 }%;
->>>>>>> 33d94d45e46f51a5e2656781181218353b9a7dbc
 `
 
 export const NavLink = styled(BtLink)`
