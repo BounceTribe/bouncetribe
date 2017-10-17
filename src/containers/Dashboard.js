@@ -1,21 +1,18 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, DashHeaderText, ProfileImg, LogoText, Divider, UserName, NavLink, TopColumn, FeedbackRating} from 'styled/Dashboard'
+import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, DashHeaderText, ProfileImg, LogoText, Divider, UserName, NavLink, TopColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Tabs, Tab} from 'material-ui'
-import {purple, grey200, grey400} from 'theme'
-import { ProfContainer, ProfTop, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft} from 'styled/Project'
-import {formatEnum} from 'utils/strings'
-import Experience from 'icons/Experience'
-import Location from 'icons/Location'
+import {purple, grey200, grey400, grey600} from 'theme'
+import { ProfCol, ProfHandle, Score} from 'styled/Project'
 import Bolt from 'icons/Bolt'
 import Logo from 'icons/Logo'
 import {BtAvatar} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
-import SetUserOnline from 'mutations/SetUserOnline'
-import SetUserOffline from 'mutations/SetUserOffline'
+// import SetUserOnline from 'mutations/SetUserOnline'
+// import SetUserOffline from 'mutations/SetUserOffline'
 import {IconTextContainer, IconText, TabLabel} from 'styled'
 
 
@@ -47,9 +44,7 @@ class Dashboard extends Component {
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
-        //uncomment below to double suggestion list for testing
         suggestions = suggestions.concat(suggestions);
-        // suggestions = suggestions.concat(suggestions);
         let list = suggestions.slice(0, max).map( friend =>
           <FbList
             key={friend.id}
@@ -169,40 +164,18 @@ class Dashboard extends Component {
               show={this.state.showMentors} />
           </DashLeft>
           <DashRight>
-            <ProfContainer style={{paddingLeft: '19px'}}>
-              <ProfTop>
-                <ProfLeft>
-                  <BtAvatar user={selectedUser} size={60} />
-                  <ProfCol>
-                    <ProfHandle to={`/${selectedUser.handle}`} >
-                      {selectedUser.handle}
-                    </ProfHandle>
-                    <Score>
-                      <Bolt style={{ marginRight: '5px' }} />
-                      {selectedUser.score}
-                    </Score>
-                  </ProfCol>
-                </ProfLeft>
-                <MoreInfo>
-                  <Location fill={purple} height={20} width={20}
-                    style={{
-                      marginLeft: '15px',
-                      marginRight: '5px',
-                      display: (selectedUser.placename) ? '': 'none'
-                    }}
-                  />
-                  {selectedUser.placename}
-                  <Experience height={18} width={18}
-                    style={{
-                      marginLeft: '15px',
-                      marginRight: '5px',
-                      display: (selectedUser.experience) ? '': 'none'
-                    }}
-                  />
-                  {formatEnum(selectedUser.experience)}
-                </MoreInfo>
-              </ProfTop>
-            </ProfContainer>
+            <DashProfile>
+              <BtAvatar user={selectedUser} size={60} />
+              <ProfCol>
+                <ProfHandle to={`/${selectedUser.handle}`} >
+                  {selectedUser.handle}
+                </ProfHandle>
+                <Score>
+                  <Bolt style={{ marginRight: '5px' }} />
+                  {selectedUser.score}
+                </Score>
+              </ProfCol>
+            </DashProfile>
             <Tabs
               style={{ margin: '6px 0 25px 0' }}
               tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
@@ -211,16 +184,20 @@ class Dashboard extends Component {
               <Tab
                 label={'projects'}
                 value={'projects'}
+                buttonStyle={{fontSize: '15px', fontWeight: '500', color: `${grey600}`}}
                 onActive={(e)=>{this.setTab(e.props.value)}} />
               <Tab
                 icon={( <TabLabel text={'bounces'} locked /> )}
                 value={'bounces'}
+                buttonStyle={{fontSize: '15px', fontWeight: '500', color: `${grey600}`}}
                 onActive={(e)=>{this.setTab(e.props.value)}}
                 style={{ cursor: 'not-allowed' }} disabled />
               <Tab
                 icon={( <TabLabel text={'messages'} locked /> )}
                 value={'messages'}
-                onActive={(e)=>{this.setTab(e.props.value)}} />
+                buttonStyle={{fontSize: '15px', fontWeight: '500', color: `${grey600}`}}
+                onActive={(e)=>{this.setTab(e.props.value)}}
+                style={{ cursor: 'not-allowed' }} disabled />
             </Tabs>
             {this.props.children}
           </DashRight>
@@ -247,28 +224,6 @@ class Dashboard extends Component {
                   score
                   isOnline
                   portrait { url }
-                }
-              }
-            }
-            sentMessages ( first: 20 ) {
-              edges {
-                node {
-                  text
-                  sender
-                  createdAt
-                  updatedAt
-                }
-              }
-            }
-          }
-          User (handle: $userHandle) {
-            receivedMessages (first: 20) {
-              edges {
-                node {
-                  text
-                  sender
-                  createdAt
-                  updatedAt
                 }
               }
             }
