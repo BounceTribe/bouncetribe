@@ -1,7 +1,18 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
+import styled from 'styled-components'
 import {ProjectItemSm} from 'components/ProjectItemSm'
-import {List} from 'styled/list'
+
+const ProjectsContainerSm = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
+`
 
 class Projects extends Component {
   edgeFilter = (project, type) => (
@@ -33,9 +44,9 @@ class Projects extends Component {
 
   render () {
     return (
-      <List>
+      <ProjectsContainerSm>
         {this.makeList()}
-      </List>
+      </ProjectsContainerSm>
     )
   }
 }

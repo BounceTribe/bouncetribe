@@ -152,7 +152,11 @@ export const LogoText = styled.h2`
 export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
+<<<<<<< HEAD
   width: 80vw;
+=======
+  width: ${props => props.widthPercent ? props.widthPercent : 90 }%;
+>>>>>>> 33d94d45e46f51a5e2656781181218353b9a7dbc
 `
 
 export const NavLink = styled(BtLink)`

@@ -10,14 +10,14 @@ import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
 import Bolt from 'icons/Bolt'
+import Logo from 'icons/Logo'
 import {BtAvatar} from 'styled'
-// import DirectMessages from 'components/DirectMessages'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
-
 import SetUserOnline from 'mutations/SetUserOnline'
 import SetUserOffline from 'mutations/SetUserOffline'
-import {TabLabel} from 'styled'
+import {IconTextContainer, IconText, TabLabel} from 'styled'
+
 
 class Dashboard extends Component {
 
@@ -119,8 +119,12 @@ class Dashboard extends Component {
       <ProfileView>
         <DashHeader>
           <DashHeaderRow>
-            <BtAvatar user={selectedUser} size={60} />
-            <LogoText>My Tribe</LogoText>
+            <IconTextContainer to={`/tribe/${user.handle}`} >
+              <Logo style={{ display: 'flex', marginBottom: '-5px' }} fill={purple} />
+              <IconText>
+                My Tribe
+              </IconText>
+            </IconTextContainer>
             <InviteButton
               onClick={()=>{this.setState({invite: true})}}
               text={'Invite Member'} />
@@ -153,7 +157,7 @@ class Dashboard extends Component {
             </Dialog>
           </DashHeaderRow>
         </DashHeader>
-        <Divider />
+        <Divider widthPercent={100} />
         <TopPanel>
           <TopColumn>
             <ProfileImg src={(user.portrait || {}).url} />
@@ -170,8 +174,8 @@ class Dashboard extends Component {
             <FeedbackRating style={{justifyContent:'flex-end'}}>
               <Bolt style={{ marginRight: '5px' }} />
                 {selectedUser.score}
-            </FeedbackRating> 
-          </TopColumn>   
+            </FeedbackRating>
+          </TopColumn>
         </TopPanel>
         <BotRow>
           <DashLeft>

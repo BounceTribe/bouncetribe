@@ -1,4 +1,4 @@
-import React from 'react'
+ import React from 'react'
 import styled from 'styled-components'
 import {white, grey230, grey215, size, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
@@ -171,11 +171,7 @@ export const BtFlatButton = (props) => {
     <ButtonLink to={props.to} >
       <FlatButton
         {...props}
-        labelStyle={{
-          textTransform: 'none',
-          ...props.labelStyle
-        }}
-      >
+        labelStyle={{ textTransform: 'none', ...props.labelStyle }} >
         {props.children}
       </FlatButton>
     </ButtonLink>

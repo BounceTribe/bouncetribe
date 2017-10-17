@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-// import Relay from 'react-relay'
+import Relay from 'react-relay'
 import { MessageContainer, Messages, MessageText, SenderHandle, MessagePortrait, MessageNamePortraitRow, MessageDivider} from 'styled/Sessions'
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
@@ -122,7 +122,7 @@ class DirectMessages extends Component {
                   text: this.state.message,
                   senderId: this.props.viewer.user.id,
                   recipientId: this.props.viewer.User.id,
-                  sessionParentId: null
+                  sessionParentId: this.props.params.sessionId
                 }), {
                   onSuccess: (success) => { this.setState({message: ''}) }
                 }
@@ -135,5 +135,79 @@ class DirectMessages extends Component {
   }
 }
 
-
-export default DirectMessages
+export default Relay.createContainer( DirectMessages, {
+   initialVariables: { userHandle: '' },
+   fragments: { viewer: () => Relay.QL`
+       fragment on Viewer {
+         user {
+           id
+           handle
+           email
+           portrait { url }
+           friends (first: 999) {
+             edges {
+               node {
+                 id
+                 handle
+                 portrait { url }
+                 projects (
+                   first: 999
+                   filter: {privacy_not: PRIVATE}
+                   orderBy: createdAt_DESC
+                 ) {
+                   edges {
+                     node {
+                       createdAt
+                       id
+                       title
+                       genres (first: 999) {
+                         edges {
+                           node {name}
+                         }
+                       }
+                       artwork { url }
+                       creator {
+                         handle
+                         portrait { url }
+                       }
+                       comments (first: 999) {
+                         edges {
+                           node {type}
+                         }
+                       }
+                     }
+                   }
+                 }
+               }
+             }
+           }
+           sentMessages (
+             first: 20
+           ) {
+             edges {
+               node {
+                 text
+                 sender
+                 createdAt
+                 updatedAt
+               }
+             }
+           }
+         }
+         User (handle: $userHandle) {
+           receivedMessages (first: 20) {
+             edges {
+               node {
+                 text
+                 sender
+                 createdAt
+                 updatedAt
+               }
+             }
+           }
+         }
+       }
+     `,
+   },
+ }
+)
