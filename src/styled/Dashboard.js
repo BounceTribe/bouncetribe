@@ -114,7 +114,7 @@ export const TopPanel = styled.div`
   width: 100%;
   height: 140px;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 10px;
   border: solid ${grey222} 1px;
   margin-top: 20px;
 `
