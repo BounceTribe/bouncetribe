@@ -1,19 +1,11 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-<<<<<<< HEAD
 import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, DashRight, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
-import {Dialog, TextField, Tabs, Tab} from 'material-ui'
-import {purple, grey200, grey400, grey600} from 'theme'
-import {ProfCol, ProfHandle, Score} from 'styled/Project'
-=======
-import { FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
-import {FriendList} from 'components/FriendList'
-import {BotRow} from 'styled/Profile'
 import {Dialog, TextField} from 'material-ui'
+import {ProfCol, ProfHandle, Score} from 'styled/Project'
 import {purple, grey400} from 'theme'
->>>>>>> 6ccba3a440f4bb1200a62bdcf6a7d9d18e813d34
 import Bolt from 'icons/Bolt'
 import Logo from 'icons/Logo'
 import {BtAvatar, IconTextContainer, IconText, TabLabel} from 'styled'
@@ -21,10 +13,6 @@ import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 // import SetUserOnline from 'mutations/SetUserOnline'
 // import SetUserOffline from 'mutations/SetUserOffline'
-<<<<<<< HEAD
-=======
-import {IconTextContainer, IconText} from 'styled'
->>>>>>> 6ccba3a440f4bb1200a62bdcf6a7d9d18e813d34
 import {Panel} from 'components/Panel'
 
 
