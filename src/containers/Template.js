@@ -9,7 +9,8 @@ import MobileNav from 'components/MobileNav'
 import {btTheme} from 'theme'
 import {url} from 'config'
 import Footer from 'components/Footer'
-// import SetUserOnline from 'mutations/SetUserOnline'
+import Moment from 'moment'
+import SendPing from 'mutations/SendPing'
 // import SetUserOffline from 'mutations/SetUserOffline'
 
 injectTapEventPlugin()
@@ -22,14 +23,14 @@ class Template extends Component {
   //   this.handleClose = this.handleClose.bind(this);
   // }
   //
-  // componentDidMount() {
-  //   document.addEventListener('onbeforeunload', this.handleClose());
-  //   this.props.relay.commitUpdate(
-  //     new SetUserOnline({
-  //       user: this.props.viewer.user
-  //     })
-  //   )
-  // }
+    componentDidMount() {
+
+      this.props.relay.commitUpdate(
+        new SendPing({
+          user: this.props.viewer.user
+        })
+      )
+    }
   //
   // componentWillUnmount() {
   //   document.removeEventListener('onbeforeunload', this.handleClose());
