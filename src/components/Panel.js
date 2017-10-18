@@ -14,7 +14,7 @@ const Container = styled.div`
   border: solid ${grey222} 1px;
   border-radius: 10px;
   padding: 0 20px;
-  margin-left: 15px;
+  ${'' /* margin-left: 15px; */}
   padding: 0;
   width: 100%;
 `

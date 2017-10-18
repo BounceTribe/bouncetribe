@@ -23,7 +23,6 @@ import DirectMessages from 'containers/DirectMessages'
 // import Bounces from 'containers/Bounces'
 
 import {Loading} from 'styled/Spinner'
-
 const ViewerQuery = {
   viewer: (Component, variables) => Relay.QL`
     query {
