@@ -73,6 +73,7 @@ export const DashLeft = styled.div`
   border: solid ${grey222} 1px;
   border-radius: 10px;
   padding: 8px 15px;
+  margin-right: 20px;
 `
 
 

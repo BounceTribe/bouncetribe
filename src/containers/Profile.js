@@ -404,8 +404,8 @@ class Profile extends Component {
 
   setTab = (tab) => {
     this.props.router.replace(`${this.props.router.params.userHandle}/${tab}`)
+    this.setState({ tab })
     window.scrollTo(0, document.body.scrollHeight)
-    console.log('tab', this.props.router.params.tab);
   }
 
   topRow = () => {

@@ -21,16 +21,18 @@ class TribeAll extends Component {
       let friends = this.props.viewer.User.friends.edges.map(edge=>{
         let {node:friend} = edge
         return (
-          <TableRow key={friend.id} >
-            <TableRowColumn style={{width: '50px', padding: '10px 0 6px 0'}} >
-              <BtAvatar user={friend} size={50} />
+          <TableRow key={friend.id} style={{height: '70px'}} >
+            <TableRowColumn style={{width: '60px'}}>
+              {/* <div style={{display: 'flex', alignItems: 'center'}}> */}
+                <BtAvatar user={friend} size={50} />
+              </TableRowColumn>
+              <TableRowColumn>
+                <Name to={`/${friend.handle}`} >
+                  {friend.handle}
+                </Name>
+              {/* </div> */}
             </TableRowColumn>
             <TableRowColumn>
-              <Name to={`/${friend.handle}`} >
-                {friend.handle}
-              </Name>
-            </TableRowColumn>
-            <TableRowColumn style={{ width: '50px', }} >
               <Bolt height={18} />
               <TableScore>
                   {friend.score}
@@ -52,33 +54,23 @@ class TribeAll extends Component {
           </TableRow>
         )
       })
+
       return (
-        <Table
-          style={{
-            width: '90%',
-            margin: 'auto'
-          }}
-        >
+        <Table style={{width:'90%', margin: 'auto'}}>
           <TableHeader
             displaySelectAll={false}
             adjustForCheckbox={false}
           >
             <TableRow>
-              <TableHeaderColumn
-                style={{width: '50px'}}
-              >{/*image*/}</TableHeaderColumn>
+              <TableHeaderColumn style={{width: '60px', height: '45px'}}></TableHeaderColumn>
               <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn
-                style={{width: '50px'}}
-              >Rating</TableHeaderColumn>
+              <TableHeaderColumn>Rating</TableHeaderColumn>
               <TableHeaderColumn>Location</TableHeaderColumn>
               {/* <TableHeaderColumn>Genres</TableHeaderColumn> */}
               <TableHeaderColumn>Projects</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}
-          >
+          <TableBody displayRowCheckbox={false} >
             {friends}
           </TableBody>
         </Table>
