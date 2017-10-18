@@ -50,7 +50,6 @@ export const Single = styled.div`
   min-height: 40px;
   box-sizing: border-box;
   display: ${({hide})=> (hide) ? 'none': ''};
-
 `
 
 export const Bottom = styled.div`

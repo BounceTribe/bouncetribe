@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import styled from 'styled-components'
 import {View, BtFlatButton} from 'styled'
 // import Edit from 'icons/Edit'
-import {grey400, grey200, grey800, purple, white} from 'theme'
+import {grey200, grey400, grey800, purple, white} from 'theme'
 import Tribe from 'icons/Tribe'
 import AddFriend from 'icons/AddFriend'
 
@@ -24,7 +24,7 @@ export const Top = styled.div`
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  background-color: white;
+  background-color: ${white};
   border-radius: 10px;
   border: solid ${grey400} 1px;
   padding-top: 40px;
@@ -160,7 +160,7 @@ export const BotLeft = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  background-color: white;
+  background-color: ${white};
   min-height: 50vh;
   width: 66%;
   border: solid ${grey400} 1px;
@@ -174,7 +174,7 @@ export const BotRight = styled.div`
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  background-color: white;
+  background-color: ${white};
   min-height: 50vh;
   width: 33%;
   border: solid ${grey400} 1px;

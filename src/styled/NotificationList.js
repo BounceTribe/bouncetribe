@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {grey700, grey500, grey300, purple} from 'theme'
+import {grey300, grey500, grey700, purple} from 'theme'
 import React from 'react'
 
 export const NotifyContainer = styled.div`

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {grey500, grey600} from 'theme'
+import {grey500, grey600, white} from 'theme'
 
 export const Background = styled.div`
   width: 100%;
@@ -20,7 +20,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: white;
+  background-color: ${white};
   padding: 35px 75px;
 `
 
