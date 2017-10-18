@@ -3,16 +3,28 @@ import React, {Component} from 'react'
 import {View, BtAvatar, BtLink, BtFlatButton} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
+import Bolt from 'icons/Bolt'
 import {grey500, grey400, grey119, grey222, purple, white} from 'theme'
 import {Name} from 'styled/Tribe'
 import {SubRow} from 'styled/Profile'
 import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
+import { ProfCol, ProfHandle, Score} from 'styled/Project'
 
-export const DashProfile = styled.div`
-  display: flex;
-  padding: 31px;
-`
+export const DashProfile = ({selectedUser}) => (
+  <div style={{display: 'flex', padding: '31px'}}>
+    <BtAvatar user={selectedUser} size={60} />
+    <ProfCol>
+      <ProfHandle to={`/${selectedUser.handle}`} >
+        {selectedUser.handle}
+      </ProfHandle>
+      <Score>
+        <Bolt style={{ marginRight: '5px' }} />
+        {selectedUser.score}
+      </Score>
+    </ProfCol>
+  </div>
+)
 
 export const DialogRow = styled.div`
   display: flex;
@@ -21,7 +33,6 @@ export const DialogRow = styled.div`
   width: 100%;
   padding: 25px 0;
   border-bottom: 1px solid ${grey400};
-
 `
 const FbDialogRow = styled.div`
   display: flex;
@@ -64,19 +75,7 @@ export const DashLeft = styled.div`
   padding: 8px 15px;
 `
 
-export const DashRight = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  background-color: white;
-  min-height: 50vh;
-  border: solid ${grey222} 1px;
-  border-radius: 10px;
-  padding: 0 20px;
-  margin-left: 15px;
-  padding: 0;
-  width: 100%;
-`
+
 
 export const ProfileView = styled(View)`
   background-color: transparent;

@@ -14,6 +14,7 @@ import CreateFriendRequest from 'mutations/CreateFriendRequest'
 // import SetUserOnline from 'mutations/SetUserOnline'
 // import SetUserOffline from 'mutations/SetUserOffline'
 import {IconTextContainer, IconText, TabLabel} from 'styled'
+import {Panel} from 'components/Panel'
 
 
 class Dashboard extends Component {
@@ -28,7 +29,8 @@ class Dashboard extends Component {
       suggestions: [],
       showMentors: true,
       showTribe: true,
-      showBand: true
+      showBand: true,
+      tab: ''
     }
   }
 
@@ -160,44 +162,14 @@ class Dashboard extends Component {
               select={this.selectUser}
               show={this.state.showMentors} />
           </DashLeft>
-          <DashRight>
-            <DashProfile>
-              <BtAvatar user={selectedUser} size={60} />
-              <ProfCol>
-                <ProfHandle to={`/${selectedUser.handle}`} >
-                  {selectedUser.handle}
-                </ProfHandle>
-                <Score>
-                  <Bolt style={{ marginRight: '5px' }} />
-                  {selectedUser.score}
-                </Score>
-              </ProfCol>
-            </DashProfile>
-            <Tabs
-              style={{ margin: '6px 0 25px 0' }}
-              tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
-              inkBarStyle={{ backgroundColor: purple }}
-              value={this.props.router.params.tab} >
-              <Tab
-                label={'projects'}
-                value={'projects'}
-                buttonStyle={{fontSize: '15px', fontWeight: '500', color: `${grey600}`}}
-                onActive={(e)=>{this.setTab(e.props.value)}} />
-              <Tab
-                icon={( <TabLabel text={'bounces'} locked /> )}
-                value={'bounces'}
-                buttonStyle={{fontSize: '15px', fontWeight: '500', color: `${grey600}`}}
-                onActive={(e)=>{this.setTab(e.props.value)}}
-                style={{ cursor: 'not-allowed' }} disabled />
-              <Tab
-                icon={( <TabLabel text={'messages'} locked /> )}
-                value={'messages'}
-                buttonStyle={{fontSize: '15px', fontWeight: '500', color: `${grey600}`}}
-                onActive={(e)=>{this.setTab(e.props.value)}}
-                style={{ cursor: 'not-allowed' }} disabled />
-            </Tabs>
-            {this.props.children}
-          </DashRight>
+          <Panel
+            tab={this.state.tab}
+            topBar={<DashProfile selectedUser={selectedUser} />}
+            tabChange={(tab)=>this.setTab(tab)}
+            labels={['projects', 'bounces', 'messages']}
+            locks={[false, true, false]}
+            content={this.props.children}
+            />
         </BotRow>
       </ProfileView>
     )

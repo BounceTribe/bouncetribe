@@ -23,7 +23,6 @@ class SingleComment extends Component {
 
   componentWillMount(){
     this.setState({text: this.props.comment.text})
-
   }
 
   editComment = (e) => {

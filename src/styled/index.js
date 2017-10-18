@@ -10,7 +10,6 @@ import IconButton from 'material-ui/IconButton'
 import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
-import Lock from 'icons/Lock'
 
 export const MsgsContainer = styled.div`
   display: flex;
@@ -52,9 +51,6 @@ export const BtMessage = ({isSender, text, time}) => (
     </MsgTime>
   </MsgItem>
 )
-
-export const TabLabel = ({text, locked}) =>
-(<span>{text} {locked && <Lock style={{display: 'inline-flex'}} />}</span>)
 
 const PurpleBox = styled.div`
   display: inline-flex;
