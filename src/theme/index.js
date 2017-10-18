@@ -5,7 +5,7 @@ import {fade} from 'material-ui/utils/colorManipulator'
 
 
 
-export const fbBlue = 'rgb(68,100,162)'
+export const fbBlue = '#4464A2'
 
 export const size = {
   m: (...args) => css`
@@ -19,17 +19,17 @@ const purple = deepPurple300
 export const blue = lightBlue500
 
 
-export const transparent = `rgba(0,0,0,0)`
+export const transparent = `#000000`
 
-export const teal = 'rgb(23, 207, 170)'
-export const grey40 = 'rgb(40,40,40)'
-export const grey70 = 'rgb(70,70,70)'
-export const grey150 = 'rgb(150,150,150)'
-export const grey119 = 'rgb(119,119,119)'
-export const grey215 = 'rgb(215,215,215)'
-export const grey222 = 'rgb(222,222,222)'
-export const grey230 = 'rgb(230,230,230)'
-export const grey250 = 'rgb(250,250,250)'
+export const teal = '#17CFAA'
+export const grey40 = '#282828'
+export const grey70 = '#464646'
+export const grey150 = '#969696'
+export const grey119 = '#777777'
+export const grey215 = '#D7D7D7'
+export const grey222 = '#DEDEDE'
+export const grey230 = '#E6E6E6'
+export const grey250 = '#FAFAFA'
 
 
 
