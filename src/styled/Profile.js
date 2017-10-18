@@ -28,6 +28,7 @@ export const Top = styled.div`
   border-radius: 10px;
   border: solid ${grey400} 1px;
   padding-top: 40px;
+  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
 `
 
 export const TopCol = styled.div`
@@ -166,6 +167,7 @@ export const BotLeft = styled.div`
   border-radius: 10px;
   margin-right: 15px;
   padding-bottom: 40px;
+  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
 `
 
 export const BotRight = styled.div`
@@ -180,6 +182,7 @@ export const BotRight = styled.div`
   padding: 0 20px;
   margin-left: 15px;
   padding-bottom: 40px;
+  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
 `
 
 export const Label = styled.label`
