@@ -128,7 +128,7 @@ class SingleComment extends Component {
         <Center>
           <Text>
             <Handle
-              comment={(type === 'COMMENT')}
+              // comment={(type === 'COMMENT')}
               to={`/${author.handle}`}
             >
               {author.handle}

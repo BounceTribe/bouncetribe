@@ -1,15 +1,13 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, Portrait, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotLeft, BotRow, BotRight, Label, InputError, TribeButton, SubRow, Experience, ExperienceRow} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, Portrait, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, TribeButton, SubRow, Experience, ExperienceRow} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
 import Email from 'icons/Email'
 import Link from 'icons/Link'
-import Lock from 'icons/Lock'
 import ExperienceIcon from 'icons/Experience'
-import {Tabs, Tab} from 'material-ui/Tabs'
 import ImageEditor from 'components/ImageEditor'
 import UpdateUser from 'mutations/UpdateUser'
 import {Async} from 'react-select'
@@ -18,7 +16,7 @@ import 'theme/newSelect.css'
 import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
 import {handleValidator} from 'utils/handles'
-import {purple, grey200} from 'theme'
+import {purple} from 'theme'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
@@ -31,6 +29,7 @@ import Dialog from 'material-ui/Dialog'
 import {Button} from 'styled'
 import Checkbox from 'material-ui/Checkbox'
 import Settings from 'icons/Settings'
+import {Panel} from 'components/Panel'
 
 
 class Profile extends Component {
@@ -42,27 +41,13 @@ class Profile extends Component {
     influences: [],
     handleError: '',
     experience: '',
+    tab: 'projects',
     experiences: [
-      {
-        value: 'NOVICE',
-        text: 'Novice (Just Started)'
-      },
-      {
-        value: 'BEGINNER',
-        text: 'Beginner (0-2 Years)'
-      },
-      {
-        value: 'SKILLED',
-        text: 'Skilled (3-9 Years)'
-      },
-      {
-        value: 'ACCOMPLISHED',
-        text: 'Accomplished (10-24 Years)'
-      },
-      {
-        value: 'VETERAN',
-        text: 'Veteran (25+ Years)'
-      },
+      { value: 'NOVICE', text: 'Novice (Just Started)' },
+      { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
+      { value: 'SKILLED', text: 'Skilled (3-9 Years)' },
+      { value: 'ACCOMPLISHED', text: 'Accomplished (10-24 Years)' },
+      { value: 'VETERAN', text: 'Veteran (25+ Years)' },
     ],
     notification: false,
     tabs: 'projects',
@@ -70,7 +55,8 @@ class Profile extends Component {
 
   }
   componentDidMount = () => {
-    this.props.router.replace(`${this.props.router.params.userHandle}/projects`) 
+    //TODO-J this is a redirect: maybe there's better way to handle w/ router
+    this.props.router.replace(`/${this.props.router.params.userHandle}/projects`)
   }
 
   componentWillMount = () => {
@@ -378,79 +364,204 @@ class Profile extends Component {
     return new Promise( (resolve, reject)=> {
       getAllGenres().then(allGenres=>{
         let options = allGenres.map(genre=>{
-          return {
-            value: genre.id,
-            label: genre.name
-          }
+          return { value: genre.id, label: genre.name }
         })
         resolve({options})
       })
     })
   }
-
   loadSkills = () => {
     return new Promise( (resolve, reject)=> {
       getAllSkills().then(allSkills=>{
         let options = allSkills.map(skill=>{
-          return {
-            value: skill.id,
-            label: skill.name
-          }
+          return { value: skill.id, label: skill.name }
         })
         resolve({options})
       })
     })
   }
-
   influenceOptions = (query) => {
-    return new Promise( (resolve, reject) => {
-      if (!query) {
-        resolve({options: []})
-      } else {
-        searchArtists(query).then(options => resolve(options))
-      }
-    })
+    return new Promise( (resolve, reject) =>
+      query ? searchArtists(query).then(options => resolve(options)) : resolve({options: []})
+    )
   }
-
-
-
   unfriend = () => {
     let {id: selfId} = this.props.viewer.user
     let {id: exfriendId} = this.props.viewer.User
     this.props.relay.commitUpdate(
-      new RemoveFromFriends({
-        selfId,
-        exfriendId
-      })
+      new RemoveFromFriends({ selfId, exfriendId })
     )
   }
-
   closeSnackbar = () => {
     this.setState( (prevState, props) => {
-      return {
-        notification: false
-      }
+      return { notification: false }
     })
   }
 
   tabs = (value) => {
-    this.setState({tabs:value})
-  }
+    console.log('value', value);
+    this.setState({tab:value})}
 
-  setTab = (tabAction) => {
-    this.props.router.replace(`${this.props.router.params.userHandle}/${tabAction.props.value}`)
-    console.log('route set to', this.props.router.location);
+  setTab = (tab) => {
+    this.props.router.replace(`${this.props.router.params.userHandle}/${tab}`)
     window.scrollTo(0, document.body.scrollHeight)
     console.log('tab', this.props.router.params.tab);
   }
 
-  render () {
-    console.log('PROFILE PROPS', this.props);
-    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, genres, skills, influences, handleError, experience, experiences, notification, tabs} = this.state
+  topRow = () => {
+    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, handleError} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
     let projects = User.projects.edges.length
     let friends = User.friends.edges.length
+    let ownProfile = (User.id === user.id)
+    return (<Top>
+      <Settings
+          onClick={()=>{this.setState({settings: true})}}
+          style={{
+            alignSelf: 'flex-end',
+            marginRight: '20px',
+            display: (ownProfile) ? '' : 'none',
+            cursor: 'pointer'
+          }}
+          title="Settings" />
+      <Dialog
+        title={"Settings"}
+        actions={[
+          <Button
+            label={"Close"}
+            onClick={()=>{ this.setState({settings: false}) }} /> ]}
+        open={this.state.settings}
+        modal={true}
+      >
+        <h3> Email Notifications </h3>
+        <Checkbox
+          label={"Disable all"}
+          checked={user.doNotEmail}
+          onCheck={(e, isChecked) => {
+            this.props.relay.commitUpdate(
+              new UpdateUser({
+                userId: this.props.viewer.user.id,
+                doNotEmail: isChecked
+              })
+            )
+          }}
+        />
+      </Dialog>
+      <Row>
+        <SubRow>
+          <Portrait
+            src={portraitUrl}
+            onClick={()=>{
+              if (ownProfile) {
+                this.setState({imageEditorOpen: true})
+              }
+            }}
+            ownProfile={ownProfile}
+          />
+          <ImageEditor
+            open={imageEditorOpen}
+            onRequestClose={()=>this.setState({imageEditorOpen:false})}
+            user={user}
+            portraitSuccess={this.portraitSuccess}
+          />
+          <TopCol>
+            <InputRow>
+              <Handle
+                value={handle}
+                id={'handle'}
+                onChange={this.inputChange}
+                disabled={!ownProfile}
+                placeholder={'handle'}
+                name={'handle'}
+                onBlur={this.inputSubmit}
+                onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
+              />
+              <InputError>
+                {handleError}
+              </InputError>
+            </InputRow>
+            <InputRow
+              hide={(!ownProfile && placename.length < 1)}
+            >
+              <PinIcon/>
+              <Location
+                value={placename}
+                onChange={this.inputChange}
+                placeholder={(ownProfile) ? 'add your location' : ''}
+                name={'placename'}
+                id={'placename'}
+                disabled={!ownProfile}
+                onBlur={this.inputSubmit}
+                onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
+              />
+            </InputRow>
+            <ScoreRow>
+              <Bolt/>
+              <Score>{score}</Score>
+              <Music height={20} />
+              <Score>{projects}</Score>
+              <Tribe height={20} />
+              <Score>{friends}</Score>
+            </ScoreRow>
+          </TopCol>
+        </SubRow>
+
+        <TribeButton
+          viewer={this.props.viewer}
+          accept={this.accept}
+          addToTribe={this.addToTribe}
+          unfriend={this.unfriend}
+        />
+      </Row>
+      <Divider/>
+      <Row>
+        <Left>
+          <Summary
+            value={summary}
+            name={'summary'}
+            id={'summary'}
+            onChange={this.inputChange}
+            placeholder={(ownProfile) ? 'add your summary' : ''}
+            disabled={!ownProfile}
+            onBlur={this.inputSubmit}
+            onKeyPress={(e)=>
+              (e.charCode===13 && e.shiftKey) && this.inputSubmit(e) }
+            ownProfile={ownProfile}
+          />
+        </Left>
+        <Right>
+          <InputRow hide={(!ownProfile)} >
+            <Email/>
+            <Input
+              value={email}
+              placeholder={(ownProfile) ? 'add your email' : ''}
+              onChange={this.inputChange}
+              disabled
+            />
+          </InputRow>
+          <InputRow hide={(!ownProfile && website.length < 1)}>
+            <Link/>
+            <Input
+              value={website}
+              name={'website'}
+              id={'website'}
+              placeholder={(ownProfile) ? 'add your website' : ''}
+              onChange={this.inputChange}
+              disabled={!ownProfile}
+              onBlur={this.inputSubmit}
+              onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
+            />
+          </InputRow>
+        </Right>
+      </Row>
+    </Top>)
+  }
+
+  render () {
+    console.log('PROFILE PROPS', this.props);
+    let {genres, skills, influences, experience, experiences, notification} = this.state
+    let {User, user} = this.props.viewer
     let ownProfile = (User.id === user.id)
     return (
       <ProfileView>
@@ -462,200 +573,16 @@ class Profile extends Component {
           onActionTouchTap={this.closeSnackbar}
           bodyStyle={{ backgroundColor: purple }}
         />
-        <Top>
-          <Settings
-              onClick={()=>{
-                this.setState({settings: true})
-              }}
-              style={{
-                alignSelf: 'flex-end',
-                marginRight: '20px',
-                display: (ownProfile) ? '' : 'none',
-                cursor: 'pointer'
-              }}
-              title="Settings"
-            />
-            <Dialog
-              title={"Settings"}
-              actions={[
-                <Button
-                  label={"Close"}
-                  onClick={()=>{
-                    this.setState({settings: false})
-                  }}
-                />
-              ]}
-              open={this.state.settings}
-              modal={true}
-            >
-              <h3>
-                Email Notifications
-              </h3>
-              <Checkbox
-                label={"Disable all"}
-                checked={user.doNotEmail}
-                onCheck={(e, isChecked) => {
-                  this.props.relay.commitUpdate(
-                    new UpdateUser({
-                      userId: this.props.viewer.user.id,
-                      doNotEmail: isChecked
-                    })
-                  )
-                }}
-              />
-            </Dialog>
-            <Row>
-              <SubRow>
-                <Portrait
-                  src={portraitUrl}
-                  onClick={()=>{
-                    if (ownProfile) {
-                      this.setState({imageEditorOpen: true})
-                    }
-                  }}
-                  ownProfile={ownProfile}
-                />
-                <ImageEditor
-                  open={imageEditorOpen}
-                  onRequestClose={()=>this.setState({imageEditorOpen:false})}
-                  user={user}
-                  portraitSuccess={this.portraitSuccess}
-                />
-                <TopCol>
-                  <InputRow>
-                    <Handle
-                      value={handle}
-                      id={'handle'}
-                      onChange={this.inputChange}
-                      disabled={!ownProfile}
-                      placeholder={'handle'}
-                      name={'handle'}
-                      onBlur={this.inputSubmit}
-                      onKeyPress={(e)=>{
-                        if (e.charCode === 13) {
-                          this.inputSubmit(e)
-                        }
-                      }}
-                    />
-                    <InputError>
-                      {handleError}
-                    </InputError>
-                  </InputRow>
-                  <InputRow
-                    hide={(!ownProfile && placename.length < 1)}
-                  >
-                    <PinIcon/>
-                    <Location
-                      value={placename}
-                      onChange={this.inputChange}
-                      placeholder={(ownProfile) ? 'add your location' : ''}
-                      name={'placename'}
-                      id={'placename'}
-                      disabled={!ownProfile}
-                      onBlur={this.inputSubmit}
-                      onKeyPress={(e)=>{
-                        if (e.charCode === 13) {
-                          this.inputSubmit(e)
-                        }
-                      }}
-                    />
-                  </InputRow>
-                  <ScoreRow>
-                    <Bolt/>
-                    <Score>{score}</Score>
-                    <Music height={20} />
-                    <Score>{projects}</Score>
-                    <Tribe height={20} />
-                    <Score>{friends}</Score>
-                  </ScoreRow>
-                </TopCol>
-              </SubRow>
-
-              <TribeButton
-                viewer={this.props.viewer}
-                accept={this.accept}
-                addToTribe={this.addToTribe}
-                unfriend={this.unfriend}
-              />
-            </Row>
-            <Divider/>
-            <Row>
-              <Left>
-                <Summary
-                  value={summary}
-                  name={'summary'}
-                  id={'summary'}
-                  onChange={this.inputChange}
-                  placeholder={(ownProfile) ? 'add your summary' : ''}
-                  disabled={!ownProfile}
-                  onBlur={this.inputSubmit}
-                  onKeyPress={(e)=>{
-                    if (e.charCode === 13 && e.shiftKey) {
-                      this.inputSubmit(e)
-                    }
-                  }}
-                  ownProfile={ownProfile}
-                />
-              </Left>
-              <Right>
-                <InputRow hide={(!ownProfile)} >
-                  <Email/>
-                  <Input
-                    value={email}
-                    placeholder={(ownProfile) ? 'add your email' : ''}
-                    onChange={this.inputChange}
-                    disabled
-                  />
-                </InputRow>
-                <InputRow hide={(!ownProfile && website.length < 1)}>
-                  <Link/>
-                  <Input
-                    value={website}
-                    name={'website'}
-                    id={'website'}
-                    placeholder={(ownProfile) ? 'add your website' : ''}
-                    onChange={this.inputChange}
-                    disabled={!ownProfile}
-                    onBlur={this.inputSubmit}
-                    onKeyPress={(e)=>{
-                      if (e.charCode === 13) {
-                        this.inputSubmit(e)
-                      }
-                    }}
-                  />
-                </InputRow>
-              </Right>
-            </Row>
-        </Top>
+        {this.topRow()}
         <BotRow>
-          <BotLeft>
-            <Tabs
-              style={{ width: '100%', marginTop: '6px', }}
-              inkBarStyle={{ backgroundColor: purple }}
-              value={tabs}
-              onChange={this.tabs}
-            >
-              <Tab
-                label={'Activity'}
-                value={'activity'}
-                style={{ borderBottom: `2px solid ${grey200}` }}
-                disabled
-                onActive={(e)=>{this.setTab(e)}} />
-              <Tab
-                label={'Projects'}
-                value={'projects'}
-                style={{ borderBottom: `2px solid ${grey200}` }}
-                onActive={(e)=>{this.setTab(e)}} />
-              <Tab
-                label={'Bounces'}
-                value={'bounces'}
-                style={{ borderBottom: `2px solid ${grey200}` }}
-                icon={( <Lock /> )} disabled
-                onActive={(e)=>{this.setTab(e)}} />
-            </Tabs>
-            {this.props.children}
-
-          </BotLeft>
+          <Panel
+            tab={this.state.tab}
+            topBar={null}
+            tabChange={(tab)=>this.setTab(tab)}
+            labels={['activity', 'projects', 'bounces']}
+            locks={[true, false, true]}
+            content={this.props.children}
+          />
           <BotRight>
             <Label hide={(!ownProfile && experience.length < 1)} >
               Experience
@@ -718,7 +645,7 @@ class Profile extends Component {
               hide={(!ownProfile && influences.length < 1)}
             >
               Influences
-            </Label>
+            </Label><div></div>
             <Async
               value={influences}
               loadOptions={this.influenceOptions}
@@ -733,7 +660,6 @@ class Profile extends Component {
             />
           </BotRight>
         </BotRow>
-
       </ProfileView>
     )
   }

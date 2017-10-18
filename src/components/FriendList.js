@@ -22,6 +22,9 @@ const Handle = styled.span`
   color: ${props => props.selected ? purple : grey600};
   font-weight: ${props => props.selected ? 500 : 400};
   cursor: pointer;
+  &:hover{
+    color: ${purple}
+  }
 `
 
 const Header = styled.span`
