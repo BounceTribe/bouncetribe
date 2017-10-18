@@ -1,5 +1,6 @@
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
 import Relay from 'react-relay'
+import PropTypes from 'prop-types'
 // import TextField from 'material-ui/TextField'
 import {RoundButton} from 'styled'
 import {Container, ButtonRow, ButtonColumn, ButtonLabel, CommentBox, CommentScroller} from 'styled/Comments'
