@@ -1,12 +1,10 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {View, Button, IconTextContainer, IconText, BtTextMarker} from 'styled'
-import {Tabs, Tab} from 'material-ui/Tabs'
-import {Container, Header, HeaderOptions} from 'styled/list'
+import {View, Button, IconTextContainer, IconText} from 'styled'
+import {Header, HeaderOptions} from 'styled/list'
 import {purple, white} from 'theme'
 import AddFriend from 'icons/AddFriend'
 import TribeIcon from 'icons/Tribe'
-import {TabLabel} from 'styled'
 import {Panel} from 'components/Panel'
 
 class Tribe extends Component {
@@ -30,7 +28,6 @@ class Tribe extends Component {
     let {User, user} = this.props.viewer
     let person = (User) ? (User) : (user)
     let {handle} = person
-    let {router} = this.props
     let tab = this.state.tab
     let top = (
       <Header>
@@ -53,22 +50,17 @@ class Tribe extends Component {
         </HeaderOptions>
       </Header>
     )
-
     return (
-      <View>
-          <Panel
-            style={{
-              width: '90%',
-              margin: '60px 0px',
-              border: 'none'
-            }}
-            tab={tab}
-            topBar={top}
-            tabChange={(tab)=>this.setTab(tab)}
-            labels={['members', 'requests', 'messages']}
-            locks={[false, false, true]}
-            content={this.props.children}
-          />
+      <View hideBorder>
+        <Panel
+          style={{border: 'none'}}
+          tab={tab}
+          topBar={top}
+          tabChange={(tab)=>this.setTab(tab)}
+          labels={['members', 'requests', 'messages']}
+          locks={[false, true, true]}
+          content={this.props.children}
+        />
       </View>
     )
   }
