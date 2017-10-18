@@ -28,6 +28,8 @@ const TabLabel = ({text, locked}) => (
 
 export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
   let buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
+  console.log('panel content', content);
+  console.log('panel tab', tab);
   return (
     <Container>
       {topBar}
@@ -35,23 +37,26 @@ export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
         style={{ margin: '6px 0 25px 1px' }}
         tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
         inkBarStyle={{ backgroundColor: purple }}
+        onChange={tabValue=>tabChange(tabValue)}
         value={tab} >
         <Tab
-          icon={( <TabLabel text={labels[0]} locked={locks[0]} /> )}
-          value={'projects'}
+          icon={( <TabLabel text={labels[0] + ' '} locked={locks[0]} /> )}
+          value={labels[0]}
           buttonStyle={buttonStyle}
-          onActive={(e)=>{tabChange(e.props.value)}} />
+          style={{ cursor: locks[0] ? 'not-allowed' : 'pointer' }}
+          disabled={locks[0]} />
         <Tab
-          icon={( <TabLabel text={labels[1]} locked={locks[1]} /> )}
-          value={'bounces'}
+          icon={( <TabLabel text={labels[1] + ' '} locked={locks[1]} /> )}
+          value={labels[1]}
           buttonStyle={buttonStyle}
-          onActive={(e)=>{tabChange(e.props.value)}}
-          style={{ cursor: 'not-allowed' }} disabled />
+          style={{ cursor: locks[1] ? 'not-allowed' : 'pointer' }}
+          disabled={locks[1]} />
         <Tab
-          icon={( <TabLabel text={labels[2]} locked={locks[2]} /> )}
-          value={'messages'}
+          icon={( <TabLabel text={labels[2] + ' '} locked={locks[2]} /> )}
+          value={labels[2]}
           buttonStyle={buttonStyle}
-          onActive={(e)=>{tabChange(e.props.value)}} />
+          style={{ cursor: locks[2] ? 'not-allowed' : 'pointer' }}
+          disabled={locks[2]} />
       </Tabs>
       {content}
     </Container>

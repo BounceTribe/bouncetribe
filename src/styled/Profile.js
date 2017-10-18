@@ -209,12 +209,9 @@ export const Experience = styled(Input)`
   width: ${(props)=>inputWidth(props,11)}px;
   margin-bottom: 0;
 `
-
 export class TribeButton extends Component {
 
   state = { remove: false }
-
-
 
   button = () => {
     let {user, User} = this.props.viewer

@@ -229,7 +229,7 @@ const createRoutes = () => (
         component={Bounces}
         queries={ViewerQuery}
         render={({ props }) => props ? <Bounces {...props} /> : <Loading />} />
-      <Route path={'/:userHandle/activities'}
+      <Route path={'/:userHandle/activity'}
         component={Activities}
         queries={ViewerQuery}
         render={({ props }) => props ? <Activities {...props} /> : <Loading />} /> */}

@@ -29,7 +29,7 @@ class Dashboard extends Component {
       showMentors: true,
       showTribe: true,
       showBand: true,
-      tab: ''
+      tab: 'projects'
     }
   }
 
