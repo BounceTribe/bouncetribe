@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {MarkerContainer, Marker} from 'styled/Project'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
