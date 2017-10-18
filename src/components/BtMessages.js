@@ -35,40 +35,21 @@ const MsgItem = styled.div`
   flex-direction: column;
 `
 
-const BtMessage = ({isSender, text, time}) => (
-  <MsgItem isSender={isSender}>
-    <MsgBubble isSender={isSender}>
-      {text}
-    </MsgBubble>
-    <MsgTime isSender={isSender}>
-      {time}
-    </MsgTime>
-  </MsgItem>
+const mapMessages = (messages) => (
+  messages.map( (msg) =>
+    <MsgItem key={msg.id} isSender={msg.isSender}>
+      <MsgBubble isSender={msg.isSender}>
+        {msg.text}
+      </MsgBubble>
+      <MsgTime isSender={msg.isSender}>
+        {msg.time}
+      </MsgTime>
+    </MsgItem>
+  )
 )
 
-const messageDisplay = (messages, senderId) => (
-  messages.map(msg => {
-    msg = msg.node
-    let time
-    let created = moment.default(msg.createdAt)
-    if (created.add(12, 'hours') > moment.now()) {
-      time = created.subtract(12, 'hours').format('h:mm a')
-    } else {
-      time = created.subtract(12, 'hours').format('MMMM Do h:mm a')
-    }
-    return (
-      <BtMessage
-        key={msg.id}
-        text={msg.text}
-        time={time}
-        isSender={msg.sender.id===senderId}
-      />
-    )
-  })
-)
-
-export const BtMessages = ({msgList, senderId}) => (
+export const BtMessages = ({msgList}) => (
   <MsgsContainer>
-    {messageDisplay(msgList, senderId)}
+    {mapMessages(msgList)}
   </MsgsContainer>
 )

@@ -9,24 +9,15 @@ import MobileNav from 'components/MobileNav'
 import {btTheme} from 'theme'
 import {url} from 'config'
 import Footer from 'components/Footer'
-import Moment from 'moment'
 import SendPing from 'mutations/SendPing'
-// import SetUserOffline from 'mutations/SetUserOffline'
 
 injectTapEventPlugin()
 
 class Template extends Component {
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = { };
-  //   this.handleClose = this.handleClose.bind(this);
-  // }
-  //
   componentDidMount() {
     let intervalId = setInterval(this.ping, 15000);
     this.setState({intervalId});
-
   }
 
   componentWillUnmount() {
@@ -40,14 +31,7 @@ class Template extends Component {
       })
     )
   }
-  //
-  // handleClose() {
-  //   this.props.relay.commitUpdate(
-  //     new SetUserOffline({
-  //       user: this.props.viewer.user
-  //     })
-  //   )
-  // }
+
 
   get userOnly () {
     let { user } = this.props.viewer
