@@ -36,10 +36,8 @@ class AllSessions extends Component {
   }
 
   table = () => {
-    console.log('table');
     let {project} = this.props.router.params
     if (project) {
-      console.log('projcetc');
       let currentProject = this.currentProject()
       let sessions =  []
       currentProject.sessions.edges.forEach( (edge) => {
@@ -97,7 +95,6 @@ class AllSessions extends Component {
       })
 
       if (sessions.length > 0 ) {
-        console.log('sessions.length', sessions.length);
         return (
           <Table
             style={{
