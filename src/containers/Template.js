@@ -23,19 +23,23 @@ class Template extends Component {
   //   this.handleClose = this.handleClose.bind(this);
   // }
   //
-    componentDidMount() {
+  componentDidMount() {
+    let intervalId = setInterval(this.ping, 15000);
+    this.setState({intervalId});
 
-      this.props.relay.commitUpdate(
-        new SendPing({
-          user: this.props.viewer.user
-        })
-      )
-    }
-  //
-  // componentWillUnmount() {
-  //   document.removeEventListener('onbeforeunload', this.handleClose());
-  //   this.userOffline();
-  // }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId)
+  }
+
+  ping = () => {
+    this.props.relay.commitUpdate(
+      new SendPing({
+        user: this.props.viewer.user
+      })
+    )
+  }
   //
   // handleClose() {
   //   this.props.relay.commitUpdate(
