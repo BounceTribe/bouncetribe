@@ -24,9 +24,22 @@ class AllSessions extends Component {
 
   state = { matches: null, nearby: false, }
 
+  componentDidMount() {
+    //redirect if no project in url
+    let router = this.props.router
+    let edges = this.props.viewer.user.projects.edges
+    if (!router.params.project && edges.length) {
+      router.push(
+        `/sessions/${router.params.userHandle}/${edges[edges.length-1].node.title}`
+      )
+    }
+  }
+
   table = () => {
+    console.log('table');
     let {project} = this.props.router.params
     if (project) {
+      console.log('projcetc');
       let currentProject = this.currentProject()
       let sessions =  []
       currentProject.sessions.edges.forEach( (edge) => {
@@ -34,6 +47,7 @@ class AllSessions extends Component {
         let createdAt = edge.node.createdAt
         edge.node.projects.edges.forEach((edge) => {
           let {node: project} = edge
+          let user = this.props.viewer.user
           if (project.id !== currentProject.id) {
             sessions.push(
               <TableRow key={sessionId} >
@@ -45,7 +59,7 @@ class AllSessions extends Component {
                 <TableRowColumn>
                   <ListHandle
                     onClick={()=>{
-                      this.props.router.push(`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`)
+                      this.props.router.push(`/session/${user.handle}/${sessionId}/theirs`)
                     }}
                   >
                     {project.creator.handle}
@@ -59,7 +73,7 @@ class AllSessions extends Component {
                 </TableRowColumn>
                 <TableRowColumn style={{width: '50px'}} >
                   <ThumbLink
-                    to={`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`}
+                    to={`/session/${user.handle}/${sessionId}/theirs`}
                   >
                     <ProjectArtThumb
                       src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
@@ -68,7 +82,7 @@ class AllSessions extends Component {
                 </TableRowColumn>
                 <TableRowColumn>
                   <ListProject
-                    to={`/session/${this.props.viewer.user.handle}/${sessionId}/theirs`}
+                    to={`/session/${user.handle}/${sessionId}/theirs`}
                   >
                     {project.title}
                   </ListProject>
@@ -83,6 +97,7 @@ class AllSessions extends Component {
       })
 
       if (sessions.length > 0 ) {
+        console.log('sessions.length', sessions.length);
         return (
           <Table
             style={{
@@ -165,9 +180,10 @@ class AllSessions extends Component {
   }
 
   currentProject = () => {
+    let edges = this.props.viewer.user.projects.edges
     let {project} = this.props.router.params
     if (project) {
-      let currentProject = this.props.viewer.user.projects.edges.find( (edge) => {
+      let currentProject = edges.find( (edge) => {
         let {node} = edge
         return node.title === project
       })
@@ -258,6 +274,7 @@ class AllSessions extends Component {
   matches =  () => {
     let {router} = this.props
     let currentProject = this.currentProject()
+    console.log('currentproject', this);
     if (currentProject) {
       if (router.location.pathname.includes('/find')) {
         this.matchCards(currentProject)
