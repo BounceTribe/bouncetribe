@@ -5,8 +5,8 @@ import {grey600, grey200, grey222, purple} from 'theme'
 import Lock from 'icons/Lock'
 
 
-const DashRight = styled.div`
-  display: flex;
+const Container = styled.div`
+  display: inline-flex;
   flex-direction: column;
   border-radius: 10px;
   background-color: white;
@@ -29,7 +29,7 @@ const TabLabel = ({text, locked}) => (
 export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
   let buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
   return (
-    <DashRight>
+    <Container>
       {topBar}
       <Tabs
         style={{ margin: '6px 0 25px 1px' }}
@@ -54,6 +54,6 @@ export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
           onActive={(e)=>{tabChange(e.props.value)}} />
       </Tabs>
       {content}
-    </DashRight>
+    </Container>
   )
 }
