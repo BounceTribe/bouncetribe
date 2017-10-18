@@ -196,8 +196,7 @@ class Dashboard extends Component {
                 icon={( <TabLabel text={'messages'} locked /> )}
                 value={'messages'}
                 buttonStyle={{fontSize: '15px', fontWeight: '500', color: `${grey600}`}}
-                onActive={(e)=>{this.setTab(e.props.value)}}
-                style={{ cursor: 'not-allowed' }} disabled />
+                onActive={(e)=>{this.setTab(e.props.value)}} />
             </Tabs>
             {this.props.children}
           </DashRight>

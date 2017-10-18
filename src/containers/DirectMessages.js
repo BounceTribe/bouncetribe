@@ -4,9 +4,9 @@ import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {grey500} from 'theme'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
-import {BtMessage, MsgsContainer} from 'styled'
-import {Divider} from 'styled/Dashboard'
+import {BtMessage} from 'styled'
 import * as moment from 'moment'
+import {BtMessages} from 'components/BtMessages'
 
 class DirectMessages extends Component {
 
@@ -64,29 +64,6 @@ class DirectMessages extends Component {
     console.log('DM state', this.state);
   }
 
-  messageDisplay = (messages) => {
-    console.log('state in messages', this.state);
-    let msgList = messages.map(msg => {
-      msg = msg.node
-      let time
-      let created = moment.default(msg.createdAt)
-      if (created.add(1, 'days') > moment.now()) {
-        time = created.subtract(1, 'days').format('h:mm a')
-      } else {
-        time = created.subtract(1, 'days').format('MMMM Do h:mm a')
-      }
-      return (
-        <BtMessage
-          key={msg.id}
-          text={msg.text}
-          time={time}
-          isSender={msg.sender.id===this.props.viewer.user.id}
-        />
-      )
-    })
-    return msgList
-  }
-
   render() {
     console.log('DM props', this.props);
     return (
@@ -95,9 +72,7 @@ class DirectMessages extends Component {
         flexDirection: 'column',
         justifyContent: 'flex-end'
       }}>
-        <MsgsContainer>
-          {this.messageDisplay(this.state.messages)}
-        </MsgsContainer>
+        <BtMessages msgList={this.state.messages} senderId={this.props.viewer.user.id}/>
         <TextField
           multiLine
           name="message"
@@ -116,7 +91,7 @@ class DirectMessages extends Component {
                   senderId: this.props.viewer.user.id,
                   recipientId: this.props.viewer.User.id
                 }), {
-                  onSuccess: (success) => { this.setState({message: savedText}) }
+                  onSuccess: (success) => { console.log('sent!'); }
                   //display error message in snackbar?
                 }
               )

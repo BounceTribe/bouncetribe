@@ -120,16 +120,8 @@ class AuthService {
   }
 
   authFlow = (result) => {
-    let {
-      exp,
-      email,
-      sub
-    } = result.idTokenPayload
-    let {
-      idToken,
-      accessToken,
-      state,
-    } = result
+    let { exp, email, sub } = result.idTokenPayload
+    let { idToken, accessToken, state, } = result
 
     if (!email) {
 
