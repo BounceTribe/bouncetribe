@@ -43,26 +43,11 @@ class Profile extends Component {
     experience: '',
     tab: 'projects',
     experiences: [
-      {
-        value: 'NOVICE',
-        text: 'Novice (Just Started)'
-      },
-      {
-        value: 'BEGINNER',
-        text: 'Beginner (0-2 Years)'
-      },
-      {
-        value: 'SKILLED',
-        text: 'Skilled (3-9 Years)'
-      },
-      {
-        value: 'ACCOMPLISHED',
-        text: 'Accomplished (10-24 Years)'
-      },
-      {
-        value: 'VETERAN',
-        text: 'Veteran (25+ Years)'
-      },
+      { value: 'NOVICE', text: 'Novice (Just Started)' },
+      { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
+      { value: 'SKILLED', text: 'Skilled (3-9 Years)' },
+      { value: 'ACCOMPLISHED', text: 'Accomplished (10-24 Years)' },
+      { value: 'VETERAN', text: 'Veteran (25+ Years)' },
     ],
     notification: false,
     tabs: 'projects',
@@ -70,6 +55,7 @@ class Profile extends Component {
 
   }
   componentDidMount = () => {
+    //TODO-J this is a redirect: maybe there's better way to handle w/ router
     this.props.router.replace(`/${this.props.router.params.userHandle}/projects`)
   }
 

@@ -81,9 +81,7 @@ class Dashboard extends Component {
 
   setTab = (tab) => {
     this.props.router.push('/dash/' + tab + '/' + this.state.selectedUser.handle)
-    console.log('route set to', tab);
     window.scrollTo(0, document.body.scrollHeight)
-    console.log('tab', this.props.router.params.tab)
   }
 
   render () {
@@ -164,11 +162,10 @@ class Dashboard extends Component {
           <Panel
             tab={this.state.tab}
             topBar={<DashProfile selectedUser={selectedUser} />}
-            tabChange={(tab)=>this.setTab(tab)}
+            tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
             locks={[false, true, false]}
-            content={this.props.children}
-            />
+            content={this.props.children} />
         </BotRow>
       </ProfileView>
     )
