@@ -10,8 +10,6 @@ import Logo from 'icons/Logo'
 import {BtAvatar} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
-// import SetUserOnline from 'mutations/SetUserOnline'
-// import SetUserOffline from 'mutations/SetUserOffline'
 import {IconTextContainer, IconText} from 'styled'
 import {Panel} from 'components/Panel'
 
