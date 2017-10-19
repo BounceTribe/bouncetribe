@@ -10,8 +10,6 @@ import Logo from 'icons/Logo'
 import {BtAvatar, IconTextContainer, IconText} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
-// import SetUserOnline from 'mutations/SetUserOnline'
-// import SetUserOffline from 'mutations/SetUserOffline'
 import {Panel} from 'components/Panel'
 
 
@@ -136,7 +134,7 @@ class Dashboard extends Component {
         <TopPanel>
           <TopColumn>
             <ImgColumn>
-              <BtAvatar user={user} size={80} />
+              <BtAvatar user={user} size={80} hideStatus />
             </ImgColumn>
             {/* <ProfileImg src={(user.portrait || {}).url} /> */}
             <UserName>{user.handle}</UserName>
@@ -181,6 +179,7 @@ class Dashboard extends Component {
             id
             handle
             email
+            lastPing
             portrait { url }
             friends (first: 999) {
               edges {
@@ -188,7 +187,7 @@ class Dashboard extends Component {
                   id
                   handle
                   score
-                  isOnline
+                  lastPing
                   portrait { url }
                 }
               }

@@ -1,6 +1,6 @@
 import Relay from 'react-relay'
-
-export default class SetUserOffline extends Relay.Mutation {
+import Moment from 'moment'
+export default class SendPing extends Relay.Mutation {
 
   getMutation () {
     return Relay.QL`mutation{updateUser}`
@@ -23,10 +23,10 @@ export default class SetUserOffline extends Relay.Mutation {
   }
 
   getVariables () {
-    let isOnline = false;
+    let now = Moment();
     return {
       id: this.props.user.id,
-      isOnline
+      lastPing: now.toISOString(),
     }
   }
 

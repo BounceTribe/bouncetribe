@@ -9,40 +9,29 @@ import MobileNav from 'components/MobileNav'
 import {btTheme} from 'theme'
 import {url} from 'config'
 import Footer from 'components/Footer'
-// import SetUserOnline from 'mutations/SetUserOnline'
-// import SetUserOffline from 'mutations/SetUserOffline'
+import SendPing from 'mutations/SendPing'
 
 injectTapEventPlugin()
 
 class Template extends Component {
 
-  // constructor(props) {
-  //   super(props);
-  //   this.state = { };
-  //   this.handleClose = this.handleClose.bind(this);
-  // }
-  //
-  // componentDidMount() {
-  //   document.addEventListener('onbeforeunload', this.handleClose());
-  //   this.props.relay.commitUpdate(
-  //     new SetUserOnline({
-  //       user: this.props.viewer.user
-  //     })
-  //   )
-  // }
-  //
-  // componentWillUnmount() {
-  //   document.removeEventListener('onbeforeunload', this.handleClose());
-  //   this.userOffline();
-  // }
-  //
-  // handleClose() {
-  //   this.props.relay.commitUpdate(
-  //     new SetUserOffline({
-  //       user: this.props.viewer.user
-  //     })
-  //   )
-  // }
+  componentDidMount() {
+    let intervalId = setInterval(this.ping, 15000);
+    this.setState({intervalId});
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId)
+  }
+
+  ping = () => {
+    this.props.relay.commitUpdate(
+      new SendPing({
+        user: this.props.viewer.user
+      })
+    )
+  }
+
 
   get userOnly () {
     let { user } = this.props.viewer

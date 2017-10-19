@@ -1,6 +1,6 @@
  import React from 'react'
 import styled from 'styled-components'
-import {white, grey230, grey215, size, grey400, grey500, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
+import {white, grey230, grey215, size, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
@@ -10,47 +10,7 @@ import IconButton from 'material-ui/IconButton'
 import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
-
-export const MsgsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: 'flex-end';
-  padding: 20px 20px 0 20px;
-`
-const MsgBubble = styled.div`
-  display: flex;
-  border-radius: 5px;
-  border: 1px solid ${grey500};
-  background-color: ${props => props.isSender ? white : purple};
-  color: ${props => props.isSender ? grey500 : white};
-  padding: 9px 14px;
-  flex-wrap: wrap;
-  word-break: break-word;
-`
-const MsgTime = styled.div`
-  display: flex;
-  align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
-  padding: 6px 15px 13px 11px;
-  color: ${grey400};
-  font-size: 14px;
-  text-align: ${props => props.isSender ? 'left' : 'right'};
-`
-const MsgItem = styled.div`
-  display: flex;
-  align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
-  max-width: 49%
-  flex-direction: column;
-`
-export const BtMessage = ({isSender, text, time}) => (
-  <MsgItem isSender={isSender}>
-    <MsgBubble isSender={isSender}>
-      {text}
-    </MsgBubble>
-    <MsgTime isSender={isSender}>
-      {time}
-    </MsgTime>
-  </MsgItem>
-)
+import Moment from 'moment'
 
 const PurpleBox = styled.div`
   display: inline-flex;
@@ -80,10 +40,16 @@ export const BtTextMarker = (props) => {
   )
 }
 
+
 export const BtAvatar = ({user, size, hideStatus}) => {
   size = size || 50
   user = user || {}
   const iconSize = size * 18/60
+  let online = false
+  if (user.lastPing) {
+    let now = Moment()
+    online = now.diff(user.astPing, 'seconds') < 31
+  }
   return  (
     <div style={{height: `${size}px`}}>
       <Avatar
@@ -92,10 +58,10 @@ export const BtAvatar = ({user, size, hideStatus}) => {
         to={`/${user.handle}`}
         size={size}
       />
-      <Online size={iconSize} online={user.isOnline}
+      <Online size={iconSize} online={online}
         style={{
           marginLeft: `-${iconSize}px`,
-          display: `${(!hideStatus && user.isOnline) ? 'inline' : 'none'}`
+          display: `${hideStatus ? 'none' : 'inline'}`
         }}
       />
     </div>

@@ -28,8 +28,6 @@ const TabLabel = ({text, locked}) => (
 
 export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
   let buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
-  console.log('panel content', content);
-  console.log('panel tab', tab);
   return (
     <Container>
       {topBar}

@@ -2,10 +2,8 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
-import {grey500} from 'theme'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
-import {BtMessage, MsgsContainer} from 'styled'
-import {Divider} from 'styled/Dashboard'
+import {BtMessages} from 'components/BtMessages'
 import * as moment from 'moment'
 
 class DirectMessages extends Component {
@@ -61,12 +59,10 @@ class DirectMessages extends Component {
     let sent = this.props.viewer.User.receivedMessages.edges
     let messages = received.concat(sent).sort((a, b) => a.node.id - b.node.id)
     this.setState({ messages })
-    console.log('DM state', this.state);
   }
 
-  messageDisplay = (messages) => {
-    console.log('state in messages', this.state);
-    let msgList = messages.map(msg => {
+  formatMessages = () => {
+    let msgList = this.state.messages.map(msg => {
       msg = msg.node
       let time
       let created = moment.default(msg.createdAt)
@@ -75,29 +71,22 @@ class DirectMessages extends Component {
       } else {
         time = created.subtract(1, 'days').format('MMMM Do h:mm a')
       }
-      return (
-        <BtMessage
-          key={msg.id}
-          text={msg.text}
-          time={time}
-          isSender={msg.sender.id===this.props.viewer.user.id}
-        />
-      )
+      msg.time = time;
+      msg.isSender = (msg.sender.id===this.props.viewer.user.id)
+      return msg
     })
     return msgList
   }
 
   render() {
-    console.log('DM props', this.props);
+    console.log(this.state.messages, this.props.viewer.user.id)
     return (
       <div style={{
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'flex-end'
       }}>
-        <MsgsContainer>
-          {this.messageDisplay(this.state.messages)}
-        </MsgsContainer>
+        <BtMessages msgList={this.formatMessages()} />
         <TextField
           multiLine
           name="message"
@@ -116,7 +105,11 @@ class DirectMessages extends Component {
                   senderId: this.props.viewer.user.id,
                   recipientId: this.props.viewer.User.id
                 }), {
-                  onSuccess: (success) => { this.setState({message: savedText}) }
+                  onSuccess: (success) => { this.setState({message: ''}) },
+                  onFailure: (failure) => { this.setState({message: savedText})
+                    console.log('message send fail', failure);
+                    this.setState({message: savedText})
+                  }
                   //display error message in snackbar?
                 }
               )
