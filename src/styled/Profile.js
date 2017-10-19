@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import styled from 'styled-components'
 import {View, BtFlatButton} from 'styled'
-// import Edit from 'icons/Edit'
 import {grey200, grey400, grey800, purple, white} from 'theme'
 import Tribe from 'icons/Tribe'
 import AddFriend from 'icons/AddFriend'

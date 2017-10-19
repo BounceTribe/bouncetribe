@@ -413,7 +413,8 @@ class Profile extends Component {
     let projects = User.projects.edges.length
     let friends = User.friends.edges.length
     let ownProfile = (User.id === user.id)
-    return (<Top>
+    return (
+    <Top>
       <Settings
           onClick={()=>{this.setState({settings: true})}}
           style={{

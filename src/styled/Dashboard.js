@@ -74,6 +74,7 @@ export const DashLeft = styled.div`
   border-radius: 10px;
   padding: 8px 15px;
   margin-right: 20px;
+  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
 `
 
 
@@ -114,6 +115,7 @@ export const TopPanel = styled.div`
   width: 100%;
   height: 140px;
   background-color: white;
+  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
   border-radius: 10px;
   border: solid ${grey222} 1px;
   margin-top: 20px;

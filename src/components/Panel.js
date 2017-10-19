@@ -14,9 +14,9 @@ const Container = styled.div`
   border: solid ${grey222} 1px;
   border-radius: 10px;
   padding: 0 20px;
-  ${'' /* margin-left: 15px; */}
   padding: 0;
   width: 100%;
+  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
 `
 
 const TabLabel = ({text, locked}) => (
