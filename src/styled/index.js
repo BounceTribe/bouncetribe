@@ -10,6 +10,7 @@ import IconButton from 'material-ui/IconButton'
 import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
+import Moment from 'moment'
 
 const PurpleBox = styled.div`
   display: inline-flex;
@@ -39,10 +40,16 @@ export const BtTextMarker = (props) => {
   )
 }
 
+
 export const BtAvatar = ({user, size, hideStatus}) => {
   size = size || 50
   user = user || {}
   const iconSize = size * 18/60
+  let online = false
+  if (user.lastPing) {
+    let now = Moment()
+    online = now.diff(user.astPing, 'seconds') < 31
+  }
   return  (
     <div style={{height: `${size}px`}}>
       <Avatar
@@ -51,10 +58,10 @@ export const BtAvatar = ({user, size, hideStatus}) => {
         to={`/${user.handle}`}
         size={size}
       />
-      <Online size={iconSize} online={user.isOnline}
+      <Online size={iconSize} online={online}
         style={{
           marginLeft: `-${iconSize}px`,
-          display: `${(!hideStatus && user.isOnline) ? 'inline' : 'none'}`
+          display: `${hideStatus ? 'none' : 'inline'}`
         }}
       />
     </div>

@@ -3,7 +3,6 @@ import Relay from 'react-relay'
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
-import {BtMessage, MsgsContainer} from 'styled'
 import {BtMessages} from 'components/BtMessages'
 import * as moment from 'moment'
 

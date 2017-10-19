@@ -1,7 +1,6 @@
 import React from 'react'
-import {grey222} from 'theme'
 const Online = ({size, style, online}) => {
-  const fill = online ? "#21D38B" : `${grey222}`
+  const fill = online ? "#21D38B" : "#999999"
   return (
     <svg
       style={style}
