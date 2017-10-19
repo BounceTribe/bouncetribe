@@ -44,12 +44,15 @@ export const BtTextMarker = (props) => {
 export const BtAvatar = ({user, size, hideStatus}) => {
   size = size || 50
   user = user || {}
+  //set the ratio of size between the avatar and the online icon
   const iconSize = size * 18/60
+
   let online = false
   if (user.lastPing) {
     let now = Moment()
-    online = now.diff(user.lastPing, 'seconds') < 601
+    online = now.diff(user.lastPing, 'seconds') < 315
   }
+
   return  (
     <div style={{height: `${size}px`}}>
       <Avatar
