@@ -48,7 +48,7 @@ export const BtAvatar = ({user, size, hideStatus}) => {
   let online = false
   if (user.lastPing) {
     let now = Moment()
-    online = now.diff(user.astPing, 'seconds') < 31
+    online = now.diff(user.lastPing, 'seconds') < 31
   }
   return  (
     <div style={{height: `${size}px`}}>
