@@ -29,21 +29,17 @@ const DropdownUl = styled.ul`
     border: solid 10px transparent;
     border-bottom-color: white;
     z-index: 1;
-}
+  }
 `
 
 class Dropdown extends Component {
   render() {
     return (
-        <DropdownContainer
-          hide={this.props.hide}
-        >
-          <DropdownUl
-            onMouseLeave={this.props.close}
-          >
-            {this.props.children}
-          </DropdownUl>
-        </DropdownContainer>
+      <DropdownContainer hide={this.props.hide} >
+        <DropdownUl onMouseLeave={this.props.close} >
+          {this.props.children}
+        </DropdownUl>
+      </DropdownContainer>
     )
   }
 }
@@ -70,16 +66,10 @@ const DropLink = styled(BtLink)`
 `
 
 class DropdownMenuItem extends Component {
-
   render() {
     return (
-      <DropdownItem
-        onClick={this.props.onClick}
-      >
-        <DropLink
-          to={this.props.to}
-          href={this.props.href}
-        >
+      <DropdownItem onClick={this.props.onClick} >
+        <DropLink to={this.props.to} href={this.props.href} >
         {this.props.text}
       </DropLink>
       </DropdownItem>

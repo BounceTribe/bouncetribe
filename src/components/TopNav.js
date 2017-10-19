@@ -132,7 +132,7 @@ class TopNav extends Component {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-            <DropdownMenuItem text="Home" to={`/`} />
+            <DropdownMenuItem text="Dashboard" to={`/`} />
             <DropdownMenuItem text="View Profile" to={`/${handle}`} />
             <DropdownMenuItem text="My Tribe" to={`/tribe/${handle}`} />
             <DropHr/>
