@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, Portrait, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, TribeButton, SubRow, Experience, ExperienceRow} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, TribeButton, SubRow, Experience, ExperienceRow} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
@@ -26,7 +26,7 @@ import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
 import Dialog from 'material-ui/Dialog'
-import {Button} from 'styled'
+import {Button, BtAvatar} from 'styled'
 import Checkbox from 'material-ui/Checkbox'
 import Settings from 'icons/Settings'
 import {Panel} from 'components/Panel'
@@ -197,10 +197,7 @@ class Profile extends Component {
   }
 
   inputChange = (e) => {
-    let {
-      name,
-      value
-    } = e.target
+    let { name, value } = e.target
     if (name === 'handle') {
       let {handle: newHandle, error} = handleValidator(value)
       this.setState((prevState, props)=>{
@@ -226,6 +223,7 @@ class Profile extends Component {
 
   inputSubmit = (e) => {
     let {name, value} = e.target
+    console.log('submit name val', e);
     if (this.state[`${name}Error`]) {
       return
     } else {
@@ -236,6 +234,7 @@ class Profile extends Component {
           [name]: value,
         }), {
           onSuccess: (success) => {
+            console.log('success');
             name = name.toUpperCase()
             if (name === 'PLACENAME') {
               name = 'LOCATION'
@@ -399,7 +398,6 @@ class Profile extends Component {
   }
 
   tabs = (value) => {
-    console.log('value', value);
     this.setState({tab:value})}
 
   setTab = (tab) => {
@@ -409,7 +407,7 @@ class Profile extends Component {
   }
 
   topRow = () => {
-    let {handle, imageEditorOpen, portraitUrl, placename, summary, website, email, handleError} = this.state
+    let {handle, imageEditorOpen, placename, summary, website, email, handleError} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
     let projects = User.projects.edges.length
@@ -450,14 +448,14 @@ class Profile extends Component {
       </Dialog>
       <Row>
         <SubRow>
-          <Portrait
-            src={portraitUrl}
+          <BtAvatar user={this.props.viewer.User}
+            size={150}
+            hideStatus={ownProfile}
             onClick={()=>{
               if (ownProfile) {
                 this.setState({imageEditorOpen: true})
               }
             }}
-            ownProfile={ownProfile}
           />
           <ImageEditor
             open={imageEditorOpen}
@@ -559,7 +557,6 @@ class Profile extends Component {
   }
 
   render () {
-    console.log('PROFILE PROPS', this.props);
     let {genres, skills, influences, experience, experiences, notification} = this.state
     let {User, user} = this.props.viewer
     let ownProfile = (User.id === user.id)
