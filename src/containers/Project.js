@@ -58,8 +58,7 @@ class Project extends Component {
         <MenuItem
           primaryText={genre.name}
           value={genre.id}
-          key={genre.id}
-        />
+          key={genre.id} />
       ))
       this.setState({
         genres
@@ -136,17 +135,11 @@ class Project extends Component {
     }
   }
 
-  currentTime = (time) => {
-    this.setState({
-      time
-    })
-  }
+  currentTime = (time) =>  this.setState({ time })
 
-  getDuration = (duration) => {
-    this.setState({
-      duration
-    })
-  }
+
+  getDuration = (duration) => this.setState({ duration })
+
 
   dropMarker = (type) => {
     this.setState((prevState)=> {
@@ -214,8 +207,7 @@ class Project extends Component {
           activate={this.activate}
           deactivate={this.deactivate}
           userId={this.props.viewer.user.id}
-          tabs={this.state.tabs}
-        />
+          tabs={this.state.tabs} />
       )
     })
   }
@@ -263,7 +255,6 @@ class Project extends Component {
   filteredComments = () => {
     let comments = (this.state.new) ? this.props.viewer.allProjects.edges[0].node.comments.edges.concat({node:this.state.new}) : this.props.viewer.allProjects.edges[0].node.comments.edges
 
-
     if (this.state.tabs === 'listen') {
       comments = comments.filter( (comment) => {
         return comment.node.author.id === this.props.viewer.user.id
@@ -293,28 +284,18 @@ class Project extends Component {
     let {ownProject} = this.state
     return (
       <View>
-        <ProfContainer
-          hide={(ownProject)}
-        >
-
+        <ProfContainer hide={(ownProject)} >
           <ProfTop>
             <ProfLeft>
               <Portrait
                 src={this.props.viewer.User.portrait.url}
-                to={`/${this.props.viewer.User.handle}`}
-              />
+                to={`/${this.props.viewer.User.handle}`} />
               <ProfCol>
-                <ProfHandle
-                  to={`/${this.props.viewer.User.handle}`}
-                >
+                <ProfHandle to={`/${this.props.viewer.User.handle}`} >
                   {this.props.viewer.User.handle}
                 </ProfHandle>
                 <Score>
-                  <Bolt
-                    style={{
-                      marginRight: '5px'
-                    }}
-                  />
+                  <Bolt style={{ marginRight: '5px' }} />
                   {this.props.viewer.User.score}
                 </Score>
               </ProfCol>
@@ -328,8 +309,7 @@ class Project extends Component {
                   marginLeft: '15px',
                   marginRight: '5px',
                   display: (this.props.viewer.User.placename) ? '': 'none'
-                }}
-              />
+                }} />
               {this.props.viewer.User.placename}
               <Experience
                 height={18}
@@ -338,8 +318,7 @@ class Project extends Component {
                   marginLeft: '15px',
                   marginRight: '5px',
                   display: (this.props.viewer.User.experience) ? '': 'none'
-                }}
-              />
+                }} />
               {formatEnum(this.props.viewer.User.experience)}
               <Tribe
                 height={15}
@@ -347,8 +326,7 @@ class Project extends Component {
                 style={{
                   marginLeft: '15px',
                   marginRight: '5px'
-                }}
-              />
+                }} />
               {this.props.viewer.User.friends.edges.length}
             </MoreInfo>
           </ProfTop>
@@ -356,9 +334,7 @@ class Project extends Component {
           <CommonInfluences>
             {this.props.viewer.User.artistInfluences.edges.map(edge=>{
               return (
-                <InfluenceChip
-                  key={edge.node.id}
-                >
+                <InfluenceChip key={edge.node.id} >
                   {edge.node.name}
                 </InfluenceChip>
               )}
@@ -370,14 +346,12 @@ class Project extends Component {
             src={ (project.artwork) ? project.artwork.url : `${url}/artwork.png`}
             alt={'Project Art'}
             onClick={this.openArtworkEditor}
-            ownProject={ownProject}
-          />
+            ownProject={ownProject} />
           <ImageEditor
             open={this.state.artworkEditorOpen}
             onRequestClose={()=>this.setState({artworkEditorOpen:false})}
             user={this.props.viewer.user}
-            portraitSuccess={this.artworkSuccess}
-          />
+            portraitSuccess={this.artworkSuccess} />
           <Info>
             <TitleGenre>
               <Title>
@@ -386,11 +360,7 @@ class Project extends Component {
               <Genre>
                 <Music
                   fill={white}
-                  style={{
-                    marginRight: '5px',
-                    height: '18px'
-                  }}
-                />
+                  style={{ marginRight: '5px', height: '18px' }} />
                 {project.genres.edges[0].node.name}
               </Genre>
               <Edit
@@ -403,16 +373,12 @@ class Project extends Component {
                 onClick={()=>{
                   console.log("hello" )
                   this.setState({edit:true})
-                }}
-              />
+                }} />
             </TitleGenre>
-            <Summary
-
-            >
+            <Summary>
               {project.description}
             </Summary>
           </Info>
-
           <Dialog
             modal={false}
             open={this.state.delete}
@@ -424,8 +390,7 @@ class Project extends Component {
                 label={"Cancel"}
                 onClick={()=>{
                   this.setState({delete: false})
-                }}
-              />,
+                }} />,
               <FlatButton
                 label={"Delete"}
                 labelStyle={{
@@ -444,14 +409,10 @@ class Project extends Component {
                     )
 
                   }
-                }
-              />
-            ]}
-          >
+                } />
+            ]} >
             Are you sure you want to permanently delete this project?
           </Dialog>
-
-
           <Dialog
             open={this.state.edit}
             onRequestClose={()=>{this.setState({edit:false})}}
@@ -468,8 +429,7 @@ class Project extends Component {
                 }}
                 onClick={()=>{
                   this.setState({edit: false, delete: true})
-                }}
-              />,
+                }} />,
               <BtFlatButton
                 label={'Save'}
                 onClick={()=>{
@@ -486,19 +446,15 @@ class Project extends Component {
                     })
                   )
                   this.setState({edit: false})
-                }}
-              />
-            ]}
-          >
+                }} />
+            ]}>
             <TextField
               floatingLabelText={'Title'}
               name={'title'}
               type={'text'}
               value={this.state.title}
               disabled
-              fullWidth={true}
-
-            />
+              fullWidth={true} />
             <SelectField
               floatingLabelText={'Genre'}
               value={this.state.genre}
@@ -508,8 +464,7 @@ class Project extends Component {
               }}
               selectedMenuItemStyle={{
                 color: purple
-              }}
-            >
+              }} >
               {this.state.genres}
             </SelectField>
             <TextField
@@ -519,9 +474,7 @@ class Project extends Component {
               rows={3}
               value={this.state.description}
               onChange={(e)=>{this.setState({description:e.target.value})}}
-              fullWidth={true}
-
-            />
+              fullWidth={true}/>
             <SharingModal>
               <Choice>
                 <RoundButton
@@ -532,10 +485,8 @@ class Project extends Component {
                       style={{}}
                       height={23}
                       width={22}
-                      fill={white}
-                    />
-                  }
-                />
+                      fill={white} />
+                  } />
                 <ChoiceText>
                   Private
                 </ChoiceText>
@@ -544,12 +495,7 @@ class Project extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'TRIBE'})}
                   backgroundColor={(this.state.privacy === 'TRIBE') ? purple : grey300}
-                  icon={
-                    <Tribe
-                      fill={white}
-                    />
-                  }
-                />
+                  icon={ <Tribe fill={white} /> } />
                 <ChoiceText>
                   Tribe Only
                 </ChoiceText>
@@ -559,17 +505,12 @@ class Project extends Component {
                   onClick={()=>this.setState({privacy: 'PUBLIC'})}
                   backgroundColor={(this.state.privacy === 'PUBLIC') ? purple : grey300}
                   icon={
-                    <Logo
-                      fill={white}
-                    />
-                  }
-                />
+                    <Logo fill={white} /> } />
                 <ChoiceText>
                   Find Sessions
                 </ChoiceText>
               </Choice>
             </SharingModal>
-
           </Dialog>
         </Top>
         <Tabs
@@ -579,45 +520,30 @@ class Project extends Component {
             display: (ownProject) ? 'none' : '',
             marginBottom: '25px',
           }}
-          inkBarStyle={{
-            backgroundColor: purple
-          }}
-          value={this.state.tabs}
-        >
+          inkBarStyle={{ backgroundColor: purple }}
+          value={this.state.tabs} >
           <Tab
             label={'Listen & Give'}
             value={'listen'}
-            onActive={()=>{
-              this.setState({tabs: 'listen'})
-            }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
-            }}
-          />
+            onActive={()=>{ this.setState({tabs: 'listen'}) }}
+            style={{ borderBottom: `2px solid ${grey200}` }} />
           <Tab
             label={'View Feedback'}
             value={'view'}
-            onActive={()=>{
-              this.setState({tabs: 'view'})
-            }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
-            }}
-          />
+            onActive={()=>{ this.setState({tabs: 'view'}) }}
+            style={{ borderBottom: `2px solid ${grey200}` }} />
         </Tabs>
         <TrackContainer>
           <AudioPlayer
             track={project.tracks.edges[0].node}
             currentTime={this.currentTime}
             project={project}
-            getDuration={this.getDuration}
-          />
+            getDuration={this.getDuration} />
         </TrackContainer>
 
         <Bot>
           <LeftList
-            hide={( (this.state.tabs === 'listen') && (!ownProject) ) || (this.state.disableComments)}
-          >
+            hide={( (this.state.tabs === 'listen') && (!ownProject) ) || (this.state.disableComments)} >
             <ProjectTribeList
               self={this.props.viewer.user}
               project={project}
@@ -625,17 +551,14 @@ class Project extends Component {
               recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
               router={this.props.router}
               handleSelection={this.handleSelection}
-              selection={this.state.selection}
-            />
+              selection={this.state.selection} />
           </LeftList>
           <CommentContainer>
             <CommentMarkers
               comments={this.filteredComments()}
-              duration={this.state.duration}
-            />
+              duration={this.state.duration} />
             <ButtonRow
-              hide={(ownProject || this.state.tabs === 'view' || this.state.disableComments)}
-            >
+              hide={(ownProject || this.state.tabs === 'view' || this.state.disableComments)} >
               <ButtonColumn>
                 <RoundButton
                   big
@@ -643,11 +566,9 @@ class Project extends Component {
                   icon={
                     <Comment
                       height={50}
-                      width={50}
-                    />
+                      width={50} />
                   }
-                  onTouchTap={()=>{this.dropMarker('COMMENT')}}
-                />
+                  onTouchTap={()=>{this.dropMarker('COMMENT')}} />
                 <ButtonLabel>
                   Idea
                 </ButtonLabel>
@@ -658,11 +579,9 @@ class Project extends Component {
                   icon={
                     <Heart
                       height={50}
-                      width={50}
-                    />
+                      width={50} />
                   }
-                  onTouchTap={()=>{this.dropMarker('LIKE')}}
-                />
+                  onTouchTap={()=>{this.dropMarker('LIKE')}} />
                 <ButtonLabel>
                   Like
                 </ButtonLabel>
@@ -680,8 +599,7 @@ class Project extends Component {
                   deactivate={this.deactivate}
                   userId={this.props.viewer.user.id}
                   tabs={this.state.tabs}
-                  commentCreated={()=>{this.setState({new: false})}}
-                /> :
+                  commentCreated={()=>{this.setState({new: false})}} /> :
                 null
               }
 

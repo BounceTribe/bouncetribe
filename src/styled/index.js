@@ -91,7 +91,7 @@ export const Main = styled.main`
 
 export const View = styled.section`
   background-color: ${white};
-  display: 'flex';
+  display: flex;
   flex-direction: column;
   align-items: center;
   width: 80%;
@@ -100,6 +100,7 @@ export const View = styled.section`
   border-radius: 10px;
   min-height: 80vh;
   margin-bottom: 50px;
+  justify-content: center;
   ${size.m`
     margin-top: 0;
     width: 100%;
