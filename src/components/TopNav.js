@@ -82,8 +82,10 @@ class TopNav extends Component {
                 </IconButton>
               )}
               open={this.state.notificationMenu}
-              onRequestChange={()=>{
-                if (!this.state.notificationMenu) {
+              onRequestChange={(open)=>{
+                this.setState((prevState) =>
+                  ({notificationMenu: !prevState.notificationMenu}))
+                if (!open) {
                   user.notifications.edges.forEach( (edge) => {
                     if (!edge.node.checked) {
                       Relay.Store.commitUpdate(
@@ -95,10 +97,8 @@ class TopNav extends Component {
                     }
                   })
                 }
-                this.setState((prevState) =>
-                    ({notificationMenu: !prevState.notificationMenu})
-                )
               }}
+              touchTapCloseDelay={0}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
@@ -113,8 +113,6 @@ class TopNav extends Component {
                 </NotifyContainer>
               }
             </IconMenu>
-
-
           </NavLink>
           <IconMenu
             iconButtonElement={(
