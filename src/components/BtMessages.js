@@ -4,6 +4,7 @@ import {white, grey400, grey500, purple} from 'theme'
 
 export const MsgsContainer = styled.div`
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   justify-content: 'flex-end';
   padding: 20px 20px 0 20px;

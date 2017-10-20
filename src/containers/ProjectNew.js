@@ -203,12 +203,8 @@ class ProjectNew extends Component {
               floatingLabelText={'Genre'}
               value={this.state.genre}
               fullWidth={true}
-              onChange={(e, index, value)=>{
-                this.setState({genre:value})
-              }}
-              selectedMenuItemStyle={{
-                color: purple
-              }}
+              onChange={(e, index, value)=>{ this.setState({genre:value}) }}
+              selectedMenuItemStyle={{ color: purple }}
             >
               {this.state.genres}
             </SelectField>
@@ -220,21 +216,14 @@ class ProjectNew extends Component {
               value={this.state.description}
               onChange={(e)=>{this.setState({description:e.target.value})}}
               fullWidth={true}
-
             />
             <Button
-              style={{
-                marginTop: '20px'
-              }}
+              style={{ marginTop: '20px' }}
               primary={true}
               disabled={(!titleUnique || !title || !tracksIds || !genre)}
               label={'Create Project'}
               onClick={this.createProject}
-              icon={
-                <Music
-                  fill={white}
-                />
-              }
+              icon={ <Music fill={white} /> }
             />
           </Left>
           <Right>
@@ -256,12 +245,7 @@ class ProjectNew extends Component {
                   onClick={()=>this.setState({privacy: 'PRIVATE'})}
                   backgroundColor={(privacy === 'PRIVATE') ? purple : grey300}
                   icon={
-                    <Lock
-                      style={{}}
-                      height={23}
-                      width={22}
-                      fill={white}
-                    />
+                    <Lock style={{}} height={23} width={22} fill={white} />
                   }
                 />
                   <ChoiceText>
@@ -272,8 +256,7 @@ class ProjectNew extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'TRIBE'})}
                   backgroundColor={(privacy === 'TRIBE') ? purple : grey300}
-                  icon={
-                    <Tribe fill={white} /> }
+                  icon={ <Tribe fill={white} /> }
                 />
                 <ChoiceText>
                   Tribe Only
@@ -283,8 +266,7 @@ class ProjectNew extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'PUBLIC'})}
                   backgroundColor={(privacy === 'PUBLIC') ? purple : grey300}
-                  icon={
-                    <Logo fill={white} /> }
+                  icon={ <Logo fill={white} /> }
                 />
                 <ChoiceText>
                   Find Sessions

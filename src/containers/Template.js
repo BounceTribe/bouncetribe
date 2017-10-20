@@ -109,7 +109,6 @@ export default Relay.createContainer(
             }
             id
             handle
-            isOnline
             portrait { url }
             projects (
               first: 1
