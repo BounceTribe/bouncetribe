@@ -55,7 +55,7 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
     case 'SESSION_FEEDBACK_RECEIVED': {
       header = 'Feedback Received'
       message = `${triggeredBy.handle} has given you feedback.`
-      link = `/${notificationFor.handle}/session/${session.id}/mine`
+      link = `/session/${notificationFor.handle}/${session.id}/mine`
       break
     }
     case 'PROJECT_FEEDBACK_RECEIVED': {

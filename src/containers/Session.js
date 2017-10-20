@@ -224,6 +224,7 @@ class Session extends Component {
 
   messages = () => {
     let messages = []
+
     this.state.messages.forEach( (message, index) =>{
       if (index === 0) {
         messages.push(
@@ -235,7 +236,7 @@ class Session extends Component {
           </MessageNamePortraitRow>
         )
       } else if (message.node.sender.id !== this.state.messages[index - 1].node.sender.id) {
-        messages.push(<MessageDivider/>)
+        messages.push(<MessageDivider key={message.node.id}/>)
         messages.push(
           <MessageNamePortraitRow key={`portrait${message.node.id}`} >
             <MessagePortrait src={message.node.sender.portrait.url} />

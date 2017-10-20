@@ -102,7 +102,7 @@ export const findUserIds = (ids) => {
 export const suggestedFriends = (userId) => {
   return new Promise((resolve, reject) => {
     auth.getUserInfo().then( profile =>{
-      let friends = profile.context.mutual_friends.data
+      let friends = (profile.context || {}).mutual_friends.data
       let facebookIds = []
       for (let index in friends) {
         if (index) {
@@ -129,7 +129,7 @@ export const suggestedFriends = (userId) => {
           }`
         }),
       }).then(result=>result.json()).then(json => {
-        let fbFriends = json.data.allUsers.map(user=>user)
+        let fbFriends = (json.data.allUsers || []).map(user=>user)
         let btFriends = json.data.User.friends.map(user => user.id)
         let suggestedFriends = fbFriends.filter((fbFriend)=>{
           return !btFriends.includes(fbFriend.id)

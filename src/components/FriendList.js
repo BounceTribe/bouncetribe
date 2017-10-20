@@ -46,7 +46,7 @@ const makeRows = (users, select, selected) => (
 
 export const FriendList = (props) => {
   let {friends, category, invite, show, flip, select, selected} = props;
-  const users = friends.edges.map(edge=>edge.node)
+  const users = ((friends || {}).edges || []).map(edge=>edge.node)
   const list = show ? makeRows(users, select, selected) : [];
   list.push(
     <FriendRow key={'invite'}>

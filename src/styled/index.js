@@ -100,7 +100,6 @@ export const View = styled.section`
   border-radius: 10px;
   min-height: 80vh;
   margin-bottom: 50px;
-  justify-content: center;
   ${size.m`
     margin-top: 0;
     width: 100%;
@@ -190,10 +189,7 @@ export const RoundButton = (props) => {
 
 
   return (
-    <ButtonLink
-      to={props.to}
-      title={props.title}
-    >
+    <ButtonLink to={props.to} title={props.title} >
       <IconButton
         tooltip={props.tooltip}
         style={{
@@ -209,25 +205,22 @@ export const RoundButton = (props) => {
           paddingLeft: (tooltipLength > 10) ? "2px" : "8px",
         }}
       >
-      <MuiThemeProvider
-        muiTheme={
-          (props.big) ? bigTheme : btTheme
-        }
-      >
-        <FloatingActionButton
-          style={{
-            boxShadow: 0,
-            ...props.style
-          }}
-          secondary={props.secondary}
-          backgroundColor={props.backgroundColor}
-          onClick={props.onClick}
-          onTouchTap={props.onTouchTap}
-        >
-          {props.icon}
-        </FloatingActionButton>
-      </MuiThemeProvider>
-    </IconButton>
+        <MuiThemeProvider muiTheme={ (props.big) ? bigTheme : btTheme } >
+          <FloatingActionButton
+            style={{
+              boxShadow: 0,
+              ...props.style
+            }}
+            secondary={props.secondary}
+            backgroundColor={props.backgroundColor}
+            onClick={props.onClick}
+            onTouchTap={props.onTouchTap}
+          >
+            {props.icon}
+          </FloatingActionButton>
+        </MuiThemeProvider>
+      </IconButton>
+
     </ButtonLink>
   )
 }

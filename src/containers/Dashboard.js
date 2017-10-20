@@ -82,8 +82,8 @@ class Dashboard extends Component {
   }
 
   render () {
-    let selectedUser = this.state.selectedUser
-    let user = this.props.viewer.user
+    let selectedUser = this.state.selectedUser || {}
+    let user = this.props.viewer.user || {}
     let tab = this.state.tab
     // console.log('user:', user)
     // console.log('render - this', this)

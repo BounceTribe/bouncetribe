@@ -26,11 +26,13 @@ class Template extends Component {
   }
 
   ping = () => {
-    this.props.relay.commitUpdate(
-      new SendPing({
-        user: this.props.viewer.user
-      })
-    )
+    if (this.props.viewer.user) {
+      this.props.relay.commitUpdate(
+        new SendPing({
+          user: this.props.viewer.user
+        })
+      )
+    }
   }
 
 
@@ -80,6 +82,7 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
+            id
             doNotEmail
             notifications (
               first: 5
