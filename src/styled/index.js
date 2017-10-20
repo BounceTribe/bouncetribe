@@ -71,7 +71,6 @@ export const BtAvatar = ({user, size, hideStatus}) => {
   )
 }
 
-
 export const BtLink = styled(Link)`
   display: flex;
   color: ${grey700};
@@ -108,9 +107,6 @@ export const View = styled.section`
     border: 0;
   `}
 `
-export const FeedView = styled(View)`
-  width: 65%;
-`
 
 export const ProjectNewView = styled(View)`
   min-height: 85vh;
@@ -120,7 +116,7 @@ export const IconTextContainer = styled(BtLink)`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: baseline;
+  align-items: center;
   font-size: 30px;
 `
 export const IconText = styled.span`

@@ -59,6 +59,8 @@ class DirectMessages extends Component {
     let sent = this.props.viewer.User.receivedMessages.edges
     let messages = received.concat(sent).sort((a, b) => a.node.id - b.node.id)
     this.setState({ messages })
+    console.log('DM Mount', this);
+    // console.log('btmnessages', <DirectMessages />);
   }
 
   formatMessages = () => {
@@ -79,7 +81,6 @@ class DirectMessages extends Component {
   }
 
   render() {
-    console.log(this.state.messages, this.props.viewer.user.id)
     return (
       <div style={{
         display: 'flex',

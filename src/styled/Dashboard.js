@@ -103,10 +103,6 @@ width: 80vw;
 box-sizing: border-box;
 `
 
-export const DashHeaderText = styled.div`
-align-items: baseline;
-`
-
 export const TopPanel = styled.div`
   display: flex;
   flex-direction: row;
@@ -166,6 +162,7 @@ export const LogoText = styled.h2`
 export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
+  margin: 6px 0;
   width: 80vw;
 `
 

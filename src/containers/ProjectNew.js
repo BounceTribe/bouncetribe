@@ -273,10 +273,7 @@ class ProjectNew extends Component {
                   onClick={()=>this.setState({privacy: 'TRIBE'})}
                   backgroundColor={(privacy === 'TRIBE') ? purple : grey300}
                   icon={
-                    <Tribe
-                      fill={white}
-                    />
-                  }
+                    <Tribe fill={white} /> }
                 />
                 <ChoiceText>
                   Tribe Only
@@ -287,10 +284,7 @@ class ProjectNew extends Component {
                   onClick={()=>this.setState({privacy: 'PUBLIC'})}
                   backgroundColor={(privacy === 'PUBLIC') ? purple : grey300}
                   icon={
-                    <Logo
-                      fill={white}
-                    />
-                  }
+                    <Logo fill={white} /> }
                 />
                 <ChoiceText>
                   Find Sessions

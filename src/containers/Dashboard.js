@@ -87,13 +87,14 @@ class Dashboard extends Component {
     let user = this.props.viewer.user
     let tab = this.state.tab
     // console.log('user:', user)
-    // console.log('render - this', this);
+    // console.log('render - this', this)
     return (
       <ProfileView>
         <DashHeader>
           <DashHeaderRow>
             <IconTextContainer to={`/tribe/${user.handle}`} >
-              <Logo style={{ display: 'flex', marginBottom: '-5px' }} fill={purple} />
+              {/* <Logo style={{ display: 'flex', marginBottom: '-5px' }} fill={purple} /> */}
+              <BtAvatar size={40} hideStatus />
               <IconText>
                 My Tribe
               </IconText>
@@ -163,7 +164,7 @@ class Dashboard extends Component {
             topBar={<DashProfile selectedUser={selectedUser} />}
             tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
-            locks={[false, true, true]}
+            locks={[false, true, false]}
             content={this.props.children} />
         </BotRow>
       </ProfileView>
