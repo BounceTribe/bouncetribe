@@ -23,14 +23,57 @@ import DirectMessages from 'containers/DirectMessages'
 // import Bounces from 'containers/Bounces'
 
 import {Loading} from 'styled/Spinner'
-const ViewerQuery = {
-  viewer: (Component, variables) => Relay.QL`
+const ViewerQuery = (props) => {
+  console.log('viewer props', Relay)
+  return ({
+    viewer: (Component, variables) => {
+    console.log('in viewer', Component, variables);
+    return Relay.QL`
     query {
       viewer {
         ${Component.getFragment('viewer', variables)}
       }
     }
-  `,
+  `},})
+}
+const MessageQuery = (e) => {
+  console.log('E', e);
+  return ({
+    viewer: (Component, variables) => {
+    console.log('in viewer', Component, variables);
+    return Relay.QL`
+    query {
+      viewer {
+        user {
+          id
+          handle
+          portrait { url }
+          receivedMessages (
+            first: 20
+            orderBy: id_ASC
+            filter: {
+              sender: {
+                handle: "${variables.userHandle}"
+              }
+            }
+          ) {
+            edges {
+              node {
+                id
+                text
+                createdAt
+                sender {
+                  id
+                  handle
+                  portrait { url }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `},})
 }
 
 const tribeSearch = (params, {location})=>{
@@ -166,79 +209,79 @@ const createRoutes = () => (
   <Route
     path='/'
     component={Template}
-    queries={ViewerQuery} >
+    queries={ViewerQuery()} >
     <IndexRoute component={Dashboard}
-      queries={ViewerQuery}
+      queries={ViewerQuery()}
       onEnter={userOnly}
       render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} />
-    <Route path={'/login'} component={Login} queries={ViewerQuery} auth={auth} />
-    <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
+    <Route path={'/login'} component={Login} queries={ViewerQuery()} auth={auth} />
+    <Route path={'/connect'} component={Connect} queries={ViewerQuery()} auth={auth} />
     <Route path={'/notifications'}
       component={NotificationList}
-      queries={ViewerQuery}
+      queries={ViewerQuery()}
       render={({ props }) => props ? <NotificationList {...props} /> : <Loading />} />
     <Route path={'/sessions/:userHandle'} onEnter={userOnly}>
       <IndexRoute
         component={AllSessions}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
       <Route
         path={'/sessions/:userHandle/:project'}
         component={AllSessions}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
       <Route
         path={'/sessions/:userHandle/:project/find'}
         component={AllSessions}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <AllSessions {...props} /> : <Loading />} />
     </Route>
     <Route path={'/projects/:userHandle'}
       component={ProjectList}
-      queries={ViewerQuery}
+      queries={ViewerQuery()}
       onEnter={userOnly}
       render={({ props }) => props ? <ProjectList {...props} /> : <Loading />} />
     <Route path={'/projects/:ownHandle/new'}
       component={ProjectNew}
-      queries={ViewerQuery}
+      queries={ViewerQuery()}
       onEnter={userOnly}
       render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
 
-    <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
-      <Route path={'/dash/projects/:userHandle'}
+    <Route path='/dash/projects/:userHandle' component={Dashboard} queries={ViewerQuery()} />
+      {/* <Route path={'/dash/projects/:userHandle'}
         component={Projects}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <Projects {...props} /> : <Loading />} />
       <Route path={'/dash/messages/:userHandle'}
         component={DirectMessages}
-        queries={ViewerQuery}
-        render={({ props }) => props ? <DirectMessages {...props} /> : <Loading />} />
+        queries={ViewerQuery()}
+        render={({ props }) => props ? <DirectMessages {...props} /> : <Loading />} /> */}
       {/* <Route path={'/dash/bounces/:userHandle'}
         component={Bounces}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <Bounces {...props} /> : <Loading />} /> */}
-    </Route>
+    {/* </Route> */}
 
-    <Route path={'/:userHandle'} onEnter={userOnly} component={Profile} queries={ViewerQuery} >
+    <Route path={'/:userHandle'} onEnter={userOnly} component={Profile} queries={ViewerQuery()} >
       <Route path={'/:userHandle/projects'}
         component={Projects}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <Projects {...props} /> : <Loading />} />
       {/* <Route path={'/:userHandle/bounces'}
         component={Bounces}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <Bounces {...props} /> : <Loading />} />
       <Route path={'/:userHandle/activity'}
         component={Activities}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <Activities {...props} /> : <Loading />} /> */}
     </Route>
     <Route path={'/tribe/:userHandle'}
       component={Tribe}
-      queries={ViewerQuery}
+      queries={ViewerQuery()}
       render={({ props }) => props ? <Tribe {...props} /> : <Loading />} >
       <IndexRoute component={TribeAll}
-        queries={ViewerQuery}
+        queries={ViewerQuery()}
         render={({ props }) => props ? <TribeAll {...props} /> : <Loading />} />
       <Route path={'/tribe/:userHandle/requests'}
         component={TribeRequests}

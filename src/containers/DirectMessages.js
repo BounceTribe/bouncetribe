@@ -5,8 +5,11 @@ import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
 import {BtMessages} from 'components/BtMessages'
 import * as moment from 'moment'
+import getMessages from 'utils/graphql'
+// import CreateSession from 'mutations/CreateSession'
 
-class DirectMessages extends Component {
+
+export class DirectMessages extends Component {
 
   constructor(props) {
     super(props)
@@ -19,51 +22,84 @@ class DirectMessages extends Component {
       received: [],
       sent: [],
       messages: [],
-      message: ''
+      message: '',
+      sessionId: ''
     }
 
-    this.feedSub.subscribe(
-      {
-        query: /* GraphQL */`subscription createMessage {
-          Message (
-            filter: { mutation_in: [CREATED] }
-          ) {
-            node {
-              sender {
-                id
-                handle
-                portrait { url }
-              }
-              text
-              id
-            }
-          }
-        }`
-      }, (error, result) => {
-        if (result) {
-          let newMessage = result.Message
-          this.setState( (prevState) => {
-            let {messages} = prevState
-            messages.push(newMessage)
-            return { messages }
-          } )
-        }
-      }
-    )
+  //   this.feedSub.subscribe(
+  //     {
+  //       query: /* GraphQL */`subscription createMessage {
+  //         Message (
+  //           filter: {
+  //             mutation_in: [CREATED]
+  //             # node: {
+  //             #   directId:  "${this.props.viewer.user.id + this.props.viewer.User.id}"
+  //             # }
+  //           }
+  //         ) {
+  //           node {
+  //             sender {
+  //               id
+  //               handle
+  //               portrait { url }
+  //             }
+  //             text
+  //             id
+  //           }
+  //         }
+  //       }`
+  //     }, (error, result) => {
+  //       if (result) {
+  //         let newMessage = result.Message
+  //         this.setState( (prevState) => {
+  //           let {messages} = prevState
+  //           messages.push(newMessage)
+  //           return { messages }
+  //         } )
+  //       }
+  //     }
+  //   )
   }
+
+  msgs = async() => {
+
+    console.log('async start', this.props);
+    let messages = await getMessages(this.props.userHandle, this.props.theirHandle)
+    this.setState({messages})
+
+  }
+
+  // createSession = () => {
+  //   let userIds = [this.props.viewer.user.id, this.props.viewer.User.id]
+  //   this.props.relay.commitUpdate(
+  //     new CreateSession({projectsIds: userIds}),{
+  //       onSuccess: (success) => {
+  //         let {id: sessionId} = success.createSession.session
+  //         this.setState({sessionId})
+  //       }
+  //     }
+  //   )
+  // }
 
   currentTime = (time) => this.setState({ time })
 
   componentDidMount(){
-    let received = this.props.viewer.user.receivedMessages.edges
-    let sent = this.props.viewer.User.receivedMessages.edges
-    let messages = received.concat(sent).sort((a, b) => a.node.id - b.node.id)
-    this.setState({ messages })
-    console.log('DM Mount', this);
-    // console.log('btmnessages', <DirectMessages />);
+    this.msgs()
   }
+  //   let viewer = this.props.viewer
+  //   let received = viewer.user.receivedMessages.edges
+  //   let sent = viewer.User.receivedMessages.edges
+  //   let messages = received.concat(sent).sort((a, b) => a.node.id - b.node.id)
+  //   this.setState({ messages })
+  //   console.log('DM Mount', this);
+  //   this.props.relay.setVariables({
+  //     directId: viewer.user.id + viewer.User.id
+  //   })
+  //   // console.log('btmnessages', <DirectMessages />);
+  // }
 
   formatMessages = () => {
+    console.log('format', this.state);
     let msgList = this.state.messages.map(msg => {
       msg = msg.node
       let time
@@ -74,7 +110,7 @@ class DirectMessages extends Component {
         time = created.subtract(1, 'days').format('MMMM Do h:mm a')
       }
       msg.time = time;
-      msg.isSender = (msg.sender.id===this.props.viewer.user.id)
+      msg.isSender = (msg.sender.handle===this.props.userHandle)
       return msg
     })
     return msgList
@@ -87,8 +123,9 @@ class DirectMessages extends Component {
         flexDirection: 'column',
         justifyContent: 'flex-end'
       }}>
+      {/* <QueryData user={this.props.viewer.User.handle}/> */}
         <BtMessages msgList={this.formatMessages()} />
-        <TextField
+        {/* <TextField
           multiLine
           name="message"
           style={{padding: '0 15px 0 15px'}}
@@ -116,73 +153,77 @@ class DirectMessages extends Component {
               )
             }
           } }
-        />
+        /> */}
       </div>
     )
   }
 }
-
-export default Relay.createContainer( DirectMessages, {
-   initialVariables: { userHandle: '' },
-   fragments: { viewer: () => Relay.QL`
-       fragment on Viewer {
-         user {
-           id
-           handle
-           score
-           portrait { url }
-           receivedMessages (
-             first: 20
-             orderBy: id_ASC
-             filter: {
-               sender: {
-                 handle: "lyricandthewhoopingcranes"
-               }
-             }
-           ) {
-             edges {
-               node {
-                 id
-                 text
-                 createdAt
-                 sender {
-                   id
-                   handle
-                   portrait { url }
-                 }
-               }
-             }
-           }
-         }
-         User (handle: $userHandle) {
-           id
-           handle
-           portrait { url }
-           receivedMessages (
-             first: 20
-             orderBy: id_ASC
-             filter: {
-               sender: {
-                 handle: "subliminal_lime"
-               }
-             }
-           ) {
-             edges {
-               node {
-                 id
-                 text
-                 createdAt
-                 sender {
-                   id
-                   handle
-                   portrait { url }
-                 }
-               }
-             }
-           }
-         }
-       }
-     `,
-   },
- }
-)
+// "cj8t2om7r05z101993ejxxsxzcj5jwswj4cjyx0161fik5z7pv"
+// #  handle: "${DirectMessages.props.router.params.userHandle}"
+//
+// handle: "lyricandthewhoopingcranes"
+// //
+// export default Relay.createContainer( DirectMessages, {
+//    initialVariables: { userHandle: '', directId: '' },
+//    fragments: { viewer: () => Relay.QL`
+//        fragment on Viewer {
+//          user {
+//            id
+//            handle
+//            score
+//            portrait { url }
+//            receivedMessages (
+//              first: 20
+//              orderBy: id_ASC
+//              filter: {
+//                sender: {
+//                  handle: "lyricandthewhoopingcranes"
+//                }
+//              }
+//            ) {
+//              edges {
+//                node {
+//                  id
+//                  text
+//                  createdAt
+//                  sender {
+//                    id
+//                    handle
+//                    portrait { url }
+//                  }
+//                }
+//              }
+//            }
+//          }
+//          User (handle: $userHandle) {
+//            id
+//            handle
+//            portrait { url }
+//            receivedMessages (
+//              first: 20
+//              orderBy: id_ASC
+//              filter: {
+//                sender: {
+//                  handle: "subliminal_lime"
+//                }
+//              }
+//            ) {
+//              edges {
+//                node {
+//                  id
+//                  text
+//                  createdAt
+//                  sender {
+//                    id
+//                    handle
+//                    portrait { url }
+//                  }
+//                }
+//              }
+//            }
+//          }
+//        }
+//      `,
+//    },
+//  }
+// )

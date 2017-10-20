@@ -153,6 +153,7 @@ export const BotRow = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-top: 20px;
+  max-height: 700px;
 `
 
 export const BotLeft = styled.div`

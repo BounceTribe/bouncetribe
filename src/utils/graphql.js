@@ -1,6 +1,35 @@
 import { graphCool } from 'config'
 import auth from 'utils/auth'
 
+export const getMessages = (userHandle, otherHandle) => {
+  console.log('gettingmessages', userHandle);
+  return fetch(graphCool.simple, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      query: /* GraphQL */`{
+        allMessages (
+            first: 999
+            orderBy: id_ASC
+            filter: {
+              sender: {
+                handle: "lyricandthewhoopingcranes"
+              }
+            }
+          ) {
+           text
+        	 id
+        	 sender {
+        	   id
+        	 }
+          }
+        }
+      }
+    `
+    }),
+  }).then(result => result.json())
+}
+
 export const findMatches = async ({user, project}) => {
   try {
     let genre = project.genres.edges[0].node.id

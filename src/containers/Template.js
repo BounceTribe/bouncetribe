@@ -16,6 +16,7 @@ injectTapEventPlugin()
 class Template extends Component {
 
   componentDidMount() {
+    console.log('did mount template', this.props);
     this.ping()
     let intervalId = setInterval(this.ping, 300000);
     this.setState({intervalId});

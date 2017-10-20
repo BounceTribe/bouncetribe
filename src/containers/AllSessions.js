@@ -395,13 +395,13 @@ export default Relay.createContainer(
           user {
             id
             handle
-            friends ( first: 999 ) {
+            friends ( first: 200 ) {
               edges {
                 node { id }
               }
             }
             projects (
-              first: 999
+              first: 20
               orderBy: title_ASC
               filter: {
                 privacy: PUBLIC
@@ -417,7 +417,7 @@ export default Relay.createContainer(
                   title
                   artwork { url }
                   privacy
-                  genres ( first: 999 ) {
+                  genres ( first: 20 ) {
                     edges {
                       node {
                         id
@@ -426,14 +426,14 @@ export default Relay.createContainer(
                     }
                   }
                   sessions (
-                    first: 999
+                    first: 20
                     orderBy: createdAt_DESC
                   ) {
                     edges {
                       node {
                         id
                         createdAt
-                        projects ( first: 999 ) {
+                        projects ( first: 20 ) {
                           edges {
                             node {
                               id

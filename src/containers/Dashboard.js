@@ -4,13 +4,15 @@ import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, D
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField} from 'material-ui'
-import {purple, grey400} from 'theme'
+import {grey400} from 'theme'
 import Bolt from 'icons/Bolt'
-import Logo from 'icons/Logo'
 import {BtAvatar, IconTextContainer, IconText} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {Panel} from 'components/Panel'
+import {DirectMessages} from 'containers/DirectMessages'
+import getMessages from 'utils/graphql'
+import { graphCool } from 'config'
 
 
 class Dashboard extends Component {
@@ -26,17 +28,51 @@ class Dashboard extends Component {
       showMentors: true,
       showTribe: true,
       showBand: true,
-      tab: 'projects'
+      tab: 'projects',
+      messages: []
     }
   }
 
   componentDidMount() {
+    console.log('did mount dash', this );
+    this.msgs()
     if (this.props.viewer.user.friends.edges.length) {
       let selectedUser = this.props.viewer.user.friends.edges[0].node;
       this.setState( {selectedUser} )
       this.props.router.push(`/dash/projects/${selectedUser.handle}`)
       this.suggestFriends(this.state.maxSuggestedFriends);
     }
+  }
+  msgs = () => {
+    let self = this
+    let selectedUser = this.props.selectedUser
+    console.log('async start', this.props)
+    fetch(graphCool.simple, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        query: `{
+          allMessages (
+              first: 999
+              orderBy: id_ASC
+              filter: {
+                sender: {
+                  handle: "${selectedUser}"
+                }
+              }
+            ) {
+             text
+          	 id
+          	 sender {
+          	   id
+          	 }
+            }
+          }
+        }
+      `
+      }),
+    }).then(result => self.setState({messages: result}))
+
   }
 
   suggestFriends = (max) => {
@@ -59,6 +95,7 @@ class Dashboard extends Component {
     location = location.replace(this.state.selectedUser.handle, selectedUser.handle)
     this.props.router.push(location)
     this.setState({selectedUser})
+    console.log('new user', this.state)
   }
 
   sendInvite = () => {
@@ -83,6 +120,7 @@ class Dashboard extends Component {
   }
 
   render () {
+    console.log(this.state.messages);
     let selectedUser = this.state.selectedUser
     let user = this.props.viewer.user
     let tab = this.state.tab
@@ -93,7 +131,6 @@ class Dashboard extends Component {
         <DashHeader>
           <DashHeaderRow>
             <IconTextContainer to={`/tribe/${user.handle}`} >
-              {/* <Logo style={{ display: 'flex', marginBottom: '-5px' }} fill={purple} /> */}
               <BtAvatar size={40} hideStatus />
               <IconText>
                 My Tribe
@@ -165,7 +202,15 @@ class Dashboard extends Component {
             tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
             locks={[false, true, false]}
-            content={this.props.children} />
+            content={null} >
+          </Panel>
+
+          
+          {/* {selectedUser.handle &&
+            <DirectMessages userHandle={user.handle} theirHandle={selectedUser.handle} />
+          } */}
+
+
         </BotRow>
       </ProfileView>
     )

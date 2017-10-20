@@ -65,8 +65,8 @@ export default Relay.createContainer(
             id
             handle
             projects (
-              first: 5
-              orderBy: createdAt_ASC
+              first: 4
+              orderBy: createdAt_DESC
             ){
               edges {
                 node {

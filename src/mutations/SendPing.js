@@ -8,7 +8,7 @@ export default class SendPing extends Relay.Mutation {
 
   getFatQuery () {
     return Relay.QL`
-      fragment on UpdateUserPayload {
+      fragment on SendPing {
         user { id }
       }
     `
