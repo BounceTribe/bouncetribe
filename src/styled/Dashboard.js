@@ -138,16 +138,16 @@ export const UserName = styled.h1`
   font-size: 1.5em;
   color: #555555;
   font-weight: normal;
-  margin: -90px 0 0 115px;
+  margin: -95px 0 0 115px;
 `
 
 export const NavLink = styled(BtLink)`
   text-decoration: none;
   color: ${grey119};
   cursor: pointer;
-  font-size: .875em;
+  font-size: 14px;
   font-weight: lighter;
-  margin: 0 0 0 115px;
+  margin: 13px 0 0 115px;
 `
 
 export const LogoText = styled.h2`
