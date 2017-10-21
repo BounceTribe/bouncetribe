@@ -66,6 +66,8 @@ class DirectMessages extends Component {
       return dateB - dateA
     })
   }
+  // this component remounts whenever a new user is selected.
+  // it probably shouldnt...
   // componentDidMount(){
   //   console.log('MOUNTED, user - ', this.props.viewer.User.handle);
   // }
@@ -128,7 +130,6 @@ class DirectMessages extends Component {
   render() {
     let theirMessages = this.props.viewer.User.receivedMessages.edges
     let userMessages = this.props.viewer.user.receivedMessages.edges
-    console.log('new', this.state.newMessages);
     let messages = theirMessages.concat(userMessages).concat(this.state.newMessages)
     let scrollPlaceholder =
       <div style={{ float:"left", clear: "both" }}
@@ -149,6 +150,7 @@ class DirectMessages extends Component {
           multiLine
           name="message"
           style={{display: 'flex', padding: '0 15px 0 15px'}}
+          inputStyle={{marginRight: '25px'}}
           underlineShow={false}
           hintText={'Your message...'}
           value={this.state.message}

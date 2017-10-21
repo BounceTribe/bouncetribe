@@ -32,7 +32,6 @@ export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
     <Container>
       {topBar}
       <Tabs
-        style={{ margin: '6px 0 25px 1px' }}
         tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
         inkBarStyle={{ backgroundColor: purple }}
         onChange={tabValue=>tabChange(tabValue)}
