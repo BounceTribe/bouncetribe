@@ -58,10 +58,10 @@ class TopNav extends Component {
         </Dialog>
         <Logo to={'/'} />
         <NavList>
-          <NavLink to={`/tribe/${handle}/find`} >
+          {/* <NavLink to={`/tribe/${handle}/find`} >
             <Headphones height={18} />
             <NavText>Find Your Mentor</NavText>
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to={((((user || {}).project || {}).edges || []).length > 0) ? `/sessions/${handle}/${user.projects.edges[0].node.title}` : `/sessions/${handle}`}
           >

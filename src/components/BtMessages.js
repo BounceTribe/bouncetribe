@@ -1,17 +1,17 @@
-import React, {Component} from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import ReactDOM from 'react-dom'
 
 import {white, grey400, grey500, purple} from 'theme'
 
 export const MsgsContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: 'flex-end';
+  flex-direction: column-reverse;
+  flex-grow: 2;
   max-height: 400px;
   overflow: scroll;
   padding: 20px 20px 0 20px;
   border-bottom: 1px solid ${grey500};
+  bottom: 0;
 `
 const MsgBubble = styled.div`
   display: flex;
@@ -21,6 +21,7 @@ const MsgBubble = styled.div`
   color: ${props => props.isSender ? grey500 : white};
   padding: 9px 14px;
   word-break: break-word;
+  white-space: pre-wrap
   flex: none;
 `
 const MsgTime = styled.div`
@@ -53,16 +54,10 @@ const mapMessages = (messages) => (
   )
 )
 
-export class BtMessages extends Component {
-
-  render() {
-    return (
-      <MsgsContainer>
-        {mapMessages(this.props.msgList)}
-        <div style={{ float:"left", clear: "both" }}
-             ref={(el) => { this.msgsEnd = el}}>
-        </div>
-      </MsgsContainer>
-    )
-  }
+export const BtMessages = ({msgList, lastEl}) => {
+  return (
+    <MsgsContainer>
+      {lastEl}
+      {mapMessages(msgList)}
+    </MsgsContainer>)
 }

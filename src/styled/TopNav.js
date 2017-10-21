@@ -19,7 +19,6 @@ export const Bar = styled.div`
   `}
 `
 
-
 export const NavList = styled.div`
   display: flex;
   align-items: center;

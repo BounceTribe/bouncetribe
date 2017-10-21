@@ -5,7 +5,6 @@ import {ProjectItemSm} from 'components/ProjectItemSm'
 
 const ProjectsContainerSm = styled.div`
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
@@ -65,7 +64,7 @@ export default Relay.createContainer(
             id
             handle
             projects (
-              first: 5
+              first: 4
               orderBy: createdAt_ASC
             ){
               edges {

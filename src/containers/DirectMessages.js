@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import ReactDOM from 'react-dom'
 
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
@@ -57,25 +56,32 @@ class DirectMessages extends Component {
       }
     )
   }
-
-  currentTime = (time) => this.setState({ time })
-
   componentDidMount(){
     let received = this.props.viewer.user.receivedMessages.edges
     let sent = this.props.viewer.User.receivedMessages.edges
-    let messages = received.concat(sent).sort((a, b) => a.node.id - b.node.id)
+    let messages = received.concat(sent)
+    messages = this.temporaryFilter(messages).sort((a, b) => b.node.createdAt - a.node.createdAt)
     this.setState({ messages })
-    console.log('DM Mount', this)
-    // console.log('btmnessages', <DirectMessages />);
+    // console.log('DM Mount', this)
+  }
+
+  componentDidUpdate () {
+    if (this.state.message==='') {
+      this.msgsEnd.scrollIntoView({ behaviour: 'smooth' })
+    }
+  }
+
+  temporaryFilter = (msgList) => {
+    let userId = this.props.viewer.user.id
+    let theirId = this.props.viewer.User.id
+    return msgList.filter(msg =>
+      (msg.node.sender.id===userId && msg.node.recipient.id===theirId) ||
+      (msg.node.sender.id===theirId && msg.node.recipient.id===userId)
+    )
   }
 
   formatMessages = () => {
-    let userId = this.props.viewer.user.id
-    let theirId = this.props.viewer.User.id
-    let msgList = this.state.messages.filter(msg => {
-      return (msg.node.sender.id===userId && msg.node.recipient.id===theirId) ||
-      (msg.node.sender.id===theirId && msg.node.recipient.id===userId)}
-    )
+    let msgList = this.state.messages
     msgList = msgList.map(msg => {
       msg = msg.node
       let time
@@ -86,54 +92,59 @@ class DirectMessages extends Component {
         time = created.subtract(1, 'days').format('MMMM Do h:mm a')
       }
       msg.time = time;
-      msg.isSender = (msg.sender.id===userId)
+      msg.isSender = (msg.sender.id===this.props.viewer.user.id)
       return msg
-    })
+    } )
     return msgList
   }
 
-  componentDidUpdate () {
-    var el = this.refs.wrap;
-    el.msgsEnd.scrollIntoView({ behaviour: 'smooth' });
+  msgKeyDown = (e) => {
+    if (e.keyCode===13 && !e.shiftKey && this.state.message) {
+      e.preventDefault()
+      let savedText = this.state.message
+      this.setState({message: ''})
+      this.props.relay.commitUpdate(
+        new CreateMessage({
+          text: savedText,
+          senderId: this.props.viewer.user.id,
+          recipientId: this.props.viewer.User.id
+        }), {
+          onSuccess: (success) => { console.log('send success') },
+          onFailure: (failure) => {
+            console.log('message send fail', failure);
+            this.setState({message: savedText})
+          }
+          //display error message in snackbar?
+        }
+      )
+    }
   }
 
-
   render() {
+    let scrollPlaceholder =
+      <div style={{ float:"left", clear: "both" }}
+        ref={(el) => this.msgsEnd = el} />
     return (
       <div style={{
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
         justifyContent: 'flex-end'
       }}>
-        <BtMessages ref='wrap' msgList={this.formatMessages()} />
+        <BtMessages
+          msgList={this.formatMessages()}
+          lastEl={scrollPlaceholder}
+        />
         <TextField
+          fullWidth
           multiLine
           name="message"
-          style={{padding: '0 15px 0 15px'}}
+          style={{display: 'flex', padding: '0 15px 0 15px'}}
           underlineShow={false}
           hintText={'Your message...'}
           value={this.state.message}
-          onChange={(e)=>{ this.setState({message: e.target.value}) }}
-          onKeyDown={(e)=>{
-            if (e.keyCode === 13 && e.shiftKey!==true) {
-              let savedText = this.state.message
-              this.setState({message: ''})
-              this.props.relay.commitUpdate(
-                new CreateMessage({
-                  text: savedText,
-                  senderId: this.props.viewer.user.id,
-                  recipientId: this.props.viewer.User.id
-                }), {
-                  onSuccess: (success) => { this.setState({message: ''}) },
-                  onFailure: (failure) => { this.setState({message: savedText})
-                    console.log('message send fail', failure);
-                    this.setState({message: savedText})
-                  }
-                  //display error message in snackbar?
-                }
-              )
-            }
-          } }
+          onChange={(e)=>this.setState({message: e.target.value})}
+          onKeyDown={(e)=>{this.msgKeyDown(e)}}
         />
       </div>
     )

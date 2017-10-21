@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FbList, SendInviteBtn, DialogSpacer, DialogRow, ProfileView, TopPanel, DashLeft,  InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
+import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField} from 'material-ui'
@@ -89,7 +89,7 @@ class Dashboard extends Component {
     // console.log('user:', user)
     // console.log('render - this', this)
     return (
-      <ProfileView>
+      <DashView>
         <DashHeader>
           <DashHeaderRow>
             <IconTextContainer to={`/tribe/${user.handle}`} >
@@ -167,7 +167,7 @@ class Dashboard extends Component {
             locks={[false, true, false]}
             content={this.props.children} />
         </BotRow>
-      </ProfileView>
+      </DashView>
     )
   }
  }

@@ -79,11 +79,9 @@ export const DashLeft = styled.div`
 
 
 
-export const ProfileView = styled(View)`
+export const DashView = styled(View)`
   background-color: transparent;
   border: none;
-  padding: 40px;
-  justify-content: flex-start;
 `
 
 export const DashHeader = styled.div`

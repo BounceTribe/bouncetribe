@@ -39,7 +39,7 @@ const makeRows = (users, select, selected) => (
     <FriendRow key={user.id} onClick={()=>select(user)}>
       <BtAvatar size={40} user={user} />
       <Handle selected={user.id===selected.id}>{user.handle}</Handle>
-      <BtTextMarker size={20} fontHeight={14} value={3}/>
+      <BtTextMarker size={20} fontHeight={14} value={0}/>
     </FriendRow>
   )
 )
