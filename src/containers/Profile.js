@@ -30,6 +30,7 @@ import {Button, BtAvatar} from 'styled'
 import Checkbox from 'material-ui/Checkbox'
 import Settings from 'icons/Settings'
 import {Panel} from 'components/Panel'
+import {url} from 'config'
 
 
 class Profile extends Component {
@@ -99,7 +100,7 @@ class Profile extends Component {
         handle: User.handle,
         placename: User.placename || '',
         summary: User.summary || '',
-        portraitUrl: User.portrait.url,
+        portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
         website: User.website || '',
         email: User.email || '',
         genres,
@@ -146,7 +147,7 @@ class Profile extends Component {
         score: score || '',
         website: website || '',
         email: email || '',
-        portraitUrl: portrait.url,
+        portraitUrl: (portrait || {}).url || `${url}/logo.png`,
         projects: projects.edges.length,
         friends: friends.edges.length,
         genres: newGenres,
@@ -407,6 +408,7 @@ class Profile extends Component {
   }
 
   topRow = () => {
+
     let {handle, imageEditorOpen, placename, summary, website, email, handleError} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
@@ -558,13 +560,15 @@ class Profile extends Component {
   }
 
   render () {
+    console.log('ProfRender', this.state);
+
     let {genres, skills, influences, experience, experiences, notification} = this.state
     let {User, user} = this.props.viewer
     let ownProfile = (User.id === user.id)
     return (
       <ProfileView>
         <Snackbar
-          open={notification}
+          open={notification ? true : false} //requires boolean input
           message={notification}
           autoHideDuration={2000}
           onRequestClose={this.closeSnackbar}
