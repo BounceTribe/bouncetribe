@@ -67,7 +67,6 @@ class Project extends Component {
   }
 
   componentWillMount () {
-    console.log('PROJPROPS', this.props);
     let {id: ownId} = this.props.viewer.user
     if (ownId === this.props.viewer.User.id) {
       this.setState({
@@ -84,7 +83,6 @@ class Project extends Component {
     let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
     let project = this.props.viewer.allProjects.edges[0].node
     let projectOwnerId = this.props.viewer.User.id
-    console.log("friendIds",friendIds)
     if (
       (
         ownId !== projectOwnerId &&
@@ -272,8 +270,6 @@ class Project extends Component {
         return !comment.node.session
       })
     }
-
-
     return comments
   }
 
@@ -282,6 +278,7 @@ class Project extends Component {
       node: project
     } = this.props.viewer.allProjects.edges[0]
     let {ownProject} = this.state
+    let myInfluences = this.props.viewer.user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
       <View>
         <ProfContainer hide={(ownProject)} >
@@ -333,12 +330,16 @@ class Project extends Component {
           <Divider/>
           <CommonInfluences>
             {this.props.viewer.User.artistInfluences.edges.map(edge=>{
-              return (
-                <InfluenceChip key={edge.node.id} >
-                  {edge.node.name}
-                </InfluenceChip>
-              )}
-            )}
+              if (myInfluences.includes(edge.node.name)) {
+                return (
+                  <InfluenceChip key={edge.node.id} >
+                    {edge.node.name}
+                  </InfluenceChip>
+                )
+              } else {
+                return <div key={edge.node.id} />
+              }
+            } )}
           </CommonInfluences>
         </ProfContainer>
         <Top>
@@ -638,13 +639,19 @@ export default Relay.createContainer(
           user {
             id
             handle
-            friends (
-              first: 999
-            ) {
+            friends (first: 999) {
               edges {
                 node {
                   id
                   handle
+                }
+              }
+            }
+            artistInfluences (first: 999) {
+              edges {
+                node {
+                  id
+                  name
                 }
               }
             }
@@ -655,13 +662,9 @@ export default Relay.createContainer(
             handle
             placename
             experience
-            portrait {
-              url
-            }
+            portrait {url}
             score
-            artistInfluences (
-              first: 999
-            ) {
+            artistInfluences (first: 999) {
               edges {
                 node {
                   id
@@ -728,35 +731,25 @@ export default Relay.createContainer(
                 ) {
                   edges {
                     node {
-                      session {
-                        id
-                      }
+                      session { id }
                       text
                       type
                       id
                       author {
                         id
                         handle
-                        portrait {
-                          url
-                        }
+                        portrait { url }
                       }
-                      project {
-                        id
-                      }
+                      project { id }
                       timestamp
-                      children (
-                        first: 999
-                      ) {
+                      children ( first: 999 ) {
                         edges {
                           node {
                             id
                             text
                             author {
                               handle
-                              portrait {
-                                url
-                              }
+                              portrait { url }
                             }
                           }
                         }

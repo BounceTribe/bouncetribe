@@ -31,6 +31,7 @@ class Dashboard extends Component {
 
   componentDidMount() {
     console.log('props', this.props)
+
     if (this.props.viewer.user.friends.edges.length) {
       let selectedUser = this.props.viewer.user.friends.edges[0].node;
       this.setState( {selectedUser} )
@@ -180,7 +181,6 @@ class Dashboard extends Component {
             id
             handle
             email
-            lastPing
             portrait { url }
             friends (first: 999) {
               edges {
