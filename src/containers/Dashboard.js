@@ -10,7 +10,7 @@ import {BtAvatar, IconTextContainer, IconText} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {Panel} from 'components/Panel'
-
+import Projects from 'containers/Projects'
 
 class Dashboard extends Component {
 
@@ -34,7 +34,8 @@ class Dashboard extends Component {
     if (this.props.viewer.user.friends.edges.length) {
       let selectedUser = this.props.viewer.user.friends.edges[0].node;
       this.setState( {selectedUser} )
-      this.props.router.push(`/dash/projects/${selectedUser.handle}`)
+      console.log('selectedUser', selectedUser);
+      // this.props.router.push(`/dash/projects/${selectedUser.handle}`)
       this.suggestFriends(this.state.maxSuggestedFriends);
     }
   }
@@ -57,7 +58,7 @@ class Dashboard extends Component {
   selectUser = (selectedUser) => {
     let location = this.props.location.pathname
     location = location.replace(this.state.selectedUser.handle, selectedUser.handle)
-    this.props.router.push(location)
+    // this.props.router.push(location)
     this.setState({selectedUser})
   }
 
@@ -77,7 +78,7 @@ class Dashboard extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.push('/dash/' + tab + '/' + this.state.selectedUser.handle)
+    // this.props.router.push('/dash/' + tab + '/' + this.state.selectedUser.handle)
     this.setState({ tab })
     window.scrollTo(0, document.body.scrollHeight)
   }
@@ -165,7 +166,7 @@ class Dashboard extends Component {
             tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
             locks={[false, true, false]}
-            content={this.props.children} />
+            content={selectedUser.handle && <Projects userHandle={selectedUser.handle} {...this.props} />} />
         </BotRow>
       </DashView>
     )
@@ -174,7 +175,7 @@ class Dashboard extends Component {
 
  export default Relay.createContainer( Dashboard, {
     initialVariables: { userHandle: '' },
-    fragments: { viewer: () => Relay.QL`
+    fragments: { viewer: (variables) => Relay.QL`
         fragment on Viewer {
           user {
             id
@@ -195,6 +196,7 @@ class Dashboard extends Component {
             }
           }
         }
+          ${Projects.getFragment('viewer', variables)}
       `,
     },
   }

@@ -14,6 +14,7 @@ const ProjectsContainerSm = styled.div`
 `
 
 class Projects extends Component {
+
   edgeFilter = (project, type) => (
     project.comments.edges.filter( (edge) =>
       edge.node.type === type

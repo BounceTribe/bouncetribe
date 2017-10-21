@@ -203,7 +203,7 @@ const createRoutes = () => (
       queries={ViewerQuery}
       onEnter={userOnly}
       render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
-
+{/*
     <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
       <Route path={'/dash/projects/:userHandle'}
         component={Projects}
@@ -212,12 +212,12 @@ const createRoutes = () => (
       <Route path={'/dash/messages/:userHandle'}
         component={DirectMessages}
         queries={ViewerQuery}
-        render={({ props }) => props ? <DirectMessages {...props} /> : <Loading />} />
+        render={({ props }) => props ? <DirectMessages {...props} /> : <Loading />} /> */}
       {/* <Route path={'/dash/bounces/:userHandle'}
         component={Bounces}
         queries={ViewerQuery}
         render={({ props }) => props ? <Bounces {...props} /> : <Loading />} /> */}
-    </Route>
+    {/* </Route> */}
 
     <Route path={'/:userHandle'} onEnter={userOnly} component={Profile} queries={ViewerQuery} >
       <Route path={'/:userHandle/projects'}

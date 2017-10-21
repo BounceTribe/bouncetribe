@@ -50,6 +50,7 @@ class DirectMessages extends Component {
         if (result) {
           let newMessage = result.Message
           this.setState( (prevState) => {
+            console.log('this', this);
             let {newMessages} = prevState
             newMessages.unshift(newMessage)
             return { newMessages }
