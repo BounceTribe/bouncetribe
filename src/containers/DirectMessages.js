@@ -66,13 +66,11 @@ class DirectMessages extends Component {
       return dateB - dateA
     })
   }
-  componentDidMount(){
-    console.log('MOUNTED, user - ', this.props.viewer.User.handle);
-    // console.log('DM Mount', this)
-  }
+  // componentDidMount(){
+  //   console.log('MOUNTED, user - ', this.props.viewer.User.handle);
+  // }
 
-  componentWillUpdate () {
-    console.log('update - user', this.props.viewer.User.handle);
+  componentDidUpdate () {
     if (this.state.message==='') {
       this.msgsEnd.scrollIntoView({ behaviour: 'smooth' })
     }
@@ -130,7 +128,8 @@ class DirectMessages extends Component {
   render() {
     let theirMessages = this.props.viewer.User.receivedMessages.edges
     let userMessages = this.props.viewer.user.receivedMessages.edges
-    let messages = theirMessages.concat(userMessages).concat(this.state.new)
+    console.log('new', this.state.newMessages);
+    let messages = theirMessages.concat(userMessages).concat(this.state.newMessages)
     let scrollPlaceholder =
       <div style={{ float:"left", clear: "both" }}
         ref={(el) => this.msgsEnd = el} />
