@@ -19,8 +19,9 @@ class DirectMessages extends Component {
       active: [],
       received: [],
       sent: [],
-      messages: [],
-      message: ''
+      newMessages: [],
+      message: '',
+      new: []
     }
 
     this.feedSub.subscribe(
@@ -41,6 +42,7 @@ class DirectMessages extends Component {
               }
               text
               id
+              createdAt
             }
           }
         }`
@@ -48,24 +50,29 @@ class DirectMessages extends Component {
         if (result) {
           let newMessage = result.Message
           this.setState( (prevState) => {
-            let {messages} = prevState
-            messages.push(newMessage)
-            return { messages }
+            let {newMessages} = prevState
+            newMessages.unshift(newMessage)
+            return { newMessages }
           } )
         }
       }
     )
   }
+
+  prepMessages = (list) => {
+    return this.temporaryFilter(list).sort((a, b) => {
+      let dateA = new Date(a.node.createdAt)
+      let dateB = new Date(b.node.createdAt)
+      return dateB - dateA
+    })
+  }
   componentDidMount(){
-    let received = this.props.viewer.user.receivedMessages.edges
-    let sent = this.props.viewer.User.receivedMessages.edges
-    let messages = received.concat(sent)
-    messages = this.temporaryFilter(messages).sort((a, b) => b.node.createdAt - a.node.createdAt)
-    this.setState({ messages })
+    console.log('MOUNTED, user - ', this.props.viewer.User.handle);
     // console.log('DM Mount', this)
   }
 
-  componentDidUpdate () {
+  componentWillUpdate () {
+    console.log('update - user', this.props.viewer.User.handle);
     if (this.state.message==='') {
       this.msgsEnd.scrollIntoView({ behaviour: 'smooth' })
     }
@@ -80,8 +87,8 @@ class DirectMessages extends Component {
     )
   }
 
-  formatMessages = () => {
-    let msgList = this.state.messages
+  formatMessages = (list) => {
+    let msgList = this.prepMessages(list)
     msgList = msgList.map(msg => {
       msg = msg.node
       let time
@@ -121,6 +128,9 @@ class DirectMessages extends Component {
   }
 
   render() {
+    let theirMessages = this.props.viewer.User.receivedMessages.edges
+    let userMessages = this.props.viewer.user.receivedMessages.edges
+    let messages = theirMessages.concat(userMessages).concat(this.state.new)
     let scrollPlaceholder =
       <div style={{ float:"left", clear: "both" }}
         ref={(el) => this.msgsEnd = el} />
@@ -132,7 +142,7 @@ class DirectMessages extends Component {
         justifyContent: 'flex-end'
       }}>
         <BtMessages
-          msgList={this.formatMessages()}
+          msgList={this.formatMessages(messages)}
           lastEl={scrollPlaceholder}
         />
         <TextField

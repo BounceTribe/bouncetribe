@@ -83,6 +83,8 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            handle
+            portrait { url }
             doNotEmail
             notifications (
               first: 5
@@ -108,18 +110,6 @@ export default Relay.createContainer(
                   }
                   session { id }
                 }
-              }
-            }
-            id
-            handle
-            portrait { url }
-            projects (
-              first: 1
-              orderBy: createdAt_DESC
-              filter: { privacy: PUBLIC }
-            ) {
-              edges {
-                node { title }
               }
             }
           }
