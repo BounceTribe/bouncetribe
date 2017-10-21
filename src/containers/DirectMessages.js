@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
+import ReactDOM from 'react-dom'
+
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
@@ -34,6 +36,10 @@ class DirectMessages extends Component {
                 handle
                 portrait { url }
               }
+              recipient {
+                id
+                handle
+              }
               text
               id
             }
@@ -59,12 +65,18 @@ class DirectMessages extends Component {
     let sent = this.props.viewer.User.receivedMessages.edges
     let messages = received.concat(sent).sort((a, b) => a.node.id - b.node.id)
     this.setState({ messages })
-    console.log('DM Mount', this);
+    console.log('DM Mount', this)
     // console.log('btmnessages', <DirectMessages />);
   }
 
   formatMessages = () => {
-    let msgList = this.state.messages.map(msg => {
+    let userId = this.props.viewer.user.id
+    let theirId = this.props.viewer.User.id
+    let msgList = this.state.messages.filter(msg => {
+      return (msg.node.sender.id===userId && msg.node.recipient.id===theirId) ||
+      (msg.node.sender.id===theirId && msg.node.recipient.id===userId)}
+    )
+    msgList = msgList.map(msg => {
       msg = msg.node
       let time
       let created = moment.default(msg.createdAt)
@@ -74,11 +86,17 @@ class DirectMessages extends Component {
         time = created.subtract(1, 'days').format('MMMM Do h:mm a')
       }
       msg.time = time;
-      msg.isSender = (msg.sender.id===this.props.viewer.user.id)
+      msg.isSender = (msg.sender.id===userId)
       return msg
     })
     return msgList
   }
+
+  componentDidUpdate () {
+    var el = this.refs.wrap;
+    el.msgsEnd.scrollIntoView({ behaviour: 'smooth' });
+  }
+
 
   render() {
     return (
@@ -87,7 +105,7 @@ class DirectMessages extends Component {
         flexDirection: 'column',
         justifyContent: 'flex-end'
       }}>
-        <BtMessages msgList={this.formatMessages()} />
+        <BtMessages ref='wrap' msgList={this.formatMessages()} />
         <TextField
           multiLine
           name="message"
@@ -132,13 +150,8 @@ export default Relay.createContainer( DirectMessages, {
            score
            portrait { url }
            receivedMessages (
-             first: 20
+             first: 999
              orderBy: id_ASC
-             filter: {
-               sender: {
-                 handle: "lyricandthewhoopingcranes"
-               }
-             }
            ) {
              edges {
                node {
@@ -148,7 +161,10 @@ export default Relay.createContainer( DirectMessages, {
                  sender {
                    id
                    handle
-                   portrait { url }
+                 }
+                 recipient {
+                   id
+                   handle
                  }
                }
              }
@@ -159,13 +175,8 @@ export default Relay.createContainer( DirectMessages, {
            handle
            portrait { url }
            receivedMessages (
-             first: 20
+             first: 999
              orderBy: id_ASC
-             filter: {
-               sender: {
-                 handle: "subliminal_lime"
-               }
-             }
            ) {
              edges {
                node {
@@ -175,7 +186,10 @@ export default Relay.createContainer( DirectMessages, {
                  sender {
                    id
                    handle
-                   portrait { url }
+                 }
+                 recipient {
+                   id
+                   handle
                  }
                }
              }
