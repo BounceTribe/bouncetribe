@@ -7,7 +7,7 @@ export const MsgsContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
   flex-grow: 2;
-  max-height: 400px;
+  max-height: 50vh;
   overflow: scroll;
   padding: 20px 20px 0 20px;
   border-bottom: 1px solid ${grey500};

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View, Button, RoundButton} from 'styled'
-import {Container, Header, HeaderOptions, PList} from 'styled/list'
+import {Container, Header, HeaderOptions, List} from 'styled/list'
 import {ProjectItem, Left, Artwork, Info, ProjectTitle, Trio, TrioItem, BigBubble, ButtonRow} from 'styled/ProjectList'
 import {IconTextContainer, IconText} from 'styled'
 import Music from 'icons/Music'
@@ -197,9 +197,9 @@ class ProjectList extends Component {
 
             </HeaderOptions>
           </Header>
-          <PList>
+          <List>
             {this.projects}
-          </PList>
+          </List>
         </Container>
       </View>
     )
