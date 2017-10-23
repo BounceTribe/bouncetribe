@@ -95,11 +95,10 @@ export const View = styled.section`
   flex-direction: column;
   align-items: center;
   width: 80%;
-  margin-top: 50px;
   border: ${props => props.hideBorder ? 'none' : `solid ${grey230} 1px`};
   border-radius: 10px;
   min-height: 80vh;
-  margin-bottom: 50px;
+  margin: 100px 0 50px 0;
   ${size.m`
     margin-top: 0;
     width: 100%;

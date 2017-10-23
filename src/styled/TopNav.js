@@ -14,6 +14,7 @@ export const Bar = styled.div`
   height: 50px;
   background-color: ${grey40};
   box-sizing: border-box;
+  position: fixed;
   ${size.m`
     display: none;
   `}
