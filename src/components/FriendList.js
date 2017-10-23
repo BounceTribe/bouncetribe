@@ -55,10 +55,11 @@ export const FriendList = (props) => {
   )
 
   return (
-    <div style={{marginRight: '5px'}}>
-      <FriendRow onClick={flip} key='heading'>
+    <div style={{overflowY: 'scroll', overflowX: 'hidden', width: '100%'}}>
+      <FriendRow onClick={flip} key={category}>
         <Header>{category}</Header>
-        {show ? <Collapse color={grey600}/> : <Expand color={grey600}/>}
+        {show ? <Collapse style={{paddingRight: '9px'}} color={grey600}/>
+         : <Expand style={{paddingRight: '9px'}} color={grey600}/>}
       </FriendRow>
       {list}
     </div>

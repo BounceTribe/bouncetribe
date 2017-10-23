@@ -156,9 +156,9 @@ class Dashboard extends Component {
               friends={user.friends}
               category={'Tribe Members'}
               invite={() => this.setState({invite: true}) }
-              flip={() => this.setState({showMentors: !this.state.showMentors})}
+              flip={() => this.setState({showTribe: !this.state.showTribe})}
               select={this.selectUser}
-              show={this.state.showMentors} />
+              show={this.state.showTribe} />
           </DashLeft>
           <Panel
             tab={tab}

@@ -65,15 +65,14 @@ export const DialogRow2 = styled(DialogRow)`
 
 export const DashLeft = styled.div`
   display: flex;
-  flex-direction: column;
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
   flex: 0 0 285px;
   border: solid ${grey222} 1px;
   border-radius: 10px;
-  padding: 8px 15px;
   margin-right: 20px;
+  padding: 9px 0px 9px 9px;
   box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
 `
 
@@ -83,20 +82,20 @@ export const DashView = styled(View)`
 `
 
 export const DashHeader = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: flex-start;
-width: 80vw;
-padding-top: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 80vw;
+  padding-top: 0px;
 `
 
 export const DashHeaderRow = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-align-items: center;
-width: 80vw;
-box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 80vw;
+  box-sizing: border-box;
 `
 
 export const TopPanel = styled.div`
