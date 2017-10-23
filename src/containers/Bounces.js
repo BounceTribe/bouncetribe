@@ -15,16 +15,16 @@ const ProjectsContainerSm = styled.div`
 
 class Bounces extends Component {
 
-  edgeFilter = (project, type) => (
-    project.comments.edges.filter( (edge) =>
+  edgeFilter = (project, type) => {
+    return project.comments.edges.filter( (edge) =>
       edge.node.type === type
     )
-  )
+  }
 
   makeList = () => {
     let User = this.props.viewer.User
     return User.comments.edges.map(edge => {
-      let {node:project} = edge
+      let project = edge.node.project
       if (project.privacy === 'PRIVATE') {
         return null //shouldnt have been able to bounce a private project anyway
       } else {
@@ -33,10 +33,11 @@ class Bounces extends Component {
         return (
           <ProjectItemSm
             key={project.id}
-            user={User}
+            User={User}
             project={project}
             comments={comments}
-            likes={likes} />
+            likes={likes}
+            bounceTab />
         )
       }
     } )
@@ -68,7 +69,7 @@ export default Relay.createContainer(
               first: 999
               orderBy: createdAt_ASC
               filter: {
-                type: [BOUNCE]
+                timestamp: -1
               }
             ){
               edges {
@@ -81,7 +82,14 @@ export default Relay.createContainer(
                     createdAt
                     artwork {url}
                     privacy
-                    comments {type}
+                    creator {handle}
+                    comments (first: 999){
+                      edges {
+                        node {
+                          type
+                        }
+                      }
+                    }
                   }
                 }
               }

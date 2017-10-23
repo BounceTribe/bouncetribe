@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Bounce = ({width, fill}) => {
+const Bounce = ({width, fill, style}) => {
   return (
-  <svg width={`${width}px`} height={`${width*17/21}px`} viewBox="0 0 21 17" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <svg style={style} width={`${width}px`} height={`${width*17/21}px`} viewBox="0 0 21 17" version="1.1" xmlns="http://www.w3.org/2000/svg">
       <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
           <g id="Bounce-Icon" fillRule="nonzero" fill={fill}>
               <g transform="translate(0.500000, 0.000000)" id="Shape">

@@ -309,7 +309,8 @@ class Project extends Component {
           authorId: selfId,
           projectId: projectId,
           type: 'BOUNCE',
-          text: ' '
+          text: ' ',
+          timestamp: -1
         }), {
           onSuccess: (response) => {
             this.setState({bounced: true})
@@ -427,9 +428,11 @@ class Project extends Component {
               <BtFlatButton
                 label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
                 backgroundColor={(this.state.bounced) ? purple : white}
-                labelStyle={{color: (this.state.bounced) ? white : purple}}
+                labelStyle={{
+                  color: (this.state.bounced) ? white : purple,
+                  fontFamily: 'Helvetica Neue'}}
                 icon={
-                  <Bounce 
+                  <Bounce
                     fill={(this.state.bounced) ? white : purple}
                     width={21} />
                 }
@@ -437,7 +440,7 @@ class Project extends Component {
                 style={{
                   border: `1px solid ${grey400}`,
                   borderRadius: '5px',
-                  width: '160px',
+                  width: '170px',
                   marginTop: '20px'
                 }} />
             }
@@ -736,9 +739,7 @@ export default Relay.createContainer(
                 node {
                   id
                   handle
-                  portrait {
-                    url
-                  }
+                  portrait { url }
                 }
               }
             }
@@ -805,13 +806,9 @@ export default Relay.createContainer(
                           }
                         }
                       }
-                      upvotes (
-                        first: 999
-                      ) {
+                      upvotes ( first: 999 ) {
                         edges {
-                          node {
-                            id
-                          }
+                          node { id }
                         }
                       }
                     }
