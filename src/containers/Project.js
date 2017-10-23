@@ -6,7 +6,7 @@ import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, 
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
-import {white, purple, grey300, grey200} from 'theme'
+import {white, purple, grey300, grey200, grey400} from 'theme'
 import {url} from 'config'
 import ProjectTribeList from 'components/ProjectTribeList'
 import {Tabs, Tab} from 'material-ui/Tabs'
@@ -30,6 +30,7 @@ import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
 import DeleteProject from 'mutations/DeleteProject'
+import AddToUserBounces from 'mutations/AddToUserBounces'
 import ImageEditor from 'components/ImageEditor'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -43,7 +44,9 @@ class Project extends Component {
     edit: false,
     artworkEditorOpen: false,
     selection: false,
-    delete: false
+    delete: false,
+    bounced: false,
+    showBounceButton: false,
   }
 
   static childContextTypes = {
@@ -99,11 +102,16 @@ class Project extends Component {
   }
 
   componentDidMount(){
-    let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
+    let user = this.props.viewer.user
+    let project = this.props.viewer.allProjects.edges[0].node
+    let friendIds = user.friends.edges.map(edge => edge.node.id)
+    let bouncedByIds = project.bouncedBy.edges.map(edge => edge.node.id)
     let projectOwnerId = this.props.viewer.User.id
-    if (!friendIds.includes(projectOwnerId)) {
-      this.setState({disableComments: true})
-    }
+    this.setState({
+      disableComments: !friendIds.includes(projectOwnerId),
+      showBounceButton: user.id !== projectOwnerId,
+      bounced: bouncedByIds.includes(user.id)
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -237,7 +245,7 @@ class Project extends Component {
         project: this.props.viewer.allProjects.edges[0].node,
         artworkId: file.id,
       }), {
-        onSuccess: success => console.log(success),
+        onSuccess: success => console.log('artwork success'),
         failure: failure => console.log('fail', failure)
       }
     )
@@ -271,6 +279,27 @@ class Project extends Component {
       })
     }
     return comments
+  }
+
+  setBounce = () => {
+
+    let {id: selfId} = this.props.viewer.user
+    let {id: projectId} = this.props.viewer.allProjects[0]
+    if (this.state.bounced) {
+      console.log('insert unbounce mutation')
+    } else {
+      this.props.relay.commitUpdate(
+        new AddToUserBounces({
+          selfId,
+          projectId
+        }), {
+          onSuccess: (response) => {
+            this.setState({bounced: true})
+            console.log('success', response)},
+          onFailure: (response) => console.log('falure')
+        }
+      )
+    }
   }
 
   render () {
@@ -376,6 +405,23 @@ class Project extends Component {
                   this.setState({edit:true})
                 }} />
             </TitleGenre>
+            {this.state.showBounceButton && <BtFlatButton
+              label={(this.state.bounced) ? 'Un-Bounce' : 'Bounce to Tribe'}
+              backgroundColor={(this.state.bounced) ? white : purple}
+              labelStyle={{color: (this.state.bounced) ? purple : white}}
+              icon={
+                <Tribe
+                  fill={(this.state.bounced) ? purple : white}
+                  height={16}
+                />
+              }
+              onClick={()=>{this.setBounce()}}
+              style={{
+                border: `1px solid ${grey400}`,
+                borderRadius: '5px',
+                width: '160px'
+              }}
+            />}
             <Summary>
               {project.description}
             </Summary>
@@ -383,20 +429,14 @@ class Project extends Component {
           <Dialog
             modal={false}
             open={this.state.delete}
-            onRequestClose={()=>{
-              this.setState({delete: false})
-            }}
+            onRequestClose={()=>{this.setState({delete: false})}}
             actions={[
               <FlatButton
                 label={"Cancel"}
-                onClick={()=>{
-                  this.setState({delete: false})
-                }} />,
+                onClick={()=>{this.setState({delete: false})}} />,
               <FlatButton
                 label={"Delete"}
-                labelStyle={{
-                  color: '#DF5151'
-                }}
+                labelStyle={{color: '#DF5151'}}
                 onClick={
                   ()=>{
                     this.props.relay.commitUpdate(
@@ -694,6 +734,14 @@ export default Relay.createContainer(
             edges {
               node {
                 id
+                bouncedBy (first:999) {
+                  edges {
+                    node {
+                      id
+                      handle
+                    }
+                  }
+                }
                 title
                 description
                 privacy
@@ -701,9 +749,7 @@ export default Relay.createContainer(
                   handle
                   id
                 }
-                genres (
-                  first: 3
-                ) {
+                genres (first: 3) {
                   edges {
                     node {
                       name
@@ -711,12 +757,8 @@ export default Relay.createContainer(
                     }
                   }
                 }
-                artwork {
-                  url
-                }
-                tracks (
-                  first: 1
-                ) {
+                artwork {url}
+                tracks (first: 1) {
                   edges {
                     node {
                       id

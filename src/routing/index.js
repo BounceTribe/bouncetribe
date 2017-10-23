@@ -141,7 +141,7 @@ const createRoutes = () => (
       render={({ props }) => props ? <Tribe {...props} /> : <Loading />} >
       <IndexRoute component={TribeAll}
         queries={ViewerQuery}
-        render={({ props }) => props ? <TribeAll {...props} /> : <Loading nested/>} />
+        render={({ props }) => props ? <TribeAll {...props} /> : <Loading nested />} />
       <Route path={'/tribe/:userHandle/requests'}
         component={TribeRequests}
         queries={ViewerQuery}
