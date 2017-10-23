@@ -560,8 +560,6 @@ class Profile extends Component {
   }
 
   render () {
-    console.log('ProfRender', this.state);
-
     let {genres, skills, influences, experience, experiences, notification} = this.state
     let {User, user} = this.props.viewer
     let ownProfile = (User.id === user.id)
