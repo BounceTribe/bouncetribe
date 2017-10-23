@@ -20,7 +20,7 @@ import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
 import Projects from 'containers/Projects'
 import DirectMessages from 'containers/DirectMessages'
-// import Bounces from 'containers/Bounces'
+import Bounces from 'containers/Bounces'
 import {Loading} from 'styled/Spinner'
 
 const ViewerQuery = {
@@ -111,10 +111,10 @@ const createRoutes = () => (
         component={DirectMessages}
         queries={ViewerQuery}
         render={({ props }) => props ? <DirectMessages {...props} /> : <Loading nested />} />
-      {/* <Route path={'/dash/bounces/:userHandle'}
+      <Route path={'/dash/bounces/:userHandle'}
         component={Bounces}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Bounces {...props} /> : <Loading nested/>} /> */}
+        render={({ props }) => props ? <Bounces {...props} /> : <Loading nested/>} />
     </Route>
 
     <Route path={'/:userHandle'}

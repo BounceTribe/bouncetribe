@@ -78,7 +78,6 @@ export default Relay.createContainer(
                   comments ( first: 999 ) {
                     edges {
                       node {
-                        id
                         type
                       }
                     }

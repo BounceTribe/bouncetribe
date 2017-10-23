@@ -23,8 +23,7 @@ class Bounces extends Component {
 
   makeList = () => {
     let User = this.props.viewer.User
-    let bounced = User.comments.edges.filter(edge => edge.node.type === 'BOUNCE')
-    return bounced.comments.edges.map(edge => {
+    return User.comments.edges.map(edge => {
       let {node:project} = edge
       if (project.privacy === 'PRIVATE') {
         return null //shouldnt have been able to bounce a private project anyway
@@ -68,26 +67,21 @@ export default Relay.createContainer(
             comments (
               first: 999
               orderBy: createdAt_ASC
+              filter: {
+                type: [BOUNCE]
+              }
             ){
               edges {
                 node {
                   id
                   createdAt
-                  type
                   project {
                     id
                     title
                     createdAt
-                    artwork { url }
+                    artwork {url}
                     privacy
-                    comments ( first: 999 ) {
-                      edges {
-                        node {
-                          id
-                          type
-                        }
-                      }
-                    }
+                    comments {type}
                   }
                 }
               }

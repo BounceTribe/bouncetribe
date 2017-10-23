@@ -16,6 +16,7 @@ import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
+import Bounce from 'icons/Bounce'
 import Location from 'icons/Location'
 import Lock from 'icons/Lock'
 import Logo from 'icons/Logo'
@@ -30,7 +31,8 @@ import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
 import DeleteProject from 'mutations/DeleteProject'
-import AddToUserBounces from 'mutations/AddToUserBounces'
+import CreateComment from 'mutations/CreateComment'
+import DeleteComment from 'mutations/DeleteComment'
 import ImageEditor from 'components/ImageEditor'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -104,8 +106,10 @@ class Project extends Component {
   componentDidMount(){
     let user = this.props.viewer.user
     let project = this.props.viewer.allProjects.edges[0].node
+    let bounces = project.comments.edges.filter(edge =>
+      edge.node.type==='BOUNCE')
     let friendIds = user.friends.edges.map(edge => edge.node.id)
-    let bouncedByIds = project.bouncedBy.edges.map(edge => edge.node.id)
+    let bouncedByIds = bounces.map(edge => edge.node.author.id)
     let projectOwnerId = this.props.viewer.User.id
     this.setState({
       disableComments: !friendIds.includes(projectOwnerId),
@@ -200,7 +204,7 @@ class Project extends Component {
 
     return this.filteredComments().map((edge, index)=>{
       let {node: comment} = edge
-      if (comment.id === 'new') {
+      if (comment.id === 'new' || comment.type === 'BOUNCE') {
         return null
       }
       return (
@@ -282,21 +286,35 @@ class Project extends Component {
   }
 
   setBounce = () => {
-
+    console.log('setbounce', this);
+    let project = this.props.viewer.allProjects.edges[0].node
     let {id: selfId} = this.props.viewer.user
-    let {id: projectId} = this.props.viewer.allProjects[0]
+    let {id: projectId} = project
     if (this.state.bounced) {
-      console.log('insert unbounce mutation')
+      let thisComment = project.comments.edges.find(edge => edge.node.author.id===selfId)
+      this.props.relay.commitUpdate(
+        new DeleteComment({
+          id: thisComment.node.id,
+          projectId: projectId
+        }), {
+          onSuccess: (response) => {
+            this.setState({bounced: false})
+            console.log('success', response)},
+          onFailure: (response) => console.log('falure', response)
+        }
+      )
     } else {
       this.props.relay.commitUpdate(
-        new AddToUserBounces({
-          selfId,
-          projectId
+        new CreateComment({
+          authorId: selfId,
+          projectId: projectId,
+          type: 'BOUNCE',
+          text: ' '
         }), {
           onSuccess: (response) => {
             this.setState({bounced: true})
             console.log('success', response)},
-          onFailure: (response) => console.log('falure')
+          onFailure: (response) => console.log('falure', response)
         }
       )
     }
@@ -400,31 +418,29 @@ class Project extends Component {
                   cursor: 'pointer',
                   marginLeft: '15px'
                 }}
-                onClick={()=>{
-                  console.log("hello" )
-                  this.setState({edit:true})
-                }} />
+                onClick={()=>{this.setState({edit:true})}} />
             </TitleGenre>
-            {this.state.showBounceButton && <BtFlatButton
-              label={(this.state.bounced) ? 'Un-Bounce' : 'Bounce to Tribe'}
-              backgroundColor={(this.state.bounced) ? white : purple}
-              labelStyle={{color: (this.state.bounced) ? purple : white}}
-              icon={
-                <Tribe
-                  fill={(this.state.bounced) ? purple : white}
-                  height={16}
-                />
-              }
-              onClick={()=>{this.setBounce()}}
-              style={{
-                border: `1px solid ${grey400}`,
-                borderRadius: '5px',
-                width: '160px'
-              }}
-            />}
             <Summary>
               {project.description}
             </Summary>
+            {this.state.showBounceButton &&
+              <BtFlatButton
+                label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
+                backgroundColor={(this.state.bounced) ? purple : white}
+                labelStyle={{color: (this.state.bounced) ? white : purple}}
+                icon={
+                  <Bounce 
+                    fill={(this.state.bounced) ? white : purple}
+                    width={21} />
+                }
+                onClick={()=>{this.setBounce()}}
+                style={{
+                  border: `1px solid ${grey400}`,
+                  borderRadius: '5px',
+                  width: '160px',
+                  marginTop: '20px'
+                }} />
+            }
           </Info>
           <Dialog
             modal={false}
@@ -734,14 +750,6 @@ export default Relay.createContainer(
             edges {
               node {
                 id
-                bouncedBy (first:999) {
-                  edges {
-                    node {
-                      id
-                      handle
-                    }
-                  }
-                }
                 title
                 description
                 privacy
@@ -775,6 +783,7 @@ export default Relay.createContainer(
                     node {
                       session { id }
                       text
+                      createdAt
                       type
                       id
                       author {
