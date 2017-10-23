@@ -12,7 +12,7 @@ import FlatButton from 'material-ui/FlatButton'
 import { ProfCol, ProfHandle, Score} from 'styled/Project'
 
 export const DashProfile = ({selectedUser}) => (
-  <div style={{display: 'flex', padding: '31px'}}>
+  <div style={{display: 'flex', padding: '31px 31px 15px 31px'}}>
     <BtAvatar user={selectedUser} size={60} />
     <ProfCol>
       <ProfHandle to={`/${selectedUser.handle}`} >

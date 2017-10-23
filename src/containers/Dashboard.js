@@ -165,8 +165,8 @@ class Dashboard extends Component {
             topBar={<DashProfile selectedUser={selectedUser} />}
             tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
-            locks={[false, true, false]}
-            content={this.props.children} />
+            locks={[false, false, false]}
+            content={this.state.selectedUser && this.props.children} />
         </BotRow>
       </DashView>
     )

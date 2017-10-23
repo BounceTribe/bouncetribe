@@ -3,6 +3,7 @@ import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import {grey200, purple, grey700, blue} from 'theme'
 import Avatar from 'material-ui/Avatar'
+import {url} from 'config'
 // import Toggle from 'material-ui/Toggle'
 
 
@@ -13,48 +14,38 @@ class ProjectTribeList extends Component {
     showAll: true,
   }
 
-
-
   toggleSelection = (handle) => {
     if (this.props.selection === handle) {
-
-      this.setState({
-        selections: []
-      })
+      this.setState({ selections: [] })
       this.props.handleSelection(false)
     } else {
-
       this.props.handleSelection(handle)
     }
-
-
   }
 
-
   componentWillReceiveProps (newProps) {
-      if (!newProps.router.location.query.in) {
-        this.setState({
-          selections: []
-        })
-      }
+    if (!newProps.router.location.query.in) {
+      this.setState({ selections: [] })
+    }
   }
 
   nestedItems = () => {
     let uniqueAuthorIds = []
     let uniqueAuthors = []
 
+    let comments = this.props.project.comments.edges.map(edge => edge.node)
+    console.log('comments0', comments);
 
-    let comments = this.props.project.comments.edges.map((edge) => {
-      return edge.node
-    })
-
-
+    comments = comments.filter(comment => comment.type !== 'BOUNCE')
+    console.log('comments1', comments);
     comments.forEach( (comment) => {
       if (!uniqueAuthorIds.includes(comment.author.id) && !comment.session){
         uniqueAuthorIds.push(comment.author.id)
         uniqueAuthors.push(comment)
       }
     })
+    console.log('comments2', comments);
+
     return uniqueAuthors.map((recent, index) => {
       let {author} = recent
       return (
@@ -64,9 +55,7 @@ class ProjectTribeList extends Component {
           leftAvatar={
             <Avatar
               src={author.portrait.url}
-              style={{
-                objectFit: 'cover'
-              }}
+              style={{ objectFit: 'cover' }}
             />
           }
           style={{
@@ -131,6 +120,7 @@ class ProjectTribeList extends Component {
 
 
   render() {
+    console.log(' tribe list props', this.props);
     let nestedItems = this.nestedItems()
     let sessionCommentAuthors = this.sessionCommentAuthors()
     return (

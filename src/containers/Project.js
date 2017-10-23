@@ -6,7 +6,7 @@ import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, 
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
-import {white, purple, grey300, grey200} from 'theme'
+import {white, purple, grey300, grey200, grey400} from 'theme'
 import {url} from 'config'
 import ProjectTribeList from 'components/ProjectTribeList'
 import {Tabs, Tab} from 'material-ui/Tabs'
@@ -16,6 +16,7 @@ import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
+import Bounce from 'icons/Bounce'
 import Location from 'icons/Location'
 import Lock from 'icons/Lock'
 import Logo from 'icons/Logo'
@@ -30,6 +31,8 @@ import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
 import DeleteProject from 'mutations/DeleteProject'
+import CreateComment from 'mutations/CreateComment'
+import DeleteComment from 'mutations/DeleteComment'
 import ImageEditor from 'components/ImageEditor'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -43,7 +46,9 @@ class Project extends Component {
     edit: false,
     artworkEditorOpen: false,
     selection: false,
-    delete: false
+    delete: false,
+    bounced: false,
+    showBounceButton: false,
   }
 
   static childContextTypes = {
@@ -99,11 +104,18 @@ class Project extends Component {
   }
 
   componentDidMount(){
-    let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
+    let user = this.props.viewer.user
+    let project = this.props.viewer.allProjects.edges[0].node
+    let bounces = project.comments.edges.filter(edge =>
+      edge.node.type==='BOUNCE')
+    let friendIds = user.friends.edges.map(edge => edge.node.id)
+    let bouncedByIds = bounces.map(edge => edge.node.author.id)
     let projectOwnerId = this.props.viewer.User.id
-    if (!friendIds.includes(projectOwnerId)) {
-      this.setState({disableComments: true})
-    }
+    this.setState({
+      disableComments: !friendIds.includes(projectOwnerId),
+      showBounceButton: user.id !== projectOwnerId,
+      bounced: bouncedByIds.includes(user.id)
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -192,7 +204,7 @@ class Project extends Component {
 
     return this.filteredComments().map((edge, index)=>{
       let {node: comment} = edge
-      if (comment.id === 'new') {
+      if (comment.id === 'new' || comment.type === 'BOUNCE') {
         return null
       }
       return (
@@ -237,7 +249,7 @@ class Project extends Component {
         project: this.props.viewer.allProjects.edges[0].node,
         artworkId: file.id,
       }), {
-        onSuccess: success => console.log(success),
+        onSuccess: success => console.log('artwork success'),
         failure: failure => console.log('fail', failure)
       }
     )
@@ -271,6 +283,42 @@ class Project extends Component {
       })
     }
     return comments
+  }
+
+  setBounce = () => {
+    console.log('setbounce', this);
+    let project = this.props.viewer.allProjects.edges[0].node
+    let {id: selfId} = this.props.viewer.user
+    let {id: projectId} = project
+    if (this.state.bounced) {
+      let thisComment = project.comments.edges.find(edge => edge.node.author.id===selfId)
+      this.props.relay.commitUpdate(
+        new DeleteComment({
+          id: thisComment.node.id,
+          projectId: projectId
+        }), {
+          onSuccess: (response) => {
+            this.setState({bounced: false})
+            console.log('success', response)},
+          onFailure: (response) => console.log('falure', response)
+        }
+      )
+    } else {
+      this.props.relay.commitUpdate(
+        new CreateComment({
+          authorId: selfId,
+          projectId: projectId,
+          type: 'BOUNCE',
+          text: ' ',
+          timestamp: -1
+        }), {
+          onSuccess: (response) => {
+            this.setState({bounced: true})
+            console.log('success', response)},
+          onFailure: (response) => console.log('falure', response)
+        }
+      )
+    }
   }
 
   render () {
@@ -371,32 +419,43 @@ class Project extends Component {
                   cursor: 'pointer',
                   marginLeft: '15px'
                 }}
-                onClick={()=>{
-                  console.log("hello" )
-                  this.setState({edit:true})
-                }} />
+                onClick={()=>{this.setState({edit:true})}} />
             </TitleGenre>
             <Summary>
               {project.description}
             </Summary>
+            {this.state.showBounceButton &&
+              <BtFlatButton
+                label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
+                backgroundColor={(this.state.bounced) ? purple : white}
+                labelStyle={{
+                  color: (this.state.bounced) ? white : purple,
+                  fontFamily: 'Helvetica Neue'}}
+                icon={
+                  <Bounce
+                    fill={(this.state.bounced) ? white : purple}
+                    width={21} />
+                }
+                onClick={()=>{this.setBounce()}}
+                style={{
+                  border: `1px solid ${grey400}`,
+                  borderRadius: '5px',
+                  width: '170px',
+                  marginTop: '20px'
+                }} />
+            }
           </Info>
           <Dialog
             modal={false}
             open={this.state.delete}
-            onRequestClose={()=>{
-              this.setState({delete: false})
-            }}
+            onRequestClose={()=>{this.setState({delete: false})}}
             actions={[
               <FlatButton
                 label={"Cancel"}
-                onClick={()=>{
-                  this.setState({delete: false})
-                }} />,
+                onClick={()=>{this.setState({delete: false})}} />,
               <FlatButton
                 label={"Delete"}
-                labelStyle={{
-                  color: '#DF5151'
-                }}
+                labelStyle={{color: '#DF5151'}}
                 onClick={
                   ()=>{
                     this.props.relay.commitUpdate(
@@ -680,9 +739,7 @@ export default Relay.createContainer(
                 node {
                   id
                   handle
-                  portrait {
-                    url
-                  }
+                  portrait { url }
                 }
               }
             }
@@ -701,9 +758,7 @@ export default Relay.createContainer(
                   handle
                   id
                 }
-                genres (
-                  first: 3
-                ) {
+                genres (first: 3) {
                   edges {
                     node {
                       name
@@ -711,12 +766,8 @@ export default Relay.createContainer(
                     }
                   }
                 }
-                artwork {
-                  url
-                }
-                tracks (
-                  first: 1
-                ) {
+                artwork {url}
+                tracks (first: 1) {
                   edges {
                     node {
                       id
@@ -733,6 +784,7 @@ export default Relay.createContainer(
                     node {
                       session { id }
                       text
+                      createdAt
                       type
                       id
                       author {
@@ -754,13 +806,9 @@ export default Relay.createContainer(
                           }
                         }
                       }
-                      upvotes (
-                        first: 999
-                      ) {
+                      upvotes ( first: 999 ) {
                         edges {
-                          node {
-                            id
-                          }
+                          node { id }
                         }
                       }
                     }
