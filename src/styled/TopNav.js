@@ -125,7 +125,7 @@ const ViewAllContainer = styled(NotifyContainer)`
 `
 
 export const ViewAll = ({to}) => (
-  <BtLink to={to}>
+  <BtLink style={{paddingTop: '10px'}} to={to}>
     <ViewAllContainer>
       <NotifyHeader>
         View All

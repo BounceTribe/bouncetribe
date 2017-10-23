@@ -102,7 +102,6 @@ class TopNav extends Component {
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
-              <ViewAll to={`/notifications`}>View All</ViewAll>
               {((((user || {}).notifications || {}).edges || []).length > 0) ?
                 user.notifications.edges.map(edge=>(
                   <Notification key={edge.node.id} notification={edge.node} />
@@ -112,6 +111,7 @@ class TopNav extends Component {
                   <NotifyMessage>No new notifications</NotifyMessage>
                 </NotifyContainer>
               }
+              <ViewAll to={`/notifications`}>View All</ViewAll>
             </IconMenu>
           </NavLink>
           <IconMenu

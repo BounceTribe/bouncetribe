@@ -8,7 +8,8 @@ export const MsgsContainer = styled.div`
   flex-direction: column-reverse;
   flex-grow: 2;
   max-height: 50vh;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-x: scroll;
   padding: 20px 20px 0 20px;
   border-bottom: 1px solid ${grey500};
   bottom: 0;

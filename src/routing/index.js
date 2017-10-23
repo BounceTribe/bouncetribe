@@ -160,7 +160,6 @@ const createRoutes = () => (
         prepareParams={tribeSearch}
         ignoreScrollBehavior />
     </Route>
-
     <Route
       path={'/:userHandle/:projectTitle'}
       onEnter={userOnly}
