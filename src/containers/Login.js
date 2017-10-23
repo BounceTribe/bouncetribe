@@ -22,20 +22,11 @@ class Login extends Component {
     }
   }
 
-
-
-
-
   render () {
     return (
       <Background>
-
         <Container>
-
-          <LogoImg
-            src={`${url}/logo.png`}
-          />
-
+          <LogoImg src={`${url}/logo.png`} />
           {/* <Logo
             style={{
               display: 'flex',
@@ -44,32 +35,20 @@ class Login extends Component {
               width: '70px',
               borderRadius: '70px',
               padding: '10px'
-
             }}
             fill={'white'}
           /> */}
-
-          <Header
-            src={LoginLogo}
-          />
-
-          <Lock
-            id='lock'
-          />
+          <Header src={LoginLogo} />
+          <Lock id='lock' />
           <Legal>
-            <LegalLink
-              href={"http://bouncetribe.com/terms-of-service/"}
-            >
+            <LegalLink href={"http://bouncetribe.com/terms-of-service/"} >
               Our Terms
             </LegalLink>
               &nbsp;&&nbsp;
-            <LegalLink
-              href={"http://bouncetribe.com/privacy-policy/"}
-            >
+            <LegalLink href={"http://bouncetribe.com/privacy-policy/"} >
                Privacy Policy
             </LegalLink>
           </Legal>
-
         </Container>
       </Background>
     )
@@ -81,9 +60,7 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user {
-            id
-          }
+          user { id }
         }
       `,
     },

@@ -32,8 +32,8 @@ const sanitizeHandle = (handle) => {
    restricted.forEach((word)=>{
      sanitized = sanitized.replace(word, '')
    })
-   if (sanitized > 20) {
-     let difference = sanitized.length - 20
+   if (sanitized > 15) {
+     let difference = sanitized.length - 15
      sanitized.splice(sanitized.length - difference, difference, '')
    }
    if (sanitized < 6) {
@@ -49,7 +49,7 @@ export const handleValidator = (handle) => {
    restricted.forEach((word)=>{
      valid = valid.replace(word, '')
    })
-   if (valid.length > 20) {
+   if (valid.length > 15) {
      return {
        handle: valid,
        error: 'Too long!'
@@ -66,13 +66,13 @@ export const handleValidator = (handle) => {
      error: ''
    }
 }
-// const isValidHandle = () => {
-//
-// }
 
 export const generateHandle = (email) => {
   return new Promise((resolve, reject)=>{
     let newHandle = email.split('@')[0]
+    if (newHandle.length > 15) {
+      newHandle = newHandle.slice(0,15)
+    }
     newHandle = sanitizeHandle(newHandle)
     isUniqueHandle(newHandle).then(
       result => {
