@@ -124,7 +124,7 @@ const buttonType = (props) => {
 export const TribeButton = (props) => {
   return (
     <FriendButtonCol>
-      //make sure User is not self
+      {/* Make sure User is not self */}
       {props.viewer.user.id!==props.viewer.User.id && buttonType(props)}
     </FriendButtonCol>
   )
