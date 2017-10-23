@@ -65,8 +65,6 @@ export const Right = styled.div`
   padding-left: 20px;
 `
 
-
-
 export const Portrait = styled.img`
   height: 150px;
   width: 150px;
@@ -93,8 +91,6 @@ export const Input = styled.input`
   margin-bottom: 10px;
   width: ${(props)=>inputWidth(props,8)}px;
 `
-
-
 
 export const Handle = styled(Input)`
   font-size: 30px;

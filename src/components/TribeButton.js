@@ -80,6 +80,9 @@ const RemoveFromTribe = ({onClick}) => (
 const buttonType = (props) => {
   console.log('btnType props', props);
   let btn;
+  //Will hit if button has been clicked
+  //These are all 'disabled' buttons
+  //Cannot change state until page reload
   switch (props.btnStatus) {
     case 'REMOVED':
       btn = <RemovedFromTribe />
@@ -101,21 +104,27 @@ const buttonType = (props) => {
   let friends = user.friends.edges.map(edge => edge.node.id)
   let inviters = user.invitations.edges.map(edge => edge.node.actor.id)
   let requestees = user.sentRequests.edges.map(edge => edge.node.recipient.id)
-  console.log('btnType props', friends, inviters, requestees, User.id);
 
   if (friends.includes(User.id)) {
+    //User is Tribe member
     return <RemoveFromTribe onClick={()=>props.unfriend()} />
   } else if (inviters.includes(User.id)) {
+    //Waiting on self to accept
     let invite = user.invitations.edges.find((edge)=>edge.node.actor.id === User.id)
-    return <AcceptTribeRequest onClick={()=>{props.accept(invite.node.id)}}/>
+    return <AcceptTribeRequest onClick={()=>{props.accept(invite.node.id)}} />
+  } else if (requestees.includes(User.id)) {
+    //Waiting for User to accept
+    return <TribeRequestSent />
   } else {
-    return (<AddToTribe onClick={()=>props.addToTribe()}/>)
+    //No relationship
+    return <AddToTribe onClick={()=>props.addToTribe()}/>
   }
 }
 
 export const TribeButton = (props) => {
   return (
     <FriendButtonCol>
+      //make sure User is not self
       {props.viewer.user.id!==props.viewer.User.id && buttonType(props)}
     </FriendButtonCol>
   )
