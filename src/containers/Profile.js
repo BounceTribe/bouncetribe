@@ -575,7 +575,7 @@ class Profile extends Component {
             topBar={null}
             tabChange={(tab)=>this.setTab(tab)}
             labels={['activity', 'projects', 'bounces']}
-            locks={[true, false, true]}
+            locks={[true, false, false]}
             content={this.props.children}
           />
           <BotRight>

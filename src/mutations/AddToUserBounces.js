@@ -25,7 +25,7 @@ export default class AddToUserBounces extends Mutation {
       type: 'RANGE_ADD',
       parentName: 'bouncedByUser ',
       parentID: this.props.selfId,
-      connectionName: 'bounces',
+      connectionName: 'bounced',
       edgeName: 'bouncedByUserEdge',
       rangeBehaviors: {
         '': 'append',

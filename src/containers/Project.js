@@ -467,7 +467,6 @@ class Project extends Component {
                         }
                       }
                     )
-
                   }
                 } />
             ]} >
@@ -484,12 +483,8 @@ class Project extends Component {
             actions={[
               <FlatButton
                 label={"Delete Project"}
-                labelStyle={{
-                  color: '#DF5151'
-                }}
-                onClick={()=>{
-                  this.setState({edit: false, delete: true})
-                }} />,
+                labelStyle={{ color: '#DF5151' }}
+                onClick={()=>{ this.setState({edit: false, delete: true}) }} />,
               <BtFlatButton
                 label={'Save'}
                 onClick={()=>{
@@ -519,12 +514,8 @@ class Project extends Component {
               floatingLabelText={'Genre'}
               value={this.state.genre}
               fullWidth={true}
-              onChange={(e, index, value)=>{
-                this.setState({genre:value})
-              }}
-              selectedMenuItemStyle={{
-                color: purple
-              }} >
+              onChange={(e, index, value)=>{ this.setState({genre:value}) }}
+              selectedMenuItemStyle={{ color: purple }} >
               {this.state.genres}
             </SelectField>
             <TextField
@@ -540,13 +531,7 @@ class Project extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'PRIVATE'})}
                   backgroundColor={(this.state.privacy === 'PRIVATE') ? purple : grey300}
-                  icon={
-                    <Lock
-                      style={{}}
-                      height={23}
-                      width={22}
-                      fill={white} />
-                  } />
+                  icon={ <Lock height={23} width={22} fill={white} /> } />
                 <ChoiceText>
                   Private
                 </ChoiceText>
@@ -564,8 +549,7 @@ class Project extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'PUBLIC'})}
                   backgroundColor={(this.state.privacy === 'PUBLIC') ? purple : grey300}
-                  icon={
-                    <Logo fill={white} /> } />
+                  icon={ <Logo fill={white} /> } />
                 <ChoiceText>
                   Find Sessions
                 </ChoiceText>

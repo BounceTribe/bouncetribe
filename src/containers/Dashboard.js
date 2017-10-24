@@ -4,13 +4,14 @@ import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, Dash
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField} from 'material-ui'
-import {grey400} from 'theme'
+import {grey400, purple} from 'theme'
 import Bolt from 'icons/Bolt'
 import {BtAvatar, IconTextContainer, IconText} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {Panel} from 'components/Panel'
-
+import sendEmailInvite from 'utils/sendEmailInvite'
+import Snackbar from 'material-ui/Snackbar'
 
 class Dashboard extends Component {
 
@@ -25,13 +26,13 @@ class Dashboard extends Component {
       showMentors: true,
       showTribe: true,
       showBand: true,
-      tab: 'projects'
+      tab: 'projects',
+      snackbarText: '',
+      snackbar: false
     }
   }
 
   componentDidMount() {
-    console.log('props', this.props)
-
     if (this.props.viewer.user.friends.edges.length) {
       let selectedUser = this.props.viewer.user.friends.edges[0].node;
       this.setState( {selectedUser} )
@@ -43,7 +44,6 @@ class Dashboard extends Component {
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
-        suggestions = suggestions.concat(suggestions);
         let list = suggestions.slice(0, max).map( friend =>
           <FbList
             key={friend.id}
@@ -63,8 +63,29 @@ class Dashboard extends Component {
   }
 
   sendInvite = () => {
-    console.log('event', this.state.email)
-    this.setState({invite: false})
+    let user = this.props.viewer.user
+    let query = {
+      byId: user.id,
+      toEmail: this.state.email,
+      byHandle: user.handle
+    }
+    sendEmailInvite(query).then(result => {
+      if (result.status===200) {
+        this.setState({
+          snackbarText: 'Invite Sent!',
+          snackbar: open,
+          invite: false,
+          email: ''
+        })
+      } else {
+        this.setState({
+          snackbarText: 'Error Sending Email!',
+          snackbar: open,
+          invite: false
+        })
+      }
+    })
+    this.setState({invite: false, email: ''})
   }
 
   createFriendRequest = (recipientId) => {
@@ -91,10 +112,16 @@ class Dashboard extends Component {
     // console.log('render - this', this)
     return (
       <DashView>
+        <Snackbar
+          open={this.state.snackbar} //requires boolean input
+          message={this.state.snackbarText}
+          autoHideDuration={2000}
+          onRequestClose={()=>this.setState({snackbar:false})}
+          onActionTouchTap={()=>this.setState({snackbar:false})}
+          bodyStyle={{ backgroundColor: purple }} />
         <DashHeader>
           <DashHeaderRow>
             <IconTextContainer to={`/tribe/${user.handle}`} >
-              {/* <Logo style={{ display: 'flex', marginBottom: '-5px' }} fill={purple} /> */}
               <BtAvatar size={40} hideStatus />
               <IconText>
                 My Tribe

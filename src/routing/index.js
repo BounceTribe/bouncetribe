@@ -126,11 +126,11 @@ const createRoutes = () => (
         component={Projects}
         queries={ViewerQuery}
         render={({ props }) => props ? <Projects {...props} /> : <Loading nested/>} />
-      {/* <Route path={'/:userHandle/bounces'}
+       <Route path={'/:userHandle/bounces'}
         component={Bounces}
         queries={ViewerQuery}
         render={({ props }) => props ? <Bounces {...props} /> : <Loading nested/>} />
-      <Route path={'/:userHandle/activity'}
+      {/*<Route path={'/:userHandle/activity'}
         component={Activities}
         queries={ViewerQuery}
         render={({ props }) => props ? <Activities {...props} /> : <Loading nested/>} /> */}

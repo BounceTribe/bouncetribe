@@ -3,7 +3,6 @@ import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import {grey200, purple, grey700, blue} from 'theme'
 import Avatar from 'material-ui/Avatar'
-import {url} from 'config'
 // import Toggle from 'material-ui/Toggle'
 
 

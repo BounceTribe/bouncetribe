@@ -176,6 +176,9 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
       break
     }
     case 'BOUNCED': {
+      header = 'Track Bounced'
+      message = `${triggeredBy.handle} has bounced your track.`
+      link = `/${notificationFor.handle}/${project.title}`
       break
     }
     default: {
