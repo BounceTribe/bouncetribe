@@ -55,6 +55,8 @@ const tribeSearch = (params, {location})=>{
 }
 
 const userOnly = (nextState, replace) => {
+  //look furtherinto the auth gettoken function
+  //verify
   if (!auth.getToken()) {
     replace({ pathname: '/login' })
   }

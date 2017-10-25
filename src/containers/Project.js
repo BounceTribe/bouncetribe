@@ -665,13 +665,13 @@ export default Relay.createContainer(
       projectTitle: '',
       projectFilter: {},
     },
-    prepareVariables: (prevVar)=>{
+    prepareVariables: (urlParams)=>{
       return {
-        ...prevVar,
+        ...urlParams,
         projectFilter: {
-          title: prevVar.projectTitle,
+          title: urlParams.projectTitle,
           creator: {
-            handle: prevVar.userHandle
+            handle: urlParams.userHandle
           }
         }
       }

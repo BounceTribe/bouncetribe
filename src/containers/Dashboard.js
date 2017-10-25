@@ -113,7 +113,7 @@ class Dashboard extends Component {
     return (
       <DashView>
         <Snackbar
-          open={this.state.snackbar} //requires boolean input
+          open={this.state.snackbar ? true : false} //requires boolean input
           message={this.state.snackbarText}
           autoHideDuration={2000}
           onRequestClose={()=>this.setState({snackbar:false})}

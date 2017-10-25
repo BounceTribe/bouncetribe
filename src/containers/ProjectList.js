@@ -41,6 +41,7 @@ class ProjectList extends Component {
     return uniqueAuthors.length
   }
 
+
   get projects () {
     let {User: owner, user} = this.props.viewer
     return this.props.viewer.User.projects.edges.map(edge=>{
