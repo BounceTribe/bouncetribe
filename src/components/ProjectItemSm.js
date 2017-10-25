@@ -43,7 +43,7 @@ export const ProjectItemSm = ({User, project, comments, likes, bounces, bounceTa
             </DuoItem>
             <DuoItem>
               <Bubble>
-                <Bounce style={{margin: '1px 0 0 2px'}} width={18} />
+                <Bounce style={{margin: '1px 0 0 3px'}} width={17} />
               </Bubble>
               {bounces.length}
             </DuoItem>
