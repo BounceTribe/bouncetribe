@@ -31,8 +31,8 @@ import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
 import DeleteProject from 'mutations/DeleteProject'
-import CreateComment from 'mutations/CreateComment'
-import DeleteComment from 'mutations/DeleteComment'
+import CreateBounce from 'mutations/CreateBounce'
+import DeleteBounce from 'mutations/DeleteBounce'
 import ImageEditor from 'components/ImageEditor'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -106,10 +106,9 @@ class Project extends Component {
   componentDidMount(){
     let user = this.props.viewer.user
     let project = this.props.viewer.allProjects.edges[0].node
-    let bounces = project.comments.edges.filter(edge =>
-      edge.node.type==='BOUNCE')
+    let bounces = project.bounces.edges
     let friendIds = user.friends.edges.map(edge => edge.node.id)
-    let bouncedByIds = bounces.map(edge => edge.node.author.id)
+    let bouncedByIds = bounces.map(edge => edge.node.bouncer.id)
     let projectOwnerId = this.props.viewer.User.id
     this.setState({
       disableComments: !friendIds.includes(projectOwnerId),
@@ -291,10 +290,11 @@ class Project extends Component {
     let {id: selfId} = this.props.viewer.user
     let {id: projectId} = project
     if (this.state.bounced) {
-      let thisComment = project.comments.edges.find(edge => edge.node.author.id===selfId)
+      let thisBounce = project.bounces.edges.find(edge =>
+        edge.node.bouncer.id===selfId)
       this.props.relay.commitUpdate(
-        new DeleteComment({
-          id: thisComment.node.id,
+        new DeleteBounce({
+          id: thisBounce.node.id,
           projectId: projectId
         }), {
           onSuccess: (response) => {
@@ -305,12 +305,11 @@ class Project extends Component {
       )
     } else {
       this.props.relay.commitUpdate(
-        new CreateComment({
-          authorId: selfId,
+        new CreateBounce({
+          bouncerId: selfId,
           projectId: projectId,
           type: 'BOUNCE',
-          text: ' ',
-          timestamp: -1
+          text: ' '
         }), {
           onSuccess: (response) => {
             this.setState({bounced: true})
@@ -738,6 +737,16 @@ export default Relay.createContainer(
                 title
                 description
                 privacy
+                bounces (first: 999) {
+                  edges {
+                    node {
+                      bouncer {
+                        id
+                        handle
+                      }
+                    }
+                  }
+                }
                 creator {
                   handle
                   id

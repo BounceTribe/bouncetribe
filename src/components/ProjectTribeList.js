@@ -33,17 +33,13 @@ class ProjectTribeList extends Component {
     let uniqueAuthors = []
 
     let comments = this.props.project.comments.edges.map(edge => edge.node)
-    console.log('comments0', comments);
 
-    comments = comments.filter(comment => comment.type !== 'BOUNCE')
-    console.log('comments1', comments);
     comments.forEach( (comment) => {
       if (!uniqueAuthorIds.includes(comment.author.id) && !comment.session){
         uniqueAuthorIds.push(comment.author.id)
         uniqueAuthors.push(comment)
       }
     })
-    console.log('comments2', comments);
 
     return uniqueAuthors.map((recent, index) => {
       let {author} = recent
