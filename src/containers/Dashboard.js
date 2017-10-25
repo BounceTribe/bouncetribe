@@ -33,11 +33,18 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.viewer.user.friends.edges.length) {
-      let selectedUser = this.props.viewer.user.friends.edges[0].node;
+    console.log(this);
+    debugger;
+    let edges = this.props.viewer.user.friends.edges;
+    if (edges.length) {
+      let foundUser = edges.find(edge =>
+        edge.node.handle === this.props.params.userHandle)
+      let selectedUser = foundUser ? foundUser.node : edges[0].node;
       this.setState( {selectedUser} )
-      this.props.router.push(`/dash/projects/${selectedUser.handle}`)
       this.suggestFriends(this.state.maxSuggestedFriends);
+      if (!foundUser) {
+        this.props.router.push(`/dash/projects/${selectedUser.handle}`)
+      }
     }
   }
 

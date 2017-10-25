@@ -78,7 +78,6 @@ const RemoveFromTribe = ({onClick}) => (
   />
 )
 const buttonType = (props) => {
-  console.log('btnType props', props);
   let btn;
   //Will hit if button has been clicked
   //These are all 'disabled' buttons

@@ -1,20 +1,14 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import styled from 'styled-components'
 import {ProjectItemSm} from 'components/ProjectItemSm'
+import {ProjectsContainerSm} from 'containers/Projects'
 
-const ProjectsContainerSm = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding: 20px;
-  width: 100%;
-  box-sizing: border-box;
-`
 
 class Bounces extends Component {
 
+componentDidMount = () => {
+  console.log('mounted', this.props.viewer.User.handle);
+}
   edgeFilter = (project, type) => {
     return project.comments.edges.filter( (edge) =>
       edge.node.type === type

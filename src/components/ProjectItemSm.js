@@ -11,39 +11,38 @@ import * as moment from 'moment'
 
 export const ProjectItemSm = ({User, project, comments, likes, bounceTab}) => {
   let created = moment.default(project.createdAt).format('MMMM Do')
-  console.log('projectSM', project);
   let projectLink = `/${project.creator.handle}/${project.title}`
   return (
-  <ProfileProjectItem key={project.id} >
-    <ProjectLeft>
-      <ProfileArtwork
-        src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
-        alt={'Project Artwork'}
-        to={projectLink} />
-      <Info>
-        <ProfileProjectTitle
-          to={projectLink} >
-          {project.title}
-        </ProfileProjectTitle>
-        <CreatedAt>
-          {bounceTab ? project.creator.handle : 'Created ' + created}
-        </CreatedAt>
-        <Duo>
-          <DuoItem>
-            <Bubble secondary >
-              <Comment height={15} width={15} />
-            </Bubble>
-            {comments.length}
-          </DuoItem>
-          <DuoItem>
-            <Bubble>
-              <Heart height={15} width={15} />
-            </Bubble>
-            {likes.length}
-          </DuoItem>
-        </Duo>
-      </Info>
-    </ProjectLeft>
-  </ProfileProjectItem>
-)
+    <ProfileProjectItem key={project.id} >
+      <ProjectLeft>
+        <ProfileArtwork
+          src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+          alt={'Project Artwork'}
+          to={projectLink} />
+        <Info>
+          <ProfileProjectTitle
+            to={projectLink} >
+            {project.title}
+          </ProfileProjectTitle>
+          <CreatedAt>
+            {bounceTab ? project.creator.handle : 'Created ' + created}
+          </CreatedAt>
+          <Duo>
+            <DuoItem>
+              <Bubble secondary >
+                <Comment height={15} width={15} />
+              </Bubble>
+              {comments.length}
+            </DuoItem>
+            <DuoItem>
+              <Bubble>
+                <Heart height={15} width={15} />
+              </Bubble>
+              {likes.length}
+            </DuoItem>
+          </Duo>
+        </Info>
+      </ProjectLeft>
+    </ProfileProjectItem>
+  )
 }
