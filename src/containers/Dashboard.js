@@ -192,7 +192,9 @@ class Dashboard extends Component {
             tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
             locks={[false, false, false]}
-            content={this.state.selectedUser && this.props.children} />
+            content={this.state.selectedUser && this.props.children}
+            vh={50}
+            scroll={true} />
         </BotRow>
       </DashView>
     )

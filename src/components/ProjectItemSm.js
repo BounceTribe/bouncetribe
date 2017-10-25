@@ -26,7 +26,7 @@ export const ProjectItemSm = ({User, project, comments, likes, bounceTab}) => {
           {project.title}
         </ProfileProjectTitle>
         <CreatedAt>
-          {bounceTab ? User.handle : 'Created ' + created}
+          {bounceTab ? project.creator.handle : 'Created ' + created}
         </CreatedAt>
         <Duo>
           <DuoItem>

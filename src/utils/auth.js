@@ -13,9 +13,8 @@ import {connectAuth0Accounts} from 'utils/connectAuth0Accounts'
 import {browserHistory} from 'react-router'
 
 class AuthService {
-
   constructor() {
-
+    console.log('auth', this);
     this.defaultOptions = {
       auth: {
         params: {

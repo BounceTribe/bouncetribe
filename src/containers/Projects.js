@@ -44,7 +44,7 @@ class Projects extends Component {
 
   render () {
     return (
-      <ProjectsContainerSm>
+      <ProjectsContainerSm >
         {this.makeList()}
       </ProjectsContainerSm>
     )
@@ -65,7 +65,7 @@ export default Relay.createContainer(
             id
             handle
             projects (
-              first: 4
+              first: 999
               orderBy: createdAt_ASC
             ){
               edges {

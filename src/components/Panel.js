@@ -6,11 +6,10 @@ import Lock from 'icons/Lock'
 
 
 const Container = styled.div`
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   border-radius: 10px;
   background-color: white;
-  min-height: 50vh;
   border: solid ${grey222} 1px;
   border-radius: 10px;
   padding: 0 20px;
@@ -26,7 +25,12 @@ const TabLabel = ({text, locked}) => (
   </span>
 )
 
-export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
+const Content = styled.div`
+  max-height: ${props => props.vh ? props.vh + 'vh' : 'auto'};
+  overflow-y: ${props => props.scroll ? 'scroll' : 'hide'}
+`
+
+export const Panel = ({topBar, content, tab, tabChange, labels, locks, vh, scroll}) => {
   let buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
   return (
     <Container>
@@ -56,7 +60,7 @@ export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
           style={{ cursor: locks[2] ? 'not-allowed' : 'pointer' }}
           disabled={locks[2]} />
       </Tabs>
-      {content}
+      <Content vh={vh} scroll={scroll} style={{paddingBottm: '15px'}}>{content}</Content>
     </Container>
   )
 }
