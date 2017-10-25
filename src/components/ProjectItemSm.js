@@ -7,9 +7,10 @@ import {ProfileProjectItem, Left as ProjectLeft, ProfileArtwork, Info, ProfilePr
 import {url} from 'config'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
+import Bounce from 'icons/Bounce'
 import * as moment from 'moment'
 
-export const ProjectItemSm = ({User, project, comments, likes, bounceTab}) => {
+export const ProjectItemSm = ({User, project, comments, likes, bounces, bounceTab}) => {
   let created = moment.default(project.createdAt).format('MMMM Do')
   let projectLink = `/${project.creator.handle}/${project.title}`
   return (
@@ -39,6 +40,12 @@ export const ProjectItemSm = ({User, project, comments, likes, bounceTab}) => {
                 <Heart height={15} width={15} />
               </Bubble>
               {likes.length}
+            </DuoItem>
+            <DuoItem>
+              <Bubble>
+                <Bounce style={{margin: '1px 0 0 2px'}} width={18} />
+              </Bubble>
+              {bounces.length}
             </DuoItem>
           </Duo>
         </Info>

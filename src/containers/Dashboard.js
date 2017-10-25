@@ -33,8 +33,6 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    console.log(this);
-    debugger;
     let edges = this.props.viewer.user.friends.edges;
     if (edges.length) {
       let foundUser = edges.find(edge =>
@@ -47,7 +45,7 @@ class Dashboard extends Component {
       }
     }
   }
-  
+
 
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {

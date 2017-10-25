@@ -18,9 +18,9 @@ import Session from 'containers/Session'
 import AllSessions from 'containers/AllSessions'
 import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
-import Projects from 'containers/Projects'
+import ProjectsPanel from 'containers/ProjectsPanel'
 import DirectMessages from 'containers/DirectMessages'
-import Bounces from 'containers/Bounces'
+import BouncesPanel from 'containers/BouncesPanel'
 import {Loading} from 'styled/Spinner'
 
 const ViewerQuery = {
@@ -106,17 +106,17 @@ const createRoutes = () => (
 
     <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
       <Route path={'/dash/:userHandle/projects'}
-        component={Projects}
+        component={ProjectsPanel}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Projects {...props} /> : <Loading nested />} />
+        render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
       <Route path={'/dash/:userHandle/messages'}
         component={DirectMessages}
         queries={ViewerQuery}
         render={({ props }) => props ? <DirectMessages {...props} /> : <Loading nested />} />
       <Route path={'/dash/:userHandle/bounces'}
-        component={Bounces}
+        component={BouncesPanel}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Bounces {...props} /> : <Loading nested/>} />
+        render={({ props }) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
     </Route>
 
     <Route path={'/:userHandle'}
@@ -125,13 +125,13 @@ const createRoutes = () => (
       queries={ViewerQuery}
       render={({ props }) => props ? <Profile {...props} /> : <Loading/>} >
       <Route path={'/:userHandle/projects'}
-        component={Projects}
+        component={ProjectsPanel}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Projects {...props} /> : <Loading nested/>} />
+        render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />
        <Route path={'/:userHandle/bounces'}
-        component={Bounces}
+        component={BouncesPanel}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Bounces {...props} /> : <Loading nested/>} />
+        render={({ props }) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
       {/*<Route path={'/:userHandle/activity'}
         component={Activities}
         queries={ViewerQuery}
