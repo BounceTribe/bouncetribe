@@ -165,16 +165,15 @@ class Dashboard extends Component {
             <ImgColumn>
               <BtAvatar user={user} size={80} hideStatus />
             </ImgColumn>
-            {/* <ProfileImg src={(user.portrait || {}).url} /> */}
             <UserName>{user.handle}</UserName>
             <NavLink to={`/${user.handle}`}>
               Edit Profile
             </NavLink>
           </TopColumn>
           <FeedbackRating style={{justifyContent:'flex-end'}}>
-              <Bolt style={{ marginRight: '15px' }} />
-                {selectedUser.score}
-            </FeedbackRating>
+            <Bolt style={{ marginRight: '15px' }} />
+              {selectedUser.score}
+          </FeedbackRating>
         </TopPanel>
         <BotRow>
           <DashLeft>

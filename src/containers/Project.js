@@ -203,7 +203,7 @@ class Project extends Component {
 
     return this.filteredComments().map((edge, index)=>{
       let {node: comment} = edge
-      if (comment.id === 'new' || comment.type === 'BOUNCE') {
+      if (comment.id === 'new') {
         return null
       }
       return (
@@ -285,17 +285,16 @@ class Project extends Component {
   }
 
   setBounce = () => {
-    console.log('setbounce', this);
     let project = this.props.viewer.allProjects.edges[0].node
     let {id: selfId} = this.props.viewer.user
     let {id: projectId} = project
     if (this.state.bounced) {
       let thisBounce = project.bounces.edges.find(edge =>
         edge.node.bouncer.id===selfId)
+        console.log('thisbounce', thisBounce);
       this.props.relay.commitUpdate(
         new DeleteBounce({
-          id: thisBounce.node.id,
-          projectId: projectId
+          id: thisBounce.node.id
         }), {
           onSuccess: (response) => {
             this.setState({bounced: false})
@@ -321,9 +320,7 @@ class Project extends Component {
   }
 
   render () {
-    let {
-      node: project
-    } = this.props.viewer.allProjects.edges[0]
+    let { node: project } = this.props.viewer.allProjects.edges[0]
     let {ownProject} = this.state
     let myInfluences = this.props.viewer.user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
@@ -332,7 +329,7 @@ class Project extends Component {
           <ProfTop>
             <ProfLeft>
               <Portrait
-                src={this.props.viewer.User.portrait.url}
+                src={(this.props.viewer.User.portrait || {}).url || `${url}/logo.png`}
                 to={`/${this.props.viewer.User.handle}`} />
               <ProfCol>
                 <ProfHandle to={`/${this.props.viewer.User.handle}`} >
@@ -740,6 +737,7 @@ export default Relay.createContainer(
                 bounces (first: 999) {
                   edges {
                     node {
+                      id
                       bouncer {
                         id
                         handle

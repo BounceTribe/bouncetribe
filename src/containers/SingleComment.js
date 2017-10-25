@@ -3,7 +3,7 @@ import {Single, Bottom, Time, Text, Center, Handle, BotLink, UpVote, SCContainer
 import {RoundButton} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
-
+import {url} from 'config'
 import formatTime from 'utils/formatTime'
 import TextField from 'material-ui/TextField'
 import UpdateComment from 'mutations/UpdateComment'
@@ -101,29 +101,16 @@ class SingleComment extends Component {
   render() {
     let {author, timestamp, type, id, upvotes} = this.props.comment
     return (
-      <Single
-        id={id}
-        hide={this.hider()}
-      >
+      <Single id={id} hide={this.hider()} >
         <RoundButton
           icon={(type === 'COMMENT') ?
-            <Comment
-              height={25}
-              width={25}
-              fill={white}
-            />
+            <Comment height={25} width={25} fill={white} />
             :
-            <Heart
-              height={25}
-              width={25}
-              fill={white}
-            />
+            <Heart height={25} width={25} fill={white} />
           }
           mini
           secondary={(type === 'COMMENT')}
-          style={{
-            marginTop: '30px'
-          }}
+          style={{ marginTop: '30px' }}
         />
         <Center>
           <Text>
@@ -178,22 +165,17 @@ class SingleComment extends Component {
             >
               Comments | {(this.props.comment.children) ?  this.props.comment.children.edges.length : 0}
             </BotLink>
-            <BotLink
-              hideLink={false}
-            >
+            <BotLink hideLink={false} >
 
             </BotLink>
           </Bottom>
           {(this.state.subcomments) ?
             <SCContainer>
             {this.props.comment.children.edges.map(edge=>{
+              let imgUrl = (edge.node.sender.portrait || {}).url || `${url}/logo.png`
               return (
-                <SubComment
-                  key={edge.node.id}
-                >
-                  <SCPortrait
-                    src={edge.node.author.portrait.url}
-                  />
+                <SubComment key={edge.node.id} >
+                  <SCPortrait src={imgUrl} />
                   <SCCol>
                     <SCHandle>
                       {edge.node.author.handle}
@@ -202,7 +184,6 @@ class SingleComment extends Component {
                       {edge.node.text}
                     </SCText>
                   </SCCol>
-
                 </SubComment>
               )
             })}
@@ -211,9 +192,7 @@ class SingleComment extends Component {
               name={'newSubcomment'}
               hintText={'Add a comment'}
               onChange={(e,newValue)=>{this.setState({newSubcomment:newValue})}}
-              style={{
-                marginLeft: '35px'
-              }}
+              style={{ marginLeft: '35px' }}
               onKeyPress={(e)=>{
                 if (e.charCode === 13) {
                   Relay.Store.commitUpdate(

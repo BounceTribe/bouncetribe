@@ -249,10 +249,11 @@ class Session extends Component {
     let messages = []
 
     this.state.messages.forEach( (message, index) =>{
+      let imgUrl = (message.node.sender.portrait || {}).url || `${url}/logo.png`
       if (index === 0) {
         messages.push(
           <MessageNamePortraitRow key={`portrait${message.node.id}`} >
-            <MessagePortrait src={message.node.sender.portrait.url} />
+            <MessagePortrait src={imgUrl} />
             <SenderHandle key={`handle${message.node.id}`} >
               {message.node.sender.handle}
             </SenderHandle>
@@ -262,7 +263,7 @@ class Session extends Component {
         messages.push(<MessageDivider key={message.node.id}/>)
         messages.push(
           <MessageNamePortraitRow key={`portrait${message.node.id}`} >
-            <MessagePortrait src={message.node.sender.portrait.url} />
+            <MessagePortrait src={imgUrl} />
             <SenderHandle key={`handle${message.node.id}`} >
               {message.node.sender.handle}
             </SenderHandle>

@@ -75,6 +75,7 @@ export default Relay.createContainer(
                   createdAt
                   artwork { url }
                   privacy
+                  creator {handle}
                   comments ( first: 999 ) {
                     edges {
                       node {

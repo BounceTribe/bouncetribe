@@ -3,6 +3,8 @@ import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import {grey200, purple, grey700, blue} from 'theme'
 import Avatar from 'material-ui/Avatar'
+import {url} from 'config'
+
 // import Toggle from 'material-ui/Toggle'
 
 
@@ -49,7 +51,7 @@ class ProjectTribeList extends Component {
           primaryText={author.handle}
           leftAvatar={
             <Avatar
-              src={author.portrait.url}
+              src={author.portrait ? author.portrait.url : `${url}/logo.png`}
               style={{ objectFit: 'cover' }}
             />
           }
@@ -67,16 +69,13 @@ class ProjectTribeList extends Component {
     })
   }
 
-
   sessionCommentAuthors = () => {
     let uniqueAuthorIds = []
     let uniqueAuthors = []
 
-
     let comments = this.props.project.comments.edges.map((edge) => {
       return edge.node
     })
-
 
     comments.forEach( (comment) => {
       if (!uniqueAuthorIds.includes(comment.author.id) && comment.session){
@@ -113,9 +112,7 @@ class ProjectTribeList extends Component {
     })
   }
 
-
   render() {
-    console.log(' tribe list props', this.props);
     let nestedItems = this.nestedItems()
     let sessionCommentAuthors = this.sessionCommentAuthors()
     return (
@@ -158,7 +155,6 @@ class ProjectTribeList extends Component {
           initiallyOpen={true}
           nestedItems={nestedItems}
         />
-
 
         <Divider
           style={{

@@ -140,7 +140,6 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
   let header,
       message,
       link
-
   switch (type) {
     case 'FRIEND_REQUEST': {
       header = "Tribe Request"
@@ -176,6 +175,7 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
       break
     }
     case 'BOUNCED': {
+      console.log('bounced notification');
       header = 'Track Bounced'
       message = `${triggeredBy.handle} has bounced your track.`
       link = `/${notificationFor.handle}/${project.title}`
