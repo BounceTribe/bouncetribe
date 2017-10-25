@@ -40,8 +40,7 @@ class TopNav extends Component {
             />
           ]}
           open={this.state.settings}
-          modal={true}
-        >
+          modal={true} >
           <h3>Email Notifications</h3>
           <Checkbox
             label={"Disable all"}

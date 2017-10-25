@@ -163,7 +163,22 @@ class DirectMessages extends Component {
 }
 
 export default Relay.createContainer( DirectMessages, {
-   initialVariables: { userHandle: '' },
+  initialVariables: {
+    userHandle: '',
+    projectTitle: '',
+    projectFilter: {},
+  },
+  prepareVariables: (urlParams)=>{
+    return {
+      ...urlParams,
+      projectFilter: {
+        title: urlParams.projectTitle,
+        creator: {
+          handle: urlParams.userHandle
+        }
+      }
+    }
+  },
    fragments: { viewer: () => Relay.QL`
        fragment on Viewer {
          user {

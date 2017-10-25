@@ -43,10 +43,11 @@ class Dashboard extends Component {
       this.setState( {selectedUser} )
       this.suggestFriends(this.state.maxSuggestedFriends);
       if (!foundUser) {
-        this.props.router.push(`/dash/projects/${selectedUser.handle}`)
+        this.props.router.push(`/dash/${selectedUser.handle}/projects`)
       }
     }
   }
+  
 
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
@@ -106,7 +107,7 @@ class Dashboard extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.push('/dash/' + tab + '/' + this.state.selectedUser.handle)
+    this.props.router.push('/dash/' + this.state.selectedUser.handle + '/' + tab)
     this.setState({ tab })
     window.scrollTo(0, document.body.scrollHeight)
   }

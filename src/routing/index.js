@@ -105,15 +105,15 @@ const createRoutes = () => (
       render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
 
     <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
-      <Route path={'/dash/projects/:userHandle'}
+      <Route path={'/dash/:userHandle/projects'}
         component={Projects}
         queries={ViewerQuery}
         render={({ props }) => props ? <Projects {...props} /> : <Loading nested />} />
-      <Route path={'/dash/messages/:userHandle'}
+      <Route path={'/dash/:userHandle/messages'}
         component={DirectMessages}
         queries={ViewerQuery}
         render={({ props }) => props ? <DirectMessages {...props} /> : <Loading nested />} />
-      <Route path={'/dash/bounces/:userHandle'}
+      <Route path={'/dash/:userHandle/bounces'}
         component={Bounces}
         queries={ViewerQuery}
         render={({ props }) => props ? <Bounces {...props} /> : <Loading nested/>} />
