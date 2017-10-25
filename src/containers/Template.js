@@ -16,7 +16,8 @@ injectTapEventPlugin()
 class Template extends Component {
 
   componentDidMount() {
-    let intervalId = setInterval(this.ping, 15000);
+    this.ping()
+    let intervalId = setInterval(this.ping, 300000);
     this.setState({intervalId});
   }
 
@@ -25,11 +26,13 @@ class Template extends Component {
   }
 
   ping = () => {
-    this.props.relay.commitUpdate(
-      new SendPing({
-        user: this.props.viewer.user
-      })
-    )
+    if (this.props.viewer.user) {
+      this.props.relay.commitUpdate(
+        new SendPing({
+          user: this.props.viewer.user
+        })
+      )
+    }
   }
 
 
@@ -79,6 +82,9 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
+            id
+            handle
+            portrait { url }
             doNotEmail
             notifications (
               first: 5
@@ -104,19 +110,6 @@ export default Relay.createContainer(
                   }
                   session { id }
                 }
-              }
-            }
-            id
-            handle
-            isOnline
-            portrait { url }
-            projects (
-              first: 1
-              orderBy: createdAt_DESC
-              filter: { privacy: PUBLIC }
-            ) {
-              edges {
-                node { title }
               }
             }
           }

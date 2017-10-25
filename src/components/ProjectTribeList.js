@@ -3,6 +3,8 @@ import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import {grey200, purple, grey700, blue} from 'theme'
 import Avatar from 'material-ui/Avatar'
+import {url} from 'config'
+
 // import Toggle from 'material-ui/Toggle'
 
 
@@ -13,41 +15,26 @@ class ProjectTribeList extends Component {
     showAll: true,
   }
 
-
-
   toggleSelection = (handle) => {
     if (this.props.selection === handle) {
-
-      this.setState({
-        selections: []
-      })
+      this.setState({ selections: [] })
       this.props.handleSelection(false)
     } else {
-
       this.props.handleSelection(handle)
     }
-
-
   }
 
-
   componentWillReceiveProps (newProps) {
-      if (!newProps.router.location.query.in) {
-        this.setState({
-          selections: []
-        })
-      }
+    if (!newProps.router.location.query.in) {
+      this.setState({ selections: [] })
+    }
   }
 
   nestedItems = () => {
     let uniqueAuthorIds = []
     let uniqueAuthors = []
 
-
-    let comments = this.props.project.comments.edges.map((edge) => {
-      return edge.node
-    })
-
+    let comments = this.props.project.comments.edges.map(edge => edge.node)
 
     comments.forEach( (comment) => {
       if (!uniqueAuthorIds.includes(comment.author.id) && !comment.session){
@@ -55,6 +42,7 @@ class ProjectTribeList extends Component {
         uniqueAuthors.push(comment)
       }
     })
+
     return uniqueAuthors.map((recent, index) => {
       let {author} = recent
       return (
@@ -63,10 +51,8 @@ class ProjectTribeList extends Component {
           primaryText={author.handle}
           leftAvatar={
             <Avatar
-              src={author.portrait.url}
-              style={{
-                objectFit: 'cover'
-              }}
+              src={author.portrait ? author.portrait.url : `${url}/logo.png`}
+              style={{ objectFit: 'cover' }}
             />
           }
           style={{
@@ -83,16 +69,13 @@ class ProjectTribeList extends Component {
     })
   }
 
-
   sessionCommentAuthors = () => {
     let uniqueAuthorIds = []
     let uniqueAuthors = []
 
-
     let comments = this.props.project.comments.edges.map((edge) => {
       return edge.node
     })
-
 
     comments.forEach( (comment) => {
       if (!uniqueAuthorIds.includes(comment.author.id) && comment.session){
@@ -128,7 +111,6 @@ class ProjectTribeList extends Component {
       )
     })
   }
-
 
   render() {
     let nestedItems = this.nestedItems()
@@ -173,7 +155,6 @@ class ProjectTribeList extends Component {
           initiallyOpen={true}
           nestedItems={nestedItems}
         />
-
 
         <Divider
           style={{

@@ -14,11 +14,12 @@ export const Bar = styled.div`
   height: 50px;
   background-color: ${grey40};
   box-sizing: border-box;
+  position: fixed;
+  z-index: 10;
   ${size.m`
     display: none;
   `}
 `
-
 
 export const NavList = styled.div`
   display: flex;
@@ -124,7 +125,7 @@ const ViewAllContainer = styled(NotifyContainer)`
 `
 
 export const ViewAll = ({to}) => (
-  <BtLink to={to}>
+  <BtLink style={{paddingTop: '10px'}} to={to}>
     <ViewAllContainer>
       <NotifyHeader>
         View All
@@ -139,7 +140,6 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
   let header,
       message,
       link
-
   switch (type) {
     case 'FRIEND_REQUEST': {
       header = "Tribe Request"
@@ -156,7 +156,7 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
     case 'SESSION_FEEDBACK_RECEIVED': {
       header = 'Feedback Received'
       message = `${triggeredBy.handle} has given you feedback.`
-      link = `/${notificationFor.handle}/session/${session.id}/mine`
+      link = `/session/${notificationFor.handle}/${session.id}/mine`
       break
     }
     case 'PROJECT_FEEDBACK_RECEIVED': {
@@ -175,6 +175,10 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
       break
     }
     case 'BOUNCED': {
+      console.log('bounced notification');
+      header = 'Track Bounced'
+      message = `${triggeredBy.handle} has bounced your track.`
+      link = `/${notificationFor.handle}/${project.title}`
       break
     }
     default: {

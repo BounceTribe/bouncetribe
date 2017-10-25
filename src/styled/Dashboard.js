@@ -12,7 +12,7 @@ import FlatButton from 'material-ui/FlatButton'
 import { ProfCol, ProfHandle, Score} from 'styled/Project'
 
 export const DashProfile = ({selectedUser}) => (
-  <div style={{display: 'flex', padding: '31px'}}>
+  <div style={{display: 'flex', padding: '31px 31px 15px 31px'}}>
     <BtAvatar user={selectedUser} size={60} />
     <ProfCol>
       <ProfHandle to={`/${selectedUser.handle}`} >
@@ -65,45 +65,37 @@ export const DialogRow2 = styled(DialogRow)`
 
 export const DashLeft = styled.div`
   display: flex;
-  flex-direction: column;
   border-radius: 10px;
   background-color: white;
   min-height: 50vh;
   flex: 0 0 285px;
   border: solid ${grey222} 1px;
   border-radius: 10px;
-  padding: 8px 15px;
   margin-right: 20px;
+  padding: 9px 0px 9px 9px;
+  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
 `
 
-
-
-export const ProfileView = styled(View)`
+export const DashView = styled(View)`
   background-color: transparent;
   border: none;
-  padding: 40px;
-  justify-content: flex-start;
 `
 
 export const DashHeader = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: flex-start;
-width: 80vw;
-padding-top: 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 80vw;
+  padding-top: 0px;
 `
 
 export const DashHeaderRow = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-align-items: center;
-width: 80vw;
-box-sizing: border-box;
-`
-
-export const DashHeaderText = styled.div`
-align-items: baseline;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 80vw;
+  box-sizing: border-box;
 `
 
 export const TopPanel = styled.div`
@@ -114,6 +106,7 @@ export const TopPanel = styled.div`
   width: 100%;
   height: 140px;
   background-color: white;
+  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
   border-radius: 10px;
   border: solid ${grey222} 1px;
   margin-top: 20px;
@@ -140,16 +133,16 @@ export const UserName = styled.h1`
   font-size: 1.5em;
   color: #555555;
   font-weight: normal;
-  margin: -90px 0 0 115px;
+  margin: -95px 0 0 115px;
 `
 
 export const NavLink = styled(BtLink)`
   text-decoration: none;
   color: ${grey119};
   cursor: pointer;
-  font-size: .875em;
+  font-size: 14px;
   font-weight: lighter;
-  margin: 0 0 0 115px;
+  margin: 13px 0 0 115px;
 `
 
 export const LogoText = styled.h2`
@@ -164,6 +157,7 @@ export const LogoText = styled.h2`
 export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
+  margin: 6px 0;
   width: 80vw;
 `
 

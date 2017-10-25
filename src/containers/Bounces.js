@@ -13,20 +13,20 @@ const ProjectsContainerSm = styled.div`
   box-sizing: border-box;
 `
 
-class Projects extends Component {
+class Bounces extends Component {
 
-  edgeFilter = (project, type) => (
-    project.comments.edges.filter( (edge) =>
+  edgeFilter = (project, type) => {
+    return project.comments.edges.filter( (edge) =>
       edge.node.type === type
     )
-  )
+  }
 
   makeList = () => {
-    let {User, user} = this.props.viewer
-    return User.projects.edges.map(edge => {
-      let {node:project} = edge
-      if (User.id !== user.id && project.privacy === 'PRIVATE') {
-        return null
+    let User = this.props.viewer.User
+    return User.bounces.edges.map(edge => {
+      let project = edge.node.project
+      if (project.privacy === 'PRIVATE') {
+        return null //shouldnt have been able to bounce a private project anyway
       } else {
         let comments = this.edgeFilter(project, 'COMMENT')
         let likes = this.edgeFilter(project, 'LIKE')
@@ -36,7 +36,8 @@ class Projects extends Component {
             User={User}
             project={project}
             comments={comments}
-            likes={likes} />
+            likes={likes}
+            bounceTab />
         )
       }
     } )
@@ -52,7 +53,7 @@ class Projects extends Component {
 }
 
 export default Relay.createContainer(
-  Projects, {
+  Bounces, {
     initialVariables: { userHandle: '' },
     fragments: {
       viewer: () => Relay.QL`
@@ -64,22 +65,22 @@ export default Relay.createContainer(
           User (handle: $userHandle) {
             id
             handle
-            projects (
-              first: 4
-              orderBy: createdAt_ASC
-            ){
+            bounces (first:999) {
               edges {
                 node {
                   id
-                  title
-                  createdAt
-                  artwork { url }
-                  privacy
-                  creator {handle}
-                  comments ( first: 999 ) {
-                    edges {
-                      node {
-                        type
+                  project {
+                    id
+                    title
+                    createdAt
+                    artwork {url}
+                    privacy
+                    creator {handle}
+                    comments (first: 999){
+                      edges {
+                        node {
+                          type
+                        }
                       }
                     }
                   }

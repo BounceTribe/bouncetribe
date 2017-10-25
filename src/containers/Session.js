@@ -222,23 +222,48 @@ class Session extends Component {
     }
   }
 
+  msgKeyDown = (e, self, otherUser, Session) => {
+    if (e.keyCode===13 && !e.shiftKey && this.state.message) {
+      e.preventDefault()
+      let savedText = this.state.message
+      this.setState({message: ''})
+      this.props.relay.commitUpdate(
+        new CreateMessage({
+          text: this.state.message,
+          senderId: self.id,
+          recipientId: otherUser.id,
+          sessionParentId: Session.id
+        }), {
+          onSuccess: (success) => { console.log('send success') },
+          onFailure: (failure) => {
+            console.log('message send fail', failure);
+            this.setState({message: savedText})
+          }
+          //display error message in snackbar?
+        }
+      )
+    }
+  }
+
   messages = () => {
     let messages = []
+
     this.state.messages.forEach( (message, index) =>{
+      let imgUrl = (message.node.sender.portrait || {}).url || `${url}/logo.png`
       if (index === 0) {
         messages.push(
           <MessageNamePortraitRow key={`portrait${message.node.id}`} >
-            <MessagePortrait src={message.node.sender.portrait.url} />
+            <MessagePortrait src={imgUrl} />
             <SenderHandle key={`handle${message.node.id}`} >
               {message.node.sender.handle}
             </SenderHandle>
           </MessageNamePortraitRow>
         )
       } else if (message.node.sender.id !== this.state.messages[index - 1].node.sender.id) {
-        messages.push(<MessageDivider/>)
+        messages.push(<MessageDivider key={message.node.id}/>)
         messages.push(
           <MessageNamePortraitRow key={`portrait${message.node.id}`} >
-            <MessagePortrait src={message.node.sender.portrait.url} />
+            <MessagePortrait src={imgUrl} />
             <SenderHandle key={`handle${message.node.id}`} >
               {message.node.sender.handle}
             </SenderHandle>
@@ -584,22 +609,7 @@ class Session extends Component {
               onChange={(e)=>{
                 this.setState({message: e.target.value})
               }}
-              onKeyDown={(e)=>{
-                if (e.keyCode === 13) {
-                  this.props.relay.commitUpdate(
-                    new CreateMessage({
-                      text: this.state.message,
-                      senderId: self.id,
-                      recipientId: otherUser.id,
-                      sessionParentId: Session.id
-                    }), {
-                      onSuccess: (success) => {
-                        this.setState({message: ''})
-                      }
-                    }
-                  )
-                }
-              }}
+              onKeyDown={(e)=>{this.msgKeyDown(e, self, otherUser, Session)}}
             />
           </MessageContainer>
         )

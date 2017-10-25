@@ -49,10 +49,6 @@ export const NList = styled.div`
   padding: 40px;
 `
 
-export const PList = styled(List)`
-  padding-top: 100px;
-`
-
 export const Item = styled.div`
   display: flex;
   flex-direction: row;

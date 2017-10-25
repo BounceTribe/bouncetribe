@@ -113,7 +113,6 @@ export default Relay.createContainer(
                   handle
                   id
                   score
-                  isOnline
                   portrait {
                     url
                   }

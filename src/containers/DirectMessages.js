@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
+
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
@@ -18,8 +19,9 @@ class DirectMessages extends Component {
       active: [],
       received: [],
       sent: [],
-      messages: [],
-      message: ''
+      newMessages: [],
+      message: '',
+      new: []
     }
 
     this.feedSub.subscribe(
@@ -34,8 +36,13 @@ class DirectMessages extends Component {
                 handle
                 portrait { url }
               }
+              recipient {
+                id
+                handle
+              }
               text
               id
+              createdAt
             }
           }
         }`
@@ -43,26 +50,46 @@ class DirectMessages extends Component {
         if (result) {
           let newMessage = result.Message
           this.setState( (prevState) => {
-            let {messages} = prevState
-            messages.push(newMessage)
-            return { messages }
+            let {newMessages} = prevState
+            newMessages.unshift(newMessage)
+            return { newMessages }
           } )
         }
       }
     )
   }
 
-  currentTime = (time) => this.setState({ time })
+  prepMessages = (list) => {
+    return this.temporaryFilter(list).sort((a, b) => {
+      let dateA = new Date(a.node.createdAt)
+      let dateB = new Date(b.node.createdAt)
+      return dateB - dateA
+    })
+  }
+  // this component remounts whenever a new user is selected.
+  // it probably shouldnt...
+  // componentDidMount(){
+  //   console.log('MOUNTED, user - ', this.props.viewer.User.handle);
+  // }
 
-  componentDidMount(){
-    let received = this.props.viewer.user.receivedMessages.edges
-    let sent = this.props.viewer.User.receivedMessages.edges
-    let messages = received.concat(sent).sort((a, b) => a.node.id - b.node.id)
-    this.setState({ messages })
+  componentDidUpdate () {
+    if (this.state.message==='') {
+      this.msgsEnd.scrollIntoView({ behaviour: 'smooth' })
+    }
   }
 
-  formatMessages = () => {
-    let msgList = this.state.messages.map(msg => {
+  temporaryFilter = (msgList) => {
+    let userId = this.props.viewer.user.id
+    let theirId = this.props.viewer.User.id
+    return msgList.filter(msg =>
+      (msg.node.sender.id===userId && msg.node.recipient.id===theirId) ||
+      (msg.node.sender.id===theirId && msg.node.recipient.id===userId)
+    )
+  }
+
+  formatMessages = (list) => {
+    let msgList = this.prepMessages(list)
+    msgList = msgList.map(msg => {
       msg = msg.node
       let time
       let created = moment.default(msg.createdAt)
@@ -74,47 +101,61 @@ class DirectMessages extends Component {
       msg.time = time;
       msg.isSender = (msg.sender.id===this.props.viewer.user.id)
       return msg
-    })
+    } )
     return msgList
   }
 
+  msgKeyDown = (e) => {
+    if (e.keyCode===13 && !e.shiftKey && this.state.message) {
+      e.preventDefault()
+      let savedText = this.state.message
+      this.setState({message: ''})
+      this.props.relay.commitUpdate(
+        new CreateMessage({
+          text: savedText,
+          senderId: this.props.viewer.user.id,
+          recipientId: this.props.viewer.User.id
+        }), {
+          onSuccess: (success) => { console.log('send success') },
+          onFailure: (failure) => {
+            console.log('message send fail', failure);
+            this.setState({message: savedText})
+          }
+          //display error message in snackbar?
+        }
+      )
+    }
+  }
+
   render() {
-    console.log(this.state.messages, this.props.viewer.user.id)
+    let theirMessages = this.props.viewer.User.receivedMessages.edges
+    let userMessages = this.props.viewer.user.receivedMessages.edges
+    let messages = theirMessages.concat(userMessages).concat(this.state.newMessages)
+    let scrollPlaceholder =
+      <div style={{ float:"left", clear: "both" }}
+        ref={(el) => this.msgsEnd = el} />
     return (
       <div style={{
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
         justifyContent: 'flex-end'
       }}>
-        <BtMessages msgList={this.formatMessages()} />
+        <BtMessages
+          msgList={this.formatMessages(messages)}
+          lastEl={scrollPlaceholder}
+        />
         <TextField
+          fullWidth
           multiLine
           name="message"
-          style={{padding: '0 15px 0 15px'}}
+          style={{display: 'flex', padding: '0 15px 0 15px'}}
+          inputStyle={{marginRight: '25px'}}
           underlineShow={false}
           hintText={'Your message...'}
           value={this.state.message}
-          onChange={(e)=>{ this.setState({message: e.target.value}) }}
-          onKeyDown={(e)=>{
-            if (e.keyCode === 13 && e.shiftKey!==true) {
-              let savedText = this.state.message
-              this.setState({message: ''})
-              this.props.relay.commitUpdate(
-                new CreateMessage({
-                  text: savedText,
-                  senderId: this.props.viewer.user.id,
-                  recipientId: this.props.viewer.User.id
-                }), {
-                  onSuccess: (success) => { this.setState({message: ''}) },
-                  onFailure: (failure) => { this.setState({message: savedText})
-                    console.log('message send fail', failure);
-                    this.setState({message: savedText})
-                  }
-                  //display error message in snackbar?
-                }
-              )
-            }
-          } }
+          onChange={(e)=>this.setState({message: e.target.value})}
+          onKeyDown={(e)=>{this.msgKeyDown(e)}}
         />
       </div>
     )
@@ -131,13 +172,8 @@ export default Relay.createContainer( DirectMessages, {
            score
            portrait { url }
            receivedMessages (
-             first: 20
+             first: 999
              orderBy: id_ASC
-             filter: {
-               sender: {
-                 handle: "lyricandthewhoopingcranes"
-               }
-             }
            ) {
              edges {
                node {
@@ -147,7 +183,10 @@ export default Relay.createContainer( DirectMessages, {
                  sender {
                    id
                    handle
-                   portrait { url }
+                 }
+                 recipient {
+                   id
+                   handle
                  }
                }
              }
@@ -158,13 +197,8 @@ export default Relay.createContainer( DirectMessages, {
            handle
            portrait { url }
            receivedMessages (
-             first: 20
+             first: 999
              orderBy: id_ASC
-             filter: {
-               sender: {
-                 handle: "subliminal_lime"
-               }
-             }
            ) {
              edges {
                node {
@@ -174,7 +208,10 @@ export default Relay.createContainer( DirectMessages, {
                  sender {
                    id
                    handle
-                   portrait { url }
+                 }
+                 recipient {
+                   id
+                   handle
                  }
                }
              }

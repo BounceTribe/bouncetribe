@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, TribeButton, SubRow, Experience, ExperienceRow} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, SubRow, Experience, ExperienceRow} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
@@ -30,6 +30,8 @@ import {Button, BtAvatar} from 'styled'
 import Checkbox from 'material-ui/Checkbox'
 import Settings from 'icons/Settings'
 import {Panel} from 'components/Panel'
+import {url} from 'config'
+import {TribeButton} from 'components/TribeButton'
 
 
 class Profile extends Component {
@@ -51,7 +53,8 @@ class Profile extends Component {
     ],
     notification: false,
     tabs: 'projects',
-    settings: false
+    settings: false,
+    btnStatus: '',
 
   }
   componentDidMount = () => {
@@ -99,7 +102,7 @@ class Profile extends Component {
         handle: User.handle,
         placename: User.placename || '',
         summary: User.summary || '',
-        portraitUrl: User.portrait.url,
+        portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
         website: User.website || '',
         email: User.email || '',
         genres,
@@ -146,7 +149,7 @@ class Profile extends Component {
         score: score || '',
         website: website || '',
         email: email || '',
-        portraitUrl: portrait.url,
+        portraitUrl: (portrait || {}).url || `${url}/logo.png`,
         projects: projects.edges.length,
         friends: friends.edges.length,
         genres: newGenres,
@@ -162,25 +165,18 @@ class Profile extends Component {
   }
 
   accept = (inviteId) => {
+    console.log('accept', inviteId);
     let {id: selfId} = this.props.viewer.user
     let {id: newFriendId} = this.props.viewer.User
     this.props.relay.commitUpdate(
-      new UpdateFriendRequest({
-        id: inviteId,
-        accepted: true
-      }), {
-        onSuccess: (response) => {
-          console.log('success?')
+      new UpdateFriendRequest({ id: inviteId, accepted: true }),
+      {onSuccess: (response) => {
           this.props.relay.commitUpdate(
-            new AddToFriends({
-              selfId,
-              newFriendId
-            })
+            new AddToFriends({ selfId, newFriendId }),
+            { onSuccess: res => this.setState({btnStatus: 'ACCEPTED'}) }
           )
         },
-        onFailure: (response) => {
-          console.log('failure', response)
-        }
+        onFailure: (response) => { console.log('failure', response) }
       }
     )
   }
@@ -189,10 +185,17 @@ class Profile extends Component {
     let {id: actorId} = this.props.viewer.user
     let {id: recipientId} = this.props.viewer.User
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({
-        actorId,
-        recipientId,
-      })
+      new CreateFriendRequest({ actorId, recipientId, }),
+      { onSuccess: res => this.setState({btnStatus: 'SENT'}) }
+    )
+  }
+
+  unfriend = () => {
+    let {id: selfId} = this.props.viewer.user
+    let {id: exfriendId} = this.props.viewer.User
+    this.props.relay.commitUpdate(
+      new RemoveFromFriends({ selfId, exfriendId }),
+      {onSuccess: this.setState({btnStatus: 'REMOVED'})}
     )
   }
 
@@ -344,8 +347,6 @@ class Profile extends Component {
     }
   }
 
-
-
   portraitSuccess = (file) => {
     this.setState({imageEditorOpen: false})
     this.props.relay.commitUpdate(
@@ -384,13 +385,7 @@ class Profile extends Component {
       query ? searchArtists(query).then(options => resolve(options)) : resolve({options: []})
     )
   }
-  unfriend = () => {
-    let {id: selfId} = this.props.viewer.user
-    let {id: exfriendId} = this.props.viewer.User
-    this.props.relay.commitUpdate(
-      new RemoveFromFriends({ selfId, exfriendId })
-    )
-  }
+
   closeSnackbar = () => {
     this.setState( (prevState, props) => {
       return { notification: false }
@@ -407,13 +402,15 @@ class Profile extends Component {
   }
 
   topRow = () => {
+
     let {handle, imageEditorOpen, placename, summary, website, email, handleError} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
     let projects = User.projects.edges.length
     let friends = User.friends.edges.length
     let ownProfile = (User.id === user.id)
-    return (<Top>
+    return (
+    <Top>
       <Settings
           onClick={()=>{this.setState({settings: true})}}
           style={{
@@ -507,9 +504,10 @@ class Profile extends Component {
 
         <TribeButton
           viewer={this.props.viewer}
-          accept={this.accept}
+          accept={(id)=>this.accept(id)}
           addToTribe={this.addToTribe}
           unfriend={this.unfriend}
+          btnStatus={this.state.btnStatus}
         />
       </Row>
       <Divider/>
@@ -563,7 +561,7 @@ class Profile extends Component {
     return (
       <ProfileView>
         <Snackbar
-          open={notification}
+          open={notification ? true : false} //requires boolean input
           message={notification}
           autoHideDuration={2000}
           onRequestClose={this.closeSnackbar}
@@ -577,7 +575,7 @@ class Profile extends Component {
             topBar={null}
             tabChange={(tab)=>this.setTab(tab)}
             labels={['activity', 'projects', 'bounces']}
-            locks={[true, false, true]}
+            locks={[true, false, false]}
             content={this.props.children}
           />
           <BotRight>

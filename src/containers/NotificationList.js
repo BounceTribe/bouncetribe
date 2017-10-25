@@ -36,9 +36,6 @@ class NotificationList extends Component {
 }
 
 export default Relay.createContainer(NotificationList, {
-  initialVariables: {
-    userHandle: ''
-  },
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {

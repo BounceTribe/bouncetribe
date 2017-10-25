@@ -1,10 +1,6 @@
-import React, {Component} from 'react'
 import styled from 'styled-components'
-import {View, BtFlatButton} from 'styled'
-// import Edit from 'icons/Edit'
-import {grey200, grey400, grey800, purple, white} from 'theme'
-import Tribe from 'icons/Tribe'
-import AddFriend from 'icons/AddFriend'
+import {View} from 'styled'
+import {grey200, grey400, grey800, white} from 'theme'
 
 export const ProfileView = styled(View)`
   background-color: transparent;
@@ -69,8 +65,6 @@ export const Right = styled.div`
   padding-left: 20px;
 `
 
-
-
 export const Portrait = styled.img`
   height: 150px;
   width: 150px;
@@ -97,8 +91,6 @@ export const Input = styled.input`
   margin-bottom: 10px;
   width: ${(props)=>inputWidth(props,8)}px;
 `
-
-
 
 export const Handle = styled(Input)`
   font-size: 30px;
@@ -199,156 +191,8 @@ export const InputError = styled.span`
   font-size: 12px;
 `
 
-export const FriendButtonCol = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`
-
 export const Experience = styled(Input)`
   font-size: 14px;
   width: ${(props)=>inputWidth(props,11)}px;
   margin-bottom: 0;
 `
-export class TribeButton extends Component {
-
-  state = { remove: false }
-
-  button = () => {
-    let {user, User} = this.props.viewer
-    if (user.id === User.id) {
-      return (
-        <BtFlatButton
-          label={'My Tribe'}
-          backgroundColor={purple}
-          labelStyle={{ color: white }}
-          icon={
-            <Tribe
-              fill={white}
-              height={16}
-            />
-          }
-          style={{
-            border: `1px solid ${grey400}`,
-            borderRadius: '5px',
-            width: '160px'
-          }}
-          to={`/tribe/${user.handle}`}
-        />
-      )
-    } else {
-      let friends = user.friends.edges.map(edge => edge.node.id)
-      let inviters = user.invitations.edges.map(edge => edge.node.actor.id)
-      let requestees = user.sentRequests.edges.map(edge => edge.node.recipient.id)
-      if (friends.includes(User.id)) {
-        return (
-          <BtFlatButton
-            label={(this.state.remove) ? 'Remove' : 'Tribe Member'}
-            backgroundColor={(this.state.remove) ? white : purple}
-            labelStyle={{
-              color: (this.state.remove) ? purple : white
-            }}
-            icon={
-              <Tribe
-                fill={(this.state.remove) ? purple : white}
-                height={16}
-              />
-            }
-            onClick={()=>{
-              if (!this.state.remove) {
-                this.setState({remove:true})
-              } else {
-                this.props.unfriend()
-              }
-            }}
-            style={{
-              border: `1px solid ${grey400}`,
-              borderRadius: '5px',
-              width: '160px'
-            }}
-          />
-        )
-      } else if (inviters.includes(User.id)) {
-        let invite = user.invitations.edges.find((edge)=>{
-          return edge.node.actor.id === User.id
-        })
-        return (
-          <BtFlatButton
-            label={'Accept'}
-            backgroundColor={purple}
-            labelStyle={{
-              color:white
-            }}
-            icon={
-              <Tribe
-                fill={white}
-                height={16}
-              />
-            }
-            onClick={()=>{ this.props.accept(invite.node.id) }}
-            style={{
-              border: `1px solid ${grey400}`,
-              borderRadius: '5px',
-              width: '160px'
-            }}
-          />
-        )
-      } else if (requestees.includes(User.id)) {
-        return (
-          <BtFlatButton
-            label={'Request Sent'}
-            backgroundColor={white}
-            labelStyle={{ color:purple }}
-            icon={
-              <Tribe
-                fill={purple}
-                height={16}
-              />
-            }
-            onClick={()=>{
-
-            }}
-            style={{
-              border: `1px solid ${grey400}`,
-              borderRadius: '5px',
-              width: '160px'
-            }}
-            disabled={true}
-          />
-        )
-      } else {
-        return (
-          <BtFlatButton
-            label={'Add to Tribe'}
-            backgroundColor={purple}
-            labelStyle={{
-              color: white
-            }}
-            icon={
-              <AddFriend
-                fill={white}
-                height={16}
-              />
-            }
-            onClick={()=>{ this.props.addToTribe() }}
-            style={{
-              border: `1px solid ${grey400}`,
-              borderRadius: '5px',
-              width: '160px'
-            }}
-          />
-        )
-      }
-    }
-  }
-
-  render () {
-    return (
-      <FriendButtonCol>
-        {this.button()}
-      </FriendButtonCol>
-    )
-  }
-}

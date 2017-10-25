@@ -58,10 +58,10 @@ class TopNav extends Component {
         </Dialog>
         <Logo to={'/'} />
         <NavList>
-          <NavLink to={`/tribe/${handle}/find`} >
+          {/* <NavLink to={`/tribe/${handle}/find`} >
             <Headphones height={18} />
             <NavText>Find Your Mentor</NavText>
-          </NavLink>
+          </NavLink> */}
           <NavLink
             to={((((user || {}).project || {}).edges || []).length > 0) ? `/sessions/${handle}/${user.projects.edges[0].node.title}` : `/sessions/${handle}`}
           >
@@ -82,8 +82,10 @@ class TopNav extends Component {
                 </IconButton>
               )}
               open={this.state.notificationMenu}
-              onRequestChange={()=>{
-                if (!this.state.notificationMenu) {
+              onRequestChange={(open)=>{
+                this.setState((prevState) =>
+                  ({notificationMenu: !prevState.notificationMenu}))
+                if (!open) {
                   user.notifications.edges.forEach( (edge) => {
                     if (!edge.node.checked) {
                       Relay.Store.commitUpdate(
@@ -95,14 +97,11 @@ class TopNav extends Component {
                     }
                   })
                 }
-                this.setState((prevState) =>
-                    ({notificationMenu: !prevState.notificationMenu})
-                )
               }}
+              touchTapCloseDelay={0}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
-              <ViewAll to={`/notifications`}>View All</ViewAll>
               {((((user || {}).notifications || {}).edges || []).length > 0) ?
                 user.notifications.edges.map(edge=>(
                   <Notification key={edge.node.id} notification={edge.node} />
@@ -112,9 +111,8 @@ class TopNav extends Component {
                   <NotifyMessage>No new notifications</NotifyMessage>
                 </NotifyContainer>
               }
+              <ViewAll to={`/notifications`}>View All</ViewAll>
             </IconMenu>
-
-
           </NavLink>
           <IconMenu
             iconButtonElement={(
@@ -132,7 +130,7 @@ class TopNav extends Component {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-            <DropdownMenuItem text="Home" to={`/`} />
+            <DropdownMenuItem text="Dashboard" to={`/`} />
             <DropdownMenuItem text="View Profile" to={`/${handle}`} />
             <DropdownMenuItem text="My Tribe" to={`/tribe/${handle}`} />
             <DropHr/>

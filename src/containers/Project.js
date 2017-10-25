@@ -6,7 +6,7 @@ import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, 
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
-import {white, purple, grey300, grey200} from 'theme'
+import {white, purple, grey300, grey200, grey400} from 'theme'
 import {url} from 'config'
 import ProjectTribeList from 'components/ProjectTribeList'
 import {Tabs, Tab} from 'material-ui/Tabs'
@@ -16,6 +16,7 @@ import Comment from 'icons/Comment'
 import SingleComment from 'containers/SingleComment'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
+import Bounce from 'icons/Bounce'
 import Location from 'icons/Location'
 import Lock from 'icons/Lock'
 import Logo from 'icons/Logo'
@@ -30,6 +31,8 @@ import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
 import DeleteProject from 'mutations/DeleteProject'
+import CreateBounce from 'mutations/CreateBounce'
+import DeleteBounce from 'mutations/DeleteBounce'
 import ImageEditor from 'components/ImageEditor'
 import FlatButton from 'material-ui/FlatButton'
 
@@ -43,7 +46,9 @@ class Project extends Component {
     edit: false,
     artworkEditorOpen: false,
     selection: false,
-    delete: false
+    delete: false,
+    bounced: false,
+    showBounceButton: false,
   }
 
   static childContextTypes = {
@@ -58,8 +63,7 @@ class Project extends Component {
         <MenuItem
           primaryText={genre.name}
           value={genre.id}
-          key={genre.id}
-        />
+          key={genre.id} />
       ))
       this.setState({
         genres
@@ -68,7 +72,6 @@ class Project extends Component {
   }
 
   componentWillMount () {
-    console.log('PROJPROPS', this.props);
     let {id: ownId} = this.props.viewer.user
     if (ownId === this.props.viewer.User.id) {
       this.setState({
@@ -85,7 +88,6 @@ class Project extends Component {
     let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
     let project = this.props.viewer.allProjects.edges[0].node
     let projectOwnerId = this.props.viewer.User.id
-    console.log("friendIds",friendIds)
     if (
       (
         ownId !== projectOwnerId &&
@@ -102,11 +104,17 @@ class Project extends Component {
   }
 
   componentDidMount(){
-    let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
+    let user = this.props.viewer.user
+    let project = this.props.viewer.allProjects.edges[0].node
+    let bounces = project.bounces.edges
+    let friendIds = user.friends.edges.map(edge => edge.node.id)
+    let bouncedByIds = bounces.map(edge => edge.node.bouncer.id)
     let projectOwnerId = this.props.viewer.User.id
-    if (!friendIds.includes(projectOwnerId)) {
-      this.setState({disableComments: true})
-    }
+    this.setState({
+      disableComments: !friendIds.includes(projectOwnerId),
+      showBounceButton: user.id !== projectOwnerId,
+      bounced: bouncedByIds.includes(user.id)
+    })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -136,17 +144,11 @@ class Project extends Component {
     }
   }
 
-  currentTime = (time) => {
-    this.setState({
-      time
-    })
-  }
+  currentTime = (time) =>  this.setState({ time })
 
-  getDuration = (duration) => {
-    this.setState({
-      duration
-    })
-  }
+
+  getDuration = (duration) => this.setState({ duration })
+
 
   dropMarker = (type) => {
     this.setState((prevState)=> {
@@ -214,8 +216,7 @@ class Project extends Component {
           activate={this.activate}
           deactivate={this.deactivate}
           userId={this.props.viewer.user.id}
-          tabs={this.state.tabs}
-        />
+          tabs={this.state.tabs} />
       )
     })
   }
@@ -247,7 +248,7 @@ class Project extends Component {
         project: this.props.viewer.allProjects.edges[0].node,
         artworkId: file.id,
       }), {
-        onSuccess: success => console.log(success),
+        onSuccess: success => console.log('artwork success'),
         failure: failure => console.log('fail', failure)
       }
     )
@@ -262,7 +263,6 @@ class Project extends Component {
 
   filteredComments = () => {
     let comments = (this.state.new) ? this.props.viewer.allProjects.edges[0].node.comments.edges.concat({node:this.state.new}) : this.props.viewer.allProjects.edges[0].node.comments.edges
-
 
     if (this.state.tabs === 'listen') {
       comments = comments.filter( (comment) => {
@@ -281,40 +281,62 @@ class Project extends Component {
         return !comment.node.session
       })
     }
-
-
     return comments
   }
 
+  setBounce = () => {
+    let project = this.props.viewer.allProjects.edges[0].node
+    let {id: selfId} = this.props.viewer.user
+    let {id: projectId} = project
+    if (this.state.bounced) {
+      let thisBounce = project.bounces.edges.find(edge =>
+        edge.node.bouncer.id===selfId)
+        console.log('thisbounce', thisBounce);
+      this.props.relay.commitUpdate(
+        new DeleteBounce({
+          id: thisBounce.node.id
+        }), {
+          onSuccess: (response) => {
+            this.setState({bounced: false})
+            console.log('success', response)},
+          onFailure: (response) => console.log('falure', response)
+        }
+      )
+    } else {
+      this.props.relay.commitUpdate(
+        new CreateBounce({
+          bouncerId: selfId,
+          projectId: projectId,
+          type: 'BOUNCE',
+          text: ' '
+        }), {
+          onSuccess: (response) => {
+            this.setState({bounced: true})
+            console.log('success', response)},
+          onFailure: (response) => console.log('falure', response)
+        }
+      )
+    }
+  }
+
   render () {
-    let {
-      node: project
-    } = this.props.viewer.allProjects.edges[0]
+    let { node: project } = this.props.viewer.allProjects.edges[0]
     let {ownProject} = this.state
+    let myInfluences = this.props.viewer.user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
       <View>
-        <ProfContainer
-          hide={(ownProject)}
-        >
-
+        <ProfContainer hide={(ownProject)} >
           <ProfTop>
             <ProfLeft>
               <Portrait
-                src={this.props.viewer.User.portrait.url}
-                to={`/${this.props.viewer.User.handle}`}
-              />
+                src={(this.props.viewer.User.portrait || {}).url || `${url}/logo.png`}
+                to={`/${this.props.viewer.User.handle}`} />
               <ProfCol>
-                <ProfHandle
-                  to={`/${this.props.viewer.User.handle}`}
-                >
+                <ProfHandle to={`/${this.props.viewer.User.handle}`} >
                   {this.props.viewer.User.handle}
                 </ProfHandle>
                 <Score>
-                  <Bolt
-                    style={{
-                      marginRight: '5px'
-                    }}
-                  />
+                  <Bolt style={{ marginRight: '5px' }} />
                   {this.props.viewer.User.score}
                 </Score>
               </ProfCol>
@@ -328,8 +350,7 @@ class Project extends Component {
                   marginLeft: '15px',
                   marginRight: '5px',
                   display: (this.props.viewer.User.placename) ? '': 'none'
-                }}
-              />
+                }} />
               {this.props.viewer.User.placename}
               <Experience
                 height={18}
@@ -338,8 +359,7 @@ class Project extends Component {
                   marginLeft: '15px',
                   marginRight: '5px',
                   display: (this.props.viewer.User.experience) ? '': 'none'
-                }}
-              />
+                }} />
               {formatEnum(this.props.viewer.User.experience)}
               <Tribe
                 height={15}
@@ -347,22 +367,23 @@ class Project extends Component {
                 style={{
                   marginLeft: '15px',
                   marginRight: '5px'
-                }}
-              />
+                }} />
               {this.props.viewer.User.friends.edges.length}
             </MoreInfo>
           </ProfTop>
           <Divider/>
           <CommonInfluences>
             {this.props.viewer.User.artistInfluences.edges.map(edge=>{
-              return (
-                <InfluenceChip
-                  key={edge.node.id}
-                >
-                  {edge.node.name}
-                </InfluenceChip>
-              )}
-            )}
+              if (myInfluences.includes(edge.node.name)) {
+                return (
+                  <InfluenceChip key={edge.node.id} >
+                    {edge.node.name}
+                  </InfluenceChip>
+                )
+              } else {
+                return <div key={edge.node.id} />
+              }
+            } )}
           </CommonInfluences>
         </ProfContainer>
         <Top>
@@ -370,14 +391,12 @@ class Project extends Component {
             src={ (project.artwork) ? project.artwork.url : `${url}/artwork.png`}
             alt={'Project Art'}
             onClick={this.openArtworkEditor}
-            ownProject={ownProject}
-          />
+            ownProject={ownProject} />
           <ImageEditor
             open={this.state.artworkEditorOpen}
             onRequestClose={()=>this.setState({artworkEditorOpen:false})}
             user={this.props.viewer.user}
-            portraitSuccess={this.artworkSuccess}
-          />
+            portraitSuccess={this.artworkSuccess} />
           <Info>
             <TitleGenre>
               <Title>
@@ -386,11 +405,7 @@ class Project extends Component {
               <Genre>
                 <Music
                   fill={white}
-                  style={{
-                    marginRight: '5px',
-                    height: '18px'
-                  }}
-                />
+                  style={{ marginRight: '5px', height: '18px' }} />
                 {project.genres.edges[0].node.name}
               </Genre>
               <Edit
@@ -400,37 +415,43 @@ class Project extends Component {
                   cursor: 'pointer',
                   marginLeft: '15px'
                 }}
-                onClick={()=>{
-                  console.log("hello" )
-                  this.setState({edit:true})
-                }}
-              />
+                onClick={()=>{this.setState({edit:true})}} />
             </TitleGenre>
-            <Summary
-
-            >
+            <Summary>
               {project.description}
             </Summary>
+            {this.state.showBounceButton &&
+              <BtFlatButton
+                label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
+                backgroundColor={(this.state.bounced) ? purple : white}
+                labelStyle={{
+                  color: (this.state.bounced) ? white : purple,
+                  fontFamily: 'Helvetica Neue'}}
+                icon={
+                  <Bounce
+                    fill={(this.state.bounced) ? white : purple}
+                    width={21} />
+                }
+                onClick={()=>{this.setBounce()}}
+                style={{
+                  border: `1px solid ${grey400}`,
+                  borderRadius: '5px',
+                  width: '170px',
+                  marginTop: '20px'
+                }} />
+            }
           </Info>
-
           <Dialog
             modal={false}
             open={this.state.delete}
-            onRequestClose={()=>{
-              this.setState({delete: false})
-            }}
+            onRequestClose={()=>{this.setState({delete: false})}}
             actions={[
               <FlatButton
                 label={"Cancel"}
-                onClick={()=>{
-                  this.setState({delete: false})
-                }}
-              />,
+                onClick={()=>{this.setState({delete: false})}} />,
               <FlatButton
                 label={"Delete"}
-                labelStyle={{
-                  color: '#DF5151'
-                }}
+                labelStyle={{color: '#DF5151'}}
                 onClick={
                   ()=>{
                     this.props.relay.commitUpdate(
@@ -442,16 +463,11 @@ class Project extends Component {
                         }
                       }
                     )
-
                   }
-                }
-              />
-            ]}
-          >
+                } />
+            ]} >
             Are you sure you want to permanently delete this project?
           </Dialog>
-
-
           <Dialog
             open={this.state.edit}
             onRequestClose={()=>{this.setState({edit:false})}}
@@ -463,13 +479,8 @@ class Project extends Component {
             actions={[
               <FlatButton
                 label={"Delete Project"}
-                labelStyle={{
-                  color: '#DF5151'
-                }}
-                onClick={()=>{
-                  this.setState({edit: false, delete: true})
-                }}
-              />,
+                labelStyle={{ color: '#DF5151' }}
+                onClick={()=>{ this.setState({edit: false, delete: true}) }} />,
               <BtFlatButton
                 label={'Save'}
                 onClick={()=>{
@@ -486,30 +497,21 @@ class Project extends Component {
                     })
                   )
                   this.setState({edit: false})
-                }}
-              />
-            ]}
-          >
+                }} />
+            ]}>
             <TextField
               floatingLabelText={'Title'}
               name={'title'}
               type={'text'}
               value={this.state.title}
               disabled
-              fullWidth={true}
-
-            />
+              fullWidth={true} />
             <SelectField
               floatingLabelText={'Genre'}
               value={this.state.genre}
               fullWidth={true}
-              onChange={(e, index, value)=>{
-                this.setState({genre:value})
-              }}
-              selectedMenuItemStyle={{
-                color: purple
-              }}
-            >
+              onChange={(e, index, value)=>{ this.setState({genre:value}) }}
+              selectedMenuItemStyle={{ color: purple }} >
               {this.state.genres}
             </SelectField>
             <TextField
@@ -519,23 +521,13 @@ class Project extends Component {
               rows={3}
               value={this.state.description}
               onChange={(e)=>{this.setState({description:e.target.value})}}
-              fullWidth={true}
-
-            />
+              fullWidth={true}/>
             <SharingModal>
               <Choice>
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'PRIVATE'})}
                   backgroundColor={(this.state.privacy === 'PRIVATE') ? purple : grey300}
-                  icon={
-                    <Lock
-                      style={{}}
-                      height={23}
-                      width={22}
-                      fill={white}
-                    />
-                  }
-                />
+                  icon={ <Lock height={23} width={22} fill={white} /> } />
                 <ChoiceText>
                   Private
                 </ChoiceText>
@@ -544,12 +536,7 @@ class Project extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'TRIBE'})}
                   backgroundColor={(this.state.privacy === 'TRIBE') ? purple : grey300}
-                  icon={
-                    <Tribe
-                      fill={white}
-                    />
-                  }
-                />
+                  icon={ <Tribe fill={white} /> } />
                 <ChoiceText>
                   Tribe Only
                 </ChoiceText>
@@ -558,18 +545,12 @@ class Project extends Component {
                 <RoundButton
                   onClick={()=>this.setState({privacy: 'PUBLIC'})}
                   backgroundColor={(this.state.privacy === 'PUBLIC') ? purple : grey300}
-                  icon={
-                    <Logo
-                      fill={white}
-                    />
-                  }
-                />
+                  icon={ <Logo fill={white} /> } />
                 <ChoiceText>
                   Find Sessions
                 </ChoiceText>
               </Choice>
             </SharingModal>
-
           </Dialog>
         </Top>
         <Tabs
@@ -579,45 +560,30 @@ class Project extends Component {
             display: (ownProject) ? 'none' : '',
             marginBottom: '25px',
           }}
-          inkBarStyle={{
-            backgroundColor: purple
-          }}
-          value={this.state.tabs}
-        >
+          inkBarStyle={{ backgroundColor: purple }}
+          value={this.state.tabs} >
           <Tab
             label={'Listen & Give'}
             value={'listen'}
-            onActive={()=>{
-              this.setState({tabs: 'listen'})
-            }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
-            }}
-          />
+            onActive={()=>{ this.setState({tabs: 'listen'}) }}
+            style={{ borderBottom: `2px solid ${grey200}` }} />
           <Tab
             label={'View Feedback'}
             value={'view'}
-            onActive={()=>{
-              this.setState({tabs: 'view'})
-            }}
-            style={{
-              borderBottom: `2px solid ${grey200}`
-            }}
-          />
+            onActive={()=>{ this.setState({tabs: 'view'}) }}
+            style={{ borderBottom: `2px solid ${grey200}` }} />
         </Tabs>
         <TrackContainer>
           <AudioPlayer
             track={project.tracks.edges[0].node}
             currentTime={this.currentTime}
             project={project}
-            getDuration={this.getDuration}
-          />
+            getDuration={this.getDuration} />
         </TrackContainer>
 
         <Bot>
           <LeftList
-            hide={( (this.state.tabs === 'listen') && (!ownProject) ) || (this.state.disableComments)}
-          >
+            hide={( (this.state.tabs === 'listen') && (!ownProject) ) || (this.state.disableComments)} >
             <ProjectTribeList
               self={this.props.viewer.user}
               project={project}
@@ -625,17 +591,14 @@ class Project extends Component {
               recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
               router={this.props.router}
               handleSelection={this.handleSelection}
-              selection={this.state.selection}
-            />
+              selection={this.state.selection} />
           </LeftList>
           <CommentContainer>
             <CommentMarkers
               comments={this.filteredComments()}
-              duration={this.state.duration}
-            />
+              duration={this.state.duration} />
             <ButtonRow
-              hide={(ownProject || this.state.tabs === 'view' || this.state.disableComments)}
-            >
+              hide={(ownProject || this.state.tabs === 'view' || this.state.disableComments)} >
               <ButtonColumn>
                 <RoundButton
                   big
@@ -643,11 +606,9 @@ class Project extends Component {
                   icon={
                     <Comment
                       height={50}
-                      width={50}
-                    />
+                      width={50} />
                   }
-                  onTouchTap={()=>{this.dropMarker('COMMENT')}}
-                />
+                  onTouchTap={()=>{this.dropMarker('COMMENT')}} />
                 <ButtonLabel>
                   Idea
                 </ButtonLabel>
@@ -658,11 +619,9 @@ class Project extends Component {
                   icon={
                     <Heart
                       height={50}
-                      width={50}
-                    />
+                      width={50} />
                   }
-                  onTouchTap={()=>{this.dropMarker('LIKE')}}
-                />
+                  onTouchTap={()=>{this.dropMarker('LIKE')}} />
                 <ButtonLabel>
                   Like
                 </ButtonLabel>
@@ -680,8 +639,7 @@ class Project extends Component {
                   deactivate={this.deactivate}
                   userId={this.props.viewer.user.id}
                   tabs={this.state.tabs}
-                  commentCreated={()=>{this.setState({new: false})}}
-                /> :
+                  commentCreated={()=>{this.setState({new: false})}} /> :
                 null
               }
 
@@ -703,13 +661,13 @@ export default Relay.createContainer(
       projectTitle: '',
       projectFilter: {},
     },
-    prepareVariables: (prevVar)=>{
+    prepareVariables: (urlParams)=>{
       return {
-        ...prevVar,
+        ...urlParams,
         projectFilter: {
-          title: prevVar.projectTitle,
+          title: urlParams.projectTitle,
           creator: {
-            handle: prevVar.userHandle
+            handle: urlParams.userHandle
           }
         }
       }
@@ -720,13 +678,19 @@ export default Relay.createContainer(
           user {
             id
             handle
-            friends (
-              first: 999
-            ) {
+            friends (first: 999) {
               edges {
                 node {
                   id
                   handle
+                }
+              }
+            }
+            artistInfluences (first: 999) {
+              edges {
+                node {
+                  id
+                  name
                 }
               }
             }
@@ -737,13 +701,9 @@ export default Relay.createContainer(
             handle
             placename
             experience
-            portrait {
-              url
-            }
+            portrait {url}
             score
-            artistInfluences (
-              first: 999
-            ) {
+            artistInfluences (first: 999) {
               edges {
                 node {
                   id
@@ -759,9 +719,7 @@ export default Relay.createContainer(
                 node {
                   id
                   handle
-                  portrait {
-                    url
-                  }
+                  portrait { url }
                 }
               }
             }
@@ -776,13 +734,22 @@ export default Relay.createContainer(
                 title
                 description
                 privacy
+                bounces (first: 999) {
+                  edges {
+                    node {
+                      id
+                      bouncer {
+                        id
+                        handle
+                      }
+                    }
+                  }
+                }
                 creator {
                   handle
                   id
                 }
-                genres (
-                  first: 3
-                ) {
+                genres (first: 3) {
                   edges {
                     node {
                       name
@@ -790,12 +757,8 @@ export default Relay.createContainer(
                     }
                   }
                 }
-                artwork {
-                  url
-                }
-                tracks (
-                  first: 1
-                ) {
+                artwork {url}
+                tracks (first: 1) {
                   edges {
                     node {
                       id
@@ -810,46 +773,33 @@ export default Relay.createContainer(
                 ) {
                   edges {
                     node {
-                      session {
-                        id
-                      }
+                      session { id }
                       text
+                      createdAt
                       type
                       id
                       author {
                         id
                         handle
-                        portrait {
-                          url
-                        }
+                        portrait { url }
                       }
-                      project {
-                        id
-                      }
+                      project { id }
                       timestamp
-                      children (
-                        first: 999
-                      ) {
+                      children ( first: 999 ) {
                         edges {
                           node {
                             id
                             text
                             author {
                               handle
-                              portrait {
-                                url
-                              }
+                              portrait { url }
                             }
                           }
                         }
                       }
-                      upvotes (
-                        first: 999
-                      ) {
+                      upvotes ( first: 999 ) {
                         edges {
-                          node {
-                            id
-                          }
+                          node { id }
                         }
                       }
                     }

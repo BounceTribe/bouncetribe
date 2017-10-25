@@ -39,14 +39,14 @@ const makeRows = (users, select, selected) => (
     <FriendRow key={user.id} onClick={()=>select(user)}>
       <BtAvatar size={40} user={user} />
       <Handle selected={user.id===selected.id}>{user.handle}</Handle>
-      <BtTextMarker size={20} fontHeight={14} value={3}/>
+      <BtTextMarker size={20} fontHeight={14} value={0}/>
     </FriendRow>
   )
 )
 
 export const FriendList = (props) => {
   let {friends, category, invite, show, flip, select, selected} = props;
-  const users = friends.edges.map(edge=>edge.node)
+  const users = ((friends || {}).edges || []).map(edge=>edge.node)
   const list = show ? makeRows(users, select, selected) : [];
   list.push(
     <FriendRow key={'invite'}>
@@ -55,10 +55,11 @@ export const FriendList = (props) => {
   )
 
   return (
-    <div style={{marginRight: '5px'}}>
-      <FriendRow onClick={flip} key='heading'>
+    <div style={{overflowY: 'scroll', overflowX: 'hidden', width: '100%'}}>
+      <FriendRow onClick={flip} key={category}>
         <Header>{category}</Header>
-        {show ? <Collapse color={grey600}/> : <Expand color={grey600}/>}
+        {show ? <Collapse style={{paddingRight: '9px'}} color={grey600}/>
+         : <Expand style={{paddingRight: '9px'}} color={grey600}/>}
       </FriendRow>
       {list}
     </div>

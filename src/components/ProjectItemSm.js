@@ -7,30 +7,31 @@ import {ProfileProjectItem, Left as ProjectLeft, ProfileArtwork, Info, ProfilePr
 import {url} from 'config'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
+import * as moment from 'moment'
 
-export const ProjectItemSm = ({User, project, comments, likes}) => {
+export const ProjectItemSm = ({User, project, comments, likes, bounceTab}) => {
+  let created = moment.default(project.createdAt).format('MMMM Do')
+  console.log('projectSM', project);
+  let projectLink = `/${project.creator.handle}/${project.title}`
   return (
   <ProfileProjectItem key={project.id} >
     <ProjectLeft>
       <ProfileArtwork
         src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
         alt={'Project Artwork'}
-        to={`/${User.handle}/${project.title}`} />
+        to={projectLink} />
       <Info>
         <ProfileProjectTitle
-          to={`/${User.handle}/${project.title}`} >
+          to={projectLink} >
           {project.title}
         </ProfileProjectTitle>
         <CreatedAt>
-          Created {new Date(Date.parse(project.createdAt)).toLocaleDateString('en-US', {
-            month: 'long',
-            day: 'numeric'
-          })}
+          {bounceTab ? User.handle : 'Created ' + created}
         </CreatedAt>
         <Duo>
           <DuoItem>
             <Bubble secondary >
-                <Comment height={15} width={15} />
+              <Comment height={15} width={15} />
             </Bubble>
             {comments.length}
           </DuoItem>

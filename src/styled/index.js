@@ -44,12 +44,15 @@ export const BtTextMarker = (props) => {
 export const BtAvatar = ({user, size, hideStatus}) => {
   size = size || 50
   user = user || {}
+  //set the ratio of size between the avatar and the online icon
   const iconSize = size * 18/60
+
   let online = false
   if (user.lastPing) {
     let now = Moment()
-    online = now.diff(user.lastPing, 'seconds') < 31
+    online = now.diff(user.lastPing, 'seconds') < 315
   }
+
   return  (
     <div style={{height: `${size}px`}}>
       <Avatar
@@ -67,7 +70,6 @@ export const BtAvatar = ({user, size, hideStatus}) => {
     </div>
   )
 }
-
 
 export const BtLink = styled(Link)`
   display: flex;
@@ -89,24 +91,20 @@ export const Main = styled.main`
 
 export const View = styled.section`
   background-color: ${white};
-  display: 'flex';
+  display: flex;
   flex-direction: column;
   align-items: center;
   width: 80%;
-  margin-top: 50px;
   border: ${props => props.hideBorder ? 'none' : `solid ${grey230} 1px`};
   border-radius: 10px;
   min-height: 80vh;
-  margin-bottom: 50px;
+  margin: 100px 0 50px 0;
   ${size.m`
     margin-top: 0;
     width: 100%;
     border-radius: 0;
     border: 0;
   `}
-`
-export const FeedView = styled(View)`
-  width: 65%;
 `
 
 export const ProjectNewView = styled(View)`
@@ -117,7 +115,7 @@ export const IconTextContainer = styled(BtLink)`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: baseline;
+  align-items: center;
   font-size: 30px;
 `
 export const IconText = styled.span`
@@ -190,10 +188,7 @@ export const RoundButton = (props) => {
 
 
   return (
-    <ButtonLink
-      to={props.to}
-      title={props.title}
-    >
+    <ButtonLink to={props.to} title={props.title} >
       <IconButton
         tooltip={props.tooltip}
         style={{
@@ -209,25 +204,22 @@ export const RoundButton = (props) => {
           paddingLeft: (tooltipLength > 10) ? "2px" : "8px",
         }}
       >
-      <MuiThemeProvider
-        muiTheme={
-          (props.big) ? bigTheme : btTheme
-        }
-      >
-        <FloatingActionButton
-          style={{
-            boxShadow: 0,
-            ...props.style
-          }}
-          secondary={props.secondary}
-          backgroundColor={props.backgroundColor}
-          onClick={props.onClick}
-          onTouchTap={props.onTouchTap}
-        >
-          {props.icon}
-        </FloatingActionButton>
-      </MuiThemeProvider>
-    </IconButton>
+        <MuiThemeProvider muiTheme={ (props.big) ? bigTheme : btTheme } >
+          <FloatingActionButton
+            style={{
+              boxShadow: 0,
+              ...props.style
+            }}
+            secondary={props.secondary}
+            backgroundColor={props.backgroundColor}
+            onClick={props.onClick}
+            onTouchTap={props.onTouchTap}
+          >
+            {props.icon}
+          </FloatingActionButton>
+        </MuiThemeProvider>
+      </IconButton>
+
     </ButtonLink>
   )
 }

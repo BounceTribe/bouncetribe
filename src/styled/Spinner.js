@@ -47,7 +47,7 @@ export const Spinner = (props) => {
 }
 
 const Overlay = styled.div`
-  position: fixed;
+  position: ${props => props.nested ? 'relative' : 'fixed'}
   width: 100%;
   height: 100%;
   top: 0;
@@ -59,9 +59,9 @@ const Overlay = styled.div`
   align-content: center;
 `
 
-export const Loading = () => {
+export const Loading = ({nested}) => {
   return (
-    <Overlay>
+    <Overlay nested={nested}>
       <Spinner/>
     </Overlay>
   )
