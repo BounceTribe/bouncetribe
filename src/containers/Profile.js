@@ -16,7 +16,7 @@ import 'theme/newSelect.css'
 import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
 import {handleValidator} from 'utils/handles'
-import {purple} from 'theme'
+import {purple, grey400} from 'theme'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
@@ -25,13 +25,15 @@ import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
-import Dialog from 'material-ui/Dialog'
-import {Button, BtAvatar} from 'styled'
+import {Dialog, TextField, FlatButton} from 'material-ui/'
+import {BtAvatar} from 'styled'
 import Checkbox from 'material-ui/Checkbox'
-import Settings from 'icons/Settings'
+import Edit from 'icons/Edit'
 import {Panel} from 'components/Panel'
 import {url} from 'config'
 import {TribeButton} from 'components/TribeButton'
+import {DialogSpacer, DialogRow,} from 'styled/Dashboard'
+
 
 
 class Profile extends Component {
@@ -55,6 +57,7 @@ class Profile extends Component {
     tabs: 'projects',
     settings: false,
     btnStatus: '',
+    editProfile: false,
 
   }
   componentDidMount = () => {
@@ -401,26 +404,106 @@ class Profile extends Component {
     window.scrollTo(0, document.body.scrollHeight)
   }
 
+  setProfile = () => {
+    let {handle, placename, summary, email, website} = this.state
+    this.props.relay.commitUpdate(
+      new UpdateUser({
+        userId: this.props.viewer.user.id,
+        handle,
+        placename,
+        summary,
+        email,
+        website,
+      }), {
+        onSuccess: (success) => {
+          this.setState({
+            notification: `PROFILE UPDATED.`,
+            editProfile: false
+          })
+        }
+      }
+    )
+  }
+
   topRow = () => {
 
     let {handle, imageEditorOpen, placename, summary, website, email, handleError} = this.state
     let {User, user} = this.props.viewer
+    let editUser = {...User}
+    console.log('editUser', editUser, user);
     let {score} = User
     let projects = User.projects.edges.length
     let friends = User.friends.edges.length
     let ownProfile = (User.id === user.id)
     return (
     <Top>
-      <Settings
-          onClick={()=>{this.setState({settings: true})}}
-          style={{
-            alignSelf: 'flex-end',
-            marginRight: '20px',
-            display: (ownProfile) ? '' : 'none',
-            cursor: 'pointer'
+      <Edit
+        onClick={()=>{this.setState({editProfile: true})}}
+        fill={purple}
+        style={{
+          alignSelf: 'flex-end',
+          margin: '20px 20px 0 0',
+          display: (ownProfile) ? '' : 'none',
+          cursor: 'pointer'
+        }}
+        title="Settings" />
+        <Dialog
+          title={"Edit Profile"}
+          modal
+          open={this.state.editProfile}
+          onRequestClose={()=>{ this.setState({editProfile: false}) }}
+          autoScrollBodyContent={true}
+          bodyStyle={{padding: '0'}}
+          contentStyle={{borderRadius: '5px'}}
+          titleStyle={{
+            fontSize: '28px',
+            borderBottom:`1px solid ${grey400}`,
+            padding: '16px 27px 13px 27px',
+            fontFamily: 'Helvetica Neue'
           }}
-          title="Settings" />
-      <Dialog
+          actions={[
+            <FlatButton
+              label="Cancel"
+              onClick={()=>this.setState({editProfile: false})}
+            />,
+            <FlatButton
+              label="Submit"
+              primary={true}
+              onClick={()=>this.setProfile()}
+            />
+          ]}>
+          <DialogRow>
+            <DialogSpacer>
+              <TextField
+                floatingLabelText={'Handle'}
+                value={this.state.handle}
+                onChange={(e)=>this.setState({handle: e.target.value})}
+              />
+              <TextField
+                floatingLabelText={'Location'}
+                value={this.state.placename}
+                onChange={(e)=>this.setState({placename: e.target.value})}
+              />
+              <TextField
+                floatingLabelText={'Summary'}
+                value={this.state.summary}
+                onChange={(e)=>this.setState({summary: e.target.value})}
+                multiLine
+              />
+              <TextField
+                floatingLabelText={'Email'}
+                value={this.state.email}
+                onChange={(e)=>this.setState({email: e.target.value})}
+              />
+              <TextField
+                floatingLabelText={'Website'}
+                value={this.state.website}
+                onChange={(e)=>this.setState({website: e.target.value})}
+              />
+            </DialogSpacer>
+          </DialogRow>
+         </Dialog>
+      {/*<Dialog
         title={"Settings"}
         actions={[
           <Button
@@ -428,8 +511,8 @@ class Profile extends Component {
             onClick={()=>{ this.setState({settings: false}) }} /> ]}
         open={this.state.settings}
         modal={true}
-      >
-        <h3> Email Notifications </h3>
+      > */}
+        {/* <h3> Email Notifications </h3>
         <Checkbox
           label={"Disable all"}
           checked={user.doNotEmail}
@@ -442,7 +525,7 @@ class Profile extends Component {
             )
           }}
         />
-      </Dialog>
+      </Dialog> */}
       <Row>
         <SubRow>
           <BtAvatar user={this.props.viewer.User}
@@ -636,9 +719,7 @@ class Profile extends Component {
                 display: (!ownProfile && skills.length < 1) ? 'none' : ''
               }}
             />
-            <Label
-              hide={(!ownProfile && influences.length < 1)}
-            >
+            <Label hide={(!ownProfile && influences.length < 1)} >
               Influences
             </Label><div></div>
             <Async
@@ -671,13 +752,9 @@ export default Relay.createContainer(
           user {
             id
             handle
-            friends (
-              first: 999
-            ) {
+            friends ( first: 999 ) {
               edges {
-                node {
-                  id
-                }
+                node { id }
               }
             }
             invitations (
@@ -691,9 +768,7 @@ export default Relay.createContainer(
               edges {
                 node {
                   id
-                  actor {
-                    id
-                  }
+                  actor { id }
                 }
               }
             }
@@ -708,9 +783,7 @@ export default Relay.createContainer(
             ) {
               edges {
                 node {
-                  recipient {
-                    id
-                  }
+                  recipient { id }
                 }
               }
             }
@@ -737,13 +810,9 @@ export default Relay.createContainer(
                   id
                   title
                   createdAt
-                  artwork {
-                    url
-                  }
+                  artwork { url }
                   privacy
-                  comments (
-                    first: 999
-                  ) {
+                  comments ( first: 999 ) {
                     edges {
                       node {
                         id
@@ -755,18 +824,14 @@ export default Relay.createContainer(
                 }
               }
             }
-            friends (
-              first: 999
-            ){
+            friends ( first: 999 ){
               edges {
                 node {
                   id
                 }
               }
             }
-            genres (
-              first: 20
-            ) {
+            genres ( first: 20 ) {
               edges {
                 node {
                   id
@@ -774,9 +839,7 @@ export default Relay.createContainer(
                 }
               }
             }
-            skills (
-              first: 20
-            ) {
+            skills ( first: 20 ) {
               edges {
                 node {
                   id
@@ -784,9 +847,7 @@ export default Relay.createContainer(
                 }
               }
             }
-            artistInfluences (
-              first: 20
-            ){
+            artistInfluences ( first: 20 ){
               edges {
                 node {
                   id

@@ -17,13 +17,11 @@ export const Divider = styled.hr`
 export const Top = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+
   width: 100%;
   background-color: ${white};
   border-radius: 10px;
   border: solid ${grey400} 1px;
-  padding-top: 40px;
   box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
 `
 
@@ -47,7 +45,6 @@ export const Row = styled.div`
 
 export const SubRow = styled.div`
   display: flex;
-  flex-direction: row;
 `
 
 export const Left = styled.div`

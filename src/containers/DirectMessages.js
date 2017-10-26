@@ -106,24 +106,26 @@ class DirectMessages extends Component {
   }
 
   msgKeyDown = (e) => {
-    if (e.keyCode===13 && !e.shiftKey && this.state.message) {
+    if (e.keyCode===13 && !e.shiftKey) {
       e.preventDefault()
-      let savedText = this.state.message
-      this.setState({message: ''})
-      this.props.relay.commitUpdate(
-        new CreateMessage({
-          text: savedText,
-          senderId: this.props.viewer.user.id,
-          recipientId: this.props.viewer.User.id
-        }), {
-          onSuccess: (success) => { console.log('send success') },
-          onFailure: (failure) => {
-            console.log('message send fail', failure);
-            this.setState({message: savedText})
+      if (this.state.message) {
+        let savedText = this.state.message
+        this.setState({message: ''})
+        this.props.relay.commitUpdate(
+          new CreateMessage({
+            text: savedText,
+            senderId: this.props.viewer.user.id,
+            recipientId: this.props.viewer.User.id
+          }), {
+            onSuccess: (success) => { console.log('send success') },
+            onFailure: (failure) => {
+              console.log('message send fail', failure);
+              this.setState({message: savedText})
+            }
+            //display error message in snackbar?
           }
-          //display error message in snackbar?
-        }
-      )
+        )
+      }
     }
   }
 
