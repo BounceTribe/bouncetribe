@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, SubRow, Experience, ExperienceRow, EmailWebsite} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, TopCol, Handle, Location, ScoreRow, Score, Divider, Summary, BotRow, BotRight, Label,  SubRow, Experience, ExperienceRow, EmailWebsite, MissingUserData} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
@@ -32,7 +32,6 @@ import Edit from 'icons/Edit'
 import {Panel} from 'components/Panel'
 import {url} from 'config'
 import {TribeButton} from 'components/TribeButton'
-import {DialogSpacer, DialogRow,} from 'styled/Dashboard'
 
 
 
@@ -427,10 +426,9 @@ class Profile extends Component {
 
   topRow = () => {
 
-    let {handle, imageEditorOpen, placename, summary, website, email, handleError} = this.state
+    let {handle, imageEditorOpen, placename, summary, website, email} = this.state
     let {User, user} = this.props.viewer
-    let editUser = {...User}
-    console.log('editUser', editUser, user);
+    // let editUser = {...User}
     let {score} = User
     let projects = User.projects.edges.length
     let friends = User.friends.edges.length
@@ -447,80 +445,52 @@ class Profile extends Component {
           cursor: 'pointer'
         }}
         title="Settings" />
-        <Dialog
-          title={"Edit Profile"}
-          modal
-          open={this.state.editProfile}
-          onRequestClose={()=>{ this.setState({editProfile: false}) }}
-          autoScrollBodyContent
-          titleStyle={{
-            fontSize: '28px',
-            // borderBottom:`1px solid ${grey400}`,
-            padding: '16px 27px 13px 27px',
-            fontFamily: 'Helvetica Neue'
-          }}
-          actions={[
-            <FlatButton
-              label="Cancel"
-              onClick={()=>this.setState({editProfile: false})}
-            />,
-            <FlatButton
-              label="Submit"
-              primary={true}
-              onClick={()=>this.setProfile()}
-            />
-          ]}>
-              <TextField
-                floatingLabelText={'Handle'}
-                value={this.state.handle}
-                onChange={(e)=>this.setState({handle: e.target.value})}
-              /><br />
-              <TextField
-                floatingLabelText={'Location'}
-                value={this.state.placename}
-                onChange={(e)=>this.setState({placename: e.target.value})}
-              /><br />
-              <TextField
-                floatingLabelText={'Summary'}
-                value={this.state.summary}
-                onChange={(e)=>this.setState({summary: e.target.value})}
-                multiLine
-                fullWidth
-              /><br />
-              <TextField
-                floatingLabelText={'Email'}
-                value={this.state.email}
-                onChange={(e)=>this.setState({email: e.target.value})}
-              /><br />
-              <TextField
-                floatingLabelText={'Website'}
-                value={this.state.website}
-                onChange={(e)=>this.setState({website: e.target.value})}
-              />
-         </Dialog>
-      {/*<Dialog
-        title={"Settings"}
+      <Dialog
+        title={"Edit Profile"}
+        modal
+        autoScrollBodyContent
+        open={this.state.editProfile}
+        onRequestClose={()=>{ this.setState({editProfile: false}) }}
+        titleStyle={{ fontSize: '28px', fontFamily: 'Helvetica Neue' }}
         actions={[
-          <Button
-            label={"Close"}
-            onClick={()=>{ this.setState({settings: false}) }} /> ]}
-        open={this.state.settings}
-        modal={true}
-      > */}
-        {/* <h3> Email Notifications </h3>
-        <Checkbox
-          label={"Disable all"}
-          checked={user.doNotEmail}
-          onCheck={(e, isChecked) => {
-            this.props.relay.commitUpdate(
-              new UpdateUser({
-                userId: this.props.viewer.user.id,
-                doNotEmail: isChecked
-              })
-            )
-          }}
-        />
-      </Dialog> */}
+          <FlatButton
+            label="Cancel"
+            onClick={()=>this.setState({editProfile: false})}
+          />,
+          <FlatButton
+            label="Submit"
+            primary={true}
+            onClick={this.setProfile}
+          />
+        ]}>
+            <TextField
+              floatingLabelText={'Handle'}
+              value={this.state.handle}
+              onChange={(e)=>this.setState({handle: e.target.value})}
+            /><br />
+            <TextField
+              floatingLabelText={'Location'}
+              value={this.state.placename}
+              onChange={(e)=>this.setState({placename: e.target.value})}
+            /><br />
+            <TextField
+              floatingLabelText={'Summary'}
+              value={this.state.summary}
+              onChange={(e)=>this.setState({summary: e.target.value})}
+              multiLine
+              fullWidth
+            /><br />
+            <TextField
+              floatingLabelText={'Email'}
+              value={this.state.email}
+              onChange={(e)=>this.setState({email: e.target.value})}
+            /><br />
+            <TextField
+              floatingLabelText={'Website'}
+              value={this.state.website}
+              onChange={(e)=>this.setState({website: e.target.value})}
+            />
+      </Dialog>
       <Row>
         <SubRow>
           <BtAvatar user={this.props.viewer.User}
@@ -540,7 +510,13 @@ class Profile extends Component {
           />
           <TopCol>
             <Handle>{handle}</Handle>
-            <Location>{placename}</Location>
+            <span>
+              <PinIcon/><Location>{placename}</Location>
+              <MissingUserData hide={placename || !ownProfile}
+                onClick={()=>{this.setState({editProfile: true})}}>
+                Add your location
+              </MissingUserData>
+            </span>
             <ScoreRow>
               <Bolt/>
               <Score>{score}</Score>
@@ -563,26 +539,30 @@ class Profile extends Component {
       <Divider/>
       <Row>
         <Left>
-          <Summary>{summary}</Summary>
+          <Summary>
+            {summary}
+            <MissingUserData hide={summary || !ownProfile}
+              onClick={()=>{this.setState({editProfile: true})}}>
+              Add your summary
+            </MissingUserData>
+          </Summary>
         </Left>
         <Right>
           <EmailWebsite>
             <Email style={{marginRight: '10px'}} />
             {email}
-            <span hide={email}
-              style={{cursor: 'pointer', display: `${email ? 'none' : 'inline'}`}}
+            <MissingUserData hide={email || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
-              Add your Email
-            </span>
+              Add your email
+            </MissingUserData>
           </EmailWebsite>
           <EmailWebsite>
             <Link style={{marginRight: '10px'}} />
             {website}
-            <span hide={website}
-              style={{cursor: 'pointer', display: `${website ? 'none' : 'inline'}`}}
+            <MissingUserData hide={website || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
               Add your website
-            </span>
+            </MissingUserData>
           </EmailWebsite>
         </Right>
       </Row>

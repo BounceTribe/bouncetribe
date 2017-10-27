@@ -98,9 +98,10 @@ export const Handle = styled.div`
   margin-left: 0;
 `
 
-export const Location = styled.div`
+export const Location = styled.span`
   font-family: HelveticaNeue;
   font-size: 16px;
+  margin-left: 8px;
   color: #4A4A4A;
 `
 
@@ -140,6 +141,11 @@ export const EmailWebsite = styled.span`
   font-family: HelveticaNeue;
   font-size: 14px;
   color: #4A4A4A;
+`
+
+export const MissingUserData = styled.span`
+  cursor: pointer;
+  display: ${props => props.hide ? 'none' : 'inline'}
 `
 
 export const BotRow = styled.div`
