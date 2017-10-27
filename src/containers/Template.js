@@ -84,6 +84,7 @@ export default Relay.createContainer(
           user {
             id
             handle
+            deactivated
             portrait { url }
             doNotEmail
             notifications (

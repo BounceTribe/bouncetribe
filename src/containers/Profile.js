@@ -27,7 +27,6 @@ import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
 import {Dialog, TextField, FlatButton} from 'material-ui/'
 import {BtAvatar} from 'styled'
-import Checkbox from 'material-ui/Checkbox'
 import Edit from 'icons/Edit'
 import {Panel} from 'components/Panel'
 import {url} from 'config'
@@ -226,33 +225,6 @@ class Profile extends Component {
     }
   }
 
-  inputSubmit = (e) => {
-    let {name, value} = e.target
-    console.log('submit name val', e);
-    if (this.state[`${name}Error`]) {
-      return
-    } else {
-      document.getElementById(name).blur()
-      this.props.relay.commitUpdate(
-        new UpdateUser({
-          userId: this.props.viewer.user.id,
-          [name]: value,
-        }), {
-          onSuccess: (success) => {
-            console.log('success');
-            name = name.toUpperCase()
-            if (name === 'PLACENAME') {
-              name = 'LOCATION'
-            }
-            this.setState({
-              notification: `${name} UPDATED.`
-            })
-          }
-        }
-      )
-    }
-  }
-
   genreChange = (val) => {
     let genresIds = val.map(genre=>{
       return genre.value
@@ -388,19 +360,10 @@ class Profile extends Component {
     )
   }
 
-  closeSnackbar = () => {
-    this.setState( (prevState, props) => {
-      return { notification: false }
-    })
-  }
-
-  tabs = (value) => {
-    this.setState({tab:value})}
-
   setTab = (tab) => {
     this.props.router.replace(`${this.props.router.params.userHandle}/${tab}`)
     this.setState({ tab })
-    window.scrollTo(0, document.body.scrollHeight)
+    // window.scrollTo(0, document.body.scrollHeight)
   }
 
   setProfile = () => {
@@ -416,7 +379,7 @@ class Profile extends Component {
       }), {
         onSuccess: (success) => {
           this.setState({
-            notification: `PROFILE UPDATED.`,
+            notification: `PROFILE UPDATED`,
             editProfile: false
           })
         }
@@ -444,14 +407,14 @@ class Profile extends Component {
           display: (ownProfile) ? '' : 'none',
           cursor: 'pointer'
         }}
-        title="Settings" />
+      />
       <Dialog
         title={"Edit Profile"}
         modal
         autoScrollBodyContent
         open={this.state.editProfile}
         onRequestClose={()=>{ this.setState({editProfile: false}) }}
-        titleStyle={{ fontSize: '28px', fontFamily: 'Helvetica Neue' }}
+        titleStyle={{ fontSize: '28px' }}
         actions={[
           <FlatButton
             label="Cancel"
@@ -579,8 +542,8 @@ class Profile extends Component {
           open={notification ? true : false} //requires boolean input
           message={notification}
           autoHideDuration={2000}
-          onRequestClose={this.closeSnackbar}
-          onActionTouchTap={this.closeSnackbar}
+          onRequestClose={()=>this.setState({notification: false})}
+          onActionTouchTap={()=>this.setState({notification: false})}
           bodyStyle={{ backgroundColor: purple }}
         />
         {this.topRow()}

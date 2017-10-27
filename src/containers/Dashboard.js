@@ -3,7 +3,7 @@ import Relay from 'react-relay'
 import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {BotRow} from 'styled/Profile'
-import {Dialog, TextField} from 'material-ui'
+import {Dialog, TextField, Snackbar} from 'material-ui'
 import {grey400, purple} from 'theme'
 import Bolt from 'icons/Bolt'
 import {BtAvatar, IconTextContainer, IconText} from 'styled'
@@ -11,7 +11,6 @@ import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {Panel} from 'components/Panel'
 import sendEmailInvite from 'utils/sendEmailInvite'
-import Snackbar from 'material-ui/Snackbar'
 
 class Dashboard extends Component {
 
@@ -148,7 +147,6 @@ class Dashboard extends Component {
                 fontSize: '28px',
                 borderBottom:`1px solid ${grey400}`,
                 padding: '16px 27px 13px 27px',
-                fontFamily: 'Helvetica Neue'
               }} >
               <DialogRow>
                 <DialogSpacer>

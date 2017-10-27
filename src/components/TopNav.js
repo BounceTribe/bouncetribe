@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Bar, Logo, NavList, NavLink, Portrait, NavText, Notification, NotifyContainer, NotifyMessage, ViewAll} from 'styled/TopNav'
-import {BtFlatButton, Button} from 'styled'
+import {BtFlatButton} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
 import Music from 'icons/Music'
@@ -12,49 +12,44 @@ import auth from 'utils/auth'
 import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
 import UpdateNotification from 'mutations/UpdateNotification'
-import Dialog from 'material-ui/Dialog'
-import Checkbox from 'material-ui/Checkbox'
-// import {Container} from 'styled/list'
+import UserSettings from 'containers/UserSettings'
+import Snackbar from 'material-ui/Snackbar'
 
 
-import UpdateUser from 'mutations/UpdateUser'
 
 class TopNav extends Component {
   state = {
     dropdownOpen: false,
     notificationMenu: false,
     portraitMenu: false,
-    settings: false
+    settings: false,
+    snackbar: false,
+    snackbarText: ''
   }
 
   render() {
     let {handle, portraitUrl, user} = this.props
     return (
       <Bar>
-        <Dialog
-          title={"Settings"}
-          actions={[
-            <Button
-              label={"Close"}
-              onClick={() => this.setState({settings: false})}
-            />
-          ]}
+        <Snackbar
+          open={this.state.snackbar}
+          message={this.state.snackbarText}
+          autoHideDuration={2000}
+          onRequestClose={()=>this.setState({snackbar: false})}
+          onActionTouchTap={()=>this.setState({snackbar: false})}
+          bodyStyle={{ backgroundColor: purple }}
+        />
+        <UserSettings
           open={this.state.settings}
-          modal={true} >
-          <h3>Email Notifications</h3>
-          <Checkbox
-            label={"Disable all"}
-            checked={user.doNotEmail}
-            onCheck={(e, isChecked) => {
-              Relay.Store.commitUpdate(
-                new UpdateUser({
-                  userId: user.id,
-                  doNotEmail: isChecked
-                })
-              )
-            }}
-          />
-        </Dialog>
+          user={user}
+          onSave={()=>this.setState( {
+              snackbarText: 'SETTINGS CHANGED',
+              snackbar: open,
+              settings: false
+            })
+          }
+          onClose={()=>this.setState({settings: false})}
+        />
         <Logo to={'/'} />
         <NavList>
           {/* <NavLink to={`/tribe/${handle}/find`} >

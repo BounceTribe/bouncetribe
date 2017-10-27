@@ -425,8 +425,7 @@ class Project extends Component {
                 label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
                 backgroundColor={(this.state.bounced) ? purple : white}
                 labelStyle={{
-                  color: (this.state.bounced) ? white : purple,
-                  fontFamily: 'Helvetica Neue'}}
+                  color: (this.state.bounced) ? white : purple}}
                 icon={
                   <Bounce
                     fill={(this.state.bounced) ? white : purple}

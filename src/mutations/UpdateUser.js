@@ -3,6 +3,7 @@ import Relay from 'react-relay'
 export default class UpdateUser extends Relay.Mutation {
 
   getMutation () {
+    console.log('this update', this);
     return Relay.QL`mutation{updateUser}`
   }
 
@@ -40,7 +41,7 @@ export default class UpdateUser extends Relay.Mutation {
       artistInfluencesIds: this.props.artistInfluencesIds,
       experience: this.props.experience,
       doNotEmail: this.props.doNotEmail,
-      isActive: this.props.isActive
+      deactivated: this.props.deactivated
     }
   }
 
