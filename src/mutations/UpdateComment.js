@@ -30,8 +30,4 @@ export default class UpdateComment extends Mutation {
     }]
   }
 
-
-
-
-
 }

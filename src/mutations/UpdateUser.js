@@ -39,7 +39,8 @@ export default class UpdateUser extends Relay.Mutation {
       skillsIds: this.props.skillsIds,
       artistInfluencesIds: this.props.artistInfluencesIds,
       experience: this.props.experience,
-      doNotEmail: this.props.doNotEmail
+      doNotEmail: this.props.doNotEmail,
+      isActive: this.props.isActive
     }
   }
 
