@@ -87,6 +87,13 @@ export default Relay.createContainer(
             deactivated
             portrait { url }
             doNotEmail
+            doNotEmailTR
+            doNotEmailTRA
+            doNotEmailTFR
+            doNotEmailTMR
+            doNotEmailSFR
+            doNotEmailSFA
+            doNotEmailSMR
             notifications (
               first: 5
               orderBy: createdAt_DESC

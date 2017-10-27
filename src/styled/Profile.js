@@ -99,7 +99,6 @@ export const Handle = styled.div`
 `
 
 export const Location = styled.span`
-  font-family: HelveticaNeue;
   font-size: 16px;
   margin-left: 8px;
   color: #4A4A4A;

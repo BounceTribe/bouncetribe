@@ -9,13 +9,9 @@ class UserSettings extends Component {
 
   constructor(props) {
     super(props)
-    let {deactivated, doNotEmail} = this.props.user
-    this.state = {
-      show: true,
-      deactivated,
-      doNotEmail,
-    }
+    this.state = Object.assign({show: true}, this.props.user)
   }
+
 
   sendUpdate() {
     let userId = this.props.user.id
@@ -25,7 +21,7 @@ class UserSettings extends Component {
       new UpdateUser(updateObj),{
         onSuccess: res => {
           this.props.onSave()
-          
+
         },
         onFailure: res => {
           //handle failure
@@ -41,7 +37,7 @@ class UserSettings extends Component {
         title={"Settings"}
         autoScrollBodyContent
         modal
-        titleStyle={{ fontSize: '28px', fontFamily: 'Helvetica Neue' }}
+        titleStyle={{ fontSize: '28px'}}
         open={this.props.open}
         actions={[
           <FlatButton
@@ -61,16 +57,59 @@ class UserSettings extends Component {
         <h3>Email Notifications</h3>
         <Checkbox
           label={"Disable all"}
-          defaultChecked={this.state.doNotEmail}
+          checked={this.state.doNotEmail}
           style={{padding: '10px 0'}}
           onCheck={(e, val) => this.setState({doNotEmail: val})}
         />
+        <Checkbox
+          label={"Tribe Requests"}
+          checked={this.state.doNotEmailTR}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailTR : val})}
+        />
+        <Checkbox
+          label={"Tribe Request Accepted"}
+          checked={this.state.doNotEmailTRA}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailTRA: val})}
+        />
+        <Checkbox
+          label={"Tribe Feedback Received"}
+          checked={this.state.doNotEmailTFR}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailTFR: val})}
+        />
+        <Checkbox
+          label={"Tribe Message Received"}
+          checked={this.state.doNotEmailTMR}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailTMR: val})}
+        />
+        <Checkbox
+          label={"Session Feedback Received"}
+          checked={this.state.doNotEmailSFR}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailSFR: val})}
+        />
+        <Checkbox
+          label={"Session Feedback Appreciated"}
+          checked={this.state.doNotEmailSFA}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailSFA: val})}
+        />
+        <Checkbox
+          label={"Session Message Received"}
+          checked={this.state.doNotEmailSMR}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailSMR: val})}
+        />
+        <br/>
         <Toggle
           label={"Active Account"}
-          defaultToggled={this.state.deactivated}
+          toggled={!this.state.deactivated}
           labelPosition={'right'}
           style={{fontSize: '18px', marginTop: '10px'}}
-          onToggle={(e, val) => this.setState({deactivated: val})}
+          onToggle={(e, val) => this.setState({deactivated: !val})}
         />
       </Dialog>
     )

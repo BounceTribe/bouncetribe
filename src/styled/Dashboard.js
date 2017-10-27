@@ -165,7 +165,6 @@ const InviteStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Helvetica Neue";
   font-size: 12pt;
   height: 40px;
   cursor: pointer;
@@ -188,7 +187,6 @@ export const SendInviteBtn = ({onClick}) => (
     labelStyle={{
       color: `${white}`,
       fontSize: '14px',
-      fontFamily: 'Helvetica Neue',
       textTransform: 'none'
     }}
     icon={

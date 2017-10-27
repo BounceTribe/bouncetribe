@@ -32,7 +32,7 @@ class TopNav extends Component {
     return (
       <Bar>
         <Snackbar
-          open={this.state.snackbar}
+          open={this.state.snackbar ? true : false}
           message={this.state.snackbarText}
           autoHideDuration={2000}
           onRequestClose={()=>this.setState({snackbar: false})}
@@ -68,6 +68,8 @@ class TopNav extends Component {
           </NavLink>
           <NavLink style={{ paddingRight: 0, height: '19px' }} >
             <IconMenu
+              useLayerForClickAway
+              onClick={()=>this.setState({notificationMenu: false})}
               iconButtonElement={(
                 <IconButton style={{padding: 0}} >
                   <Alerts
@@ -92,7 +94,6 @@ class TopNav extends Component {
                   })
                 }
               }}
-              touchTapCloseDelay={0}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
@@ -109,12 +110,14 @@ class TopNav extends Component {
             </IconMenu>
           </NavLink>
           <IconMenu
+            useLayerForClickAway
             iconButtonElement={(
               <IconButton
                 style={{ padding: 0, overflow: 'visible', margin: '0 15px' }}>
                 <Portrait src={portraitUrl} />
               </IconButton>
             )}
+            onClick={()=>this.setState({portraitMenu: false})}
             open={this.state.portraitMenu}
             onRequestChange={()=>{
               this.setState((prevState) => (
@@ -124,15 +127,13 @@ class TopNav extends Component {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-            <DropdownMenuItem text="Dashboard" to={`/`} />
+            <DropdownMenuItem text="Dashboard"  to={`/`} />
             <DropdownMenuItem text="View Profile" to={`/${handle}`} />
             <DropdownMenuItem text="My Tribe" to={`/tribe/${handle}`} />
             <DropHr/>
             <DropdownMenuItem text="Settings"
               onClick={()=>{ this.setState({settings: true}) }} />
-            <DropdownMenuItem text="Help"
-              href={"http://bouncetribe.com/support/"}
-            />
+            <DropdownMenuItem text="Help" href={"http://bouncetribe.com/support/"} />
             <DropHr/>
             <DropdownMenuItem text="Log Out" to={'/logout'} onClick={auth.logout} />
           </IconMenu>

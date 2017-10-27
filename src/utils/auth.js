@@ -14,7 +14,6 @@ import {browserHistory} from 'react-router'
 
 class AuthService {
   constructor() {
-    console.log('auth', this);
     this.defaultOptions = {
       auth: {
         params: {
