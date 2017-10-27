@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, SubRow, Experience, ExperienceRow} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, SubRow, Experience, ExperienceRow, EmailWebsite} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
@@ -452,12 +452,10 @@ class Profile extends Component {
           modal
           open={this.state.editProfile}
           onRequestClose={()=>{ this.setState({editProfile: false}) }}
-          autoScrollBodyContent={true}
-          bodyStyle={{padding: '0'}}
-          contentStyle={{borderRadius: '5px'}}
+          autoScrollBodyContent
           titleStyle={{
             fontSize: '28px',
-            borderBottom:`1px solid ${grey400}`,
+            // borderBottom:`1px solid ${grey400}`,
             padding: '16px 27px 13px 27px',
             fontFamily: 'Helvetica Neue'
           }}
@@ -472,36 +470,33 @@ class Profile extends Component {
               onClick={()=>this.setProfile()}
             />
           ]}>
-          <DialogRow>
-            <DialogSpacer>
               <TextField
                 floatingLabelText={'Handle'}
                 value={this.state.handle}
                 onChange={(e)=>this.setState({handle: e.target.value})}
-              />
+              /><br />
               <TextField
                 floatingLabelText={'Location'}
                 value={this.state.placename}
                 onChange={(e)=>this.setState({placename: e.target.value})}
-              />
+              /><br />
               <TextField
                 floatingLabelText={'Summary'}
                 value={this.state.summary}
                 onChange={(e)=>this.setState({summary: e.target.value})}
                 multiLine
-              />
+                fullWidth
+              /><br />
               <TextField
                 floatingLabelText={'Email'}
                 value={this.state.email}
                 onChange={(e)=>this.setState({email: e.target.value})}
-              />
+              /><br />
               <TextField
                 floatingLabelText={'Website'}
                 value={this.state.website}
                 onChange={(e)=>this.setState({website: e.target.value})}
               />
-            </DialogSpacer>
-          </DialogRow>
          </Dialog>
       {/*<Dialog
         title={"Settings"}
@@ -544,36 +539,8 @@ class Profile extends Component {
             portraitSuccess={this.portraitSuccess}
           />
           <TopCol>
-            <InputRow>
-              <Handle
-                value={handle}
-                id={'handle'}
-                onChange={this.inputChange}
-                disabled={!ownProfile}
-                placeholder={'handle'}
-                name={'handle'}
-                onBlur={this.inputSubmit}
-                onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
-              />
-              <InputError>
-                {handleError}
-              </InputError>
-            </InputRow>
-            <InputRow
-              hide={(!ownProfile && placename.length < 1)}
-            >
-              <PinIcon/>
-              <Location
-                value={placename}
-                onChange={this.inputChange}
-                placeholder={(ownProfile) ? 'add your location' : ''}
-                name={'placename'}
-                id={'placename'}
-                disabled={!ownProfile}
-                onBlur={this.inputSubmit}
-                onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
-              />
-            </InputRow>
+            <Handle>{handle}</Handle>
+            <Location>{placename}</Location>
             <ScoreRow>
               <Bolt/>
               <Score>{score}</Score>
@@ -596,42 +563,27 @@ class Profile extends Component {
       <Divider/>
       <Row>
         <Left>
-          <Summary
-            value={summary}
-            name={'summary'}
-            id={'summary'}
-            onChange={this.inputChange}
-            placeholder={(ownProfile) ? 'add your summary' : ''}
-            disabled={!ownProfile}
-            onBlur={this.inputSubmit}
-            onKeyPress={(e)=>
-              (e.charCode===13 && e.shiftKey) && this.inputSubmit(e) }
-            ownProfile={ownProfile}
-          />
+          <Summary>{summary}</Summary>
         </Left>
         <Right>
-          <InputRow hide={(!ownProfile)} >
-            <Email/>
-            <Input
-              value={email}
-              placeholder={(ownProfile) ? 'add your email' : ''}
-              onChange={this.inputChange}
-              disabled
-            />
-          </InputRow>
-          <InputRow hide={(!ownProfile && website.length < 1)}>
-            <Link/>
-            <Input
-              value={website}
-              name={'website'}
-              id={'website'}
-              placeholder={(ownProfile) ? 'add your website' : ''}
-              onChange={this.inputChange}
-              disabled={!ownProfile}
-              onBlur={this.inputSubmit}
-              onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
-            />
-          </InputRow>
+          <EmailWebsite>
+            <Email style={{marginRight: '10px'}} />
+            {email}
+            <span hide={email}
+              style={{cursor: 'pointer', display: `${email ? 'none' : 'inline'}`}}
+              onClick={()=>{this.setState({editProfile: true})}}>
+              Add your Email
+            </span>
+          </EmailWebsite>
+          <EmailWebsite>
+            <Link style={{marginRight: '10px'}} />
+            {website}
+            <span hide={website}
+              style={{cursor: 'pointer', display: `${website ? 'none' : 'inline'}`}}
+              onClick={()=>{this.setState({editProfile: true})}}>
+              Add your website
+            </span>
+          </EmailWebsite>
         </Right>
       </Row>
     </Top>)

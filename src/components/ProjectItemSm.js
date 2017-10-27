@@ -21,8 +21,7 @@ export const ProjectItemSm = ({User, project, comments, likes, bounces, bounceTa
           alt={'Project Artwork'}
           to={projectLink} />
         <Info>
-          <ProfileProjectTitle
-            to={projectLink} >
+          <ProfileProjectTitle to={projectLink} >
             {project.title}
           </ProfileProjectTitle>
           <CreatedAt>

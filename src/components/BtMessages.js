@@ -22,7 +22,7 @@ const MsgBubble = styled.div`
   color: ${props => props.isSender ? grey500 : white};
   padding: 9px 14px;
   word-break: break-word;
-  white-space: pre-wrap
+  white-space: pre-wrap;
   flex: none;
 `
 const MsgTime = styled.div`

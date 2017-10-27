@@ -28,9 +28,10 @@ export const Top = styled.div`
 export const TopCol = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: flex-start;
-  margin-left: 30px;
+  ${'' /* margin-left: 30px; */}
+  padding: 18px 30px;
 `
 
 export const Row = styled.div`
@@ -89,15 +90,18 @@ export const Input = styled.input`
   width: ${(props)=>inputWidth(props,8)}px;
 `
 
-export const Handle = styled(Input)`
+export const Handle = styled.div`
+  font-family: HelveticaNeue-Light;
   font-size: 30px;
-  width: ${(props)=>inputWidth(props,17)}px;
+  color: #333333;
+  letter-spacing: 0;
   margin-left: 0;
 `
 
-export const Location = styled(Input)`
-  font-size: 15px;
-  width: ${(props)=>inputWidth(props,8)}px;
+export const Location = styled.div`
+  font-family: HelveticaNeue;
+  font-size: 16px;
+  color: #4A4A4A;
 `
 
 export const InputRow = styled.div`
@@ -115,7 +119,6 @@ export const ScoreRow = styled.div`
   justify-content: flex-start;
   align-items: baseline;
   height: 20px;
-  margin-top: 10px;
 `
 
 export const Score = styled.span`
@@ -124,18 +127,19 @@ export const Score = styled.span`
   margin-left: 10px;
 `
 
-export const Summary = styled.textarea`
-  display: ${({value, ownProfile}) => (!value && !ownProfile) ? 'none' : 'flex'};
-  width: 100%;
-  height: 100%;
-  border: 0;
-  outline: none;
+export const Summary = styled.p`
   font-size: 14px;
-  line-height: 20px;
+  line-height: 24px;
   color: ${grey800};
   min-height: 100px;
-  resize: none;
-  padding-top: 50px;
+  white-space: pre-wrap;
+`
+export const EmailWebsite = styled.span`
+  display: ${props => props.hide ? 'none' : 'inline-flex'}
+  margin: 0 50px 10px 10px;
+  font-family: HelveticaNeue;
+  font-size: 14px;
+  color: #4A4A4A;
 `
 
 export const BotRow = styled.div`
