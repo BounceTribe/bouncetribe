@@ -69,7 +69,6 @@ class TopNav extends Component {
           <NavLink style={{ paddingRight: 0, height: '19px' }} >
             <IconMenu
               useLayerForClickAway
-              onClick={()=>this.setState({notificationMenu: false})}
               iconButtonElement={(
                 <IconButton style={{padding: 0}} >
                   <Alerts
@@ -117,7 +116,6 @@ class TopNav extends Component {
                 <Portrait src={portraitUrl} />
               </IconButton>
             )}
-            onClick={()=>this.setState({portraitMenu: false})}
             open={this.state.portraitMenu}
             onRequestChange={()=>{
               this.setState((prevState) => (
