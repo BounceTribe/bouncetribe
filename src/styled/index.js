@@ -41,7 +41,7 @@ export const BtTextMarker = (props) => {
 }
 
 
-export const BtAvatar = ({user, size, hideStatus}) => {
+export const BtAvatar = ({user, size, hideStatus, onClick, pointer}) => {
   size = size || 50
   user = user || {}
   //set the ratio of size between the avatar and the online icon
@@ -54,7 +54,10 @@ export const BtAvatar = ({user, size, hideStatus}) => {
   }
 
   return  (
-    <div style={{height: `${size}px`}}>
+    <div style={{
+      height: `${size}px`,
+      cursor: pointer ? 'pointer' : 'auto'
+    }} onClick={onClick}>
       <Avatar
         src={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
         style={{border: 0, objectFit: 'cover'}}
