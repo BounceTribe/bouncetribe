@@ -124,19 +124,19 @@ const ViewAllContainer = styled(NotifyContainer)`
   padding: 0 20px;
 `
 
-export const ViewAll = ({to}) => (
-  <BtLink style={{paddingTop: '10px'}} to={to}>
+export const ViewAll = ({to, onClick}) => (
+  <BtLink style={{paddingTop: '10px'}} to={to} onClick={onClick}>
     <ViewAllContainer>
       <NotifyHeader>
         View All
       </NotifyHeader>
     </ViewAllContainer>
   </BtLink>
-);
+)
 
 
-export const Notification = ({notification: {type, triggeredBy, createdAt, notificationFor, project, session}}) => {
-
+export const Notification = ({onClick, notification}) => {
+  let {type, triggeredBy, createdAt, notificationFor, project, session} = notification
   let header,
       message,
       link
@@ -175,7 +175,6 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
       break
     }
     case 'BOUNCED': {
-      console.log('bounced notification');
       header = 'Track Bounced'
       message = `${triggeredBy.handle} has bounced your track.`
       link = `/${notificationFor.handle}/${project.title}`
@@ -186,7 +185,7 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
   }
 
   return (
-    <BtLink to={link} >
+    <BtLink to={link} onClick={onClick} >
       <NotifyContainer>
         <NotifyHeader>
           {header}

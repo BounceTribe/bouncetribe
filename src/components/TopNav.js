@@ -10,12 +10,11 @@ import Alerts from 'icons/Alerts'
 import {DropdownMenuItem, DropHr} from 'components/Dropdown'
 import auth from 'utils/auth'
 import IconMenu from 'material-ui/IconMenu'
+// import MenuItem from 'material-ui/MenuItem'
 import IconButton from 'material-ui/IconButton'
 import UpdateNotification from 'mutations/UpdateNotification'
 import UserSettings from 'containers/UserSettings'
 import Snackbar from 'material-ui/Snackbar'
-
-
 
 class TopNav extends Component {
   state = {
@@ -25,6 +24,14 @@ class TopNav extends Component {
     settings: false,
     snackbar: false,
     snackbarText: ''
+  }
+
+  closeMenu = () => {
+    console.log('closeMenu');
+    setTimeout(()=>this.setState({
+      portraitMenu: false,
+      notificationMenu: false
+    }), 200)
   }
 
   render() {
@@ -98,14 +105,14 @@ class TopNav extends Component {
             >
               {((((user || {}).notifications || {}).edges || []).length > 0) ?
                 user.notifications.edges.map(edge=>(
-                  <Notification key={edge.node.id} notification={edge.node} />
+                  <Notification onClick={this.closeMenu} key={edge.node.id} notification={edge.node} />
                 ) )
                 :
                 <NotifyContainer style={{border: 0}}>
                   <NotifyMessage>No new notifications</NotifyMessage>
                 </NotifyContainer>
               }
-              <ViewAll to={`/notifications`}>View All</ViewAll>
+              <ViewAll onClick={this.closeMenu} to={`/notifications`}>View All</ViewAll>
             </IconMenu>
           </NavLink>
           <IconMenu
@@ -118,20 +125,17 @@ class TopNav extends Component {
             )}
             open={this.state.portraitMenu}
             onRequestChange={()=>{
-              this.setState((prevState) => (
-                {portraitMenu: !prevState.portraitMenu}
-              ) )
+              this.setState({portraitMenu: !this.state.portraitMenu})
             }}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-            <DropdownMenuItem text="Dashboard"  to={`/`} />
-            <DropdownMenuItem text="View Profile" to={`/${handle}`} />
-            <DropdownMenuItem text="My Tribe" to={`/tribe/${handle}`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="Dashboard"  to={`/`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="View Profile" to={`/${handle}`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="My Tribe" to={`/tribe/${handle}`} />
             <DropHr/>
-            <DropdownMenuItem text="Settings"
-              onClick={()=>{ this.setState({settings: true}) }} />
-            <DropdownMenuItem text="Help" href={"http://bouncetribe.com/support/"} />
+            <DropdownMenuItem onClick={this.closeMenu} text="Settings" />
+            <DropdownMenuItem onClick={this.closeMenu} text="Help" href={"http://bouncetribe.com/support/"} />
             <DropHr/>
             <DropdownMenuItem text="Log Out" to={'/logout'} onClick={auth.logout} />
           </IconMenu>
