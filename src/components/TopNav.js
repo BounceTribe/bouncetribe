@@ -75,7 +75,6 @@ class TopNav extends Component {
           </NavLink>
           <NavLink style={{ paddingRight: 0, height: '19px' }} >
             <IconMenu
-              useLayerForClickAway
               iconButtonElement={(
                 <IconButton style={{padding: 0}} >
                   <Alerts
@@ -116,7 +115,6 @@ class TopNav extends Component {
             </IconMenu>
           </NavLink>
           <IconMenu
-            useLayerForClickAway
             iconButtonElement={(
               <IconButton
                 style={{ padding: 0, overflow: 'visible', margin: '0 15px' }}>
@@ -134,7 +132,10 @@ class TopNav extends Component {
             <DropdownMenuItem onClick={this.closeMenu} text="View Profile" to={`/${handle}`} />
             <DropdownMenuItem onClick={this.closeMenu} text="My Tribe" to={`/tribe/${handle}`} />
             <DropHr/>
-            <DropdownMenuItem onClick={this.closeMenu} text="Settings" />
+            <DropdownMenuItem onClick={() => {
+              this.setState({settings: true})
+              this.closeMenu()
+            } } text="Settings" />
             <DropdownMenuItem onClick={this.closeMenu} text="Help" href={"http://bouncetribe.com/support/"} />
             <DropHr/>
             <DropdownMenuItem text="Log Out" to={'/logout'} onClick={auth.logout} />
