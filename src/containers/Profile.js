@@ -426,44 +426,41 @@ class Profile extends Component {
             onClick={this.setProfile}
           />
         ]}>
-            <TextField
-              floatingLabelText={'Handle'}
-              value={this.state.handle}
-              onChange={(e)=>this.setState({handle: e.target.value})}
-            /><br />
-            <TextField
-              floatingLabelText={'Location'}
-              value={this.state.placename}
-              onChange={(e)=>this.setState({placename: e.target.value})}
-            /><br />
-            <TextField
-              floatingLabelText={'Summary'}
-              value={this.state.summary}
-              onChange={(e)=>this.setState({summary: e.target.value})}
-              multiLine
-              fullWidth
-            /><br />
-            <TextField
-              floatingLabelText={'Email'}
-              value={this.state.email}
-              onChange={(e)=>this.setState({email: e.target.value})}
-            /><br />
-            <TextField
-              floatingLabelText={'Website'}
-              value={this.state.website}
-              onChange={(e)=>this.setState({website: e.target.value})}
-            />
+        <TextField
+          floatingLabelText={'Handle'}
+          value={this.state.handle}
+          onChange={(e)=>this.setState({handle: e.target.value})}
+        /><br />
+        <TextField
+          floatingLabelText={'Location'}
+          value={this.state.placename}
+          onChange={(e)=>this.setState({placename: e.target.value})}
+        /><br />
+        <TextField
+          floatingLabelText={'Summary'}
+          value={this.state.summary}
+          onChange={(e)=>this.setState({summary: e.target.value})}
+          multiLine
+          fullWidth
+        /><br />
+        <TextField
+          floatingLabelText={'Email'}
+          value={this.state.email}
+          onChange={(e)=>this.setState({email: e.target.value})}
+        /><br />
+        <TextField
+          floatingLabelText={'Website'}
+          value={this.state.website}
+          onChange={(e)=>this.setState({website: e.target.value})}
+        />
       </Dialog>
       <Row>
         <SubRow>
           <BtAvatar user={this.props.viewer.User}
             size={150}
             hideStatus={ownProfile}
-            onClick={()=>{
-              if (ownProfile) {
-                this.setState({imageEditorOpen: true})
-              }
-            }}
+            pointer={ownProfile}
+            onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
           />
           <ImageEditor
             open={imageEditorOpen}

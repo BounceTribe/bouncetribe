@@ -13,11 +13,12 @@ export default class ImageUploader extends Component {
 
   state = {
     image: false,
+    croppedImage: false,
     crop: {
       aspect: 1/1,
       x: 0,
       y: 0,
-      width: 100,
+      width: 100
     }
   }
 
@@ -34,21 +35,16 @@ export default class ImageUploader extends Component {
 
   uploadImage = () => {
     let imageName = this.state.imageName
-
     let {image, pixel} = this.state
     console.log(this.state)
     let htmlImage = new Image()
-
 
     htmlImage.onload = ()=>{
       window.createImageBitmap(htmlImage, 0, 0 ,pixel.width, pixel.height).then(result=>{
         let canvas = document.createElement('canvas')
         canvas.width = pixel.width
         canvas.height = pixel.height
-
         let c = canvas.getContext('2d')
-
-
         c.drawImage(htmlImage, pixel.x, pixel.y, pixel.width, pixel.height, 0, 0,pixel.width, pixel.height )
 
         canvas.toBlob((blob)=>{
@@ -61,9 +57,7 @@ export default class ImageUploader extends Component {
               }), {
                 onSuccess: (transaction) => {
                   let file = transaction.updateFile.file
-                  this.setState({
-                    croppedImage: file.url
-                  })
+                  this.setState({ croppedImage: file.url })
                   this.props.fileSuccess(file)
                 },
                 onFailure: (response) => {
@@ -72,18 +66,15 @@ export default class ImageUploader extends Component {
               }
             )
           })
-
         })
-
       })
-
     }
-
     htmlImage.src = image
   }
 
 
   get dropzoneOrCropper () {
+    console.log('dz or c', this.state);
     if (this.state.croppedImage) {
       return (
         <CroppedImage
@@ -92,19 +83,15 @@ export default class ImageUploader extends Component {
         />
       )
     } else if (this.state.image) {
+
       return (
         <div>
           <ReactCrop
             src={this.state.image}
             crop={this.state.crop}
+            onImageLoaded={(image)=>console.log('loaded', image)}
             keepSelection={true}
-            onComplete={(crop, pixel)=>{
-              this.setState({
-                crop,
-                pixel
-              })
-            }}
-
+            onComplete={(crop, pixel)=>this.setState({ crop, pixel })}
           />
           <Button
             label="Save"
@@ -138,13 +125,8 @@ export default class ImageUploader extends Component {
 
   render () {
     return (
-      <ImageDropContainer
-        image={this.state.image}
-      >
-
-
+      <ImageDropContainer image={this.state.image} >
         {this.dropzoneOrCropper}
-
       </ImageDropContainer>
     )
   }

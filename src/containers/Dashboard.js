@@ -77,14 +77,14 @@ class Dashboard extends Component {
     sendEmailInvite(query).then(result => {
       if (result.status===200) {
         this.setState({
-          snackbarText: 'Invite Sent!',
+          snackbarText: 'INVITE SENT',
           snackbar: open,
           invite: false,
           email: ''
         })
       } else {
         this.setState({
-          snackbarText: 'Error Sending Email!',
+          snackbarText: 'ERROR SENDING EMAIL',
           snackbar: open,
           invite: false
         })
