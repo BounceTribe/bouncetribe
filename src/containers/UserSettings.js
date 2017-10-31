@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Dialog, Checkbox, FlatButton, Toggle} from 'material-ui/'
+import {Dialog, Checkbox, FlatButton, Toggle, TextField} from 'material-ui/'
 import UpdateUser from 'mutations/UpdateUser'
+import {BtFlatButton} from 'styled'
+import {purple, white} from 'theme'
 
 
 
@@ -9,7 +11,11 @@ class UserSettings extends Component {
 
   constructor(props) {
     super(props)
-    this.state = Object.assign({show: true}, this.props.user)
+    this.state = Object.assign(this.props.user, {
+      show: true,
+      pass1: null,
+      pass2: null
+    })
   }
 
 
@@ -28,6 +34,10 @@ class UserSettings extends Component {
         }
       }
     )
+  }
+
+  submitPass = () => {
+    //TODO compare and notify
   }
 
 
@@ -104,6 +114,23 @@ class UserSettings extends Component {
           onCheck={(e, val) => this.setState({doNotEmailSMR: val})}
         />
         <br/>
+        <TextField
+          floatingLabelText={'New Password'}
+          value={this.state.pass1}
+          onChange={(e, val)=>this.setState({pass1: val})}
+        />
+        <TextField
+          floatingLabelText={'Confirm Password'}
+          value={this.state.pass1}
+          onChange={(e, val)=>this.setState({pass2: val})}
+        />
+        <BtFlatButton
+          label={'Add to Tribe'}
+          backgroundColor={purple}
+          labelStyle={{ color: white }}
+          onClick={this.submitPass}
+        />
+        <br />
         <Toggle
           label={"Active Account"}
           toggled={!this.state.deactivated}

@@ -83,6 +83,7 @@ export default Relay.createContainer(
         fragment on Viewer {
           user {
             id
+            auth0UserId
             handle
             deactivated
             portrait { url }

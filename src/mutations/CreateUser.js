@@ -18,7 +18,6 @@ export default class CreateUserMutation extends Relay.Mutation {
     return Relay.QL`mutation{createUser}`
   }
 
-
   getFatQuery () {
     return Relay.QL`
       fragment on CreateUserPayload {
