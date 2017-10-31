@@ -3,7 +3,6 @@ import Relay from 'react-relay'
 export default class UpdateUser extends Relay.Mutation {
 
   getMutation () {
-    console.log('this update', this);
     return Relay.QL`mutation{updateUser}`
   }
 

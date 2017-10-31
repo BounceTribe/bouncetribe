@@ -34,7 +34,6 @@ class Login extends Component {
       this.props.router.push(`${redirect}`)
       this.setState({routeSet: true})
     } else if (user.friends.edges.length) {
-      debugger
       this.props.router.push(`/dash/${user.friends.edges[0].node.handle}/projects`)
       this.setState({routeSet: true})
     } else {

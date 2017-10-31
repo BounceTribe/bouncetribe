@@ -1,6 +1,9 @@
-const updatePassword = ({auth0Id, newPass}) => {
+import {auth0} from 'config'
 
-  let url = `https://bouncetribe.auth0.com/api/v2/users/${auth0Id}`
+
+const updatePassword = (auth0UserId, newPass) => {
+  console.log('updatePassword', auth0UserId, newPass);
+  let url = `https://${auth0.domain}/api/v2/users/${auth0UserId}`
 
   let options = {
     method: 'PATCH',
@@ -8,7 +11,8 @@ const updatePassword = ({auth0Id, newPass}) => {
     body:
      { password: newPass,
        connection: 'Username-Password-Authentication' },
-    json: true
+    json: true,
+    // idToken: auth.getToken()
   }
 
   return new Promise( (resolve, reject) => {
@@ -19,3 +23,5 @@ const updatePassword = ({auth0Id, newPass}) => {
     })
   })
 }
+
+export default updatePassword

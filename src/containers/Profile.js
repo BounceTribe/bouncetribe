@@ -41,7 +41,6 @@ class Profile extends Component {
     genres: [],
     skills: [],
     influences: [],
-    handleError: '',
     experience: '',
     tab: 'projects',
     experiences: [
@@ -56,7 +55,7 @@ class Profile extends Component {
     settings: false,
     btnStatus: '',
     editProfile: false,
-
+    userhandleError: null
   }
   componentDidMount = () => {
     //TODO-J this is a redirect: maybe there's better way to handle w/ router
@@ -200,30 +199,11 @@ class Profile extends Component {
     )
   }
 
-  inputChange = (e) => {
-    let { name, value } = e.target
-    if (name === 'handle') {
-      let {handle: newHandle, error} = handleValidator(value)
-      this.setState((prevState, props)=>{
-        return {
-          [name]: newHandle,
-          handleError: error
-        }
-      })
-    } else if (name === 'summary' && value.length >= 150) {
-      this.setState((prevState, props)=>{
-        return {
-          [name]: prevState.summary,
-        }
-      })
-    } else {
-      this.setState((prevState, props)=>{
-        return {
-          [name]: value
-        }
-      })
-    }
+  handleSet = (val) =>{
+    let {handle: newHandle, error} = handleValidator(val)
+    this.setState({ handle: newHandle, userhandleError: error })
   }
+
 
   genreChange = (val) => {
     let genresIds = val.map(genre=>{
@@ -428,8 +408,9 @@ class Profile extends Component {
         ]}>
         <TextField
           floatingLabelText={'Handle'}
+          errorText={this.state.userhandleError}
           value={this.state.handle}
-          onChange={(e)=>this.setState({handle: e.target.value})}
+          onChange={(e)=>this.handleSet(e.target.value)}
         /><br />
         <TextField
           floatingLabelText={'Location'}
