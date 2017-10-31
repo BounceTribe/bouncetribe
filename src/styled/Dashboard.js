@@ -73,7 +73,7 @@ export const DashLeft = styled.div`
   border-radius: 10px;
   margin-right: 20px;
   padding: 9px 0px 9px 9px;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
 export const DashView = styled(View)`
@@ -106,7 +106,7 @@ export const TopPanel = styled.div`
   width: 100%;
   height: 140px;
   background-color: white;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
   border-radius: 10px;
   border: solid ${grey222} 1px;
   margin-top: 20px;

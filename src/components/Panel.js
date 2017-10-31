@@ -15,7 +15,7 @@ const Container = styled.div`
   padding: 0 20px;
   padding: 0;
   width: 100%;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
 const TabLabel = ({text, locked}) => (

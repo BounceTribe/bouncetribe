@@ -26,7 +26,7 @@ export const MatchCard = styled.div`
   overflow: hidden;
   transition: .5s all;
   &:hover {
-    box-shadow: 5px 5px 5px ${grey300};
+    box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
     margin-top: -10px;
   }
 `
