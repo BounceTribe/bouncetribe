@@ -138,7 +138,7 @@ class TopNav extends Component {
             } } text="Settings" />
             <DropdownMenuItem onClick={this.closeMenu} text="Help" href={"http://bouncetribe.com/support/"} />
             <DropHr/>
-            <DropdownMenuItem text="Log Out" to={'/logout'} onClick={auth.logout} />
+            <DropdownMenuItem text="Log Out" onClick={auth.logout} />
           </IconMenu>
           {/*
           <Portrait

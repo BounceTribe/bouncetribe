@@ -14,13 +14,14 @@ import {browserHistory} from 'react-router'
 
 class AuthService {
   constructor() {
+    console.log('auththis', this);
     this.defaultOptions = {
       auth: {
         params: {
           scope: 'openid email update:current_user_identities',
           state: 'default'
         },
-        redirectUrl: `${url}/login`,
+        redirectUrl: `${url}/login/`,
         responseType: 'token',
         connectionScopes: {
           'facebook': ['email', 'public_profile', 'user_friends']
@@ -65,7 +66,7 @@ class AuthService {
           scope: 'openid email update:current_user_identities'
         },
         responseType: 'token',
-        redirectUrl: `${url}/login`,
+        redirectUrl: `${url}/login/`,
         connectionScopes: {
           'facebook': ['email', 'public_profile', 'user_actions.music', 'user_friends']
         }
@@ -89,8 +90,9 @@ class AuthService {
     }
     let now = new Date()
     let exp =  new Date(parseInt(expString, 10)) //10 = radix
-
     if (exp < now) {
+      debugger
+
       this.logout()
       return false
     } else {
@@ -102,7 +104,8 @@ class AuthService {
     localStorage.removeItem('idToken')
     localStorage.removeItem('accessToken')
     localStorage.removeItem('exp')
-    location.reload()
+    localStorage.removeItem('redirect')
+    location.replace('/login/')
   }
 
   getToken () {
@@ -118,16 +121,8 @@ class AuthService {
   }
 
   authFlow = (result) => {
-    let {
-      exp,
-      email,
-      sub
-    } = result.idTokenPayload
-    let {
-      idToken,
-      accessToken,
-      state,
-    } = result
+    let { exp, email, sub }             = result.idTokenPayload
+    let { idToken, accessToken, state } = result
 
     if (!email) {
 

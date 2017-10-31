@@ -171,7 +171,7 @@ class Dashboard extends Component {
             </ImgColumn>
             <UserName>{user.handle}</UserName>
             <NavLink to={`/${user.handle}`}>
-              Edit Profile
+              View Profile
             </NavLink>
           </TopColumn>
           <FeedbackRating style={{justifyContent:'flex-end'}}>

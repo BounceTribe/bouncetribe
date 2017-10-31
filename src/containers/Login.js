@@ -9,17 +9,25 @@ import {url} from 'config'
 class Login extends Component {
 
   componentDidMount() {
-    if (this.props.viewer.user) {
-      this.props.router.push('/')
+    let user = this.props.viewer.user
+    if (user) {
+      this.toSite(user)
     } else {
       this.props.route.auth.showLock(false)
     }
   }
 
   componentWillReceiveProps (newProps) {
-    if (newProps.viewer.user) {
-      this.props.router.push('/')
+    let user = newProps.viewer.user
+    if (user) {
+      this.toSite(user)
     }
+  }
+
+  toSite = (user) => {
+    let redirect = localStorage.getItem('redirect')
+    redirect && localStorage.removeItem('redirect')
+    this.props.router.push(`${redirect || ''}/`)
   }
 
   render () {
@@ -60,7 +68,9 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user { id }
+          user {
+            id
+          }
         }
       `,
     },

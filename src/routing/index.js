@@ -57,8 +57,16 @@ const tribeSearch = (params, {location})=>{
 const userOnly = (nextState, replace) => {
   //look furtherinto the auth gettoken function
   //verify
+  console.log(' nextState', nextState, 'replace', replace);
+
   if (!auth.getToken()) {
-    replace({ pathname: '/login' })
+    let path = nextState.location.pathname
+    if (path.substring(0,7) !== '/login/') {
+      localStorage.setItem('redirect', path)
+    }
+    // let nextPath = nextState.location.pathname
+    // nextPath==='/login' && nextPa
+    replace({ pathname: '/login/'})
   }
 }
 
@@ -70,8 +78,9 @@ const createRoutes = () => (
     <IndexRoute component={Dashboard}
       queries={ViewerQuery}
       onEnter={userOnly}
+      auth={auth}
       render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} />
-    <Route path={'/login'} component={Login} queries={ViewerQuery} auth={auth} />
+    <Route path={'/login/*'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
     <Route path={'/notifications'}
       component={NotificationList}
