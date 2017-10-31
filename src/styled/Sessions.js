@@ -21,7 +21,7 @@ export const MatchCard = styled.div`
   margin-left: 2%;
   margin-bottom: 40px;
   border: 1px solid ${grey300};
-  border-radius: 10px;
+  border-radius: 5px;
   padding-bottom: 10px;
   overflow: hidden;
   transition: .5s all;

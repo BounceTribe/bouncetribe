@@ -15,7 +15,7 @@ export const Background = styled.div`
 `
 
 export const Container = styled.div`
-  border-radius: 10px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;

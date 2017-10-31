@@ -99,7 +99,7 @@ export const View = styled.section`
   align-items: center;
   width: 80%;
   border: ${props => props.hideBorder ? 'none' : `solid ${grey230} 1px`};
-  border-radius: 10px;
+  border-radius: 5px;
   min-height: 80vh;
   margin: 100px 0 50px 0;
   ${size.m`
@@ -136,7 +136,7 @@ export const DropContainer = styled.div`
   min-width: 30%;
   max-width: 400px;
   height: 200px;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
 `
 
@@ -146,7 +146,7 @@ export const ImageDropContainer = styled.div`
   align-items: center;
   max-width: 800px;
   max-height: 800px;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
   border: ${({image})=>(image) ? `none` : `2px dashed ${grey215}`};
 `

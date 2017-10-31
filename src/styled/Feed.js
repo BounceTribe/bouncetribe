@@ -115,7 +115,7 @@ export const Genre = styled.span`
   line-height: 15px;
   background-color: ${purple};
   padding: 10px 15px;
-  border-radius: 10px;
+  border-radius: 5px;
 `
 
 export const Row = styled.div`

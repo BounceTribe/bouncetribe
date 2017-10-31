@@ -8,10 +8,10 @@ import Lock from 'icons/Lock'
 const Container = styled.div`
   display: inline-flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: white;
   border: solid ${grey222} 1px;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 0 20px;
   padding: 0;
   width: 100%;

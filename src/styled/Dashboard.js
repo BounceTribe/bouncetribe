@@ -65,12 +65,12 @@ export const DialogRow2 = styled(DialogRow)`
 
 export const DashLeft = styled.div`
   display: flex;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: white;
   min-height: 50vh;
   flex: 0 0 285px;
   border: solid ${grey222} 1px;
-  border-radius: 10px;
+  border-radius: 5px;
   margin-right: 20px;
   padding: 9px 0px 9px 9px;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
@@ -107,7 +107,7 @@ export const TopPanel = styled.div`
   height: 140px;
   background-color: white;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-  border-radius: 10px;
+  border-radius: 5px;
   border: solid ${grey222} 1px;
   margin-top: 20px;
 `

@@ -20,7 +20,7 @@ export const Top = styled.div`
 
   width: 100%;
   background-color: ${white};
-  border-radius: 10px;
+  border-radius: 5px;
   border: solid ${grey400} 1px;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
@@ -157,12 +157,12 @@ export const BotRow = styled.div`
 export const BotLeft = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: ${white};
   min-height: 50vh;
   width: 66%;
   border: solid ${grey400} 1px;
-  border-radius: 10px;
+  border-radius: 5px;
   margin-right: 15px;
   padding-bottom: 40px;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
@@ -171,12 +171,12 @@ export const BotLeft = styled.div`
 export const BotRight = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: ${white};
   min-height: 50vh;
   width: 33%;
   border: solid ${grey400} 1px;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 0 20px;
   margin-left: 15px;
   padding-bottom: 40px;
