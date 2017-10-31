@@ -41,11 +41,20 @@ export default class SigninUserMutation extends Relay.Mutation {
               viewer {
                 user {
                   id
+                  handle
+                  friends (first: 1) {
+                    edges {
+                      node {
+                        handle
+                      }
+                    }
+                  }
                 }
                 id
               }
               user {
                 id
+                handle
               }
             }
           `,

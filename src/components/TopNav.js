@@ -63,12 +63,12 @@ class TopNav extends Component {
             <Headphones height={18} />
             <NavText>Find Your Mentor</NavText>
           </NavLink> */}
-          <NavLink
+          {/* <NavLink
             to={((((user || {}).project || {}).edges || []).length > 0) ? `/sessions/${handle}/${user.projects.edges[0].node.title}` : `/sessions/${handle}`}
           >
             <Headphones />
             <NavText>Sessions</NavText>
-          </NavLink>
+          </NavLink> */}
           <NavLink to={`/projects/${handle}`}>
             <Music height={18} />
             <NavText>Projects</NavText>

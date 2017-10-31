@@ -4,6 +4,7 @@ import {ProjectListSm} from 'components/ProjectListSm'
 
 class ProjectsPanel extends Component {
   render () {
+    console.log('projs this', this)
     return (
       <ProjectListSm {...this.props} />
     )

@@ -7,8 +7,9 @@ import LoginLogo from 'icons/LoginLogo.png'
 import {url} from 'config'
 
 class Login extends Component {
-
+  state={ routeSet: false }
   componentDidMount() {
+    console.log('login redirect:', localStorage.getItem('redirect'))
     let user = this.props.viewer.user
     if (user) {
       this.toSite(user)
@@ -18,16 +19,29 @@ class Login extends Component {
   }
 
   componentWillReceiveProps (newProps) {
-    let user = newProps.viewer.user
-    if (user) {
-      this.toSite(user)
+    if (!this.state.routeSet) {
+      let user = newProps.viewer.user
+      if ((user || {}).id) {
+        this.toSite(user)
+      }
     }
   }
 
   toSite = (user) => {
     let redirect = localStorage.getItem('redirect')
-    redirect && localStorage.removeItem('redirect')
-    this.props.router.push(`${redirect || ''}/`)
+    if (redirect) {
+      localStorage.removeItem('redirect')
+      this.props.router.push(`${redirect}`)
+      this.setState({routeSet: true})
+    } else if (user.friends.edges.length) {
+      debugger
+      this.props.router.push(`/dash/${user.friends.edges[0].node.handle}/projects`)
+      this.setState({routeSet: true})
+    } else {
+      //for new users/no friends
+      this.props.router.push(`/${user.handle}/profile`)
+      this.setState({routeSet: true})
+    }
   }
 
   render () {
@@ -69,7 +83,15 @@ export default Relay.createContainer(
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
+            handle
             id
+            friends (first: 1) {
+              edges {
+                node {
+                  handle
+                }
+              }
+            }
           }
         }
       `,

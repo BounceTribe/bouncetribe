@@ -91,8 +91,6 @@ class AuthService {
     let now = new Date()
     let exp =  new Date(parseInt(expString, 10)) //10 = radix
     if (exp < now) {
-      debugger
-
       this.logout()
       return false
     } else {

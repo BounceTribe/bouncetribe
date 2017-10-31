@@ -32,14 +32,16 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    console.log('context', this);
     let edges = this.props.viewer.user.friends.edges;
     if (edges.length) {
       let foundUser = edges.find(edge =>
         edge.node.handle === this.props.params.userHandle)
       let selectedUser = foundUser ? foundUser.node : edges[0].node;
       this.setState( {selectedUser} )
-      this.suggestFriends(this.state.maxSuggestedFriends);
+      this.suggestFriends(this.state.maxSuggestedFriends)
       if (!foundUser) {
+        console.log('no found user; redirecting');
         this.props.router.push(`/dash/${selectedUser.handle}/projects`)
       }
     }
@@ -176,7 +178,7 @@ class Dashboard extends Component {
           </TopColumn>
           <FeedbackRating style={{justifyContent:'flex-end'}}>
             <Bolt style={{ marginRight: '15px' }} />
-              {selectedUser.score}
+              {selectedUser.score || 0}
           </FeedbackRating>
         </TopPanel>
         <BotRow>
