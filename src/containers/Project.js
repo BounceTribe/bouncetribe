@@ -546,7 +546,7 @@ class Project extends Component {
                   backgroundColor={(this.state.privacy === 'PUBLIC') ? purple : grey300}
                   icon={ <Logo fill={white} /> } />
                 <ChoiceText>
-                  Find Sessions
+                  Public
                 </ChoiceText>
               </Choice>
             </SharingModal>

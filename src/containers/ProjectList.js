@@ -144,7 +144,7 @@ class ProjectList extends Component {
                 onClick={()=>this.setPrivacy(project, 'TRIBE')}
               />
               <RoundButton
-                tooltip="Find Sessions"
+                tooltip="Public"
                 backgroundColor={(project.privacy === 'PUBLIC') ? purple : grey300}
                 icon={
                   <Logo

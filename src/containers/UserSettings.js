@@ -55,11 +55,15 @@ class UserSettings extends Component {
     let options = {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
-      body:
-       { password,
-         idToken,
-         connection: 'Username-Password-Authentication' },
-         json: true,
+      body: {
+        password,
+        Authorization: 'Bearer ' + idToken,
+        connection: 'Username-Password-Authentication'
+      },
+      params: {
+        scope: 'update.us',
+        state: 'default'
+      }
       // idToken: auth.getToken()
     }
 
@@ -102,11 +106,23 @@ class UserSettings extends Component {
         ]}
       >
         <h3>Email Notifications</h3>
-        <Checkbox
+        {/* <Checkbox
           label={"Disable all"}
           checked={this.state.doNotEmail}
           style={{padding: '10px 0'}}
           onCheck={(e, val) => this.setState({doNotEmail: val})}
+        /> */}
+        <Checkbox
+          label={"Project Feedback"}
+          checked={this.state.doNotEmailPF}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailPF: val})}
+        />
+        <Checkbox
+          label={"Project Bounced"}
+          checked={this.state.doNotEmailPB}
+          style={{padding: '10px 0'}}
+          onCheck={(e, val) => this.setState({doNotEmailPB: val})}
         />
         <Checkbox
           label={"Tribe Requests"}
@@ -116,39 +132,9 @@ class UserSettings extends Component {
         />
         <Checkbox
           label={"Tribe Request Accepted"}
-          checked={this.state.doNotEmailTRA}
+          checked={this.state.doNotEmailTA}
           style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailTRA: val})}
-        />
-        <Checkbox
-          label={"Tribe Feedback Received"}
-          checked={this.state.doNotEmailTFR}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailTFR: val})}
-        />
-        <Checkbox
-          label={"Tribe Message Received"}
-          checked={this.state.doNotEmailTMR}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailTMR: val})}
-        />
-        <Checkbox
-          label={"Session Feedback Received"}
-          checked={this.state.doNotEmailSFR}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailSFR: val})}
-        />
-        <Checkbox
-          label={"Session Feedback Appreciated"}
-          checked={this.state.doNotEmailSFA}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailSFA: val})}
-        />
-        <Checkbox
-          label={"Session Message Received"}
-          checked={this.state.doNotEmailSMR}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailSMR: val})}
+          onCheck={(e, val) => this.setState({doNotEmailTA: val})}
         />
         <br />
         <TextField

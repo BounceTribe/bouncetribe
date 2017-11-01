@@ -42,15 +42,11 @@ export default class UpdateUser extends Relay.Mutation {
       doNotEmail: this.props.doNotEmail,
       deactivated: this.props.deactivated,
       doNotEmailTR: this.props.doNotEmailTR,
-      doNotEmailTRA: this.props.doNotEmailTRA,
-      doNotEmailTFR: this.props.doNotEmailTFR,
-      doNotEmailTMR: this.props.doNotEmailTMR,
-      doNotEmailSFR: this.props.doNotEmailSFR,
-      doNotEmailSFA: this.props.doNotEmailSFA,
-      doNotEmailSMR: this.props.doNotEmailSMR,
+      doNotEmailTA: this.props.doNotEmailTA,
+      doNotEmailPF: this.props.doNotEmailPF,
+      doNotEmailPB: this.props.doNotEmailPB,
     }
   }
-
   getOptimisticResponse () {
     return {
       user: {

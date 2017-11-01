@@ -269,7 +269,7 @@ class ProjectNew extends Component {
                   icon={ <Logo fill={white} /> }
                 />
                 <ChoiceText>
-                  Find Sessions
+                  Public
                 </ChoiceText>
               </Choice>
             </Sharing>
