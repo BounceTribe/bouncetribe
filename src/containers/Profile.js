@@ -52,7 +52,6 @@ class Profile extends Component {
     ],
     notification: false,
     tabs: 'projects',
-    settings: false,
     btnStatus: '',
     editProfile: false,
     userhandleError: null

@@ -183,11 +183,11 @@ const Routing = createRoutes()
 
 export default Routing
 
-{/* <IndexRoute component={Dashboard}
+/* <IndexRoute component={Dashboard}
   queries={ViewerQuery}
   onEnter={userOnly}
   auth={auth}
-  render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} /> */}
+  render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} /> */
 
 /* <Route path={'/sessions/:userHandle'} onEnter={userOnly}>
   <IndexRoute

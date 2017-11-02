@@ -21,7 +21,8 @@ class Template extends Component {
 
   state = {
     snackbar: false,
-    snackbarText: ''
+    snackbarText: '',
+    settings: false
   }
 
   componentDidMount() {
@@ -30,10 +31,11 @@ class Template extends Component {
     this.setState({intervalId});
     console.log('template didmount', this.props);
     if (this.props.location.pathname==='/') this.redirect()
+    this.props.params.settings && !this.state.settings && this.setState({settings: true})
   }
 
-  componentWillReceiveProps() {
-    if (this.props.location.pathname==='/') this.redirect()
+  componentWillReceiveProps(newProps) {
+    if (newProps.location.pathname==='/') this.redirect()
   }
 
   componentWillUnmount() {
@@ -41,6 +43,9 @@ class Template extends Component {
   }
 
   redirect = () => {
+    if (this.props.params.settings) {
+      debugger
+    }
     console.log('template redirect', this.props);
     let user = this.props.viewer.user
     let friends = user.friends.edges
@@ -97,7 +102,8 @@ class Template extends Component {
     }
     this.setState( {
         snackbarText: 'SETTINGS CHANGED',
-        snackbar: open,
+        snackbar: true,
+        settings: false
       })
   }
 
@@ -107,6 +113,7 @@ class Template extends Component {
       console.log('s', s, s.substr(0, s.lastIndexOf('/')))
       this.props.router.push(s.substr(0, s.lastIndexOf('/')))
     }
+    this.setState({settings: false})
   }
 
   render () {
@@ -114,7 +121,7 @@ class Template extends Component {
       <MuiThemeProvider muiTheme={btTheme} >
         <Main>
           <Snackbar
-            open={this.state.snackbar ? true : false}
+            open={this.state.snackbar}
             message={this.state.snackbarText}
             autoHideDuration={2000}
             onRequestClose={()=>this.setState({snackbar: false})}
@@ -122,7 +129,7 @@ class Template extends Component {
             bodyStyle={{ backgroundColor: purple }}
           />
           <UserSettings
-            open={this.props.params.settings ? true : false}
+            open={this.state.settings ? true : false}
             user={this.props.viewer.user}
             onSave={()=>this.settingsSave()}
             onClose={()=>this.settingsClose()}
