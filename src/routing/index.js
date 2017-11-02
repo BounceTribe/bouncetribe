@@ -78,6 +78,7 @@ const createRoutes = () => (
     queries={ViewerQuery} >
     <Route path={'/login/*'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
+    {/* <Route path={'/inviteduser/:inviteeId'} /> */}
     <Route path={'/notifications'}
       component={NotificationList}
       queries={ViewerQuery}
@@ -113,7 +114,7 @@ const createRoutes = () => (
       component={Profile}
       queries={ViewerQuery}
       render={({ props }) => props ? <Profile {...props} /> : <Loading/>} >
-      <Route path={'/:userHandle/projects(/:settings)'}
+      <Route path={'/:userHandle/projects'}
         component={ProjectsPanel}
         queries={ViewerQuery}
         render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />

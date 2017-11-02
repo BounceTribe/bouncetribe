@@ -36,6 +36,7 @@ class AuthService {
         logo: `${url}/logo.png`,
         primaryColor: purple,
       },
+      // initialScreen: 'signUp', //TODO for email invite
       languageDictionary: {
         emailInputPlaceholder: "rockstar@band.com",
         title: "BounceTribe"

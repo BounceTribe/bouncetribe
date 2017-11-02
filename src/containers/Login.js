@@ -3,6 +3,7 @@ import Relay from 'react-relay'
 import {Background, Container, Lock, Header, Legal, LegalLink, LogoImg} from 'styled/Login'
 import LoginLogo from 'icons/LoginLogo.png'
 import {url} from 'config'
+import AddToFriends from 'mutations/AddToFriends'
 
 class Login extends Component {
 
@@ -22,10 +23,29 @@ class Login extends Component {
     }
   }
 
+  newUserFriend = (redirect) => {
+    let newFriendId = redirect.split('/')[2]
+    let selfId = this.props.viewer.user.id
+    console.log('newFriendid', newFriendId);
+    //TODO, prevent anyone from using this route
+    this.props.relay.commitUpdate(
+      new AddToFriends({ selfId, newFriendId }),
+      { onSuccess: res => {
+          console.log('FRIEND ADDED', this.props);
+          this.props.router.push(`/${this.props.viewer.user.handle}/projects`)
+        }
+      }
+    )
+  }
+
   toSite = (user) => {
     let redirect = localStorage.getItem('redirect')
     let friends = user.friends.edges
-    if (redirect) {
+    if (redirect && redirect.match('/inviteduser/')) {
+      this.newUserFriend(redirect)
+
+    }
+    else if (redirect) {
       localStorage.removeItem('redirect')
       this.props.router.push(`${redirect}`)
       this.setState({routeSet: true})
@@ -33,7 +53,7 @@ class Login extends Component {
       this.props.router.push(`/dash/${friends[0].node.handle}/projects`)
       this.setState({routeSet: true})
     } else {
-      //for new users/no friends
+      //for new users/no friends got to profile
       this.props.router.push(`/${user.handle}/profile`)
       this.setState({routeSet: true})
     }

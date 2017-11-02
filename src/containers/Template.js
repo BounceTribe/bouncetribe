@@ -29,9 +29,12 @@ class Template extends Component {
     this.ping()
     let intervalId = setInterval(this.ping, 300000);
     this.setState({intervalId});
+
     console.log('template didmount', this.props);
+    let {settings} = this.props.params
     if (this.props.location.pathname==='/') this.redirect()
-    this.props.params.settings && !this.state.settings && this.setState({settings: true})
+    settings && !this.state.settings && this.setState({settings: true})
+
   }
 
   componentWillReceiveProps(newProps) {
@@ -95,11 +98,11 @@ class Template extends Component {
   }
 
   settingsSave = () => {
-    if (this.props.params.settings) {
-      let s = this.props.location.pathname
-      console.log('s', s, s.substr(0, s.lastIndexOf('/')))
-      this.props.router.push(s.substr(0, s.lastIndexOf('/')))
-    }
+    // if (this.props.params.settings) {
+    //   let s = this.props.location.pathname
+    //   console.log('s', s, s.substr(0, s.lastIndexOf('/')))
+    //   this.props.router.push(s.substr(0, s.lastIndexOf('/')))
+    // }
     this.setState( {
         snackbarText: 'SETTINGS CHANGED',
         snackbar: true,
@@ -108,11 +111,11 @@ class Template extends Component {
   }
 
   settingsClose = () => {
-    if (this.props.params.settings) {
-      let s = this.props.location.pathname
-      console.log('s', s, s.substr(0, s.lastIndexOf('/')))
-      this.props.router.push(s.substr(0, s.lastIndexOf('/')))
-    }
+    // if (this.props.params.settings) {
+    //   let s = this.props.location.pathname
+    //   console.log('s', s, s.substr(0, s.lastIndexOf('/')))
+    //   this.props.router.push(s.substr(0, s.lastIndexOf('/')))
+    // }
     this.setState({settings: false})
   }
 
