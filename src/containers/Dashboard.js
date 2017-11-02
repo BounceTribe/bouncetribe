@@ -32,7 +32,6 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    console.log('context', this);
     let edges = this.props.viewer.user.friends.edges;
     if (edges.length) {
       let foundUser = edges.find(edge =>

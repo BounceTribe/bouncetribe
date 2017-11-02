@@ -73,6 +73,7 @@ class Project extends Component {
 
   componentWillMount () {
     let {id: ownId} = this.props.viewer.user
+    console.log('projectmount', this.props);
     if (ownId === this.props.viewer.User.id) {
       this.setState({
         ownProject:true,

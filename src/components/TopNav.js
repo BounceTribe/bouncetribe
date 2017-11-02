@@ -5,7 +5,6 @@ import {BtFlatButton} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
 import Music from 'icons/Music'
-import Headphones from 'icons/Headphones'
 import Alerts from 'icons/Alerts'
 import {DropdownMenuItem, DropHr} from 'components/Dropdown'
 import auth from 'utils/auth'
@@ -17,6 +16,7 @@ import UserSettings from 'containers/UserSettings'
 import Snackbar from 'material-ui/Snackbar'
 
 class TopNav extends Component {
+
   state = {
     dropdownOpen: false,
     notificationMenu: false,
@@ -27,15 +27,26 @@ class TopNav extends Component {
   }
 
   closeMenu = () => {
-    console.log('closeMenu');
+    //delay 200ms to allow menu item click t owork
     setTimeout(()=>this.setState({
       portraitMenu: false,
       notificationMenu: false
     }), 200)
   }
 
+  settingsSave = () => {
+    this.setState( {
+        snackbarText: 'SETTINGS CHANGED',
+        snackbar: open,
+        settings: false
+      })
+  }
+
+  settingsClose = () => this.setState({settings: false})
+
   render() {
     let {handle, portraitUrl, user} = this.props
+    console.log('dash render props', this.props);
     return (
       <Bar>
         <Snackbar
@@ -49,13 +60,8 @@ class TopNav extends Component {
         <UserSettings
           open={this.state.settings}
           user={user}
-          onSave={()=>this.setState( {
-              snackbarText: 'SETTINGS CHANGED',
-              snackbar: open,
-              settings: false
-            })
-          }
-          onClose={()=>this.setState({settings: false})}
+          onSave={()=>this.settingsSave()}
+          onClose={()=>this.settingsClose()}
         />
         <Logo to={'/'} />
         <NavList>

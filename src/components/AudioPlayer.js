@@ -138,6 +138,7 @@ class AudioPlayer extends Component {
 
 
         <audio
+          loop
           ref={(audio)=>{this.audio = audio}}
         >
           <source

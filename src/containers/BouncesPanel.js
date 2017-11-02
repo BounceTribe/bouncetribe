@@ -23,9 +23,7 @@ export default Relay.createContainer(
           User (handle: $userHandle) {
             id
             handle
-            bounces (
-              first:999
-            ) {
+            bounces ( first:999 ) {
               edges {
                 node {
                   id
@@ -43,9 +41,7 @@ export default Relay.createContainer(
                     }
                     comments (first: 999){
                       edges {
-                        node {
-                          type
-                        }
+                        node { type }
                       }
                     }
                   }

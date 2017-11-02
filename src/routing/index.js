@@ -21,6 +21,7 @@ import Dashboard from 'containers/Dashboard'
 import ProjectsPanel from 'containers/ProjectsPanel'
 import DirectMessages from 'containers/DirectMessages'
 import BouncesPanel from 'containers/BouncesPanel'
+import Unsubscribe from 'containers/Unsubscribe'
 import {Loading} from 'styled/Spinner'
 
 const ViewerQuery = {
@@ -71,37 +72,18 @@ const userOnly = (nextState, replace) => {
 }
 
 const createRoutes = () => (
+
   <Route
     path='/'
     component={Template}
     queries={ViewerQuery} >
-    <IndexRoute component={Dashboard}
-      queries={ViewerQuery}
-      onEnter={userOnly}
-      auth={auth}
-      render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} />
+    <Route path={'/unsubscribe'} component={Unsubscribe} onEnter={userOnly} auth={auth} />
     <Route path={'/login/*'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
     <Route path={'/notifications'}
       component={NotificationList}
       queries={ViewerQuery}
       render={({ props }) => props ? <NotificationList {...props} /> : <Loading />} />
-    <Route path={'/sessions/:userHandle'} onEnter={userOnly}>
-      <IndexRoute
-        component={AllSessions}
-        queries={ViewerQuery}
-        render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
-      <Route
-        path={'/sessions/:userHandle/:project'}
-        component={AllSessions}
-        queries={ViewerQuery}
-        render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
-      <Route
-        path={'/sessions/:userHandle/:project/find'}
-        component={AllSessions}
-        queries={ViewerQuery}
-        render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
-    </Route>
     <Route path={'/projects/:userHandle'}
       component={ProjectList}
       queries={ViewerQuery}
@@ -114,7 +96,7 @@ const createRoutes = () => (
       render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
 
     <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
-      <Route path={'/dash/:userHandle/projects'}
+      <Route path={'/dash/:userHandle/projects(/:settings)'}
         component={ProjectsPanel}
         queries={ViewerQuery}
         render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
@@ -133,7 +115,7 @@ const createRoutes = () => (
       component={Profile}
       queries={ViewerQuery}
       render={({ props }) => props ? <Profile {...props} /> : <Loading/>} >
-      <Route path={'/:userHandle/projects'}
+      <Route path={'/:userHandle/projects(/:settings)'}
         component={ProjectsPanel}
         queries={ViewerQuery}
         render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />
@@ -202,6 +184,29 @@ const createRoutes = () => (
 const Routing = createRoutes()
 
 export default Routing
+
+{/* <IndexRoute component={Dashboard}
+  queries={ViewerQuery}
+  onEnter={userOnly}
+  auth={auth}
+  render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} /> */}
+
+/* <Route path={'/sessions/:userHandle'} onEnter={userOnly}>
+  <IndexRoute
+    component={AllSessions}
+    queries={ViewerQuery}
+    render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
+  <Route
+    path={'/sessions/:userHandle/:project'}
+    component={AllSessions}
+    queries={ViewerQuery}
+    render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
+  <Route
+    path={'/sessions/:userHandle/:project/find'}
+    component={AllSessions}
+    queries={ViewerQuery}
+    render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
+</Route> */
 
 
 // const ownCommentsFilter = (params, {location}) => {

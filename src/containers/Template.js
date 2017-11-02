@@ -10,6 +10,9 @@ import {btTheme} from 'theme'
 import {url} from 'config'
 import Footer from 'components/Footer'
 import SendPing from 'mutations/SendPing'
+import UserSettings from 'containers/UserSettings'
+import Snackbar from 'material-ui/Snackbar'
+
 
 injectTapEventPlugin()
 
@@ -19,18 +22,33 @@ class Template extends Component {
     this.ping()
     let intervalId = setInterval(this.ping, 300000);
     this.setState({intervalId});
+    console.log('template didmount', this.props);
+    if (this.props.location.pathname==='/') this.redirect()
+  }
+
+  componentWillReceiveProps() {
+    if (this.props.location.pathname==='/') this.redirect()
   }
 
   componentWillUnmount() {
     clearInterval(this.state.intervalId)
   }
 
+  redirect = () => {
+    let user = this.props.viewer.user
+    let friends = user.friends.edges
+    if (friends.length) {
+      this.props.router.push(`/dash/${friends[0].node.handle}/projects`)
+    } else {
+      this.props.router.push(`/${user.handle}/profile`)
+    }
+  }
+
   ping = () => {
-    if (this.props.viewer.user) {
+    let {user} = this.props.viewer
+    if (user) {
       this.props.relay.commitUpdate(
-        new SendPing({
-          user: this.props.viewer.user
-        })
+        new SendPing({ user })
       )
     }
   }
@@ -62,10 +80,38 @@ class Template extends Component {
     }
   }
 
+  settingsSave = () => {
+    if (this.props.params.settings) {
+      let s = this.props.location.pathname
+      console.log('s', s, s.substr(0, s.lastIndexOf('/')))
+      this.props.router.push(s.substr(0, s.lastIndexOf('/')))
+    }
+    // this.setState( {
+    //     snackbarText: 'SETTINGS CHANGED',
+    //     snackbar: open,
+    //     settings: false
+    //   })
+  }
+
+  settingsClose = () => {
+    if (this.props.params.settings) {
+      let s = this.props.location.pathname
+      console.log('s', s, s.substr(0, s.lastIndexOf('/')))
+      this.props.router.push(s.substr(0, s.lastIndexOf('/')))
+    }
+  }
+
   render () {
     return (
       <MuiThemeProvider muiTheme={btTheme} >
         <Main>
+          
+          <UserSettings
+            open={this.props.params.settings ? true : false}
+            user={this.props.viewer.user}
+            onSave={()=>this.settingsSave()}
+            onClose={()=>this.settingsClose()}
+          />
           {this.userOnly}
           {this.mobileUserOnly}
           {this.props.children}
@@ -92,6 +138,13 @@ export default Relay.createContainer(
             doNotEmailTA
             doNotEmailPB
             doNotEmailPF
+            friends (first: 1) {
+              edges {
+                node {
+                  handle
+                }
+              }
+            }
             notifications (
               first: 5
               orderBy: createdAt_DESC
