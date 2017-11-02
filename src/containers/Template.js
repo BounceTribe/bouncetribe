@@ -12,11 +12,17 @@ import Footer from 'components/Footer'
 import SendPing from 'mutations/SendPing'
 import UserSettings from 'containers/UserSettings'
 import Snackbar from 'material-ui/Snackbar'
+import {purple} from 'theme'
 
 
 injectTapEventPlugin()
 
 class Template extends Component {
+
+  state = {
+    snackbar: false,
+    snackbarText: ''
+  }
 
   componentDidMount() {
     this.ping()
@@ -35,6 +41,7 @@ class Template extends Component {
   }
 
   redirect = () => {
+    console.log('template redirect', this.props);
     let user = this.props.viewer.user
     let friends = user.friends.edges
     if (friends.length) {
@@ -60,6 +67,7 @@ class Template extends Component {
       return (
         <TopNav
           handle={user.handle}
+          redirect={this.redirect}
           user={user}
           portraitUrl={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
         />
@@ -73,6 +81,7 @@ class Template extends Component {
       return (
         <MobileNav
           user={user}
+          redirect={this.redirect}
           router={this.props.router}
           location={this.props.location}
         />
@@ -86,11 +95,10 @@ class Template extends Component {
       console.log('s', s, s.substr(0, s.lastIndexOf('/')))
       this.props.router.push(s.substr(0, s.lastIndexOf('/')))
     }
-    // this.setState( {
-    //     snackbarText: 'SETTINGS CHANGED',
-    //     snackbar: open,
-    //     settings: false
-    //   })
+    this.setState( {
+        snackbarText: 'SETTINGS CHANGED',
+        snackbar: open,
+      })
   }
 
   settingsClose = () => {
@@ -105,7 +113,14 @@ class Template extends Component {
     return (
       <MuiThemeProvider muiTheme={btTheme} >
         <Main>
-          
+          <Snackbar
+            open={this.state.snackbar ? true : false}
+            message={this.state.snackbarText}
+            autoHideDuration={2000}
+            onRequestClose={()=>this.setState({snackbar: false})}
+            onActionTouchTap={()=>this.setState({snackbar: false})}
+            bodyStyle={{ backgroundColor: purple }}
+          />
           <UserSettings
             open={this.props.params.settings ? true : false}
             user={this.props.viewer.user}

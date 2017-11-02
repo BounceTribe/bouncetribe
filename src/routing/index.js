@@ -15,13 +15,12 @@ import TribeSearchResults from 'containers/TribeSearchResults'
 import Login from 'containers/Login'
 import Connect from 'containers/Connect'
 import Session from 'containers/Session'
-import AllSessions from 'containers/AllSessions'
+// import AllSessions from 'containers/AllSessions'
 import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
 import ProjectsPanel from 'containers/ProjectsPanel'
 import DirectMessages from 'containers/DirectMessages'
 import BouncesPanel from 'containers/BouncesPanel'
-import Unsubscribe from 'containers/Unsubscribe'
 import {Loading} from 'styled/Spinner'
 
 const ViewerQuery = {
@@ -77,7 +76,6 @@ const createRoutes = () => (
     path='/'
     component={Template}
     queries={ViewerQuery} >
-    <Route path={'/unsubscribe'} component={Unsubscribe} onEnter={userOnly} auth={auth} />
     <Route path={'/login/*'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
     <Route path={'/notifications'}

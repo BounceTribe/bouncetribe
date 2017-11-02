@@ -14,7 +14,7 @@ class UserSettings extends Component {
 
   constructor(props) {
     super(props)
-    this.state = Object.assign(this.props.user, {
+    this.state = Object.assign((this.props.user || {}), {
       show: true,
       pass1: '',
       pass2: '',
@@ -114,34 +114,34 @@ class UserSettings extends Component {
         /> */}
         <Checkbox
           label={"Project Feedback"}
-          checked={this.state.doNotEmailPF}
+          checked={!this.state.doNotEmailPF}
           style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailPF: val})}
+          onCheck={(e, val) => this.setState({doNotEmailPF: !val})}
         />
         <Checkbox
           label={"Project Bounced"}
-          checked={this.state.doNotEmailPB}
+          checked={!this.state.doNotEmailPB}
           style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailPB: val})}
+          onCheck={(e, val) => this.setState({doNotEmailPB: !val})}
         />
         <Checkbox
           label={"Tribe Requests"}
-          checked={this.state.doNotEmailTR}
+          checked={!this.state.doNotEmailTR}
           style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailTR : val})}
+          onCheck={(e, val) => this.setState({doNotEmailTR : !val})}
         />
         <Checkbox
           label={"Tribe Request Accepted"}
-          checked={this.state.doNotEmailTA}
+          checked={!this.state.doNotEmailTA}
           style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailTA: val})}
+          onCheck={(e, val) => this.setState({doNotEmailTA: !val})}
         />
         <br />
         <TextField
           floatingLabelText={'New Password'}
           value={this.state.pass1}
           type={'password'}
-          onChange={(e, val) => this.checkPasswords({pass1: val})}
+          onChange={(e, val) => this.checkPasswords({pass1: !val})}
         />
         <br />
         <TextField

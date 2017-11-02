@@ -34,7 +34,7 @@ const makeList = (props) => {
   let bounceTab = props.route.path.match(/\/bounces$/)
   let User = props.viewer.User
   let edges = bounceTab ? User.bounces.edges : User.projects.edges
-  return edges.map(edge => {
+  return edges.map((edge, index) => {
     let project = edge.node.project || edge.node
     if (project.privacy === 'PRIVATE') {
       return null
@@ -44,7 +44,7 @@ const makeList = (props) => {
       let bounces = project.bounces.edges.map(edge => edge.node)
       return (
         <ProjectItemSm
-          key={project.id}
+          key={project.id + index}
           User={User}
           project={project}
           comments={comments}

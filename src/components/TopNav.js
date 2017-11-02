@@ -46,7 +46,6 @@ class TopNav extends Component {
 
   render() {
     let {handle, portraitUrl, user} = this.props
-    console.log('dash render props', this.props);
     return (
       <Bar>
         <Snackbar
@@ -63,7 +62,9 @@ class TopNav extends Component {
           onSave={()=>this.settingsSave()}
           onClose={()=>this.settingsClose()}
         />
-        <Logo to={'/'} />
+        <div onClick={()=>this.props.redirect()}>
+          <Logo />
+        </div>
         <NavList>
           {/* <NavLink to={`/tribe/${handle}/find`} >
             <Headphones height={18} />
