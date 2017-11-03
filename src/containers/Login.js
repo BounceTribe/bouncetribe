@@ -26,12 +26,12 @@ class Login extends Component {
   newUserFriend = (redirect) => {
     let newFriendId = redirect.split('/')[2]
     let selfId = this.props.viewer.user.id
-    console.log('newFriendid', newFriendId);
+    console.log('newFriendid', newFriendId)
     //TODO, prevent anyone from using this route
     this.props.relay.commitUpdate(
       new AddToFriends({ selfId, newFriendId }),
       { onSuccess: res => {
-          console.log('FRIEND ADDED', this.props);
+          console.log('FRIEND ADDED', this.props)
           this.props.router.push(`/${this.props.viewer.user.handle}/projects`)
         }
       }
@@ -43,7 +43,6 @@ class Login extends Component {
     let friends = user.friends.edges
     if (redirect && redirect.match('/inviteduser/')) {
       this.newUserFriend(redirect)
-
     }
     else if (redirect) {
       localStorage.removeItem('redirect')

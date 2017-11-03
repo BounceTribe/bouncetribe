@@ -26,6 +26,7 @@ class UserSettings extends Component {
   sendUpdate() {
     let userId = this.props.user.id
     let updateObj = Object.assign({userId}, this.state)
+    console.log('usdateobj', updateObj);
     Relay.Store.commitUpdate(
       new UpdateUser(updateObj),{
         onSuccess: res => {this.props.onSave()},

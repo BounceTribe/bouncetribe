@@ -60,12 +60,11 @@ const userOnly = (nextState, replace) => {
   console.log(' nextState', nextState, 'replace', replace);
 
   if (!auth.getToken()) {
+    console.log('no token (routes)');
     let path = nextState.location.pathname
     if (path.substring(0,7) !== '/login/') {
       localStorage.setItem('redirect', path)
     }
-    // let nextPath = nextState.location.pathname
-    // nextPath==='/login' && nextPa
     replace({ pathname: '/login/'})
   }
 }
@@ -114,7 +113,7 @@ const createRoutes = () => (
       component={Profile}
       queries={ViewerQuery}
       render={({ props }) => props ? <Profile {...props} /> : <Loading/>} >
-      <Route path={'/:userHandle/projects'}
+      <Route path={'/:userHandle/projects(/:settings)'}
         component={ProjectsPanel}
         queries={ViewerQuery}
         render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />

@@ -12,8 +12,6 @@ import IconMenu from 'material-ui/IconMenu'
 // import MenuItem from 'material-ui/MenuItem'
 import IconButton from 'material-ui/IconButton'
 import UpdateNotification from 'mutations/UpdateNotification'
-import UserSettings from 'containers/UserSettings'
-import Snackbar from 'material-ui/Snackbar'
 
 class TopNav extends Component {
 
@@ -21,47 +19,22 @@ class TopNav extends Component {
     dropdownOpen: false,
     notificationMenu: false,
     portraitMenu: false,
-    settings: false,
-    snackbar: false,
-    snackbarText: ''
   }
 
   closeMenu = () => {
-    //delay 200ms to allow menu item click t owork
+    //delay 200ms to allow menu item click to work
     setTimeout(()=>this.setState({
       portraitMenu: false,
       notificationMenu: false
     }), 200)
   }
 
-  settingsSave = () => {
-    this.setState( {
-        snackbarText: 'SETTINGS CHANGED',
-        snackbar: open,
-        settings: false
-      })
-  }
-
-  settingsClose = () => this.setState({settings: false})
-
   render() {
-    let {handle, portraitUrl, user} = this.props
+    let {portraitUrl, user} = this.props
+    let {handle} = user
+
     return (
       <Bar>
-        <Snackbar
-          open={this.state.snackbar ? true : false}
-          message={this.state.snackbarText}
-          autoHideDuration={2000}
-          onRequestClose={()=>this.setState({snackbar: false})}
-          onActionTouchTap={()=>this.setState({snackbar: false})}
-          bodyStyle={{ backgroundColor: purple }}
-        />
-        <UserSettings
-          open={this.state.settings}
-          user={user}
-          onSave={()=>this.settingsSave()}
-          onClose={()=>this.settingsClose()}
-        />
         <div onClick={()=>this.props.redirect()}>
           <Logo />
         </div>
@@ -140,7 +113,7 @@ class TopNav extends Component {
             <DropdownMenuItem onClick={this.closeMenu} text="My Tribe" to={`/tribe/${handle}`} />
             <DropHr/>
             <DropdownMenuItem onClick={() => {
-              this.setState({settings: true})
+              this.props.openSettings()
               this.closeMenu()
             } } text="Settings" />
             <DropdownMenuItem onClick={this.closeMenu} text="Help" href={"http://bouncetribe.com/support/"} />

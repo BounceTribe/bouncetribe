@@ -38,7 +38,13 @@ class Template extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if (newProps.location.pathname==='/') this.redirect()
+    let newPath = newProps.location.pathname
+    if (newPath==='/') this.redirect()
+    if (newPath===`/unsubscribe`) {
+      this.setState({settings: true})
+      this.redirect()
+      console.log('UNSUB HIT');
+    }
   }
 
   componentWillUnmount() {
@@ -46,9 +52,6 @@ class Template extends Component {
   }
 
   redirect = () => {
-    if (this.props.params.settings) {
-      debugger
-    }
     console.log('template redirect', this.props);
     let user = this.props.viewer.user
     let friends = user.friends.edges
@@ -74,9 +77,9 @@ class Template extends Component {
     if (user) {
       return (
         <TopNav
-          handle={user.handle}
-          redirect={this.redirect}
           user={user}
+          openSettings={()=>this.setState({settings: true})}
+          redirect={this.redirect}
           portraitUrl={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
         />
       )
