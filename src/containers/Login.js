@@ -12,6 +12,7 @@ class Login extends Component {
   componentDidMount() {
     console.log('login redirect:', localStorage.getItem('redirect'))
     let user = this.props.viewer.user
+    console.log('login user', user);
     user ? this.toSite(user) : this.props.route.auth.showLock(false)
 
   }

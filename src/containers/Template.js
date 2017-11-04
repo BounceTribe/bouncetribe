@@ -13,6 +13,7 @@ import SendPing from 'mutations/SendPing'
 import UserSettings from 'containers/UserSettings'
 import Snackbar from 'material-ui/Snackbar'
 import {purple} from 'theme'
+import AddToFriends from 'mutations/AddToFriends'
 
 
 injectTapEventPlugin()
@@ -27,38 +28,60 @@ class Template extends Component {
 
   componentDidMount() {
     this.ping()
-    let intervalId = setInterval(this.ping, 300000);
-    this.setState({intervalId});
-
-    console.log('template didmount', this.props);
-    let {settings} = this.props.params
-    if (this.props.location.pathname==='/') this.redirect()
-    settings && !this.state.settings && this.setState({settings: true})
-
+    let intervalId = setInterval(this.ping, 300000)
+    this.setState({intervalId})
+    console.log('template didmount', this.props)
+    // let {settings} = this.props.params
+    // settings && !this.state.settings && this.setState({settings: true})
+    this.pathCheck(this.props)
   }
 
   componentWillReceiveProps(newProps) {
-    let newPath = newProps.location.pathname
-    if (newPath==='/') this.redirect()
-    if (newPath===`/unsubscribe`) {
-      this.setState({settings: true})
-      this.redirect()
-      console.log('UNSUB HIT');
-    }
+    this.pathCheck(newProps)
   }
 
   componentWillUnmount() {
     clearInterval(this.state.intervalId)
   }
 
+  pathCheck = (props) => {
+    let newPath = props.location.pathname
+    if (newPath==='/') this.redirect()
+    else if (newPath===`/unsubscribe`) {
+      this.setState({settings: true})
+      this.redirect()
+      console.log('UNSUB HIT');
+    } else if (newPath.match('/acceptinvite/')) {
+      // a.substr(a.lastIndexOf('/') + 1, a.length-1)
+      let byId = newPath.replace('/acceptinvite/', '')
+      console.log('byId', byId);
+      this.addFriend(byId)
+    }
+  }
+
+  addFriend = (newFriendId) => {
+    let selfId = this.props.viewer.user.id
+    console.log('newFriendid', newFriendId)
+    //TODO, prevent anyone from using this route
+    this.props.relay.commitUpdate(
+      new AddToFriends({ selfId, newFriendId }),
+      { onSuccess: res => {
+        this.setState({snackbarText: 'FRIEND ADDED', snackbar: true})
+          console.log('FRIEND ADDED', res)
+          this.redirect()
+        }
+      }
+    )
+  }
+
   redirect = () => {
-    console.log('template redirect', this.props);
+    console.log('template redirect', this.props)
     let user = this.props.viewer.user
     let friends = user.friends.edges
     if (friends.length) {
       this.props.router.push(`/dash/${friends[0].node.handle}/projects`)
     } else {
-      this.props.router.push(`/${user.handle}/profile`)
+      this.props.router.push(`/${user.handle}/projects`)
     }
   }
 

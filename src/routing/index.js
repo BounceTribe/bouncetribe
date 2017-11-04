@@ -14,7 +14,7 @@ import TribeFind from 'containers/TribeFind'
 import TribeSearchResults from 'containers/TribeSearchResults'
 import Login from 'containers/Login'
 import Connect from 'containers/Connect'
-import Session from 'containers/Session'
+// import Session from 'containers/Session'
 // import AllSessions from 'containers/AllSessions'
 import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
@@ -77,7 +77,7 @@ const createRoutes = () => (
     queries={ViewerQuery} >
     <Route path={'/login/*'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
-    {/* <Route path={'/inviteduser/:inviteeId'} /> */}
+    <Route path={'/acceptinvite/:inviteeId'} onEnter={userOnly}/>
     <Route path={'/notifications'}
       component={NotificationList}
       queries={ViewerQuery}
@@ -94,7 +94,7 @@ const createRoutes = () => (
       render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
 
     <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
-      <Route path={'/dash/:userHandle/projects(/:settings)'}
+      <Route path={'/dash/:userHandle/projects'}
         component={ProjectsPanel}
         queries={ViewerQuery}
         render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
@@ -113,11 +113,13 @@ const createRoutes = () => (
       component={Profile}
       queries={ViewerQuery}
       render={({ props }) => props ? <Profile {...props} /> : <Loading/>} >
-      <Route path={'/:userHandle/projects(/:settings)'}
+      <Route path={'/:userHandle/projects'}
         component={ProjectsPanel}
+        onEnter={userOnly}
         queries={ViewerQuery}
         render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />
        <Route path={'/:userHandle/bounces'}
+        onEnter={userOnly}
         component={BouncesPanel}
         queries={ViewerQuery}
         render={({ props }) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
@@ -157,6 +159,13 @@ const createRoutes = () => (
       component={Project}
       queries={ViewerQuery}
       render={({ props }) => props ? <Project {...props} /> : <Loading />} >
+    </Route>
+    {/* <Route
+      path={'/:userHandle/:projectTitle'}
+      onEnter={userOnly}
+      component={Project}
+      queries={ViewerQuery}
+      render={({ props }) => props ? <Project {...props} /> : <Loading />} >
       {/* <Route
         path={'/:userHandle/:projectTitle/view'}
         component={Comments}
@@ -167,13 +176,13 @@ const createRoutes = () => (
         component={Comments}
         queries={ViewerQuery}
         prepareParams={ownCommentsFilter} /> */}
-      </Route>
-      <Route
+      {/* </Route> */}
+      {/* <Route
         path={'/session/:userHandle/:sessionId/:tab'}
         onEnter={userOnly}
         component={Session}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Session {...props} /> : <Loading />} />
+        render={({ props }) => props ? <Session {...props} /> : <Loading />} /> */}
     </Route>
 
 
