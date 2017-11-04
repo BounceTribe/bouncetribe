@@ -54,7 +54,7 @@ class Template extends Component {
         this.setState({settings: true})
         this.redirect()
         break
-      case newPath.substr(0,13)===('/acceptinvite/'):
+      case newPath.substr(0,14)===('/acceptinvite/'):
         let byId = newPath.replace('/acceptinvite/', '')
         console.log('byId', byId);
         this.addFriend(byId)
