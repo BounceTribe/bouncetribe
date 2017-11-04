@@ -77,9 +77,10 @@ class Template extends Component {
   redirect = () => {
     console.log('template redirect', this.props)
     let user = this.props.viewer.user
-    let friends = user.friends.edges
-    if (friends.length) {
-      this.props.router.push(`/dash/${friends[0].node.handle}/projects`)
+    if (!user) {
+      this.props.router.push(`/login/`)
+    } else if (user.friends.edges.length) {
+      this.props.router.push(`/dash/${user.friends.edges[0].node.handle}/projects`)
     } else {
       this.props.router.push(`/${user.handle}/projects`)
     }
