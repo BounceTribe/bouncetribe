@@ -71,85 +71,89 @@ const userOnly = (nextState, replace) => {
 
 const createRoutes = () => (
 
-  <Route
-    path='/'
+  <Route path={'/'}
     component={Template}
     queries={ViewerQuery} >
     <Route path={'/login/*'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
     <Route path={'/acceptinvite/:inviteeId'} onEnter={userOnly}/>
+    <Route path={'/unsubscribe'} onEnter={userOnly}/>
     <Route path={'/notifications'}
       component={NotificationList}
       queries={ViewerQuery}
-      render={({ props }) => props ? <NotificationList {...props} /> : <Loading />} />
+      render={({props}) => props ? <NotificationList {...props} /> : <Loading />} />
     <Route path={'/projects/:userHandle'}
       component={ProjectList}
       queries={ViewerQuery}
       onEnter={userOnly}
-      render={({ props }) => props ? <ProjectList {...props} /> : <Loading />} />
+      render={({props}) => props ? <ProjectList {...props} /> : <Loading />} />
     <Route path={'/projects/:ownHandle/new'}
       component={ProjectNew}
       queries={ViewerQuery}
       onEnter={userOnly}
-      render={({ props }) => props ? <ProjectNew {...props} /> : <Loading />} />
+      render={({props}) => props ? <ProjectNew {...props} /> : <Loading />} />
 
-    <Route path='/dash' component={Dashboard} queries={ViewerQuery} >
-      <Route path={'/dash/:userHandle/projects'}
+    <Route path='/dash/:userHandle(/projects)'
+      component={Dashboard}
+      queries={ViewerQuery}
+      render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
+      <IndexRoute
         component={ProjectsPanel}
         queries={ViewerQuery}
-        render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
+        render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
       <Route path={'/dash/:userHandle/messages'}
         component={DirectMessages}
         queries={ViewerQuery}
-        render={({ props }) => props ? <DirectMessages {...props} /> : <Loading nested />} />
+        render={({props}) => props ? <DirectMessages {...props} /> : <Loading nested />} />
       <Route path={'/dash/:userHandle/bounces'}
         component={BouncesPanel}
         queries={ViewerQuery}
-        render={({ props }) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
+        render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
     </Route>
 
     <Route path={'/:userHandle'}
       onEnter={userOnly}
       component={Profile}
       queries={ViewerQuery}
-      render={({ props }) => props ? <Profile {...props} /> : <Loading/>} >
+      render={({props}) => props ? <Profile {...props} /> : <Loading/>} >
       <Route path={'/:userHandle/projects'}
         component={ProjectsPanel}
         onEnter={userOnly}
         queries={ViewerQuery}
-        render={({ props }) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />
+        render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />
        <Route path={'/:userHandle/bounces'}
         onEnter={userOnly}
         component={BouncesPanel}
         queries={ViewerQuery}
-        render={({ props }) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
+        render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
       {/*<Route path={'/:userHandle/activity'}
         component={Activities}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Activities {...props} /> : <Loading nested/>} /> */}
+        render={({props}) => props ? <Activities {...props} /> : <Loading nested/>} /> */}
     </Route>
-    <Route path={'/tribe/:userHandle'}
+    <Route path={'/tribe/:userHandle(/members)'}
       component={Tribe}
       queries={ViewerQuery}
-      render={({ props }) => props ? <Tribe {...props} /> : <Loading />} >
-      <IndexRoute component={TribeAll}
+      render={({props}) => props ? <Tribe {...props} /> : <Loading />} >
+      <IndexRoute
+        component={TribeAll}
         queries={ViewerQuery}
-        render={({ props }) => props ? <TribeAll {...props} /> : <Loading nested />} />
-      <Route path={'/tribe/:userHandle/requests'}
+        render={({props}) => props ? <TribeAll {...props} /> : <Loading nested />} />
+      <Route path={'/tribe/:userHandle/requests(/:acceptFriendId)'}
         component={TribeRequests}
         queries={ViewerQuery}
-        render={({ props }) => props ? <TribeRequests {...props} /> : <Loading nested/>} />
+        render={({props}) => props ? <TribeRequests {...props} /> : <Loading nested/>} />
     </Route>
     <Route path={'/tribe/:userHandle/find/*'}
       component={TribeFind}
       queries={ViewerQuery}
-      render={({ props }) => props ? <TribeFind {...props} /> : <Loading />}
+      render={({props}) => props ? <TribeFind {...props} /> : <Loading />}
       auth={auth}
       ignoreScrollBehavior >
       <IndexRoute
         component={TribeSearchResults}
         queries={ViewerQuery}
-        render={({ props }) => props ? <TribeSearchResults {...props} /> : <Loading nested/>}
+        render={({props}) => props ? <TribeSearchResults {...props} /> : <Loading nested/>}
         prepareParams={tribeSearch}
         ignoreScrollBehavior />
     </Route>
@@ -158,14 +162,14 @@ const createRoutes = () => (
       onEnter={userOnly}
       component={Project}
       queries={ViewerQuery}
-      render={({ props }) => props ? <Project {...props} /> : <Loading />} >
+      render={({props}) => props ? <Project {...props} /> : <Loading />} >
     </Route>
     {/* <Route
       path={'/:userHandle/:projectTitle'}
       onEnter={userOnly}
       component={Project}
       queries={ViewerQuery}
-      render={({ props }) => props ? <Project {...props} /> : <Loading />} >
+      render={({props}) => props ? <Project {...props} /> : <Loading />} >
       {/* <Route
         path={'/:userHandle/:projectTitle/view'}
         component={Comments}
@@ -182,7 +186,7 @@ const createRoutes = () => (
         onEnter={userOnly}
         component={Session}
         queries={ViewerQuery}
-        render={({ props }) => props ? <Session {...props} /> : <Loading />} /> */}
+        render={({props}) => props ? <Session {...props} /> : <Loading />} /> */}
     </Route>
 
 
@@ -196,23 +200,23 @@ export default Routing
   queries={ViewerQuery}
   onEnter={userOnly}
   auth={auth}
-  render={({ props }) => props ? <Dashboard {...props} /> : <Loading />} /> */
+  render={({props}) => props ? <Dashboard {...props} /> : <Loading />} /> */
 
 /* <Route path={'/sessions/:userHandle'} onEnter={userOnly}>
   <IndexRoute
     component={AllSessions}
     queries={ViewerQuery}
-    render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
+    render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
   <Route
     path={'/sessions/:userHandle/:project'}
     component={AllSessions}
     queries={ViewerQuery}
-    render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
+    render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
   <Route
     path={'/sessions/:userHandle/:project/find'}
     component={AllSessions}
     queries={ViewerQuery}
-    render={({ props }) => props ? <AllSessions {...props} /> : <Loading nested />} />
+    render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
 </Route> */
 
 

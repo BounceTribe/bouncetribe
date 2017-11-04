@@ -31,7 +31,8 @@ const edgeFilter = (project, type) => (
 
 const makeList = (props) => {
   //bounceTab says we are dealing with a list of bounces and their associated projects, rather than a list of just projects
-  let bounceTab = props.route.path.match(/\/bounces$/)
+  console.log('listsm props', props);
+  let bounceTab = props.location.pathname.match(/\/bounces$/)
   let User = props.viewer.User
   let edges = bounceTab ? User.bounces.edges : User.projects.edges
   return edges.map((edge, index) => {

@@ -32,6 +32,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
+    console.log('dash', this.props.viewer);
     let edges = this.props.viewer.user.friends.edges;
     if (edges.length) {
       let foundUser = edges.find(edge =>
@@ -112,7 +113,7 @@ class Dashboard extends Component {
 
   render () {
     let selectedUser = this.state.selectedUser || {}
-    let user = this.props.viewer.user || {}
+    let {User, user} = this.props.viewer
     let tab = this.state.tab
     // console.log('user:', user)
     // console.log('render - this', this)
@@ -197,6 +198,7 @@ class Dashboard extends Component {
             tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
             locks={[false, false, false]}
+            values={[User.projects.count, User.bounces.count, 0]}
             content={this.state.selectedUser && this.props.children}
             vh={50}
             scroll={true} />
@@ -208,7 +210,8 @@ class Dashboard extends Component {
 
  export default Relay.createContainer( Dashboard, {
     initialVariables: { userHandle: '' },
-    fragments: { viewer: () => Relay.QL`
+    fragments: {
+      viewer: () => Relay.QL`
         fragment on Viewer {
           user {
             id
@@ -226,6 +229,13 @@ class Dashboard extends Component {
                 }
               }
             }
+          }
+          User (handle: $userHandle) {
+            handle
+            id
+            email
+            bounces { count }
+            projects { count }
           }
         }
       `,

@@ -15,7 +15,7 @@ import Moment from 'moment'
 const PurpleBox = styled.div`
   display: inline-flex;
   align-items: center;
-  justify-content: center
+  justify-content: center;
   font-weight: bold;
   background-color: ${purple};
   color: ${white};

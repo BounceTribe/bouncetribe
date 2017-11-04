@@ -451,7 +451,8 @@ class Profile extends Component {
           <TopCol>
             <Handle>{handle}</Handle>
             <span>
-              <PinIcon/><Location>{placename}</Location>
+              {(placename || ownProfile) && <PinIcon/>}
+              <Location>{placename}</Location>
               <MissingUserData hide={placename || !ownProfile}
                 onClick={()=>{this.setState({editProfile: true})}}>
                 Add your location
@@ -531,6 +532,7 @@ class Profile extends Component {
             tabChange={(tab)=>this.setTab(tab)}
             labels={['activity', 'projects', 'bounces']}
             locks={[true, false, false]}
+            values={[0,0,0]}
             content={this.props.children}
           />
           <BotRight>

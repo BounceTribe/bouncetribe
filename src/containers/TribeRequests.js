@@ -7,6 +7,20 @@ import AddToFriends from 'mutations/AddToFriends'
 
 class TribeRequests extends Component {
 
+  componentDidMount() {
+    if (this.props.params.acceptFriendId) {
+      this.props.viewer.user.invitations.edges.some( edge => {
+        console.log('edge', edge);
+        if (edge.node.actor.id===this.props.params.acceptFriendId) {
+          console.log('INVITE MATCH!');
+          this.accept(edge.node.id, edge.node.actor.id)
+          return true
+        }
+        return false
+      })
+    }
+  }
+
   accept = (inviteId, newFriendId) => {
     let {id: selfId} = this.props.viewer.user
     this.props.relay.commitUpdate(
@@ -19,7 +33,9 @@ class TribeRequests extends Component {
             new AddToFriends({
               selfId,
               newFriendId
-            })
+            }), {
+              onSuccess: (response) => console.log('Accepted and added')
+            }
           )
         }
       }
@@ -36,8 +52,7 @@ class TribeRequests extends Component {
   }
 
   get requests() {
-
-    return this.props.viewer.user.invitations.edges.map(edge => {
+    return (this.props.viewer.user.invitations.edges || []).map(edge => {
       let {actor:user, id} = edge.node
       return (
         <RequestUser

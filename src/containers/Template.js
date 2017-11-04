@@ -46,16 +46,20 @@ class Template extends Component {
 
   pathCheck = (props) => {
     let newPath = props.location.pathname
-    if (newPath==='/') this.redirect()
-    else if (newPath===`/unsubscribe`) {
-      this.setState({settings: true})
-      this.redirect()
-      console.log('UNSUB HIT');
-    } else if (newPath.match('/acceptinvite/')) {
-      // a.substr(a.lastIndexOf('/') + 1, a.length-1)
-      let byId = newPath.replace('/acceptinvite/', '')
-      console.log('byId', byId);
-      this.addFriend(byId)
+    switch (newPath) {
+      case '/':
+        this.redirect()
+        break
+      case '/unsubscribe':
+        this.setState({settings: true})
+        this.redirect()
+        break
+      case newPath.substr(0,13)===('/acceptinvite/'):
+        let byId = newPath.replace('/acceptinvite/', '')
+        console.log('byId', byId);
+        this.addFriend(byId)
+        break
+      default:
     }
   }
 
