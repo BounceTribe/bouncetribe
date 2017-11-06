@@ -3,10 +3,6 @@ import Relay from 'react-relay'
 import {ProjectListSm} from 'components/ProjectListSm'
 
 class ProjectsPanel extends Component {
-  componentDidMount() {
-    console.log('project panel mount', this.props)
-  }
-  
   render () {
     return (
       <ProjectListSm {...this.props} />

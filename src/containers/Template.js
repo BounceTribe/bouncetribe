@@ -16,6 +16,7 @@ import {purple} from 'theme'
 import AddToFriends from 'mutations/AddToFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
+import { browserHistory } from 'react-router';
 
 injectTapEventPlugin()
 
@@ -31,13 +32,13 @@ class Template extends Component {
     let intervalId = setInterval(this.ping, 300000)
     this.setState({intervalId})
     console.log('template didmount', this.props)
-    // let {settings} = this.props.params
-    // settings && !this.state.settings && this.setState({settings: true})
     this.pathCheck(this.props)
   }
 
   componentWillReceiveProps(newProps) {
-    this.pathCheck(newProps)
+    let oldPath = this.props.location.pathname
+    let newPath = newProps.location.pathname
+    if (oldPath!==newPath) this.pathCheck(newProps)
   }
 
   componentWillUnmount() {
@@ -45,8 +46,9 @@ class Template extends Component {
   }
 
   pathCheck = (props) => {
-    // console.log('pathcheck', props);
     let newPath = props.location.pathname
+    let {inviteId, newFriendId} = props.params
+    // console.log('pathcheck', props, newPath)
     switch (true) {
       case newPath==='/':
         this.redirect()
@@ -55,13 +57,44 @@ class Template extends Component {
         this.setState({settings: true})
         this.redirect()
         break
+      case newPath.substr(0,15)==='/acceptrequest/':
+        console.log('inviteId', inviteId)
+        this.acceptRequest(inviteId, newFriendId)
+        break
       case newPath.substr(0,14)==='/acceptinvite/':
-        let byId = newPath.replace('/acceptinvite/', '')
-        console.log('byId', byId);
-        this.addInviteFriend(byId)
+        console.log('newFriendId', newFriendId);
+        this.addInviteFriend(newFriendId)
         break
       default:
     }
+  }
+
+  acceptRequest = (inviteId, newFriendId) => {
+    console.log('accept', inviteId);
+    let {id: selfId} = this.props.viewer.user
+    this.props.relay.commitUpdate(
+      new UpdateFriendRequest({ id: inviteId, accepted: true }), {
+        onSuccess: (res) => {
+          this.props.relay.commitUpdate(
+            new AddToFriends({ selfId, newFriendId }), {
+              onSuccess: res => {
+                console.log('friend added res', res);
+                this.setState({snackbarText: 'FRIEND ADDED'})
+                this.props.router.push(`/tribe/${this.props.viewer.user.handle}`)
+              },
+              onFailure: (res) => {
+                console.log('add friend failure', res)
+                this.redirect()
+              }
+            }
+          )
+        },
+        onFailure: (res) => {
+          console.log('add  update req failure', res)
+          this.redirect()
+        }
+      }
+    )
   }
   //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
@@ -155,7 +188,6 @@ class Template extends Component {
     // }
     this.setState( {
         snackbarText: 'SETTINGS CHANGED',
-        snackbar: true,
         settings: false
       })
   }
@@ -170,6 +202,7 @@ class Template extends Component {
   }
 
   render () {
+
     return (
       <MuiThemeProvider muiTheme={btTheme} >
         <Main>

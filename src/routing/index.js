@@ -77,8 +77,8 @@ const createRoutes = () => (
     queries={ViewerQuery} >
     <Route path={'/login/*'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
-    <Route path={'/acceptinvite/:inviteeId'} onEnter={userOnly} auth={auth}/>
-    <Route path={'/acceptrequest/:requesterId'} onEnter={userOnly} auth={auth}/>
+    <Route path={'/acceptrequest/:inviteId/:newFriendId'} onEnter={userOnly} auth={auth}/>
+    <Route path={'/acceptinvite/:newFriendId'} onEnter={userOnly} auth={auth}/>
     <Route path={'/unsubscribe'} onEnter={userOnly} auth={auth}/>
     <Route path={'/notifications'}
       component={NotificationList}
