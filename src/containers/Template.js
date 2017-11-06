@@ -181,11 +181,6 @@ class Template extends Component {
   }
 
   settingsSave = () => {
-    // if (this.props.params.settings) {
-    //   let s = this.props.location.pathname
-    //   console.log('s', s, s.substr(0, s.lastIndexOf('/')))
-    //   this.props.router.push(s.substr(0, s.lastIndexOf('/')))
-    // }
     this.setState( {
         snackbarText: 'SETTINGS CHANGED',
         settings: false
@@ -193,11 +188,6 @@ class Template extends Component {
   }
 
   settingsClose = () => {
-    // if (this.props.params.settings) {
-    //   let s = this.props.location.pathname
-    //   console.log('s', s, s.substr(0, s.lastIndexOf('/')))
-    //   this.props.router.push(s.substr(0, s.lastIndexOf('/')))
-    // }
     this.setState({settings: false})
   }
 
