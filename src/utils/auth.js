@@ -14,7 +14,7 @@ import {browserHistory} from 'react-router'
 
 class AuthService {
   constructor() {
-    console.log('auththis', this);
+    let showSignup = window.location.href.includes('/acceptinvite/')
     this.defaultOptions = {
       auth: {
         params: {
@@ -36,7 +36,7 @@ class AuthService {
         logo: `${url}/logo.png`,
         primaryColor: purple,
       },
-      // initialScreen: 'signUp', //TODO for email invite
+      initialScreen: showSignup ? 'signUp' : 'login',
       languageDictionary: {
         emailInputPlaceholder: "rockstar@band.com",
         title: "BounceTribe"

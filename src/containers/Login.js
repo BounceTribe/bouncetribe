@@ -29,7 +29,7 @@ class Login extends Component {
     if (redirect) {
       console.log('redirect', redirect);
       localStorage.removeItem('redirect')
-      this.props.router.push(`${redirect}`)
+      this.props.router.push(redirect)
       this.setState({routeSet: true})
     } else if (friends.length) {
       this.props.router.push(`/dash/${friends[0].node.handle}/projects`)

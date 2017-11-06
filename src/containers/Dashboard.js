@@ -32,18 +32,21 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    console.log('dash', this.props.viewer);
-    let edges = this.props.viewer.user.friends.edges;
+    console.log('dashmount props', this.props)
+    let edges = this.props.viewer.user.friends.edges
     if (edges.length) {
       let foundUser = edges.find(edge =>
         edge.node.handle === this.props.params.userHandle)
-      let selectedUser = foundUser ? foundUser.node : edges[0].node;
-      this.setState( {selectedUser} )
-      this.suggestFriends(this.state.maxSuggestedFriends)
-      if (!foundUser) {
-        console.log('no found user; redirecting');
-        this.props.router.push(`/dash/${selectedUser.handle}/projects`)
+      if (foundUser) {
+        this.setState( {selectedUser: foundUser.node} )
+        this.suggestFriends(this.state.maxSuggestedFriends)
+      } else {
+        console.log('no found user; redirecting to first friend')
+        this.props.router.push(`/dash/${edges[0].node.handle}/projects`)
       }
+    } else {
+      console.log('dash no tribe');
+      //notribe
     }
   }
 
@@ -63,9 +66,9 @@ class Dashboard extends Component {
   }
 
   selectUser = (selectedUser) => {
-    let location = this.props.location.pathname
-    location = location.replace(this.state.selectedUser.handle, selectedUser.handle)
-    this.props.router.push(location)
+    let oldPath = this.props.location.pathname
+    let newPath = oldPath.replace(this.state.selectedUser.handle, selectedUser.handle)
+    this.props.router.push(newPath)
     this.setState({selectedUser})
   }
 
@@ -192,7 +195,7 @@ class Dashboard extends Component {
               select={this.selectUser}
               show={this.state.showTribe} />
           </DashLeft>
-          <Panel
+          {User && <Panel
             tab={tab}
             topBar={<DashProfile selectedUser={selectedUser} />}
             tabChange={(newTab)=>this.setTab(newTab)}
@@ -201,7 +204,7 @@ class Dashboard extends Component {
             values={[User.projects.count, User.bounces.count, 0]}
             content={this.state.selectedUser && this.props.children}
             vh={50}
-            scroll={true} />
+            scroll={true} />}
         </BotRow>
       </DashView>
     )

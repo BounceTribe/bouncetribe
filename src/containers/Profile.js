@@ -168,11 +168,11 @@ class Profile extends Component {
     let {id: selfId} = this.props.viewer.user
     let {id: newFriendId} = this.props.viewer.User
     this.props.relay.commitUpdate(
-      new UpdateFriendRequest({ id: inviteId, accepted: true }),
-      {onSuccess: (response) => {
+      new UpdateFriendRequest({ id: inviteId, accepted: true }), {
+        onSuccess: (response) => {
           this.props.relay.commitUpdate(
-            new AddToFriends({ selfId, newFriendId }),
-            { onSuccess: res => this.setState({btnStatus: 'ACCEPTED'}) }
+            new AddToFriends({ selfId, newFriendId }), {
+              onSuccess: res => this.setState({btnStatus: 'ACCEPTED'}) }
           )
         },
         onFailure: (response) => { console.log('failure', response) }

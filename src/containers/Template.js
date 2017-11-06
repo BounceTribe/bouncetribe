@@ -14,6 +14,9 @@ import UserSettings from 'containers/UserSettings'
 import Snackbar from 'material-ui/Snackbar'
 import {purple} from 'theme'
 import AddToFriends from 'mutations/AddToFriends'
+import CreateFriendRequest from 'mutations/CreateFriendRequest'
+import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
+
 
 
 injectTapEventPlugin()
@@ -45,7 +48,14 @@ class Template extends Component {
   }
 
   pathCheck = (props) => {
+    // console.log('pathcheck', props);
     let newPath = props.location.pathname
+    console.log('ndwpath', newPath)
+    if (newPath.substr(0,14)===('/acceptinvite/')) {
+      let byId = newPath.replace('/acceptinvite/', '')
+      console.log('byId', byId);
+      this.addInviteFriend(byId)
+    }
     switch (newPath) {
       case '/':
         this.redirect()
@@ -54,28 +64,42 @@ class Template extends Component {
         this.setState({settings: true})
         this.redirect()
         break
-      case newPath.substr(0,14)===('/acceptinvite/'):
-        let byId = newPath.replace('/acceptinvite/', '')
-        console.log('byId', byId);
-        this.addFriend(byId)
-        break
+
       default:
     }
   }
 
-  addFriend = (newFriendId) => {
+  addInviteFriend = (newFriendId) => {
     let selfId = this.props.viewer.user.id
-    console.log('newFriendid', newFriendId)
+    console.log('newFriendid, selfId', newFriendId, selfId)
     //TODO, prevent anyone from using this route
     this.props.relay.commitUpdate(
-      new AddToFriends({ selfId, newFriendId }),
-      { onSuccess: res => {
-        this.setState({snackbarText: 'FRIEND ADDED', snackbar: true})
-          console.log('FRIEND ADDED', res)
-          this.redirect()
+      new CreateFriendRequest({
+        actorId: selfId,
+        recipientId: newFriendId,
+      }), {
+        onSuccess: res => {
+          console.log('request made, proceeding to accept RES:', res)
+          // this.props.relay.commitUpdate(
+          //   new UpdateFriendRequest({ id: inviteId, accepted: true }), {
+          //     onSuccess: (response) => {console.log('friend request updated')}
+          //
+          //   }
+          // )
+        },
+        onFailure: res => {
+          console.log('create req failed RES', res);
         }
       }
     )
+    // this.props.relay.commitUpdate(
+    //   new AddToFriends({ selfId, newFriendId }), {
+    //     onSuccess: res => {
+    //     this.setState({snackbarText: 'FRIEND ADDED', snackbar: true})
+    //       this.redirect()
+    //     }
+    //   }
+    // )
   }
 
   redirect = () => {
@@ -86,7 +110,9 @@ class Template extends Component {
     } else if (user.friends.edges.length) {
       this.props.router.push(`/dash/${user.friends.edges[0].node.handle}/projects`)
     } else {
-      this.props.router.push(`/${user.handle}/projects`)
+      this.props.router.push(`/dash/`) //notribe
+      console.log('notribe redirect');
+      // this.props.router.push(`/${user.handle}/projects`)
     }
   }
 
