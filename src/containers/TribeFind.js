@@ -36,12 +36,13 @@ class TribeFind extends Component {
   }
 
   createFriendRequest = (recipientId) => {
+    console.log('TF createfriend request')
     let {id: actorId} = this.props.viewer.user
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({
-        actorId,
-        recipientId,
-      })
+      new CreateFriendRequest({ actorId, recipientId, }), {
+        onSuccess: res => console.log('CFQ success', res),
+        onFailure: res => console.log('CFQ FAIL', res)
+      }
     )
   }
 

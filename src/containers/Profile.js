@@ -172,7 +172,8 @@ class Profile extends Component {
         onSuccess: (response) => {
           this.props.relay.commitUpdate(
             new AddToFriends({ selfId, newFriendId }), {
-              onSuccess: res => this.setState({btnStatus: 'ACCEPTED'}) }
+              onSuccess: res => this.setState({btnStatus: 'ACCEPTED'})
+            }
           )
         },
         onFailure: (response) => { console.log('failure', response) }
@@ -181,6 +182,7 @@ class Profile extends Component {
   }
 
   addToTribe = () => {
+    console.log('CFQ Profile');
     let {id: actorId} = this.props.viewer.user
     let {id: recipientId} = this.props.viewer.User
     this.props.relay.commitUpdate(

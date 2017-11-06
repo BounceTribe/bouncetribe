@@ -17,8 +17,6 @@ import AddToFriends from 'mutations/AddToFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
 
-
-
 injectTapEventPlugin()
 
 class Template extends Component {
@@ -50,56 +48,52 @@ class Template extends Component {
   pathCheck = (props) => {
     // console.log('pathcheck', props);
     let newPath = props.location.pathname
-    console.log('ndwpath', newPath)
-    if (newPath.substr(0,14)===('/acceptinvite/')) {
-      let byId = newPath.replace('/acceptinvite/', '')
-      console.log('byId', byId);
-      this.addInviteFriend(byId)
-    }
-    switch (newPath) {
-      case '/':
+    switch (true) {
+      case newPath==='/':
         this.redirect()
         break
-      case '/unsubscribe':
+      case newPath==='/unsubscribe':
         this.setState({settings: true})
         this.redirect()
         break
-
+      case newPath.substr(0,14)==='/acceptinvite/':
+        let byId = newPath.replace('/acceptinvite/', '')
+        console.log('byId', byId);
+        this.addInviteFriend(byId)
+        break
       default:
     }
   }
+  //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
   addInviteFriend = (newFriendId) => {
     let selfId = this.props.viewer.user.id
-    console.log('newFriendid, selfId', newFriendId, selfId)
+    let actorId = newFriendId
+    let recipientId = selfId
     //TODO, prevent anyone from using this route
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({
-        actorId: selfId,
-        recipientId: newFriendId,
-      }), {
+      new CreateFriendRequest({ actorId, recipientId, accepted: true}), {
         onSuccess: res => {
-          console.log('request made, proceeding to accept RES:', res)
-          // this.props.relay.commitUpdate(
-          //   new UpdateFriendRequest({ id: inviteId, accepted: true }), {
-          //     onSuccess: (response) => {console.log('friend request updated')}
-          //
-          //   }
-          // )
+          this.props.relay.commitUpdate(
+            new AddToFriends({ selfId, newFriendId }), {
+              onSuccess: res => {
+                console.log('friend added res', res);
+                this.setState({snackbarText: 'FRIEND ADDED', snackbar: true})
+                this.props.router.push(`/tribe/${this.props.viewer.user.handle}`)
+              },
+              onFailure: res => {
+                console.log('ADD FRIEND FAILURE', res)
+                this.redirect()
+              }
+            }
+          )
         },
         onFailure: res => {
-          console.log('create req failed RES', res);
+          console.log('CFRQ FAIL', res)
+          this.redirect()
         }
       }
     )
-    // this.props.relay.commitUpdate(
-    //   new AddToFriends({ selfId, newFriendId }), {
-    //     onSuccess: res => {
-    //     this.setState({snackbarText: 'FRIEND ADDED', snackbar: true})
-    //       this.redirect()
-    //     }
-    //   }
-    // )
   }
 
   redirect = () => {
