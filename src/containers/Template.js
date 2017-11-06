@@ -22,7 +22,6 @@ injectTapEventPlugin()
 class Template extends Component {
 
   state = {
-    snackbar: false,
     snackbarText: '',
     settings: false
   }
@@ -78,7 +77,7 @@ class Template extends Component {
             new AddToFriends({ selfId, newFriendId }), {
               onSuccess: res => {
                 console.log('friend added res', res);
-                this.setState({snackbarText: 'FRIEND ADDED', snackbar: true})
+                this.setState({snackbarText: 'FRIEND ADDED'})
                 this.props.router.push(`/tribe/${this.props.viewer.user.handle}`)
               },
               onFailure: res => {
@@ -175,11 +174,11 @@ class Template extends Component {
       <MuiThemeProvider muiTheme={btTheme} >
         <Main>
           <Snackbar
-            open={this.state.snackbar}
+            open={this.state.snackbarText ? true : false}
             message={this.state.snackbarText}
             autoHideDuration={2000}
-            onRequestClose={()=>this.setState({snackbar: false})}
-            onActionTouchTap={()=>this.setState({snackbar: false})}
+            onRequestClose={()=>this.setState({snackbarText: ''})}
+            onActionTouchTap={()=>this.setState({snackbarText: ''})}
             bodyStyle={{ backgroundColor: purple }}
           />
           <UserSettings
