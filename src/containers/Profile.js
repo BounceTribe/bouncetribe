@@ -633,6 +633,11 @@ export default Relay.createContainer(
             id
             handle
             email
+            friends ( first: 999 ) {
+              edges {
+                node { id }
+              }
+            }
             invitations (
               filter: {
                 accepted: false
@@ -648,6 +653,7 @@ export default Relay.createContainer(
                 }
               }
             }
+            doNotEmail
             sentRequests (
               filter: {
                 accepted: false
