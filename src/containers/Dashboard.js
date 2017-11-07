@@ -21,6 +21,7 @@ class Dashboard extends Component {
     this.state = {
       invite: false,
       email: null,
+      emailError: null,
       maxSuggestedFriends: 2,
       selectedUser: {},
       suggestions: [],
@@ -28,8 +29,7 @@ class Dashboard extends Component {
       showTribe: true,
       showBand: true,
       tab: 'projects',
-      snackbarText: '',
-      snackbar: false
+      snackbarText: ''
     }
   }
 
@@ -83,29 +83,20 @@ class Dashboard extends Component {
         let user = this.props.viewer.user
         let {id: byId, handle: byHandle} = user
         let query = { byId, toEmail, byHandle }
-        console.log('query', query);
-        sendEmailInvite(query).then(result => {
+        sendEmailInvite(query).then( result => {
           if (result.status===200) {
             this.setState({
               snackbarText: 'INVITE SENT',
-              snackbar: open,
               invite: false,
               email: ''
             })
           } else {
-            this.setState({
-              snackbarText: 'ERROR SENDING EMAIL',
-              snackbar: open,
-              invite: false
-            })
+            this.setState({ snackbarText: 'ERROR SENDING EMAIL', })
           }
         })
-        this.setState({invite: false, email: ''})
       }
     })
   }
-
-
 
   createFriendRequest = (recipientId) => {
     console.log('DASH CFQ');
@@ -133,11 +124,11 @@ class Dashboard extends Component {
     return (
       <DashView>
         <Snackbar
-          open={this.state.snackbar ? true : false} //requires boolean input
+          open={!!this.state.snackbarText} //requires boolean input
           message={this.state.snackbarText}
           autoHideDuration={2000}
-          onRequestClose={()=>this.setState({snackbar:false})}
-          onActionTouchTap={()=>this.setState({snackbar:false})}
+          onRequestClose={()=>this.setState({snackbarText: ''})}
+          onActionTouchTap={()=>this.setState({snackbarText: ''})}
           bodyStyle={{ backgroundColor: purple }} />
         <DashHeader>
           <DashHeaderRow>
