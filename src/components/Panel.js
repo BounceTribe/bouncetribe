@@ -23,17 +23,17 @@ const TabLabel = ({text, locked, value}) => (
   <span>
     {text}
     {locked && <Lock style={{display: 'inline-flex'}} /> }
-    {!locked && !!value && 
+    {!locked && !!value &&
       <BtTextMarker size={20} fontHeight={14} value={value} radius={10}/>}
   </span>
 )
 
-export const Panel = ({topBar, content, tab, tabChange, labels, locks, values}) => {
+export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, empty}) => {
   let buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
   return (
     <Container>
       {topBar}
-      <Tabs
+      {!empty && <Tabs
         style={{ margin: '6px 0 10px 1px' }}
         tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
         inkBarStyle={{ backgroundColor: purple }}
@@ -48,7 +48,7 @@ export const Panel = ({topBar, content, tab, tabChange, labels, locks, values}) 
             style={{ cursor: locks[index] ? 'not-allowed' : 'pointer' }}
             disabled={locks[index]} />
         )}
-      </Tabs>
+      </Tabs>}
       {content}
     </Container>
   )

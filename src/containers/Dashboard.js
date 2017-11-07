@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
+import {NoTribe} from 'components/NoTribe'
 import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Snackbar} from 'material-ui'
 import {grey400, purple} from 'theme'
@@ -195,7 +196,7 @@ class Dashboard extends Component {
               select={this.selectUser}
               show={this.state.showTribe} />
           </DashLeft>
-          {User && <Panel
+          {User ? <Panel
             tab={tab}
             topBar={<DashProfile selectedUser={selectedUser} />}
             tabChange={(newTab)=>this.setTab(newTab)}
@@ -204,7 +205,9 @@ class Dashboard extends Component {
             values={[User.projects.count, User.bounces.count, 0]}
             content={this.state.selectedUser && this.props.children}
             vh={50}
-            scroll={true} />}
+            scroll={true} />
+            : <Panel empty vh={50} content={<NoTribe />}/>
+            }
         </BotRow>
       </DashView>
     )

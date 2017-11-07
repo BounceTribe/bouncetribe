@@ -183,13 +183,10 @@ export const BtFlatButton = (props) => {
 }
 
 export const RoundButton = (props) => {
-
   let tooltipLength = 0
   if (props.tooltip) {
     tooltipLength = props.tooltip.length
   }
-
-
   return (
     <ButtonLink to={props.to} title={props.title} >
       <IconButton
