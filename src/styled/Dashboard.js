@@ -59,8 +59,14 @@ export const TopCol = styled.div`
   align-items: flex-start;
   margin-left: 30px;
 `
-export const DialogRow2 = styled(DialogRow)`
+
+export const BotRow = styled.div`
+  display: flex;
   justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+  min-height: 50vh;
+  max-height: 60vh;
 `
 
 export const DashLeft = styled.div`

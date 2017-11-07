@@ -15,7 +15,7 @@ export const size = {
   `
 }
 
-const purple = deepPurple300
+const purple = '#9075F3'
 export const blue = lightBlue500
 
 export const transparent = `rgba(0,0,0,0)`

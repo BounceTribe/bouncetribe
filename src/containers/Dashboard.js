@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
+import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile, BotRow} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {NoTribe} from 'components/NoTribe'
-import {BotRow} from 'styled/Profile'
 import {Dialog, TextField, Snackbar} from 'material-ui'
 import {grey400, purple} from 'theme'
 import Bolt from 'icons/Bolt'
@@ -21,6 +20,7 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       invite: false,
+      inviteMentors: false,
       email: null,
       emailError: null,
       maxSuggestedFriends: 2,
@@ -188,15 +188,20 @@ class Dashboard extends Component {
         <BotRow>
           <DashLeft>
             <FriendList
+              select={this.selectUser}
               selected={selectedUser}
               friends={user.friends}
-              category={'Tribe Members'}
-              invite={() => this.setState({invite: true}) }
-              flip={() => this.setState({showTribe: !this.state.showTribe})}
-              select={this.selectUser}
-              show={this.state.showTribe} />
+              inviteTribe={() => this.setState({invite: true}) }
+              showTribe={this.state.showTribe}
+              flipTribe={() => this.setState({showTribe: !this.state.showTribe})}
+              mentors={user.mentors} //TODO
+              inviteMentors={() => this.setState({inviteMentors: true}) }
+              showMentors={this.state.showMentors}
+              flipMentors={() =>
+                this.setState({showMentors: !this.state.showMentors})}
+              />
           </DashLeft>
-          {User ? <Panel
+          {User && <Panel
             tab={tab}
             topBar={<DashProfile selectedUser={selectedUser} />}
             tabChange={(newTab)=>this.setTab(newTab)}
@@ -204,9 +209,9 @@ class Dashboard extends Component {
             locks={[false, false, false]}
             values={[User.projects.count, User.bounces.count, 0]}
             content={this.state.selectedUser && this.props.children}
-            vh={50}
+            // vh={50}
             scroll={true} />
-            : <Panel empty vh={50} content={<NoTribe />}/>
+            // : <Panel empty vh={50} content={<NoTribe />}/>
             }
         </BotRow>
       </DashView>
@@ -225,6 +230,7 @@ class Dashboard extends Component {
             email
             portrait { url }
             friends (first: 999) {
+              count
               edges {
                 node {
                   id

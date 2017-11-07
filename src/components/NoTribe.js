@@ -15,44 +15,34 @@ const Container = styled.div`
 `
 
 export const NoTribe = () => {
-  let buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
   return (
     <Container>
-        <Tribe height={93} fill={"#D3D3D3"} />
-        <div style={{
-          fontSize: '23px',
-          fontWeight: '400',
-          margin: '20px 0 0 0'
-        }}>
-          It's a little quiet here...
-        </div>
-        <div style={{
-          fontSize: '15px',
-          fontWeight: '300',
-          color: '#999999',
-          margin: '8px 0 22px 0'
-        }}>
-          Invite your friends to begin building your tribe
-        </div>
+      <Tribe height={93} fill={"#D3D3D3"} />
+      <div style={{fontSize: '23px', fontWeight: '400', margin: '20px 0 0 0'}}>
+        It's a little quiet here...
+      </div>
+      <div style={{
+        fontSize: '15px',
+        fontWeight: '300',
+        color: '#999999',
+        margin: '8px 0 22px 0'
+      }}>
+        Invite your friends to begin building your tribe
+      </div>
 
-        <BtFlatButton
-          label={'Invite Friends'}
-          labelStyle={{
-            color: purple,
-            fontSize: '13px',
-            fontWeight: '500',
-          }}
-          backgroundColor={white}
-          // to={`projects/${handle}/new`}
-          // icon={<Plus/>}
-
-          style={{
-            border: '2px solid #9075F3',
-            borderRadius: '5px',
-            width: '168px',
-            height: '50px'
-          }}
-        />
+      <BtFlatButton
+        label={'Invite Friends'}
+        labelStyle={{ color: purple, fontSize: '13px', fontWeight: '500', }}
+        backgroundColor={white}
+        // to={`projects/${handle}/new`}
+        // icon={<Plus/>}
+        style={{
+          border: `2px solid ${purple}`,
+          borderRadius: '5px',
+          width: '168px',
+          height: '50px'
+        }}
+      />
     </Container>
   )
 }
