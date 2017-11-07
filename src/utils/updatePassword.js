@@ -1,7 +1,6 @@
 import {auth0} from 'config'
 
-
-const updatePassword = (auth0UserId, newPass) => {
+export const updatePassword = (auth0UserId, newPass) => {
   console.log('updatePassword', auth0UserId, newPass);
   let url = `https://${auth0.domain}/api/v2/users/${auth0UserId}`
 
@@ -23,5 +22,3 @@ const updatePassword = (auth0UserId, newPass) => {
     })
   })
 }
-
-export default updatePassword

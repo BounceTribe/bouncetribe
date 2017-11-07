@@ -4,10 +4,7 @@ import {Router, browserHistory, applyRouterMiddleware} from 'react-router'
 import Routing from 'routing'
 import Relay from 'react-relay'
 import useRelay from 'react-router-relay'
-import {
-  RelayNetworkLayer,
-  urlMiddleware
-} from 'react-relay-network-layer'
+import { RelayNetworkLayer, urlMiddleware } from 'react-relay-network-layer'
 import {graphCool} from 'config'
 import auth from 'utils/auth'
 

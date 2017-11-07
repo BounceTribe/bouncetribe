@@ -14,6 +14,8 @@ import {browserHistory} from 'react-router'
 
 class AuthService {
   constructor() {
+
+
     let showSignup = window.location.href.includes('/acceptinvite/')
     this.defaultOptions = {
       auth: {
@@ -190,11 +192,7 @@ class AuthService {
   }
 
   setToken = (authFields) => {
-    let {
-      idToken,
-      exp,
-      accessToken
-    } = authFields
+    let { idToken, exp, accessToken } = authFields
     localStorage.setItem('idToken', idToken)
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('exp', exp * 1000)
@@ -226,18 +224,14 @@ class AuthService {
   signinUser = (authFields) => {
     return new Promise ( (resolve, reject) => {
       Relay.Store.commitUpdate(
-        new SigninUser({
-          idToken: authFields.idToken
-        }), {
+        new SigninUser({ idToken: authFields.idToken }), {
           onSuccess: (response) => {
             this.setToken(authFields)
             let userId = response.signinUser.viewer.user.id
             //this.addFriends()
             resolve(userId)
           },
-          onFailure: (response) => {
-            reject(response.getError())
-          }
+          onFailure: (response) => reject(response.getError())
         }
       )
     })
@@ -255,8 +249,6 @@ class AuthService {
       })
     })
   }
-
-
 
   updateUser = (userId, profile) => {
     let {
@@ -305,24 +297,18 @@ class AuthService {
         Promise.all([
           findUserIds(socialIds),
           findUserIds(`"${userId}"`)
-        ])
-        .then((result)=>{
+        ]).then( result => {
           let newFriends = result[0]
           let selfId = result[1][0]
           newFriends.forEach( (newFriendId)=>{
             Relay.Store.commitUpdate(
-              new AddToFriends({
-                newFriendId,
-                selfId
-              })
+              new AddToFriends({ newFriendId, selfId })
             )
           })
-
         })
       }
     })
   }
-
 
 }
 

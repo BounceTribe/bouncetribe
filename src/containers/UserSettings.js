@@ -4,7 +4,7 @@ import {Dialog, Checkbox, FlatButton, Toggle, TextField} from 'material-ui/'
 import UpdateUser from 'mutations/UpdateUser'
 import {BtFlatButton} from 'styled'
 import {purple, white} from 'theme'
-// import updatePassword from 'utils/updatePassword'
+// import {updatePassword, getCredToken} from 'utils/updatePassword'
 import auth from 'utils/auth'
 import {auth0} from 'config'
 
@@ -40,7 +40,7 @@ class UserSettings extends Component {
   submitPass = () => {
     if (!this.state.passwordError) {
       return new Promise( (resolve, reject) => {
-        this.updatePassword(this.state.auth0UserId, this.state.pass1, auth.getToken())
+        this.setNewPassword(this.state.auth0UserId, this.state.pass1, auth.getToken())
         .then(res => {
           console.log('response:', res);
           return resolve(res)
@@ -49,7 +49,9 @@ class UserSettings extends Component {
     }
   }
 
-  updatePassword = (auth0UserId, password, idToken) => {
+
+
+  setNewPassword = (auth0UserId, password, idToken) => {
     console.log('updatePassword', auth0UserId, password, idToken);
     let url = `https://${auth0.domain}/api/v2/users/${auth0UserId}`
 
@@ -58,13 +60,13 @@ class UserSettings extends Component {
       headers: { 'content-type': 'application/json' },
       body: {
         password,
-        Authorization: 'Bearer ' + idToken,
+        Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
         connection: 'Username-Password-Authentication'
       },
-      params: {
-        scope: 'update.us',
-        state: 'default'
-      }
+      // params: {
+      //   scope: 'update.us',
+      //   state: 'default'
+      // }
       // idToken: auth.getToken()
     }
 
@@ -142,7 +144,7 @@ class UserSettings extends Component {
           floatingLabelText={'New Password'}
           value={this.state.pass1}
           type={'password'}
-          onChange={(e, val) => this.checkPasswords({pass1: !val})}
+          onChange={(e, val) => this.checkPasswords({pass1: val})}
         />
         <br />
         <TextField
