@@ -15,7 +15,7 @@ import 'react-select/dist/react-select.css'
 import 'theme/newSelect.css'
 import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
-import {handleValidator, isUniqueHandle} from 'utils/handles'
+import {handleValidator, isUniqueField} from 'utils/handles'
 import {purple} from 'theme'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
@@ -54,7 +54,8 @@ class Profile extends Component {
     tabs: 'projects',
     btnStatus: '',
     editProfile: false,
-    userhandleError: null
+    userhandleError: null,
+    emailError: null,
   }
   componentDidMount = () => {
     //TODO-J this is a redirect: maybe there's better way to handle w/ router
@@ -145,12 +146,12 @@ class Profile extends Component {
         handle: handle || '',
         placename: placename || '',
         summary: summary || '',
-        score: score || '',
+        score: score || 0,
         website: website || '',
         email: email || '',
         portraitUrl: (portrait || {}).url || `${url}/logo.png`,
-        projects: projects.edges.length,
-        friends: friends.edges.length,
+        projects: projects.count,
+        friends: friends.count,
         genres: newGenres,
         skills: newSkills,
         influences: newInfluences,
@@ -202,16 +203,26 @@ class Profile extends Component {
 
   handleSet = (val) =>{
     let {handle: newHandle, error} = handleValidator(val)
-    if (val!==this.props.viewer.user.handle) {
-      isUniqueHandle(val).then( result => {
-        if (!result) {
-          this.setState({userhandleError: 'Username already taken!'})
-        }
-      })
+    if (val!==this.props.viewer.User.handle) {
+      isUniqueField(val, 'email').then( result =>
+        !result && this.setState({emailError: 'Email already in use!'})
+      )
     }
     this.setState({ handle: newHandle, userhandleError: error })
   }
 
+  emailSet = (val) => {
+    let newEmail = val
+    let error
+    if (val!==this.props.viewer.User.email) {
+      isUniqueField(val, 'email').then( result => {
+        if (!result) {
+          this.setState({emailError: 'Email already in use!'})
+        }
+      })
+    }
+    this.setState({ email: newEmail,  emailError: error })
+  }
 
   genreChange = (val) => {
     let genresIds = val.map(genre=>{
@@ -223,9 +234,7 @@ class Profile extends Component {
         genresIds
       }), {
         onSuccess: (success) => {
-          this.setState({
-            notification: `GENRE UPDATED.`
-          })
+          this.setState({ notification: `GENRE UPDATED` })
         }
       }
     )
@@ -238,27 +247,21 @@ class Profile extends Component {
         experience: experience.toUpperCase()
       }), {
         onSuccess: (success) => {
-          this.setState({
-            notification: `EXPERIENCE UPDATED.`
-          })
+          this.setState({ notification: `EXPERIENCE UPDATED` })
         }
       }
     )
   }
 
   skillChange = (val) => {
-    let skillsIds = val.map(skill=>{
-      return skill.value
-    })
+    let skillsIds = val.map(skill => skill.value)
     this.props.relay.commitUpdate(
       new UpdateUser({
         userId: this.props.viewer.user.id,
         skillsIds
       }), {
         onSuccess: (success) => {
-          this.setState({
-            notification: `SKILLS UPDATED.`
-          })
+          this.setState({ notification: `SKILLS UPDATED` })
         }
       }
     )
@@ -266,25 +269,19 @@ class Profile extends Component {
 
   influenceChange = (options) => {
     if (options.length < this.state.influences.length) {
-      let artistInfluencesIds = options.map((option) => {
-        return option.value.id
-      })
+      let artistInfluencesIds = options.map((option) => option.value.id)
       this.props.relay.commitUpdate(
         new UpdateUser({
           userId: this.props.viewer.user.id,
           artistInfluencesIds
         }), {
           onSuccess: (success) => {
-            this.setState({
-              notification: `INFLUENCES UPDATED.`
-            })
+            this.setState({ notification: `INFLUENCES UPDATED` })
           }
         }
       )
     } else {
-      let newInfluence = options.find((option) => {
-        return !option.value.id
-      })
+      let newInfluence = options.find((option) => !option.value.id)
       ensureBtArtistExists(newInfluence).then(artistId => {
         let artistInfluencesIds = options.map((option) => {
           if (option.value.id) {
@@ -299,9 +296,7 @@ class Profile extends Component {
             artistInfluencesIds
           }),{
             onSuccess: (success) => {
-              this.setState({
-                notification: `INFLUENCES UPDATED.`
-              })
+              this.setState({ notification: `INFLUENCES UPDATED` })
             }
           }
         )
@@ -377,12 +372,12 @@ class Profile extends Component {
 
   topRow = () => {
 
-    let {handle, imageEditorOpen, placename, summary, website, email, userhandleError} = this.state
+    let {handle, imageEditorOpen, placename, summary, website, email, userhandleError, emailError} = this.state
     let {User, user} = this.props.viewer
     // let editUser = {...User}
     let {score} = User
-    let projects = User.projects.edges.length
-    let friends = User.friends.edges.length
+    let projects = User.projects.count
+    let friends = User.friends.count
     let ownProfile = (User.id === user.id)
     return (
     <Top>
@@ -411,7 +406,7 @@ class Profile extends Component {
           <FlatButton
             label="Submit"
             primary={true}
-            disabled={!!userhandleError}
+            disabled={!!userhandleError || !!emailError}
             onClick={this.setProfile}
           />
         ]}>
@@ -435,8 +430,9 @@ class Profile extends Component {
         /><br />
         <TextField
           floatingLabelText={'Email'}
+          errorText={emailError}
           value={email}
-          onChange={(e)=>this.setState({email: e.target.value})}
+          onChange={(e)=>this.emailSet(e.target.value)}
         /><br />
         <TextField
           floatingLabelText={'Website'}
@@ -636,11 +632,7 @@ export default Relay.createContainer(
           user {
             id
             handle
-            friends ( first: 999 ) {
-              edges {
-                node { id }
-              }
-            }
+            email
             invitations (
               filter: {
                 accepted: false
@@ -656,7 +648,6 @@ export default Relay.createContainer(
                 }
               }
             }
-            doNotEmail
             sentRequests (
               filter: {
                 accepted: false
@@ -685,36 +676,8 @@ export default Relay.createContainer(
             website
             placename
             score
-            projects (
-              first: 8
-              orderBy: createdAt_ASC
-            ){
-              edges {
-                node {
-                  id
-                  title
-                  createdAt
-                  artwork { url }
-                  privacy
-                  comments ( first: 999 ) {
-                    edges {
-                      node {
-                        id
-                        type
-                      }
-                    }
-                  }
-
-                }
-              }
-            }
-            friends ( first: 999 ){
-              edges {
-                node {
-                  id
-                }
-              }
-            }
+            projects { count }
+            friends { count }
             genres ( first: 20 ) {
               edges {
                 node {
@@ -731,7 +694,7 @@ export default Relay.createContainer(
                 }
               }
             }
-            artistInfluences ( first: 20 ){
+            artistInfluences ( first: 20 ) {
               edges {
                 node {
                   id

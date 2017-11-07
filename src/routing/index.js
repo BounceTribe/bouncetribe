@@ -58,8 +58,7 @@ const tribeSearch = (params, {location})=>{
 const userOnly = (nextState, replace) => {
   //look furtherinto the auth gettoken function
   //verify
-  console.log(' nextState', nextState, 'replace', replace);
-
+  // console.log(' nextState', nextState, 'replace', replace);
   if (!auth.getToken()) {
     console.log('no token (routes)');
     let path = nextState.location.pathname

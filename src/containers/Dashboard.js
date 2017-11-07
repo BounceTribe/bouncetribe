@@ -11,6 +11,8 @@ import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {Panel} from 'components/Panel'
 import sendEmailInvite from 'utils/sendEmailInvite'
+import {isUniqueField} from 'utils/handles'
+
 
 class Dashboard extends Component {
 
@@ -73,30 +75,37 @@ class Dashboard extends Component {
   }
 
   sendInvite = () => {
-    let user = this.props.viewer.user
-    let query = {
-      byId: user.id,
-      toEmail: this.state.email,
-      byHandle: user.handle
-    }
-    sendEmailInvite(query).then(result => {
-      if (result.status===200) {
-        this.setState({
-          snackbarText: 'INVITE SENT',
-          snackbar: open,
-          invite: false,
-          email: ''
-        })
+    let toEmail = this.state.email
+    isUniqueField(toEmail, 'email').then( result => {
+      if (!result) {
+        this.setState({emailError: 'Already a member!'})
       } else {
-        this.setState({
-          snackbarText: 'ERROR SENDING EMAIL',
-          snackbar: open,
-          invite: false
+        let user = this.props.viewer.user
+        let {id: byId, handle: byHandle} = user
+        let query = { byId, toEmail, byHandle }
+        console.log('query', query);
+        sendEmailInvite(query).then(result => {
+          if (result.status===200) {
+            this.setState({
+              snackbarText: 'INVITE SENT',
+              snackbar: open,
+              invite: false,
+              email: ''
+            })
+          } else {
+            this.setState({
+              snackbarText: 'ERROR SENDING EMAIL',
+              snackbar: open,
+              invite: false
+            })
+          }
         })
+        this.setState({invite: false, email: ''})
       }
     })
-    this.setState({invite: false, email: ''})
   }
+
+
 
   createFriendRequest = (recipientId) => {
     console.log('DASH CFQ');
@@ -158,8 +167,11 @@ class Dashboard extends Component {
                 <DialogSpacer>
                   <TextField
                     label={'Email'}
+                    errorText={this.state.emailError}
                     name={'email'}
-                    onChange={(ev, em)=>{this.setState({email: em})}}
+                    onChange={(ev, em) => this.setState({
+                      email: em, emailError: null
+                    })}
                     placeholder={'Email'}
                   />
                   <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
