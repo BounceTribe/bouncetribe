@@ -15,7 +15,7 @@ import 'react-select/dist/react-select.css'
 import 'theme/newSelect.css'
 import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
-import {handleValidator} from 'utils/handles'
+import {handleValidator, isUniqueHandle} from 'utils/handles'
 import {purple} from 'theme'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
@@ -202,6 +202,13 @@ class Profile extends Component {
 
   handleSet = (val) =>{
     let {handle: newHandle, error} = handleValidator(val)
+    if (val!==this.props.viewer.user.handle) {
+      isUniqueHandle(val).then( result => {
+        if (!result) {
+          this.setState({userhandleError: 'Username already taken!'})
+        }
+      })
+    }
     this.setState({ handle: newHandle, userhandleError: error })
   }
 
@@ -370,7 +377,7 @@ class Profile extends Component {
 
   topRow = () => {
 
-    let {handle, imageEditorOpen, placename, summary, website, email} = this.state
+    let {handle, imageEditorOpen, placename, summary, website, email, userhandleError} = this.state
     let {User, user} = this.props.viewer
     // let editUser = {...User}
     let {score} = User
@@ -404,35 +411,36 @@ class Profile extends Component {
           <FlatButton
             label="Submit"
             primary={true}
+            disabled={!!userhandleError}
             onClick={this.setProfile}
           />
         ]}>
         <TextField
           floatingLabelText={'Handle'}
-          errorText={this.state.userhandleError}
-          value={this.state.handle}
+          errorText={userhandleError}
+          value={handle}
           onChange={(e)=>this.handleSet(e.target.value)}
         /><br />
         <TextField
           floatingLabelText={'Location'}
-          value={this.state.placename}
+          value={placename}
           onChange={(e)=>this.setState({placename: e.target.value})}
         /><br />
         <TextField
           floatingLabelText={'Summary'}
-          value={this.state.summary}
+          value={summary}
           onChange={(e)=>this.setState({summary: e.target.value})}
           multiLine
           fullWidth
         /><br />
         <TextField
           floatingLabelText={'Email'}
-          value={this.state.email}
+          value={email}
           onChange={(e)=>this.setState({email: e.target.value})}
         /><br />
         <TextField
           floatingLabelText={'Website'}
-          value={this.state.website}
+          value={website}
           onChange={(e)=>this.setState({website: e.target.value})}
         />
       </Dialog>
@@ -451,11 +459,11 @@ class Profile extends Component {
             portraitSuccess={this.portraitSuccess}
           />
           <TopCol>
-            <Handle>{handle}</Handle>
+            <Handle>{User.handle}</Handle>
             <span>
-              {(placename || ownProfile) && <PinIcon/>}
-              <Location>{placename}</Location>
-              <MissingUserData hide={placename || !ownProfile}
+              {(User.placename || ownProfile) && <PinIcon/>}
+              <Location>{User.placename}</Location>
+              <MissingUserData hide={User.placename || !ownProfile}
                 onClick={()=>{this.setState({editProfile: true})}}>
                 Add your location
               </MissingUserData>
@@ -483,8 +491,8 @@ class Profile extends Component {
       <Row>
         <Left>
           <Summary>
-            {summary}
-            <MissingUserData hide={summary || !ownProfile}
+            {User.summary}
+            <MissingUserData hide={User.summary || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
               Add your summary
             </MissingUserData>
@@ -493,16 +501,16 @@ class Profile extends Component {
         <Right>
           <EmailWebsite>
             <Email style={{marginRight: '10px'}} />
-            {email}
-            <MissingUserData hide={email || !ownProfile}
+            {User.email}
+            <MissingUserData hide={User.email || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
               Add your email
             </MissingUserData>
           </EmailWebsite>
           <EmailWebsite>
             <Link style={{marginRight: '10px'}} />
-            {website}
-            <MissingUserData hide={website || !ownProfile}
+            {User.website}
+            <MissingUserData hide={User.website || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
               Add your website
             </MissingUserData>

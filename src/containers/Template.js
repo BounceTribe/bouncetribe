@@ -16,7 +16,6 @@ import {purple} from 'theme'
 import AddToFriends from 'mutations/AddToFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
-import { browserHistory } from 'react-router';
 
 injectTapEventPlugin()
 
