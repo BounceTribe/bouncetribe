@@ -75,17 +75,11 @@ class Profile extends Component {
       let {User} = this.props.viewer
       let genres = User.genres.edges.map(edge=>{
         let {node: genre} = edge
-        return {
-          value: genre.id,
-          label: genre.name
-        }
+        return { value: genre.id, label: genre.name }
       })
       let skills = User.skills.edges.map(edge=>{
         let {node: skill} = edge
-        return {
-          value: skill.id,
-          label: skill.name
-        }
+        return { value: skill.id, label: skill.name }
       })
       let influences = User.artistInfluences.edges.map(edge=>{
         let {node: influence} = edge
@@ -119,17 +113,11 @@ class Profile extends Component {
     this.setState( (prevState, props) => {
       let newGenres = genres.edges.map(edge=>{
         let {node: genre} = edge
-        return {
-          value: genre.id,
-          label: genre.name
-        }
+        return { value: genre.id, label: genre.name }
       })
       let newSkills = skills.edges.map(edge=>{
         let {node: skill} = edge
-        return {
-          value: skill.id,
-          label: skill.name
-        }
+        return { value: skill.id, label: skill.name }
       })
       let newInfluences = artistInfluences.edges.map(edge=>{
         let {node: influence} = edge

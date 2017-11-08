@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
@@ -147,18 +146,20 @@ class DirectMessages extends Component {
           msgList={this.formatMessages(messages)}
           lastEl={scrollPlaceholder}
         />
-        <TextField
-          fullWidth
-          multiLine
-          name="message"
-          style={{display: 'flex', padding: '0 15px 0 15px'}}
-          inputStyle={{marginRight: '25px'}}
-          underlineShow={false}
-          hintText={'Your message...'}
-          value={this.state.message}
-          onChange={(e)=>this.setState({message: e.target.value})}
-          onKeyDown={(e)=>{this.msgKeyDown(e)}}
-        />
+        <div style={{padding: '0 15px', marginBottom: '-15px'}}>
+          <TextField
+            fullWidth
+            multiLine
+            rowsMax={5}
+            name="message"
+            style={{display: 'flex', flexDirection: 'column-reverse'}}
+            underlineShow={false}
+            hintText={'Your message...'}
+            value={this.state.message}
+            onChange={(e)=>this.setState({message: e.target.value})}
+            onKeyDown={(e)=>{this.msgKeyDown(e)}}
+          />
+        </div>
       </div>
     )
   }

@@ -13,8 +13,7 @@ const Container = styled.div`
   background-color: white;
   border: solid ${grey222} 1px;
   border-radius: 5px;
-  padding: 0 20px;
-  padding: 0;
+  padding: 0 0 15px 0;
   width: 100%;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
@@ -28,8 +27,9 @@ const TabLabel = ({text, locked, value}) => (
   </span>
 )
 
+const buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
+
 export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, empty}) => {
-  let buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
   return (
     <Container>
       {topBar}

@@ -7,28 +7,25 @@ export const ProjectsContainerSm = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 20px;
+  padding: 10px;
   width: 100%;
   box-sizing: border-box;
-  padding-bottom: 15px;
-`
-export const Spacer = styled.div`
   overflow-y: scroll;
-  &:after {
-    content: "";
-    display: block;
-    height: 15px;
-    width: 100%;
-  }
 `
+// const Spacer = styled.div`
+//   ${'' /* overflow-y: scroll; */}
+//   &:after {
+//     content: "";
+//     display: block;
+//     height: 15px;
+//     width: 100%;
+//   }
+// `
 const edgeFilter = (project, type) => (
-  project.comments.edges.filter( (edge) =>
-    edge.node.type === type
-  )
+  project.comments.edges.filter( (edge) => edge.node.type === type)
 )
 
 const makeList = (props) => {
-  //bounceTab says we are dealing with a list of bounces and their associated projects, rather than a list of just projects
   let bounceTab = props.location.pathname.match(/\/bounces$/)
   let User = props.viewer.User
   let edges = bounceTab ? User.bounces.edges : User.projects.edges
@@ -57,8 +54,10 @@ const makeList = (props) => {
 
 export const ProjectListSm = (props) => {
   return (
-    <Spacer><ProjectsContainerSm >
-      {makeList(props)}
-    </ProjectsContainerSm></Spacer>
+    // <Spacer>
+      <ProjectsContainerSm >
+        {makeList(props)}
+      </ProjectsContainerSm>
+    // </Spacer>
   )
 }
