@@ -12,7 +12,7 @@ import FlatButton from 'material-ui/FlatButton'
 import { ProfCol, ProfHandle, Score} from 'styled/Project'
 
 export const DashProfile = ({selectedUser}) => (
-  <div style={{display: 'flex', padding: '31px 31px 15px 31px'}}>
+  <div style={{display: 'flex', padding: '21px 31px 15px 31px', minHeight: '60px'}}>
     <BtAvatar user={selectedUser} size={60} />
     <ProfCol>
       <ProfHandle to={`/${selectedUser.handle}`} >
@@ -179,10 +179,17 @@ const InviteStyled = styled.div`
 const Span7pxRight = styled.span`
   margin-right: 7px;
 `
-export const InviteButton = ({onClick, text}) => (
+const Span7pxLeft = styled.span`
+  margin-left: 7px;
+  font-size: 14px;
+  font-weight: 400;
+`
+export const InviteButton = ({onClick, text, rightText}) => (
   <InviteStyled onClick={onClick}>
     {text && <Span7pxRight>{text}</Span7pxRight>}
     <InviteIcon/>
+    {rightText && <Span7pxLeft>{rightText}</Span7pxLeft>}
+
   </InviteStyled>
 )
 

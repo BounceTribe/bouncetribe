@@ -60,14 +60,14 @@ export const FriendList = (props) => {
   const friendList = showTribe ? makeRows(friendNodes, select, selected) : []
   friendList.push(
     <FriendRow key={'inviteTribe'}>
-      <InviteButton onClick={inviteTribe} />
+      <InviteButton onClick={inviteTribe} rightText={'Add Tribe Member'}/>
     </FriendRow>
   )
 
   const mentorList = showMentors ? makeRows(mentorNodes, select, selected) : []
   mentorList.push(
     <FriendRow key={'addMentors'}>
-      <InviteButton onClick={inviteMentors} />
+      <InviteButton onClick={inviteMentors} rightText={'Add Mentor'}/>
     </FriendRow>
   )
 

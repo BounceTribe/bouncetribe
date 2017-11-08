@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {grey600, grey200, grey222, purple, white} from 'theme'
+import {purple, white} from 'theme'
 import Tribe from 'icons/Tribe'
 import {BtFlatButton} from 'styled'
 
@@ -14,7 +14,7 @@ const Container = styled.div`
   padding: '20px'
 `
 
-export const NoTribe = () => {
+export const NoTribe = ({invite}) => {
   return (
     <Container>
       <Tribe height={93} fill={"#D3D3D3"} />
@@ -31,6 +31,7 @@ export const NoTribe = () => {
       </div>
 
       <BtFlatButton
+        onClick={()=>invite()}
         label={'Invite Friends'}
         labelStyle={{ color: purple, fontSize: '13px', fontWeight: '500', }}
         backgroundColor={white}

@@ -1,6 +1,6 @@
 import {css} from 'styled-components'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import {deepPurple300, grey50, grey100, grey200, grey300, grey400, grey500, grey600, grey700, grey800, grey900, white, black, lightBlue500} from 'material-ui/styles/colors'
+import {grey50, grey100, grey200, grey300, grey400, grey500, grey600, grey700, grey800, grey900, white, black, lightBlue500} from 'material-ui/styles/colors'
 import {fade} from 'material-ui/utils/colorManipulator'
 
 

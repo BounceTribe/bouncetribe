@@ -3,19 +3,17 @@ import styled from 'styled-components'
 import {ProjectItemSm} from 'components/ProjectItemSm'
 
 export const ProjectsContainerSm = styled.div`
-
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  max-height: 50vh;
   padding: 20px;
   width: 100%;
   box-sizing: border-box;
-  overflow-y: scroll;
   padding-bottom: 15px;
 `
 export const Spacer = styled.div`
+  overflow-y: scroll;
   &:after {
     content: "";
     display: block;

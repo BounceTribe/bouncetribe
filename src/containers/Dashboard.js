@@ -114,10 +114,8 @@ class Dashboard extends Component {
 
   render () {
     let selectedUser = this.state.selectedUser || {}
-    let {User, user} = this.props.viewer
+    let {user} = this.props.viewer
     let tab = this.state.tab
-    // console.log('user:', user)
-    // console.log('render - this', this)
     return (
       <DashView>
         <Snackbar
@@ -182,7 +180,7 @@ class Dashboard extends Component {
           </TopColumn>
           <FeedbackRating style={{justifyContent:'flex-end'}}>
             <Bolt style={{ marginRight: '15px' }} />
-              {selectedUser.score || 0}
+              {user.score || 0}
           </FeedbackRating>
         </TopPanel>
         <BotRow>
@@ -201,17 +199,19 @@ class Dashboard extends Component {
                 this.setState({showMentors: !this.state.showMentors})}
               />
           </DashLeft>
-          {User && <Panel
+          {selectedUser.id ? <Panel
             tab={tab}
             topBar={<DashProfile selectedUser={selectedUser} />}
             tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
             locks={[false, false, false]}
-            values={[User.projects.count, User.bounces.count, 0]}
+            values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
             content={this.state.selectedUser && this.props.children}
-            // vh={50}
             scroll={true} />
-            // : <Panel empty vh={50} content={<NoTribe />}/>
+            : <Panel empty
+              content={
+                <NoTribe invite={()=>this.setState({invite: true})
+              }/>}/>
             }
         </BotRow>
       </DashView>
@@ -237,6 +237,8 @@ class Dashboard extends Component {
                   handle
                   score
                   lastPing
+                  bounces { count }
+                  projects { count }
                   portrait { url }
                 }
               }
@@ -246,8 +248,6 @@ class Dashboard extends Component {
             handle
             id
             email
-            bounces { count }
-            projects { count }
           }
         }
       `,
