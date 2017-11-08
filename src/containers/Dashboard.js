@@ -228,6 +228,7 @@ class Dashboard extends Component {
             id
             handle
             email
+            score
             portrait { url }
             friends (first: 999) {
               count
