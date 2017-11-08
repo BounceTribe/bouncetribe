@@ -110,7 +110,8 @@ class Template extends Component {
               onSuccess: res => {
                 console.log('friend added res', res);
                 this.setState({snackbarText: 'FRIEND ADDED'})
-                this.props.router.push(`/dash/`)
+                //using location fo force query update
+                location.assign(`${url}/dash/`)
               },
               onFailure: res => {
                 console.log('ADD FRIEND FAILURE', res)
@@ -130,15 +131,7 @@ class Template extends Component {
   redirect = () => {
     console.log('template redirect', this.props)
     let user = this.props.viewer.user
-    if (!user) {
-      this.props.router.push(`/login/`)
-    } else if (user.friends.edges.length) {
-      this.props.router.push(`/dash/${user.friends.edges[0].node.handle}/projects`)
-    } else {
-      this.props.router.push(`/dash/`) //notribe
-      console.log('notribe redirect');
-      // this.props.router.push(`/${user.handle}/projects`)
-    }
+    this.props.router.push(`${ user ? '/dash/' : '/login/' }`)
   }
 
   ping = () => {

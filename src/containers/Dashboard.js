@@ -45,6 +45,7 @@ class Dashboard extends Component {
         this.suggestFriends(this.state.maxSuggestedFriends)
       } else {
         console.log('no found user; redirecting to first friend')
+        this.selectUser(edges[0].node)
         this.props.router.push(`/dash/${edges[0].node.handle}/projects`)
       }
     } else {
@@ -129,9 +130,7 @@ class Dashboard extends Component {
           <DashHeaderRow>
             <IconTextContainer to={`/tribe/${user.handle}`} >
               <BtAvatar size={40} hideStatus />
-              <IconText>
-                My Tribe
-              </IconText>
+              <IconText>My Tribe</IconText>
             </IconTextContainer>
             <InviteButton
               onClick={()=>{this.setState({invite: true})}}
@@ -174,9 +173,7 @@ class Dashboard extends Component {
               <BtAvatar user={user} size={80} hideStatus />
             </ImgColumn>
             <UserName>{user.handle}</UserName>
-            <NavLink to={`/${user.handle}`}>
-              View Profile
-            </NavLink>
+            <NavLink to={`/${user.handle}`}>View Your Profile</NavLink>
           </TopColumn>
           <FeedbackRating style={{justifyContent:'flex-end'}}>
             <Bolt style={{ marginRight: '15px' }} />
