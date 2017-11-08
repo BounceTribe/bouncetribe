@@ -189,7 +189,6 @@ export const InviteButton = ({onClick, text, rightText}) => (
     {text && <Span7pxRight>{text}</Span7pxRight>}
     <InviteIcon/>
     {rightText && <Span7pxLeft>{rightText}</Span7pxLeft>}
-
   </InviteStyled>
 )
 

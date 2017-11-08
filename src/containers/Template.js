@@ -110,7 +110,7 @@ class Template extends Component {
               onSuccess: res => {
                 console.log('friend added res', res);
                 this.setState({snackbarText: 'FRIEND ADDED'})
-                this.props.router.push(`/tribe/${this.props.viewer.user.handle}`)
+                this.props.router.push(`/dash/`)
               },
               onFailure: res => {
                 console.log('ADD FRIEND FAILURE', res)
