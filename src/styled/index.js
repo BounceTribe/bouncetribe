@@ -1,4 +1,4 @@
- import React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {white, grey230, grey215, size, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
@@ -11,6 +11,11 @@ import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
 import Moment from 'moment'
+
+export const PanelScrollContainer = styled.div`
+  padding: 15px 0;
+  display: flex;
+`
 
 const PurpleBox = styled.div`
   display: inline-flex;

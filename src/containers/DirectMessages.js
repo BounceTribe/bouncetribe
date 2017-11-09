@@ -146,7 +146,7 @@ class DirectMessages extends Component {
           msgList={this.formatMessages(messages)}
           lastEl={scrollPlaceholder}
         />
-        <div style={{padding: '0 15px', marginBottom: '-15px'}}>
+        <div style={{padding: '0 15px'}}>
           <TextField
             fullWidth
             multiLine

@@ -9,12 +9,9 @@ import {BtTextMarker} from 'styled'
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 5px;
   background-color: white;
   border: solid ${grey222} 1px;
   border-radius: 5px;
-  padding: 0 0 15px 0;
-  flex-grow: 1;
   width: 100%;
   flex-grow: 1;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
@@ -36,10 +33,13 @@ export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, e
     <Container>
       {topBar}
       {!empty && <Tabs
-        style={{ margin: '6px 0 10px 1px' }}
-        tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
+        // style={{ margin: '0 0 10px 0', borderRadius: '5px' }}
+        tabItemContainerStyle={{
+          borderBottom: `2px solid ${grey200}`,
+          borderTopLeftRadius: '5px',
+          borderTopRightRadius: '5px' }}
         inkBarStyle={{ backgroundColor: purple }}
-        onChange={tabValue=>tabChange(tabValue)}
+        onChange={ tabValue => tabChange(tabValue) }
         value={tab} >
         {labels.map( (label, index) =>
           <Tab

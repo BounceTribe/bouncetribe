@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import {PanelScrollContainer} from 'styled'
 import {ProjectItemSm} from 'components/ProjectItemSm'
 
 export const ProjectsContainerSm = styled.div`
@@ -12,6 +13,7 @@ export const ProjectsContainerSm = styled.div`
   box-sizing: border-box;
   overflow-y: scroll;
 `
+
 // const Spacer = styled.div`
 //   ${'' /* overflow-y: scroll; */}
 //   &:after {
@@ -54,10 +56,10 @@ const makeList = (props) => {
 
 export const ProjectListSm = (props) => {
   return (
-    // <Spacer>
+    <PanelScrollContainer>
       <ProjectsContainerSm >
         {makeList(props)}
       </ProjectsContainerSm>
-    // </Spacer>
+    </PanelScrollContainer>
   )
 }

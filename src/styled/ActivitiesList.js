@@ -1,29 +1,13 @@
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {grey300, grey500, grey700, purple} from 'theme'
+import {grey300, grey500} from 'theme'
 import React from 'react'
-import {BtAvatar, IconTextContainer, IconText} from 'styled'
-
-export const ActivitiesContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  ${'' /* flex-wrap: wrap; */}
-  ${'' /* align-items: flex-start; */}
-  ${'' /* justify-content: flex-start; */}
-  ${'' /* padding: 10px; */}
-  ${'' /* width: 100%; */}
-  ${'' /* box-sizing: border-box; */}
-  overflow-y: scroll;
-`
-/* Tribe - Gave Feedbac: */
 
 const ActivityContainer = styled.div`
   display: flex;
   justify-content: flex-start;
   border-bottom: 1px solid ${grey300};
-  width: 100%;
-  padding: 15px 20px;
-  overflow-y: scroll;
+  padding: 20px 20px;
 `
 const ActivityDate = styled.div`
   font-size: 12px;
@@ -38,31 +22,17 @@ const ActivityText = styled.div`
   font-weight: 400;
   color: #4A4A4A;
 `
-export const Activity = ({date, icon, text}) => {
+export const Activity = ({date, icon, text, link}) => {
   let formattedDate = new Date(Date.parse(date))
     .toLocaleDateString('en-US', {month: 'short', 'day': 'numeric'})
 
   return (
-    // <BtLink to={null}>
       <ActivityContainer>
-        <ActivityDate>{formattedDate}</ActivityDate>
-        <ActivityIcon>{icon}</ActivityIcon>
-        <ActivityText>{text}</ActivityText>
+        <BtLink to={link}>
+          <ActivityDate>{formattedDate}</ActivityDate>
+          <ActivityIcon>{icon}</ActivityIcon>
+          <ActivityText>{text}</ActivityText>
+        </BtLink>
       </ActivityContainer>
-    // </BtLink>
   )
 }
-
-// const Activity = styled.h4`
-//   margin: 0;
-//   color: ${purple};
-//   font-size: 17px;
-//   flex: 2;
-// `
-//
-// const NotifyMessage = styled.div`
-//   font-size: 15px;
-//   color: ${grey700};
-//   margin-bottom: 4px;
-//   flex: 3;
-// `
