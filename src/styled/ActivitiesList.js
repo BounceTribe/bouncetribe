@@ -22,19 +22,16 @@ const ActivityContainer = styled.div`
   justify-content: flex-start;
   border-bottom: 1px solid ${grey300};
   width: 100%;
-  ${'' /* height: 40px; */}
   padding: 15px 20px;
   overflow-y: scroll;
 `
 const ActivityDate = styled.div`
   font-size: 12px;
   color: ${grey500};
-  width: 5%;
-  ${'' /* flex: 3; */}
+  width: 70px;
 `
 const ActivityIcon = styled.div`
   padding: 0 10px;
-  ${'' /* flex: 1; */}
 `
 const ActivityText = styled.div`
   font-size: 15px;

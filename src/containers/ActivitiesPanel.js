@@ -34,14 +34,15 @@ class ActiviesPanel extends Component {
         icon={<Music height={13}/>}
         text={`Added a new Project - ${edge.node.title}`} />
     ))
-    list = list.sort( (a,b) => (b.props.date - a.props.date) )
+    list = list.sort( (a,b) =>
+      (new Date(b.props.date) - new Date(a.props.date)) )
     console.log('list', list);
     return list
   }
 
   render () {
     return (
-      <div>
+      <div style={{overflowY: 'scroll'}}>
         {this.activities}
       </div>
     )
