@@ -97,7 +97,7 @@ export const View = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
+  width: 90%;
   border: ${props => props.hideBorder ? 'none' : `solid ${grey230} 1px`};
   border-radius: 5px;
   min-height: 80vh;

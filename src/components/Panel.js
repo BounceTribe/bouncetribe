@@ -14,6 +14,7 @@ const Container = styled.div`
   border: solid ${grey222} 1px;
   border-radius: 5px;
   padding: 0 0 15px 0;
+  flex-grow: 1;
   width: 100%;
   flex-grow: 1;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
