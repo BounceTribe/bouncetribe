@@ -21,11 +21,10 @@ export const NotifyHeader = styled.h4`
 
 export const NotifyMessage = styled.div`
   font-size: 15px;
-  color: ${grey700}
+  color: ${grey700};
   margin-bottom: 4px;
   flex: 3;
-  `
-
+`
 
 export const NotifyDate = styled.div`
   font-size: 11px;

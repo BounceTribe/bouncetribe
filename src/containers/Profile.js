@@ -42,7 +42,7 @@ class Profile extends Component {
     skills: [],
     influences: [],
     experience: '',
-    tab: 'projects',
+    tab: 'activity',
     experiences: [
       { value: 'NOVICE', text: 'Novice (Just Started)' },
       { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
@@ -51,7 +51,6 @@ class Profile extends Component {
       { value: 'VETERAN', text: 'Veteran (25+ Years)' },
     ],
     notification: false,
-    tabs: 'projects',
     btnStatus: '',
     editProfile: false,
     userhandleError: '',
@@ -60,7 +59,9 @@ class Profile extends Component {
   }
   componentDidMount = () => {
     //TODO-J this is a redirect: maybe there's better way to handle w/ router
-    this.props.router.push(`/${this.props.router.params.userHandle}/projects`)
+    // let location = this.props.router.location;
+
+    this.props.router.push(`/${this.props.router.params.userHandle}/activity`)
   }
 
   componentWillMount = () => {
@@ -506,7 +507,7 @@ class Profile extends Component {
             topBar={null}
             tabChange={(tab)=>this.setTab(tab)}
             labels={['activity', 'projects', 'bounces']}
-            locks={[true, false, false]}
+            locks={[false, false, false]}
             values={[0,0,0]}
             content={this.props.children}
           />

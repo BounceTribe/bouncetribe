@@ -21,6 +21,7 @@ import Dashboard from 'containers/Dashboard'
 import ProjectsPanel from 'containers/ProjectsPanel'
 import DirectMessages from 'containers/DirectMessages'
 import BouncesPanel from 'containers/BouncesPanel'
+import ActivitiesPanel from 'containers/ActivitiesPanel'
 import {Loading} from 'styled/Spinner'
 //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
@@ -127,10 +128,10 @@ const createRoutes = () => (
         component={BouncesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
-      {/*<Route path={'/:userHandle/activity'}
-        component={Activities}
+      <Route path={'/:userHandle/activity'}
+        component={ActivitiesPanel}
         queries={ViewerQuery}
-        render={({props}) => props ? <Activities {...props} /> : <Loading nested/>} /> */}
+        render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>} />
     </Route>
     <Route path={'/tribe/:userHandle(/members)'}
       component={Tribe}
