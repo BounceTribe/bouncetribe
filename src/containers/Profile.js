@@ -54,12 +54,13 @@ class Profile extends Component {
     tabs: 'projects',
     btnStatus: '',
     editProfile: false,
-    userhandleError: null,
-    emailError: null,
+    userhandleError: '',
+    emailError: '',
+    summaryError: ''
   }
   componentDidMount = () => {
     //TODO-J this is a redirect: maybe there's better way to handle w/ router
-    this.props.router.replace(`/${this.props.router.params.userHandle}/projects`)
+    this.props.router.push(`/${this.props.router.params.userHandle}/projects`)
   }
 
   componentWillMount = () => {
@@ -99,11 +100,11 @@ class Profile extends Component {
         portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
         website: User.website || '',
         email: User.email || '',
+        experience: User.experience || '',
         genres,
         skills,
         influences,
         experiences,
-        experience: User.experience || '',
       }
     })
   }
@@ -121,12 +122,9 @@ class Profile extends Component {
       })
       let newInfluences = artistInfluences.edges.map(edge=>{
         let {node: influence} = edge
+        let {imageUrl, spotifyId, id} = influence
         return {
-          value: {
-            imageUrl: influence.imageUrl,
-            spotifyId: influence.spotifyId,
-            id: influence.id
-          },
+          value: { imageUrl, spotifyId, id },
           label: influence.name
         }
       })
@@ -146,10 +144,11 @@ class Profile extends Component {
         experience: experience || '',
       }
     })
-    let oldHandle = this.props.viewer.User.handle
-    if (oldHandle !== handle) {
-      this.props.router.replace(`/${handle}`)
-    }
+    // let oldHandle = this.props.viewer.User.handle
+    // console.log(oldHandle, handle);
+    // if (oldHandle !== handle) {
+    //   this.props.router.push(`/${handle}`)
+    // }
   }
 
   accept = (inviteId) => {
@@ -175,8 +174,12 @@ class Profile extends Component {
     let {id: actorId} = this.props.viewer.user
     let {id: recipientId} = this.props.viewer.User
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({ actorId, recipientId, }),
-      { onSuccess: res => this.setState({btnStatus: 'SENT'}) }
+      new CreateFriendRequest({ actorId, recipientId, }), {
+        onSuccess: res => this.setState({
+          btnStatus: 'SENT',
+          notification: 'TRIBE REQUEST SENT'
+        })
+      }
     )
   }
 
@@ -184,8 +187,12 @@ class Profile extends Component {
     let {id: selfId} = this.props.viewer.user
     let {id: exfriendId} = this.props.viewer.User
     this.props.relay.commitUpdate(
-      new RemoveFromFriends({ selfId, exfriendId }),
-      {onSuccess: this.setState({btnStatus: 'REMOVED'})}
+      new RemoveFromFriends({ selfId, exfriendId }), {
+        onSuccess: this.setState({
+          btnStatus: 'REMOVED',
+          notification: 'REMOVED FROM TRIBE'
+        })
+      }
     )
   }
 
@@ -200,57 +207,47 @@ class Profile extends Component {
   }
 
   emailSet = (val) => {
-    let newEmail = val
-    let error
+    let error = ''
     if (val!==this.props.viewer.User.email) {
       isUniqueField(val, 'email').then( result => {
-        if (!result) {
-          this.setState({emailError: 'Email already in use!'})
-        }
+        if (!result) error='Email already in use!'
       })
     }
-    this.setState({ email: newEmail,  emailError: error })
+    this.setState({ email: val,  emailError: error })
+  }
+
+  summarySet = (val) => {
+    console.log('summary', val, val.length);
+    let error = ''
+    if (val.split(/\r\n|\r|\n/).length > 15) error='Too many lines'
+    if (val.length > 400) error='500 character limit exceeded'
+    this.setState({summary: val, summaryError: error})
   }
 
   genreChange = (val) => {
-    let genresIds = val.map(genre=>{
-      return genre.value
-    })
+    let genresIds = val.map(genre=>genre.value)
     this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.user.id,
-        genresIds
-      }), {
-        onSuccess: (success) => {
-          this.setState({ notification: `GENRE UPDATED` })
-        }
+      new UpdateUser({ userId: this.props.viewer.user.id, genresIds }), {
+        onSuccess: res => this.setState({ notification: `GENRE UPDATED` })
       }
     )
   }
 
   experienceChange = (experience) => {
+    let userId = this.props.viewer.user.id
     this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.user.id,
-        experience: experience.toUpperCase()
-      }), {
-        onSuccess: (success) => {
-          this.setState({ notification: `EXPERIENCE UPDATED` })
-        }
+      new UpdateUser({ userId, experience: experience.toUpperCase() }), {
+        onSuccess: res => this.setState({ notification: `EXPERIENCE UPDATED`})
       }
     )
   }
 
   skillChange = (val) => {
     let skillsIds = val.map(skill => skill.value)
+    let userId = this.props.viewer.user.id
     this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.user.id,
-        skillsIds
-      }), {
-        onSuccess: (success) => {
-          this.setState({ notification: `SKILLS UPDATED` })
-        }
+      new UpdateUser({ userId, skillsIds }), {
+        onSuccess: res => this.setState({ notification: `SKILLS UPDATED` })
       }
     )
   }
@@ -258,34 +255,20 @@ class Profile extends Component {
   influenceChange = (options) => {
     if (options.length < this.state.influences.length) {
       let artistInfluencesIds = options.map((option) => option.value.id)
+      let userId = this.props.viewer.user.id
       this.props.relay.commitUpdate(
-        new UpdateUser({
-          userId: this.props.viewer.user.id,
-          artistInfluencesIds
-        }), {
-          onSuccess: (success) => {
-            this.setState({ notification: `INFLUENCES UPDATED` })
-          }
+        new UpdateUser({userId,artistInfluencesIds}), {
+          onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
         }
       )
     } else {
       let newInfluence = options.find((option) => !option.value.id)
       ensureBtArtistExists(newInfluence).then(artistId => {
-        let artistInfluencesIds = options.map((option) => {
-          if (option.value.id) {
-            return option.value.id
-          } else {
-            return artistId
-          }
-        })
+        let artistInfluencesIds = options.map(option=>option.value.id || artistId)
+        let userId = this.props.viewer.user.id
         this.props.relay.commitUpdate(
-          new UpdateUser({
-            userId: this.props.viewer.user.id,
-            artistInfluencesIds
-          }),{
-            onSuccess: (success) => {
-              this.setState({ notification: `INFLUENCES UPDATED` })
-            }
+          new UpdateUser({userId,artistInfluencesIds}),{
+            onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
           }
         )
       })
@@ -332,37 +315,33 @@ class Profile extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.replace(`${this.props.router.params.userHandle}/${tab}`)
+    this.props.router.push(`/${this.props.router.params.userHandle}/${tab}`)
     this.setState({ tab })
     // window.scrollTo(0, document.body.scrollHeight)
   }
 
   setProfile = () => {
     let {handle, placename, summary, email, website} = this.state
+    let userId = this.props.viewer.user.id
     this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.user.id,
-        handle,
-        placename,
-        summary,
-        email,
-        website,
-      }), {
-        onSuccess: (success) => {
-          this.setState({
-            notification: `PROFILE UPDATED`,
-            editProfile: false
-          })
-        }
+      new UpdateUser({ userId, handle, placename, summary, email, website }), {
+        onSuccess: (success) =>
+          this.setState({ notification: `PROFILE UPDATED`, editProfile: false })
       }
     )
   }
 
   topRow = () => {
-
-    let {handle, imageEditorOpen, placename, summary, website, email, userhandleError, emailError} = this.state
+    let { handle,
+          imageEditorOpen,
+          placename,
+          summary,
+          website,
+          email,
+          userhandleError,
+          emailError,
+          summaryError} = this.state
     let {User, user} = this.props.viewer
-    // let editUser = {...User}
     let {score} = User
     let projects = User.projects.count
     let friends = User.friends.count
@@ -394,7 +373,7 @@ class Profile extends Component {
           <FlatButton
             label="Submit"
             primary={true}
-            disabled={!!userhandleError || !!emailError}
+            disabled={!!userhandleError || !!emailError || !!summaryError}
             onClick={this.setProfile}
           />
         ]}>
@@ -411,9 +390,11 @@ class Profile extends Component {
         /><br />
         <TextField
           floatingLabelText={'Summary'}
+          errorText={summaryError}
           value={summary}
-          onChange={(e)=>this.setState({summary: e.target.value})}
+          onChange={(e)=>this.summarySet(e.target.value)}
           multiLine
+          rowsMax={5}
           fullWidth
         /><br />
         <TextField
@@ -471,7 +452,7 @@ class Profile extends Component {
           btnStatus={this.state.btnStatus}
         />
       </Row>
-      <Divider/>
+      {(User.summary || User.email || User.website || ownProfile) && <Divider/>}
       <Row>
         <Left>
           <Summary>

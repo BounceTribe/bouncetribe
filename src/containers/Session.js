@@ -414,7 +414,7 @@ class Session extends Component {
             label={'Messages'}
             value={'messages'}
             onActive={()=>{
-              this.props.router.replace(`/session/${self.handle}/${Session.id}/messages`)
+              this.props.router.push(`/session/${self.handle}/${Session.id}/messages`)
               window.scrollTo(0, document.body.scrollHeight)
             }}
           />

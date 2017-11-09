@@ -132,11 +132,11 @@ class ProjectTribeList extends Component {
               onToggle={(e, value)=>{
                 let {title, creator} = this.props.project
                 if (value) {
-                  this.props.router.replace({
+                  this.props.router.push({
                     pathname: `/${creator.handle}/${title}/view`,
                   })
                 } else {
-                  this.props.router.replace({
+                  this.props.router.push({
                     pathname: `/${creator.handle}/${title}/view`,
                   })
                 }

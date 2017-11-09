@@ -25,18 +25,14 @@ class Login extends Component {
 
   toSite = (user) => {
     let redirect = localStorage.getItem('redirect')
-    let friends = user.friends.edges
+    // let friends = user.friends.edges
     if (redirect) {
-      console.log('redirect', redirect);
+      console.log('Login.js - localstorage redirect and this', redirect, this);
       localStorage.removeItem('redirect')
       this.props.router.push(redirect)
       this.setState({routeSet: true})
-    } else if (friends.length) {
-      this.props.router.push(`/dash/${friends[0].node.handle}/projects`)
-      this.setState({routeSet: true})
     } else {
-      //for new users/no friends got to profile
-      this.props.router.push(`/${user.handle}/projects`)
+      this.props.router.push(`/dash/`)
       this.setState({routeSet: true})
     }
   }

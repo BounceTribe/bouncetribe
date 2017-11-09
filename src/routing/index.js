@@ -62,7 +62,7 @@ const userOnly = (nextState, replace) => {
   if (!auth.getToken()) {
     console.log('no token (routes)');
     let path = nextState.location.pathname
-    if (path.substring(0,7) !== '/login/') {
+    if ((path !== ('/login/' || '/login'))) {
       localStorage.setItem('redirect', path)
     }
     replace({ pathname: '/login/'})
@@ -74,7 +74,7 @@ const createRoutes = () => (
   <Route path={'/'}
     component={Template}
     queries={ViewerQuery} >
-    <Route path={'/login/*'} component={Login} queries={ViewerQuery} auth={auth} />
+    <Route path={'/login/'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
     <Route path={'/acceptrequest/:inviteId/:newFriendId'} onEnter={userOnly} auth={auth}/>
     <Route path={'/acceptinvite/:newFriendId'} onEnter={userOnly} auth={auth}/>

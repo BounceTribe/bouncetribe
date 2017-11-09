@@ -114,7 +114,7 @@ class TribeFind extends Component {
               label={'Search'}
               name={'search'}
               onChange={(event, newValue) => {
-                router.replace({
+                router.push({
                   query: {
                     handle: newValue,
                     ownId: user.id

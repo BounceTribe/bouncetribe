@@ -7,7 +7,7 @@ import {BtTextMarker} from 'styled'
 
 
 const Container = styled.div`
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
   border-radius: 5px;
   background-color: white;
@@ -15,6 +15,7 @@ const Container = styled.div`
   border-radius: 5px;
   padding: 0 0 15px 0;
   width: 100%;
+  flex-grow: 1;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
