@@ -172,10 +172,10 @@ class Template extends Component {
     }
   }
 
-  settingsSave = () => {
+  settingsSave = (passSave) => {
     this.setState( {
-        snackbarText: 'SETTINGS CHANGED',
-        settings: false
+        snackbarText: passSave ? 'PASSWORD CHANGED' : 'SETTINGS CHANGED',
+        settings: passSave ? true : false
       })
   }
 
@@ -196,12 +196,14 @@ class Template extends Component {
             onActionTouchTap={()=>this.setState({snackbarText: ''})}
             bodyStyle={{ backgroundColor: purple }}
           />
-          <UserSettings
-            open={this.state.settings ? true : false}
-            user={this.props.viewer.user}
-            onSave={()=>this.settingsSave()}
-            onClose={()=>this.settingsClose()}
-          />
+          {this.props.viewer.user &&
+            <UserSettings
+              open={this.state.settings ? true : false}
+              user={this.props.viewer.user}
+              onSave={(pass)=>this.settingsSave('pass')}
+              onClose={()=>this.settingsClose()}
+            />
+          }
           {this.userOnly}
           {this.mobileUserOnly}
           {this.props.children}

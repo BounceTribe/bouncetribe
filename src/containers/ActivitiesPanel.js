@@ -43,9 +43,8 @@ class ActiviesPanel extends Component {
         text={`Added a new Project - ${edge.node.title}`}
         link={edge.node.privacy==='PUBLIC' && `/${this.props.params.userHandle}/${edge.node.title}`}/>
     ))
-    list = list.sort( (a,b) =>
+    return list.sort( (a,b) =>
       (new Date(b.props.date) - new Date(a.props.date)) )
-    return list
   }
 
   render () {

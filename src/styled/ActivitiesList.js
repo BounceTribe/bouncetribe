@@ -27,12 +27,12 @@ export const Activity = ({date, icon, text, link}) => {
     .toLocaleDateString('en-US', {month: 'short', 'day': 'numeric'})
 
   return (
-      <ActivityContainer>
-        <BtLink to={link}>
-          <ActivityDate>{formattedDate}</ActivityDate>
-          <ActivityIcon>{icon}</ActivityIcon>
-          <ActivityText>{text}</ActivityText>
-        </BtLink>
-      </ActivityContainer>
+    <ActivityContainer>
+      <BtLink to={link}>
+        <ActivityDate>{formattedDate}</ActivityDate>
+        <ActivityIcon>{icon}</ActivityIcon>
+        <ActivityText>{text}</ActivityText>
+      </BtLink>
+    </ActivityContainer>
   )
 }

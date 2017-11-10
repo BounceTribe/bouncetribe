@@ -122,6 +122,7 @@ class AuthService {
   }
 
   authFlow = (result) => {
+    console.log('authflow result', result);
     let { exp, email, sub }             = result.idTokenPayload
     let { idToken, accessToken, state } = result
 

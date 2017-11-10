@@ -5,7 +5,7 @@ import UpdateUser from 'mutations/UpdateUser'
 import {BtFlatButton} from 'styled'
 import {purple, white} from 'theme'
 // import {updatePassword, getCredToken} from 'utils/updatePassword'
-import auth from 'utils/auth'
+import changePassword from 'utils/changePassword'
 import {auth0} from 'config'
 
 
@@ -39,51 +39,69 @@ class UserSettings extends Component {
 
   submitPass = () => {
     if (!this.state.passwordError) {
-      return new Promise( (resolve, reject) => {
-        this.setNewPassword(this.state.auth0UserId, this.state.pass1, auth.getToken())
-        .then(res => {
-          console.log('response:', res);
-          return resolve(res)
-        })
+      let query = {
+        auth0UserId: this.props.user.auth0UserId,
+        newPass: this.state.pass1
+      }
+      changePassword(query).then( result => {
+        if (result.status===200) {
+          this.props.onSave('password')
+        } else {
+          this.setState({ passwordError: 'Could not update password', })
+        }
+        console.log('CHANGE PASS RES:', result);
       })
+
+      // return new Promise( (resolve, reject) => {
+      //   this.setNewPassword(this.state.auth0UserId, this.state.pass1, auth.getToken())
+      //   .then(res => {
+      //     console.log('response:', res);
+      //     return resolve(res)
+      //   })
+      // })
     }
   }
 
 
 
-  setNewPassword = (auth0UserId, password, idToken) => {
-    console.log('updatePassword', auth0UserId, password, idToken);
-    let url = `https://${auth0.domain}/api/v2/users/${auth0UserId}`
+  // setNewPassword = (auth0UserId, password, idToken) => {
+  //   console.log('updatePassword', auth0UserId, password, idToken);
+  //   let url = `https://${auth0.domain}/api/v2/users/${auth0UserId}`
+  //
+  //   let options = {
+  //     method: 'PATCH',
+  //     headers: { 'content-type': 'application/json' },
+  //     body: {
+  //       password,
+  //       Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
+  //       connection: 'Username-Password-Authentication'
+  //     },
+  //     // params: {
+  //     //   scope: 'update.us',
+  //     //   state: 'default'
+  //     // }
+  //     // idToken: auth.getToken()
+  //   }
+  //
+  //   return new Promise( (resolve, reject) => {
+  //     fetch(url, options)
+  //     .then(result => result.json())
+  //     .then(response => {
+  //       resolve(response)
+  //     })
+  //   })
+  // }
 
-    let options = {
-      method: 'PATCH',
-      headers: { 'content-type': 'application/json' },
-      body: {
-        password,
-        Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-        connection: 'Username-Password-Authentication'
-      },
-      // params: {
-      //   scope: 'update.us',
-      //   state: 'default'
-      // }
-      // idToken: auth.getToken()
-    }
 
-    return new Promise( (resolve, reject) => {
-      fetch(url, options)
-      .then(result => result.json())
-      .then(response => {
-        resolve(response)
-      })
-    })
-  }
 
   checkPasswords = ({pass1, pass2}) => {
-    pass1 = pass1 || this.state.pass1
-    pass2 = pass2 || this.state.pass2
+    this.setState({pass1, pass2})
+
     let passwordError = pass1!==pass2 ? `Password doesn't match!` : ''
-    this.setState({ passwordError, pass1, pass2 })
+    if (!passwordError && (pass1.length < 6)) {
+      passwordError = 'Password too short!'
+    }
+    this.setState({ passwordError })
   }
   render() {
     return (
@@ -98,7 +116,7 @@ class UserSettings extends Component {
             label={"Cancel"}
             onClick={() => {
               this.props.onClose()
-              this.setState({show: false})
+              this.setState({show: false, pass1: '', pass2: ''})
             }}
           />,
           <FlatButton
@@ -141,20 +159,24 @@ class UserSettings extends Component {
         />
         <br />
         <TextField
+          disabled={this.props.user.auth0UserId.includes('facebook|')}
           floatingLabelText={'New Password'}
           value={this.state.pass1}
           type={'password'}
-          onChange={(e, val) => this.checkPasswords({pass1: val})}
+          onChange={(e, pass1) => this.checkPasswords({pass1, pass2: this.state.pass2})}
         />
         <br />
         <TextField
+          disabled={this.props.user.auth0UserId.includes('facebook|')}
           floatingLabelText={'Confirm Password'}
           errorText={this.state.passwordError}
           value={this.state.pass2}
           type={'password'}
-          onChange={(e, val) => this.checkPasswords({pass2: val})}
+          onChange={(e, pass2) => this.checkPasswords({pass1: this.state.pass1, pass2})}
         /><br />
+        {console.log(!this.state.pass1 || !!this.state.passwordError, !this.state.pass1, !!this.state.passwordError)}
         <BtFlatButton
+          disabled={!this.state.pass1 || !!this.state.passwordError}
           label={'Submit'}
           backgroundColor={purple}
           labelStyle={{ color: white }}

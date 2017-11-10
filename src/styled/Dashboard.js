@@ -91,7 +91,7 @@ export const DashHeader = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  width: 80vw;
+  width: 90vw;
   padding-top: 0px;
 `
 
@@ -100,7 +100,7 @@ export const DashHeaderRow = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 80vw;
+  width: 90vw;
   box-sizing: border-box;
 `
 
@@ -164,7 +164,7 @@ export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
   margin: 6px 0;
-  width: 80vw;
+  width: 90vw;
 `
 
 const InviteStyled = styled.div`
