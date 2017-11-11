@@ -227,7 +227,10 @@ class Dashboard extends Component {
             email
             score
             portrait { url }
-            friends (first: 999) {
+            friends (
+              first: 999
+              filter: {deactivated: false}
+            ) {
               count
               edges {
                 node {

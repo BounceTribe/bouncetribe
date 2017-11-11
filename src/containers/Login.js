@@ -67,7 +67,10 @@ export default Relay.createContainer(
           user {
             handle
             id
-            friends (first: 1) {
+            friends (
+              first: 1
+              filter: {deactivated: false}
+            ) {
               edges {
                 node { handle }
               }

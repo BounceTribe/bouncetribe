@@ -11,6 +11,7 @@ const changePassword = (query) => {
     body
   }
   return new Promise( (resolve, reject) => {
+    
     fetch(url, options).then(result => resolve(result))
   })
 }

@@ -321,6 +321,7 @@ class Project extends Component {
   }
 
   render () {
+    let {User} = this.props.viewer
     let { node: project } = this.props.viewer.allProjects.edges[0]
     let {ownProject} = this.state
     let myInfluences = this.props.viewer.user.artistInfluences.edges.map(edge=>edge.node.name)
@@ -330,15 +331,15 @@ class Project extends Component {
           <ProfTop>
             <ProfLeft>
               <Portrait
-                src={(this.props.viewer.User.portrait || {}).url || `${url}/logo.png`}
-                to={`/${this.props.viewer.User.handle}`} />
+                src={(User.portrait || {}).url || `${url}/logo.png`}
+                to={`/${User.handle}`} />
               <ProfCol>
-                <ProfHandle to={`/${this.props.viewer.User.handle}`} >
-                  {this.props.viewer.User.handle}
+                <ProfHandle to={`/${User.handle}`} >
+                  {User.handle}
                 </ProfHandle>
                 <Score>
                   <Bolt style={{ marginRight: '5px' }} />
-                  {this.props.viewer.User.score}
+                  {User.score}
                 </Score>
               </ProfCol>
             </ProfLeft>
@@ -348,33 +349,30 @@ class Project extends Component {
                 height={20}
                 width={20}
                 style={{
-                  marginLeft: '15px',
-                  marginRight: '5px',
-                  display: (this.props.viewer.User.placename) ? '': 'none'
+                  margin: '0 5px 0 15px',
+                  display: (User.placename) ? '': 'none'
                 }} />
-              {this.props.viewer.User.placename}
+              {User.placename}
               <Experience
                 height={18}
                 width={18}
                 style={{
-                  marginLeft: '15px',
-                  marginRight: '5px',
-                  display: (this.props.viewer.User.experience) ? '': 'none'
+                  margin: '0 5px 0 15px',
+                  display: (User.experience) ? '': 'none'
                 }} />
-              {formatEnum(this.props.viewer.User.experience)}
+              {formatEnum(User.experience)}
               <Tribe
                 height={15}
                 width={15}
                 style={{
-                  marginLeft: '15px',
-                  marginRight: '5px'
+                  margin: '0 5px 0 15px',
                 }} />
-              {this.props.viewer.User.friends.edges.length}
+              {User.friends.edges.length}
             </MoreInfo>
           </ProfTop>
           <Divider/>
           <CommonInfluences>
-            {this.props.viewer.User.artistInfluences.edges.map(edge=>{
+            {User.artistInfluences.edges.map(edge=>{
               if (myInfluences.includes(edge.node.name)) {
                 return (
                   <InfluenceChip key={edge.node.id} >
@@ -400,9 +398,7 @@ class Project extends Component {
             portraitSuccess={this.artworkSuccess} />
           <Info>
             <TitleGenre>
-              <Title>
-                {project.title}
-              </Title>
+              <Title>{project.title}</Title>
               <Genre>
                 <Music
                   fill={white}
@@ -418,9 +414,7 @@ class Project extends Component {
                 }}
                 onClick={()=>{this.setState({edit:true})}} />
             </TitleGenre>
-            <Summary>
-              {project.description}
-            </Summary>
+            <Summary>{project.description}</Summary>
             {this.state.showBounceButton &&
               <BtFlatButton
                 label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
@@ -587,7 +581,7 @@ class Project extends Component {
             <ProjectTribeList
               self={this.props.viewer.user}
               project={project}
-              tribe={this.props.viewer.User.friends.edges}
+              tribe={User.friends.edges}
               recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
               router={this.props.router}
               handleSelection={this.handleSelection}
@@ -678,7 +672,10 @@ export default Relay.createContainer(
           user {
             id
             handle
-            friends (first: 999) {
+            friends (
+              first: 999
+              filter: {deactivated: false}
+            ) {
               edges {
                 node {
                   id

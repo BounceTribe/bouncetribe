@@ -103,7 +103,10 @@ export default Relay.createContainer(
                     }
                     score
                     placename
-                    friends (first: 999) {
+                    friends (
+                      first: 999
+                      filter: {deactivated: false}
+                    ) {
                       edges {
                         node
                       }

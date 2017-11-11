@@ -200,7 +200,7 @@ class Template extends Component {
             <UserSettings
               open={this.state.settings ? true : false}
               user={this.props.viewer.user}
-              onSave={(pass)=>this.settingsSave('pass')}
+              onSave={this.settingsSave}
               onClose={()=>this.settingsClose()}
             />
           }
@@ -230,7 +230,10 @@ export default Relay.createContainer(
             doNotEmailTA
             doNotEmailPB
             doNotEmailPF
-            friends (first: 1) {
+            friends (
+              first: 1
+              filter: {deactivated: false}
+            ) {
               edges {
                 node {
                   handle

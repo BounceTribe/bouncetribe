@@ -40,7 +40,10 @@ export default class SigninUserMutation extends Relay.Mutation {
                 user {
                   id
                   handle
-                  friends (first: 1) {
+                  friends (
+                    first: 1
+                    filter: {deactivated: false}
+                  ) {
                     edges {
                       node { handle }
                     }

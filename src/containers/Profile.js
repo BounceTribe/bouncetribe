@@ -603,7 +603,10 @@ export default Relay.createContainer(
             id
             handle
             email
-            friends ( first: 999 ) {
+            friends (
+              first: 999
+              filter: {deactivated: false}
+             ) {
               edges {
                 node { id }
               }

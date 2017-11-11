@@ -115,7 +115,7 @@ class UserSettings extends Component {
           <FlatButton
             label={"Cancel"}
             onClick={() => {
-              this.props.onClose()
+              this.props.onClose(false)
               this.setState({show: false, pass1: '', pass2: ''})
             }}
           />,
