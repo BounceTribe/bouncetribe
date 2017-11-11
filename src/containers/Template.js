@@ -29,7 +29,9 @@ class Template extends Component {
   componentDidMount() {
     this.ping()
     let intervalId = setInterval(this.ping, 300000)
-    this.setState({intervalId})
+    this.setState({
+      intervalId
+    })
     console.log('template didmount', this.props)
     this.pathCheck(this.props)
   }
@@ -184,7 +186,7 @@ class Template extends Component {
   }
 
   render () {
-
+    let user = this.props.viewer.user
     return (
       <MuiThemeProvider muiTheme={btTheme} >
         <Main>
@@ -196,10 +198,10 @@ class Template extends Component {
             onActionTouchTap={()=>this.setState({snackbarText: ''})}
             bodyStyle={{ backgroundColor: purple }}
           />
-          {this.props.viewer.user &&
+          {user &&
             <UserSettings
-              open={this.state.settings ? true : false}
-              user={this.props.viewer.user}
+              open={(this.state.settings || user.deactivated) ? true : false}
+              user={user}
               onSave={this.settingsSave}
               onClose={()=>this.settingsClose()}
             />

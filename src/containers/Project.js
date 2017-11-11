@@ -321,10 +321,10 @@ class Project extends Component {
   }
 
   render () {
-    let {User} = this.props.viewer
-    let { node: project } = this.props.viewer.allProjects.edges[0]
+    let {User, user, allProjects} = this.props.viewer
+    let { node: project } = allProjects.edges[0]
     let {ownProject} = this.state
-    let myInfluences = this.props.viewer.user.artistInfluences.edges.map(edge=>edge.node.name)
+    let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
       <View>
         <ProfContainer hide={(ownProject)} >
@@ -344,29 +344,20 @@ class Project extends Component {
               </ProfCol>
             </ProfLeft>
             <MoreInfo>
-              <Location
-                fill={purple}
-                height={20}
-                width={20}
+              <Location fill={purple} height={20} width={20}
                 style={{
                   margin: '0 5px 0 15px',
                   display: (User.placename) ? '': 'none'
                 }} />
               {User.placename}
-              <Experience
-                height={18}
-                width={18}
+              <Experience height={18} width={18}
                 style={{
                   margin: '0 5px 0 15px',
                   display: (User.experience) ? '': 'none'
                 }} />
               {formatEnum(User.experience)}
-              <Tribe
-                height={15}
-                width={15}
-                style={{
-                  margin: '0 5px 0 15px',
-                }} />
+              <Tribe height={15} width={15}
+                style={{ margin: '0 5px 0 15px', }} />
               {User.friends.edges.length}
             </MoreInfo>
           </ProfTop>
@@ -394,19 +385,17 @@ class Project extends Component {
           <ImageEditor
             open={this.state.artworkEditorOpen}
             onRequestClose={()=>this.setState({artworkEditorOpen:false})}
-            user={this.props.viewer.user}
+            user={user}
             portraitSuccess={this.artworkSuccess} />
           <Info>
             <TitleGenre>
               <Title>{project.title}</Title>
               <Genre>
-                <Music
-                  fill={white}
+                <Music fill={white}
                   style={{ marginRight: '5px', height: '18px' }} />
                 {project.genres.edges[0].node.name}
               </Genre>
-              <Edit
-                fill={purple}
+              <Edit fill={purple}
                 style={{
                   display: (ownProject) ? '' : 'none',
                   cursor: 'pointer',
@@ -419,8 +408,7 @@ class Project extends Component {
               <BtFlatButton
                 label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
                 backgroundColor={(this.state.bounced) ? purple : white}
-                labelStyle={{
-                  color: (this.state.bounced) ? white : purple}}
+                labelStyle={{ color: (this.state.bounced) ? white : purple}}
                 icon={
                   <Bounce
                     fill={(this.state.bounced) ? white : purple}
@@ -450,10 +438,10 @@ class Project extends Component {
                   ()=>{
                     this.props.relay.commitUpdate(
                       new DeleteProject({
-                        id: this.props.viewer.allProjects.edges[0].node.id,
+                        id: allProjects.edges[0].node.id,
                       }),{
                         onSuccess: ()=>{
-                          this.props.router.push(`/projects/${this.props.viewer.user.handle}`)
+                          this.props.router.push(`/projects/${user.handle}`)
                         }
                       }
                     )
@@ -479,7 +467,7 @@ class Project extends Component {
                 label={'Save'}
                 onClick={()=>{
                   let project = {
-                    id: this.props.viewer.allProjects.edges[0].node.id,
+                    id: allProjects.edges[0].node.id,
                     privacy: this.state.privacy,
                     title: this.state.title,
                     description: this.state.description,
@@ -579,10 +567,10 @@ class Project extends Component {
           <LeftList
             hide={( (this.state.tabs === 'listen') && (!ownProject) ) || (this.state.disableComments)} >
             <ProjectTribeList
-              self={this.props.viewer.user}
+              self={user}
               project={project}
               tribe={User.friends.edges}
-              recentCommenters={this.props.viewer.allProjects.edges[0].node.comments.edges}
+              recentCommenters={allProjects.edges[0].node.comments.edges}
               router={this.props.router}
               handleSelection={this.handleSelection}
               selection={this.state.selection} />
@@ -597,28 +585,16 @@ class Project extends Component {
                 <RoundButton
                   big
                   secondary
-                  icon={
-                    <Comment
-                      height={50}
-                      width={50} />
-                  }
+                  icon={<Comment height={50} width={50} />}
                   onTouchTap={()=>{this.dropMarker('COMMENT')}} />
-                <ButtonLabel>
-                  Idea
-                </ButtonLabel>
+                <ButtonLabel>Idea</ButtonLabel>
               </ButtonColumn>
               <ButtonColumn>
                 <RoundButton
                   big
-                  icon={
-                    <Heart
-                      height={50}
-                      width={50} />
-                  }
+                  icon={ <Heart height={50} width={50} /> }
                   onTouchTap={()=>{this.dropMarker('LIKE')}} />
-                <ButtonLabel>
-                  Like
-                </ButtonLabel>
+                <ButtonLabel> Like </ButtonLabel>
               </ButtonColumn>
             </ButtonRow>
             <CommentScroller>
@@ -631,14 +607,12 @@ class Project extends Component {
                   active={(this.state.active.includes('new'))}
                   activate={this.activate}
                   deactivate={this.deactivate}
-                  userId={this.props.viewer.user.id}
+                  userId={user.id}
                   tabs={this.state.tabs}
                   commentCreated={()=>{this.setState({new: false})}} /> :
                 null
               }
-
               {this.comments}
-
             </CommentScroller>
           </CommentContainer>
         </Bot>

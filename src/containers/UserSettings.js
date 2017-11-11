@@ -4,9 +4,7 @@ import {Dialog, Checkbox, FlatButton, Toggle, TextField} from 'material-ui/'
 import UpdateUser from 'mutations/UpdateUser'
 import {BtFlatButton} from 'styled'
 import {purple, white} from 'theme'
-// import {updatePassword, getCredToken} from 'utils/updatePassword'
 import changePassword from 'utils/changePassword'
-import {auth0} from 'config'
 
 
 
@@ -21,7 +19,6 @@ class UserSettings extends Component {
       passwordError: '',
     })
   }
-
 
   sendUpdate() {
     let userId = this.props.user.id
@@ -51,58 +48,18 @@ class UserSettings extends Component {
         }
         console.log('CHANGE PASS RES:', result);
       })
-
-      // return new Promise( (resolve, reject) => {
-      //   this.setNewPassword(this.state.auth0UserId, this.state.pass1, auth.getToken())
-      //   .then(res => {
-      //     console.log('response:', res);
-      //     return resolve(res)
-      //   })
-      // })
     }
   }
 
-
-
-  // setNewPassword = (auth0UserId, password, idToken) => {
-  //   console.log('updatePassword', auth0UserId, password, idToken);
-  //   let url = `https://${auth0.domain}/api/v2/users/${auth0UserId}`
-  //
-  //   let options = {
-  //     method: 'PATCH',
-  //     headers: { 'content-type': 'application/json' },
-  //     body: {
-  //       password,
-  //       Authorization: 'Bearer ' + localStorage.getItem('accessToken'),
-  //       connection: 'Username-Password-Authentication'
-  //     },
-  //     // params: {
-  //     //   scope: 'update.us',
-  //     //   state: 'default'
-  //     // }
-  //     // idToken: auth.getToken()
-  //   }
-  //
-  //   return new Promise( (resolve, reject) => {
-  //     fetch(url, options)
-  //     .then(result => result.json())
-  //     .then(response => {
-  //       resolve(response)
-  //     })
-  //   })
-  // }
-
-
-
   checkPasswords = ({pass1, pass2}) => {
     this.setState({pass1, pass2})
-
     let passwordError = pass1!==pass2 ? `Password doesn't match!` : ''
     if (!passwordError && (pass1.length < 6)) {
       passwordError = 'Password too short!'
     }
     this.setState({ passwordError })
   }
+
   render() {
     return (
       <Dialog
@@ -115,7 +72,7 @@ class UserSettings extends Component {
           <FlatButton
             label={"Cancel"}
             onClick={() => {
-              this.props.onClose(false)
+              this.props.onClose()
               this.setState({show: false, pass1: '', pass2: ''})
             }}
           />,
@@ -126,6 +83,8 @@ class UserSettings extends Component {
           />
         ]}
       >
+        {this.props.user.deactivated
+          && <h4 style={{color: 'red'}}>Activate your account to continue!</h4>}
         <h3>Email Notifications</h3>
         {/* <Checkbox
           label={"Disable all"}
@@ -156,33 +115,30 @@ class UserSettings extends Component {
           checked={!this.state.doNotEmailTA}
           style={{padding: '10px 0'}}
           onCheck={(e, val) => this.setState({doNotEmailTA: !val})}
-        />
-        <br />
+        /><br />
         <TextField
           disabled={this.props.user.auth0UserId.includes('facebook|')}
           floatingLabelText={'New Password'}
           value={this.state.pass1}
           type={'password'}
           onChange={(e, pass1) => this.checkPasswords({pass1, pass2: this.state.pass2})}
-        />
-        <br />
+        /><br />
         <TextField
           disabled={this.props.user.auth0UserId.includes('facebook|')}
           floatingLabelText={'Confirm Password'}
           errorText={this.state.passwordError}
           value={this.state.pass2}
           type={'password'}
+          inputStyle={{marginTop: '0'}}
           onChange={(e, pass2) => this.checkPasswords({pass1: this.state.pass1, pass2})}
         /><br />
-        {console.log(!this.state.pass1 || !!this.state.passwordError, !this.state.pass1, !!this.state.passwordError)}
         <BtFlatButton
           disabled={!this.state.pass1 || !!this.state.passwordError}
           label={'Submit'}
           backgroundColor={purple}
           labelStyle={{ color: white }}
           onClick={this.submitPass}
-        />
-        <br />
+        /><br />
         <Toggle
           label={"Active Account"}
           toggled={!this.state.deactivated}
@@ -190,6 +146,7 @@ class UserSettings extends Component {
           style={{fontSize: '18px', marginTop: '10px'}}
           onToggle={(e, val) => this.setState({deactivated: !val})}
         />
+
       </Dialog>
     )
   }

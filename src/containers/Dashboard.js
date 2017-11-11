@@ -142,7 +142,6 @@ class Dashboard extends Component {
               onRequestClose={()=>{ this.setState({invite: false}) }}
               autoScrollBodyContent={true}
               bodyStyle={{padding: '0'}}
-              contentStyle={{borderRadius: '5px'}}
               titleStyle={{
                 fontSize: '28px',
                 borderBottom:`1px solid ${grey400}`,
@@ -166,7 +165,7 @@ class Dashboard extends Component {
             </Dialog>
           </DashHeaderRow>
         </DashHeader>
-        <Divider widthPercent={100} />
+        <Divider/>
         <TopPanel>
           <TopColumn>
             <ImgColumn>
@@ -175,9 +174,9 @@ class Dashboard extends Component {
             <UserName>{user.handle}</UserName>
             <NavLink to={`/${user.handle}`}>View Your Profile</NavLink>
           </TopColumn>
-          <FeedbackRating style={{justifyContent:'flex-end'}}>
+          <FeedbackRating>
             <Bolt style={{ marginRight: '15px' }} />
-              {user.score || 0}
+            {user.score || 0}
           </FeedbackRating>
         </TopPanel>
         <BotRow>
@@ -206,9 +205,7 @@ class Dashboard extends Component {
             content={this.state.selectedUser && this.props.children}
             scroll={true} />
             : <Panel empty
-              content={
-                <NoTribe invite={()=>this.setState({invite: true})
-              }/>}/>
+              content={<NoTribe invite={()=>this.setState({invite: true})}/>}/>
             }
         </BotRow>
       </DashView>
