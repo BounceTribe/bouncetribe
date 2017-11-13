@@ -139,9 +139,7 @@ class Template extends Component {
   ping = () => {
     let {user} = this.props.viewer
     if (user) {
-      this.props.relay.commitUpdate(
-        new SendPing({ user })
-      )
+      this.props.relay.commitUpdate( new SendPing({ user }) )
     }
   }
 
@@ -178,7 +176,7 @@ class Template extends Component {
     this.setState( {
         snackbarText: passSave ? 'PASSWORD CHANGED' : 'SETTINGS CHANGED',
         settings: passSave ? true : false
-      })
+    } )
   }
 
   settingsClose = () => {
