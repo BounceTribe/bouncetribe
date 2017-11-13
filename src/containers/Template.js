@@ -15,7 +15,8 @@ import Snackbar from 'material-ui/Snackbar'
 import {purple} from 'theme'
 import AddToFriends from 'mutations/AddToFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
-import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
+import {acceptFriendRequest} from 'utils/updateCommits'
+
 
 injectTapEventPlugin()
 
@@ -70,33 +71,19 @@ class Template extends Component {
     }
   }
 
-  acceptRequest = (inviteId, newFriendId) => {
-    console.log('accept', inviteId);
-    let {id: selfId} = this.props.viewer.user
-    this.props.relay.commitUpdate(
-      new UpdateFriendRequest({ id: inviteId, accepted: true }), {
-        onSuccess: (res) => {
-          this.props.relay.commitUpdate(
-            new AddToFriends({ selfId, newFriendId }), {
-              onSuccess: res => {
-                console.log('friend added res', res);
-                this.setState({snackbarText: 'FRIEND ADDED'})
-                this.props.router.push(`/tribe/${this.props.viewer.user.handle}`)
-              },
-              onFailure: (res) => {
-                console.log('add friend failure', res)
-                this.redirect()
-              }
-            }
-          )
-        },
-        onFailure: (res) => {
-          console.log('add  update req failure', res)
-          this.redirect()
-        }
-      }
-    )
-  }
+  acceptRequest = (requestId, newFriendId) => acceptFriendRequest({
+    requestId, newFriendId,
+    props: this.props,
+    successCB: (res)=>{
+      this.setState({snackbarText: 'FRIEND ADDED'})
+      this.props.router.push(`/tribe/${this.props.viewer.user.handle}`)
+    },
+    failureCB: (res)=>{
+      console.log('add friend failure', res)
+      this.redirect()
+    }
+  })
+
   //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
   addInviteFriend = (newFriendId) => {

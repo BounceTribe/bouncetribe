@@ -19,7 +19,6 @@ class ActiviesPanel extends Component {
         return <div key={index}/>
       } else {
         commentProjects.push(project.id)
-        console.log('project', project);
         return project.id && <Activity
           key={edge.node.id}
           date={edge.node.createdAt}
@@ -43,8 +42,7 @@ class ActiviesPanel extends Component {
         text={`Added a new Project - ${edge.node.title}`}
         link={edge.node.privacy==='PUBLIC' && `/${this.props.params.userHandle}/${edge.node.title}`}/>
     ))
-    return list.sort( (a,b) =>
-      (new Date(b.props.date) - new Date(a.props.date)) )
+    return list.sort( (a,b) => (new Date(b.props.date) - new Date(a.props.date)) )
   }
 
   render () {

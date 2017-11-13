@@ -3,8 +3,7 @@ import Relay from 'react-relay'
 import {List} from 'styled/list'
 import {RequestUser} from 'styled/Tribe'
 import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
-import AddToFriends from 'mutations/AddToFriends'
-
+import {acceptFriendRequest} from 'utils/updateCommits'
 class TribeRequests extends Component {
 
   componentDidMount() {
@@ -20,27 +19,33 @@ class TribeRequests extends Component {
       })
     }
   }
+  accept = (requestId, newFriendId) => acceptFriendRequest({
+    requestId, newFriendId,
+    props: this.props,
+    successCB: ()=>console.log('success from TR'),
+    failureCB: ()=>console.log('failure from TR'),
+  })
 
-  accept = (inviteId, newFriendId) => {
-    let {id: selfId} = this.props.viewer.user
-    this.props.relay.commitUpdate(
-      new UpdateFriendRequest({
-        id: inviteId,
-        accepted: true
-      }), {
-        onSuccess: (response) => {
-          this.props.relay.commitUpdate(
-            new AddToFriends({
-              selfId,
-              newFriendId
-            }), {
-              onSuccess: (response) => console.log('Accepted and added')
-            }
-          )
-        }
-      }
-    )
-  }
+  // accept = (inviteId, newFriendId) => {
+  //   let {id: selfId} = this.props.viewer.user
+  //   this.props.relay.commitUpdate(
+  //     new UpdateFriendRequest({
+  //       id: inviteId,
+  //       accepted: true
+  //     }), {
+  //       onSuccess: (response) => {
+  //         this.props.relay.commitUpdate(
+  //           new AddToFriends({
+  //             selfId,
+  //             newFriendId
+  //           }), {
+  //             onSuccess: (response) => console.log('Accepted and added')
+  //           }
+  //         )
+  //       }
+  //     }
+  //   )
+  // }
 
   ignore = (id) => {
     this.props.relay.commitUpdate(
@@ -52,11 +57,11 @@ class TribeRequests extends Component {
   }
 
   get requests() {
-    return (this.props.viewer.user.invitations.edges || []).map(edge => {
+    return (this.props.viewer.user.invitations.edges || []).map((edge, index) => {
       let {actor:user, id} = edge.node
       return (
         <RequestUser
-          key={user.id}
+          key={id}
           user={user}
           accept={()=>this.accept(id, user.id)}
           ignore={()=>this.ignore(id)}

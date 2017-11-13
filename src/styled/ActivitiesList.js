@@ -28,7 +28,7 @@ export const Activity = ({date, icon, text, link}) => {
 
   return (
     <ActivityContainer>
-      <BtLink to={link}>
+      <BtLink to={link ? link : null}>
         <ActivityDate>{formattedDate}</ActivityDate>
         <ActivityIcon>{icon}</ActivityIcon>
         <ActivityText>{text}</ActivityText>

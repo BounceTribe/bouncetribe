@@ -1,9 +1,9 @@
 import React from 'react'
 import {purple} from 'theme'
 
-const Tribe = ({style, fill, height}) => {
+const Tribe = ({style, fill, height, width}) => {
   height = height || 23
-  let width = height*35/23
+  width = width || height*35/23
   return (
     <svg style={style} width={width} height={height}
       viewBox="45 26 35 23" version="1.1" xmlns="http://www.w3.org/2000/svg" >

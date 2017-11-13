@@ -19,8 +19,6 @@ import {handleValidator, isUniqueField} from 'utils/handles'
 import {purple} from 'theme'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
-import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
-import AddToFriends from 'mutations/AddToFriends'
 import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
@@ -31,6 +29,7 @@ import Edit from 'icons/Edit'
 import {Panel} from 'components/Panel'
 import {url} from 'config'
 import {TribeButton} from 'components/TribeButton'
+import {acceptFriendRequest} from 'utils/updateCommits'
 
 
 
@@ -62,6 +61,7 @@ class Profile extends Component {
     // let location = this.props.router.location;
 
     this.props.router.push(`/${this.props.router.params.userHandle}/activity`)
+    console.log('profile mount props', this.props);
   }
 
   componentWillMount = () => {
@@ -152,23 +152,13 @@ class Profile extends Component {
     // }
   }
 
-  accept = (inviteId) => {
-    console.log('accept', inviteId);
-    let {id: selfId} = this.props.viewer.user
-    let {id: newFriendId} = this.props.viewer.User
-    this.props.relay.commitUpdate(
-      new UpdateFriendRequest({ id: inviteId, accepted: true }), {
-        onSuccess: (response) => {
-          this.props.relay.commitUpdate(
-            new AddToFriends({ selfId, newFriendId }), {
-              onSuccess: res => this.setState({btnStatus: 'ACCEPTED'})
-            }
-          )
-        },
-        onFailure: (response) => { console.log('failure', response) }
-      }
-    )
-  }
+  accept = (requestId) => acceptFriendRequest({
+    requestId,
+    newFriendId: this.props.viewer.User.id,
+    props: this.props,
+    successCB: (response)=>this.setState({btnStatus: 'ACCEPTED'}),
+    failureCB: (response)=>console.log('failure from Profile', response),
+  })
 
   addToTribe = () => {
     console.log('CFQ Profile');
