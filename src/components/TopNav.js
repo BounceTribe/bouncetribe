@@ -37,7 +37,7 @@ class TopNav extends Component {
     return (
       <Bar>
         {/* <div onClick={()=>this.props.redirect()}> */}
-          <Logo to={`/dash/${friendHandle ? friendHandle + '/projects' : '' }`} />
+          <Logo to={`/dash/${friendHandle ? friendHandle + '/projects/' : '' }`} />
         {/* </div> */}
         <NavList>
           {/* <NavLink to={`/tribe/${handle}/find`} >

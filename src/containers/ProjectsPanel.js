@@ -12,7 +12,10 @@ class ProjectsPanel extends Component {
 
 export default Relay.createContainer(
   ProjectsPanel, {
-    initialVariables: { userHandle: '' },
+    initialVariables: {
+      userHandle: '',
+      suggestedFriendsFilter: {}
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {

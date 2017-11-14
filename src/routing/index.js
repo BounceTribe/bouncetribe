@@ -99,10 +99,29 @@ const createRoutes = () => (
       component={Dashboard}
       queries={ViewerQuery}
       render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
-      <Route path='/dash/:userHandle/projects'
+      <Route path='/dash/invite/*'
+        component={TribeFind}
+        queries={ViewerQuery}
+        render={({props}) => props ? <TribeFind {...props} /> : <Loading nested />} > */}
+        <IndexRoute
+          component={TribeSearchResults}
+          queries={ViewerQuery}
+          render={({props}) => props ? <TribeSearchResults {...props} /> : <Loading nested/>}
+          prepareParams={tribeSearch}
+          ignoreScrollBehavior />
+      </Route>
+      <Route path='/dash/:userHandle/projects/'
         component={ProjectsPanel}
         queries={ViewerQuery}
-        render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
+        render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested />} >
+        {/* <IndexRoute
+          component={TribeSearchResults}
+          queries={ViewerQuery}
+          render={({props}) => props ? <TribeSearchResults {...props} /> : <Loading nested/>}
+          prepareParams={tribeSearch}
+          ignoreScrollBehavior /> */}
+      </Route>
+
       <Route path={'/dash/:userHandle/messages'}
         component={DirectMessages}
         queries={ViewerQuery}

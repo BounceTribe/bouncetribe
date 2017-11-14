@@ -6,7 +6,9 @@ import CreateFriendRequest from 'mutations/CreateFriendRequest'
 
 class TribeSearchResults extends Component {
 
-
+componentDidMount() {
+  console.log('search mounted', this.props);
+}
   createFriendRequest = (recipientId) => {
     let {id: actorId} = this.props.viewer.user
     this.props.relay.commitUpdate(
@@ -20,6 +22,7 @@ class TribeSearchResults extends Component {
   get results () {
     return this.props.viewer.allUsers.edges.map(edge => {
       let {node: user} = edge
+      console.log('search allusers', this.props)
       return (
         <SearchUser
           key={user.id}
@@ -31,8 +34,7 @@ class TribeSearchResults extends Component {
   }
 
   render () {
-    return ( <List> {this.results} </List>
-    )
+    return (<List>{this.results}</List>)
   }
 }
 

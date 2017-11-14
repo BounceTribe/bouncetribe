@@ -32,7 +32,8 @@ class Dashboard extends Component {
       showTribe: true,
       showBand: true,
       tab: props.location.pathname.split('/')[3] ||'projects',
-      snackbarText: ''
+      snackbarText: '',
+      searchHandle: ''
     }
   }
 
@@ -48,14 +49,13 @@ class Dashboard extends Component {
       } else {
         console.log('no found user; redirecting to first friend')
         this.selectUser(edges[0].node)
-        this.props.router.push(`/dash/${edges[0].node.handle}/projects`)
+        this.props.router.push(`/dash/${edges[0].node.handle}/projects/`)
       }
     } else {
       console.log('dash no tribe');
       //notribe
     }
   }
-
 
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
@@ -69,6 +69,10 @@ class Dashboard extends Component {
         return {suggestions: list}
       })
     })
+  }
+
+  filterUsernames = () => {
+
   }
 
   selectUser = (selectedUser) => {
@@ -105,7 +109,7 @@ class Dashboard extends Component {
   createFriendRequest = (recipientId) => {
     let {id: actorId} = this.props.viewer.user
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({ actorId, recipientId})
+      new CreateFriendRequest({actorId, recipientId})
     )
   }
 
@@ -135,7 +139,12 @@ class Dashboard extends Component {
               <IconText>My Tribe</IconText>
             </IconTextContainer>
             <InviteButton
-              onClick={()=>{this.setState({invite: true})}}
+              onClick={()=>{
+                this.props.router.push(`/dash/invite/`)
+                // TODO: select route better
+                this.setState({invite: true})
+              }
+              }
               text={'Invite Member'} />
             <Dialog
               title={"Invite to Your Tribe"}
@@ -149,7 +158,8 @@ class Dashboard extends Component {
                 borderBottom:`1px solid ${grey400}`,
                 padding: '16px 27px 13px 27px',
               }} >
-              <DialogRow>
+              {/* {this.props.children} */}
+              {/* <DialogRow>
                 <DialogSpacer>
                   <TextField
                     label={'Email'}
@@ -163,7 +173,15 @@ class Dashboard extends Component {
                   <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
                 </DialogSpacer>
               </DialogRow>
-              <DialogRow>{this.state.suggestions}</DialogRow>
+              <DialogRow>
+                <TextField
+                  label={'Search by Username'}
+                  onChange={(ev, val) => this.filterUsernames(val)}
+                  placeholder={'Search by Username'}
+                /> */}
+                {this.props.children}
+                {/* {this.state.suggestions} */}
+            {/* </DialogRow> */}
             </Dialog>
           </DashHeaderRow>
         </DashHeader>
@@ -216,7 +234,10 @@ class Dashboard extends Component {
  }
 
  export default Relay.createContainer( Dashboard, {
-    initialVariables: { userHandle: '' },
+   initialVariables: {
+     userHandle: '',
+     suggestedFriendsFilter: {}
+   },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
