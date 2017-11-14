@@ -152,8 +152,8 @@ export const BotRow = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-top: 20px;
-  min-height: 50vh;
   max-height: 60vh;
+  min-height: 420px;
 `
 
 export const BotLeft = styled.div`
@@ -176,12 +176,14 @@ export const BotRight = styled.div`
   border-radius: 5px;
   background-color: ${white};
   min-height: 50vh;
+  flex-grow: 1;
   width: 33%;
   border: solid ${grey400} 1px;
   border-radius: 5px;
-  padding: 0 20px;
+  padding: 10px 20px;
   margin-left: 15px;
-  padding-bottom: 40px;
+  ${'' /* padding-bottom: 40px; */}
+  overflow: visible;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
@@ -189,7 +191,7 @@ export const Label = styled.label`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   font-size: 15px;
   font-weight: bold;
-  margin-top: 40px
+  ${'' /* padding-top: 40px; */}
   color: ${grey800};
 `
 
@@ -201,6 +203,6 @@ export const InputError = styled.span`
 
 export const Experience = styled(Input)`
   font-size: 14px;
-  width: ${(props)=>inputWidth(props,11)}px;
+  ${'' /* width: ${(props)=>inputWidth(props,11)}px; */}
   margin-bottom: 0;
 `

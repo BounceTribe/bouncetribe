@@ -502,7 +502,7 @@ class Profile extends Component {
             content={this.props.children}
           />
           <BotRight>
-            <Label hide={(!ownProfile && experience.length < 1)} >
+            <Label hide={(!ownProfile && !experience.length)} >
               Experience
             </Label>
             {(ownProfile) ? (
@@ -521,7 +521,7 @@ class Profile extends Component {
                 </SelectField>
               </ExperienceRow>
             ) : (
-              <ExperienceRow hide={(!ownProfile && experience.length < 1)} >
+              <ExperienceRow hide={(!ownProfile && !experience.length)} >
                 <ExperienceIcon style={{ marginRight: '5px' }} />
                 <Experience
                   value={formatEnum(experience)}
@@ -531,47 +531,47 @@ class Profile extends Component {
               </ExperienceRow>
             )}
 
-            <Label hide={(!ownProfile && genres.length < 1)} >
+            <Label hide={(!ownProfile && !genres.length)} >
               Genres
             </Label>
             <Async
               loadOptions={this.loadGenres}
               value={genres}
               onChange={this.genreChange}
-              multi={true}
+              multi
               className={(ownProfile) ? 'async' : 'async others'}
               disabled={!ownProfile}
               placeholder={'add your genres'}
-              style={{ display:(!ownProfile && genres.length < 1) ? 'none':''}}
+              style={{ display:(!ownProfile && !genres.length) ? 'none':'',  margin: '4px 0 8px 0'}}
             />
-            <Label hide={(!ownProfile && skills.length < 1)} >
+            <Label hide={(!ownProfile && !skills.length)} >
               Skills
             </Label>
             <Async
               loadOptions={this.loadSkills}
               value={skills}
               onChange={this.skillChange}
-              multi={true}
+              multi
               className={(ownProfile) ? 'async' : 'async others'}
               disabled={!ownProfile}
               placeholder={'add your skills'}
               style={{
-                display: (!ownProfile && skills.length < 1) ? 'none' : ''
+                display: (!ownProfile && !skills.length) ? 'none' : '',  margin: '4px 0 8px 0'
               }}
             />
-            <Label hide={(!ownProfile && influences.length < 1)} >
+            <Label hide={(!ownProfile && !influences.length)} >
               Influences
-            </Label><div></div>
+            </Label>
             <Async
               value={influences}
               loadOptions={this.influenceOptions}
-              multi={true}
+              multi
               onChange={this.influenceChange}
               className={(ownProfile) ? 'async influences' : 'async influences others'}
               disabled={!ownProfile}
               placeholder={'add your influences'}
               style={{
-                display: (!ownProfile && influences.length < 1) ? 'none' : ''
+                display: (!ownProfile && !influences.length) ? 'none' : '', margin: '4px 0 8px 0'
               }}
             />
           </BotRight>

@@ -17,6 +17,8 @@ import {isUniqueField} from 'utils/handles'
 class Dashboard extends Component {
 
   constructor(props) {
+    console.log('props', props)
+    console.log(props.location.pathname.split('/')[3]);
     super(props);
     this.state = {
       invite: false,
@@ -29,7 +31,7 @@ class Dashboard extends Component {
       showMentors: true,
       showTribe: true,
       showBand: true,
-      tab: 'projects',
+      tab: props.location.pathname.split('/')[3] ||'projects',
       snackbarText: ''
     }
   }

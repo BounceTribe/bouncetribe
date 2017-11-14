@@ -8,7 +8,7 @@ export const ProjectsContainerSm = styled.div`
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 10px;
+  padding: 0 10px;
   width: 100%;
   box-sizing: border-box;
   overflow-y: scroll;

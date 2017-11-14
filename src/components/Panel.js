@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Tabs, Tab} from 'material-ui'
-import {grey600, grey200, grey222, purple} from 'theme'
+import {grey600, grey200, grey222, purple, white} from 'theme'
 import Lock from 'icons/Lock'
 import {BtTextMarker} from 'styled'
 
@@ -9,11 +9,10 @@ import {BtTextMarker} from 'styled'
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: ${white};
   border: solid ${grey222} 1px;
   border-radius: 5px;
   width: 100%;
-  flex-grow: 1;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 

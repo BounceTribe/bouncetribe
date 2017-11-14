@@ -59,14 +59,14 @@ export const TopCol = styled.div`
   align-items: flex-start;
   margin-left: 30px;
 `
-
+//min height accomodates 3 project items
 export const BotRow = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin-top: 20px;
-  min-height: 50vh;
   max-height: 60vh;
+  min-height: 525px;
 `
 
 export const DashLeft = styled.div`
