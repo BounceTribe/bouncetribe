@@ -135,7 +135,7 @@ export const FeedbackRating = styled.div`
   margin: 50px 50px 0 0;
 `
 
-export const UserName = styled.h1`
+export const UserName = styled(ProfHandle)`
   font-size: 1.5em;
   color: #555555;
   font-weight: normal;

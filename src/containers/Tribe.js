@@ -52,15 +52,15 @@ class Tribe extends Component {
       </Header>
     )
     return (
-      <View hideBorder>
+      <View>
         <Panel
-          style={{border: 'none'}}
+          hideBorder
           tab={tab}
           topBar={top}
           tabChange={(tab)=>this.setTab(tab, this.props.userHandle)}
-          labels={['members', 'requests', 'messages']}
-          values={[User.friends.count, user.invitations.count, 0]}
-          locks={[false, User.id!==user.id, true]}
+          labels={['members', 'requests']}
+          values={[User.friends.count, user.invitations.count]}
+          locks={[false, User.id!==user.id]}
           content={this.props.children}
         />
       </View>

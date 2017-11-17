@@ -103,9 +103,10 @@ export const View = styled.section`
   flex-direction: column;
   align-items: center;
   width: 90%;
-  border: ${props => props.hideBorder ? 'none' : `solid ${grey230} 1px`};
+  border: solid ${grey230} 1px;
   border-radius: 5px;
   min-height: 80vh;
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
   margin: 100px 0 50px 0;
   ${size.m`
     margin-top: 0;

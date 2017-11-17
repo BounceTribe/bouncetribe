@@ -5,6 +5,7 @@ import {grey200, grey400, grey800, white} from 'theme'
 export const ProfileView = styled(View)`
   background-color: transparent;
   border: none;
+  box-shadow: none;
   padding: 60px;
 `
 
@@ -149,24 +150,22 @@ export const MissingUserData = styled.span`
 
 export const BotRow = styled.div`
   display: flex;
-  justify-content: space-between;
   width: 100%;
   margin-top: 20px;
-  max-height: 60vh;
+  height: 60vh;
   min-height: 420px;
 `
 
 export const BotLeft = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 5px;
   background-color: ${white};
-  min-height: 50vh;
+  ${'' /* min-height: 50vh; */}
   width: 66%;
-  border: solid ${grey400} 1px;
-  border-radius: 5px;
   margin-right: 15px;
   padding-bottom: 40px;
+  border: solid ${grey400} 1px;
+  border-radius: 5px;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 

@@ -112,7 +112,7 @@ class Dashboard extends Component {
   setTab = (tab) => {
     this.props.router.push('/dash/' + this.state.selectedUser.handle + '/' + tab)
     this.setState({ tab })
-    window.scrollTo(0, document.body.scrollHeight)
+    // window.scrollTo(0, document.body.scrollHeight)
   }
 
   render () {
@@ -173,8 +173,7 @@ class Dashboard extends Component {
             <ImgColumn>
               <BtAvatar user={user} size={80} hideStatus />
             </ImgColumn>
-            <UserName>{user.handle}</UserName>
-            <NavLink to={`/${user.handle}`}>View Your Profile</NavLink>
+            <UserName to={`/${user.handle}`}>{user.handle}</UserName>
           </TopColumn>
           <FeedbackRating>
             <Bolt style={{ marginRight: '15px' }} />

@@ -10,10 +10,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${white};
-  border: solid ${grey222} 1px;
   border-radius: 5px;
   width: 100%;
-  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
+  min-width: 550px;
+  border: ${props => props.hideBorder ? `none`: `solid ${grey222} 1px`};
+  box-shadow: ${props => props.hideBorder ? `none`: '0 1px 2px 0 rgba(202, 202, 202, 0.5)'};
 `
 
 const TabLabel = ({text, locked, value}) => (
@@ -27,9 +28,9 @@ const TabLabel = ({text, locked, value}) => (
 
 const buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
 
-export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, empty}) => {
+export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, empty, hideBorder}) => {
   return (
-    <Container>
+    <Container hideBorder={hideBorder}>
       {topBar}
       {!empty && <Tabs
         // style={{ margin: '0 0 10px 0', borderRadius: '5px' }}
