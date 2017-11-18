@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {ProjectListSm} from 'components/ProjectListSm'
-
+// impoty {EmptyPanel} 
 class ProjectsPanel extends Component {
   render () {
+    let hasProjects = !!this.props.viewer.User.projects.length
+
     return (
       <ProjectListSm {...this.props} />
     )

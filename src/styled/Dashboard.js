@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
-import {View, BtAvatar, BtLink, BtFlatButton} from 'styled'
+import {View, BtAvatar, BtFlatButton} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import Bolt from 'icons/Bolt'

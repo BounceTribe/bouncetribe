@@ -2,10 +2,9 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, TopColumn, ImgColumn, FeedbackRating, DashProfile, BotRow} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
-import {EmptyPanel} from 'components/EmptyPanel'
+import {EmptyTribe} from 'styled/EmptyPanels'
 import {Dialog, TextField, Snackbar} from 'material-ui'
 import {grey400, purple} from 'theme'
-import Tribe from 'icons/Tribe'
 import Bolt from 'icons/Bolt'
 import {BtAvatar, IconTextContainer, IconText} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
@@ -206,15 +205,8 @@ class Dashboard extends Component {
             values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
             content={this.state.selectedUser && this.props.children}
             scroll={true} />
-            : <Panel empty
-              content={
-                <EmptyPanel
-                  icon={<Tribe height={93} fill={"#D3D3D3"} />}
-                  headline={`It's a little quiet here...`}
-                  note={`Invite your friends to begin building your tribe`}
-                  btnLabel={`Invite Friends`}
-                  btnClick={()=>this.setState({invite: true})}/>}/>
-            }
+            : <Panel empty content={<EmptyTribe/>}/>
+          }
         </BotRow>
       </DashView>
     )

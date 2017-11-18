@@ -1,7 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import {purple, white} from 'theme'
+import {purple} from 'theme'
 import {BtFlatButton} from 'styled'
+import Tribe from 'icons/Tribe'
+import Music from 'icons/Music'
+import Bounce from 'icons/Bounce'
+
 
 
 const Container = styled.div`
@@ -47,3 +51,29 @@ export const EmptyPanel = ({icon, headline, note, btnLabel, btnClick }) => {
     </Container>
   )
 }
+
+export const EmptyTribe = ({btnClick}) => (
+  <EmptyPanel
+    icon={<Tribe height={93} fill={"#D3D3D3"} />}
+    headline={`It's a little quiet here...`}
+    note={`Invite your friends to begin building your tribe`}
+    btnLabel={`Invite Friends`}
+    btnClick={()=>btnClick()}
+  />
+)
+export const EmptyOwnProjects = ({btnClick}) => (
+  <EmptyPanel
+    icon={<Music height={93} fill={"#D3D3D3"} />}
+    headline={`Everyone wants to hear it`}
+    note={`Upload your first project!`}
+    btnLabel={`Invite Friends`}
+    btnClick={()=>btnClick()}
+  />
+)
+export const EmptyOwnBounces = () => (
+  <EmptyPanel
+    icon={<Bounce height={93} fill={"#D3D3D3"} />}
+    headline={`Do you love someone’s project?`}
+    note={`Bounce it to share with your tribe`}
+  />
+)
