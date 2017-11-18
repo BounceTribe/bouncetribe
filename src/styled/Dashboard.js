@@ -142,15 +142,6 @@ export const UserName = styled(ProfHandle)`
   margin: -95px 0 0 115px;
 `
 
-export const NavLink = styled(BtLink)`
-  text-decoration: none;
-  color: ${grey119};
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: lighter;
-  margin: 13px 0 0 115px;
-`
-
 export const LogoText = styled.h2`
   display: flex;
   flex: 1;

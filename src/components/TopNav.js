@@ -9,7 +9,6 @@ import Alerts from 'icons/Alerts'
 import {DropdownMenuItem, DropHr} from 'components/Dropdown'
 import auth from 'utils/auth'
 import IconMenu from 'material-ui/IconMenu'
-// import MenuItem from 'material-ui/MenuItem'
 import IconButton from 'material-ui/IconButton'
 import UpdateNotification from 'mutations/UpdateNotification'
 
