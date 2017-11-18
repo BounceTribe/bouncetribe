@@ -1,13 +1,23 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {ProjectListSm} from 'components/ProjectListSm'
-// impoty {EmptyPanel} 
+import Music from 'icons/Music'
+import {EmptyPanel} from 'components/EmptyPanel'
+
 class ProjectsPanel extends Component {
   render () {
-    let hasProjects = !!this.props.viewer.User.projects.length
+    let {user, User} = this.props.viewer
+    let hasProjects = !!User.projects.length
 
     return (
-      <ProjectListSm {...this.props} />
+      hasProjects ? <ProjectListSm {...this.props} /> :
+      <EmptyPanel
+        icon={<Music height={93} fill={"#D3D3D3"} />}
+        headline={`Everyone wants to hear it`}
+        note={`Upload your first project!`}
+        btnLabel={`New Project`}
+        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new`)}
+      />
     )
   }
 }
