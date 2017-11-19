@@ -197,16 +197,18 @@ class Dashboard extends Component {
                 this.setState({showMentors: !this.state.showMentors})}
               />
           </DashLeft>
-          {selectedUser.id ? <Panel
-            tab={tab}
-            topBar={<DashProfile selectedUser={selectedUser} />}
-            tabChange={(newTab)=>this.setTab(newTab)}
-            labels={['projects', 'bounces', 'messages']}
-            locks={[false, false, false]}
-            values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
-            content={this.state.selectedUser && this.props.children}
-            scroll={true} />
-            : <Panel empty
+          {selectedUser.id ?
+            <Panel
+              tab={tab}
+              topBar={<DashProfile selectedUser={selectedUser} />}
+              tabChange={(newTab)=>this.setTab(newTab)}
+              labels={['projects', 'bounces', 'messages']}
+              locks={[false, false, false]}
+              values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
+              content={this.state.selectedUser && this.props.children}
+              scroll={true} />
+            : 
+            <Panel empty
               content={
                 <EmptyPanel
                   icon={<Tribe height={93} fill={"#D3D3D3"} />}
@@ -214,7 +216,7 @@ class Dashboard extends Component {
                   note={`Invite your friends to begin building your tribe`}
                   btnLabel={`Invite Friends`}
                   btnClick={()=>this.setState({invite: true})}/>}/>
-            }
+          }
         </BotRow>
       </DashView>
     )

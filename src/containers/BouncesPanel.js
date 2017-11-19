@@ -9,15 +9,20 @@ import {EmptyPanel} from 'components/EmptyPanel'
 class BouncesPanel extends Component {
   render () {
     //also check for dashboard component for display
-    let {User} = this.props.viewer
+    let {User, user} = this.props.viewer
+    let isSelf = user.id===User.id
+
     let hasBounces = !!User.bounces.length
+    let isDash = this.props.route.path.substr(0,6)==='/dash/'
 
     return (
-      hasBounces ? <ProjectListSm {...this.props} /> :
+      (hasBounces || isDash) ?
+      <ProjectListSm {...this.props} />
+      :
       <EmptyPanel
-        icon={<Bounce height={93} fill={"#D3D3D3"} />}
-        headline={`Do you love someone’s project?`}
-        note={`Bounce it to share with your tribe`}
+        icon={<Bounce width={100} fill={"#D3D3D3"} />}
+        headline={isSelf ? `Do you love someone’s project?` : `User has no bounces yet`}
+        note={isSelf ? `Bounce it to share with your tribe` : ``}
       />
     )
   }

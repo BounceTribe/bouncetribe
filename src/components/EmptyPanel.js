@@ -31,7 +31,7 @@ export const EmptyPanel = ({icon, headline, note, btnLabel, btnClick }) => {
       {icon}
       <Headline>{headline}</Headline>
       <Note>{note}</Note>
-      <BtFlatButton
+      {btnLabel && <BtFlatButton
         onClick={()=>btnClick()}
         label={btnLabel}
         labelStyle={{ color: purple, fontSize: '13px', fontWeight: '500', }}
@@ -41,7 +41,7 @@ export const EmptyPanel = ({icon, headline, note, btnLabel, btnClick }) => {
           width: '168px',
           height: '50px'
         }}
-      />
+      />}
     </Container>
   )
 }

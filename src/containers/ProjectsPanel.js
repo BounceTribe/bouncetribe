@@ -7,15 +7,17 @@ import {EmptyPanel} from 'components/EmptyPanel'
 class ProjectsPanel extends Component {
   render () {
     let {user, User} = this.props.viewer
+    let isSelf = user.id===User.id
     let hasProjects = !!User.projects.length
+    let isDash = this.props.route.path.substr(0,6)==='/dash/'
 
     return (
-      hasProjects ? <ProjectListSm {...this.props} /> :
+      (hasProjects || isDash) ? <ProjectListSm {...this.props} /> :
       <EmptyPanel
-        icon={<Music height={93} fill={"#D3D3D3"} />}
-        headline={`Everyone wants to hear it`}
-        note={`Upload your first project!`}
-        btnLabel={`New Project`}
+        icon={<Music height={113} fill={"#D3D3D3"} />}
+        headline={isSelf ? `Everyone wants to hear it...` : `User has no projects`}
+        note={isSelf ? `Upload your first project!` : ``}
+        btnLabel={isSelf ? `New Project` : ``}
         btnClick={()=>this.props.router.push(`/projects/${user.handle}/new`)}
       />
     )

@@ -6,6 +6,8 @@ import Music from 'icons/Music'
 import Bounce from 'icons/Bounce'
 import {purple} from 'theme'
 import {PanelScrollContainer} from 'styled'
+import {EmptyPanel} from 'components/EmptyPanel'
+
 
 class ActiviesPanel extends Component {
 
@@ -46,12 +48,24 @@ class ActiviesPanel extends Component {
   }
 
   render () {
+    let {user, User} = this.props.viewer
+    let isSelf = user.id===User.id
+    let hasActivities = !!this.activities.length
     return (
+      hasActivities ?
       <PanelScrollContainer>
         <div style={{overflowY: 'scroll', overflowX: 'hidden', width: '100%'}}>
           {this.activities}
         </div>
       </PanelScrollContainer>
+      :
+      <EmptyPanel
+        icon={<Music height={113} fill={"#D3D3D3"} />}
+        headline={isSelf ? `Everyone wants to hear it` : `No Activity Yet`}
+        note={isSelf ? `Upload your first project!` : ``}
+        btnLabel={isSelf ? `New Project` : ``}
+        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new`)}
+      />
     )
   }
 }
