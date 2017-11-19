@@ -19,8 +19,7 @@ class Dashboard extends Component {
 
   constructor(props) {
     console.log('props', props)
-    console.log(props.location.pathname.split('/')[3]);
-    super(props);
+    super(props)
     this.state = {
       invite: false,
       inviteMentors: false,
@@ -129,6 +128,42 @@ class Dashboard extends Component {
           onRequestClose={()=>this.setState({snackbarText: ''})}
           onActionTouchTap={()=>this.setState({snackbarText: ''})}
           bodyStyle={{ backgroundColor: purple }} />
+        <Dialog
+          title={"Invite to Your Tribe"}
+          modal={false}
+          open={this.state.invite}
+          onRequestClose={()=>{ this.setState({invite: false}) }}
+          autoScrollBodyContent={true}
+          bodyStyle={{padding: '0'}}
+          titleStyle={{
+            fontSize: '28px',
+            borderBottom:`1px solid ${grey400}`,
+            padding: '16px 27px 13px 27px',
+          }}
+          contentStyle={{width: '580px'}} >
+
+          <DialogRow style={{paddingTop: '0'}}>
+            <div style={{display: 'flex', padding: '27px', fontSize:'14px'}}>
+              <Tribe width={30} />
+              <div style={{alignSelf: 'center', paddingLeft: '7px'}}>Send an invitation to your friend</div>
+            </div>
+            <DialogSpacer>
+
+              <TextField
+                label={'Email'}
+                errorText={this.state.emailError}
+                name={'email'}
+                onChange={(ev, em) => this.setState({
+                  email: em, emailError: null
+                })}
+                placeholder={'Email'}
+              />
+              <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
+            </DialogSpacer>
+          </DialogRow>
+          <DialogRow>{this.state.suggestions}</DialogRow>
+        </Dialog>
+
         <DashHeader>
           <DashHeaderRow>
             <IconTextContainer to={`/tribe/${user.handle}`} >
@@ -138,34 +173,6 @@ class Dashboard extends Component {
             <InviteButton
               onClick={()=>{this.setState({invite: true})}}
               text={'Invite Member'} />
-            <Dialog
-              title={"Invite to Your Tribe"}
-              modal={false}
-              open={this.state.invite}
-              onRequestClose={()=>{ this.setState({invite: false}) }}
-              autoScrollBodyContent={true}
-              bodyStyle={{padding: '0'}}
-              titleStyle={{
-                fontSize: '28px',
-                borderBottom:`1px solid ${grey400}`,
-                padding: '16px 27px 13px 27px',
-              }} >
-              <DialogRow>
-                <DialogSpacer>
-                  <TextField
-                    label={'Email'}
-                    errorText={this.state.emailError}
-                    name={'email'}
-                    onChange={(ev, em) => this.setState({
-                      email: em, emailError: null
-                    })}
-                    placeholder={'Email'}
-                  />
-                  <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
-                </DialogSpacer>
-              </DialogRow>
-              <DialogRow>{this.state.suggestions}</DialogRow>
-            </Dialog>
           </DashHeaderRow>
         </DashHeader>
         <Divider/>
@@ -207,7 +214,7 @@ class Dashboard extends Component {
               values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
               content={this.state.selectedUser && this.props.children}
               scroll={true} />
-            : 
+            :
             <Panel empty
               content={
                 <EmptyPanel

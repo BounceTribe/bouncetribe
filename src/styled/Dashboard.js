@@ -4,6 +4,7 @@ import {View, BtAvatar, BtFlatButton} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import Bolt from 'icons/Bolt'
+import FacebookCircle from 'icons/FacebookCircle'
 import {grey500, grey400, grey119, grey222, purple, white} from 'theme'
 import {Name} from 'styled/Tribe'
 import {SubRow} from 'styled/Profile'
@@ -215,7 +216,7 @@ export class FbList extends Component {
     return (
       <FbDialogRow user={friend} >
         <SubRow>
-          <BtAvatar user={friend} size={50} />
+          <BtAvatar user={friend} size={50} fbCircle />
           <Name style={{lineHeight:'48px', paddingLeft: '7px'}} to={`/${friend.handle}`}>
             {friend.handle}
           </Name>
@@ -227,12 +228,13 @@ export class FbList extends Component {
           }}
           backgroundColor={white}
           labelStyle={{ color: `${white}` }}
-          icon={ <AddFriend fill={(invited) ? white : purple} height={16} /> }
+          icon={ <AddFriend fill={'#3B5998'} height={16} /> }
           style={{
             border: `1px solid ${grey400}`,
             borderRadius: '5px',
+            minWidth: '60px',
             width: '60px',
-            height: '4 0px'
+            height: '40px'
           }}
           disabled={invited}
         />

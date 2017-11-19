@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import {white, grey230, grey215, size, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
+import FacebookCircle from 'icons/FacebookCircle'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -46,7 +47,7 @@ export const BtTextMarker = (props) => {
 }
 
 
-export const BtAvatar = ({user, size, hideStatus, onClick, pointer}) => {
+export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) => {
   size = size || 50
   user = user || {}
   //set the ratio of size between the avatar and the online icon
@@ -57,24 +58,24 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer}) => {
     let now = Moment()
     online = now.diff(user.lastPing, 'seconds') < 315
   }
-
   return  (
     <div style={{
       height: `${size}px`,
       cursor: pointer ? 'pointer' : 'auto'
-    }} onClick={onClick}>
+    }} onClick={onClick} >
       <Avatar
-        src={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
+        src={(user.portrait && !user.disabled) ? user.portrait.url : `${url}/logo.png`}
         style={{border: 0, objectFit: 'cover'}}
         to={`/${user.handle}`}
         size={size}
       />
-      <Online size={iconSize} online={online}
+      {fbCircle ? <FacebookCircle style={{ marginLeft: `-20px` }} />
+        : <Online size={iconSize} online={online}
         style={{
           marginLeft: `-${iconSize}px`,
           display: `${hideStatus ? 'none' : 'inline'}`
         }}
-      />
+      />}
     </div>
   )
 }
