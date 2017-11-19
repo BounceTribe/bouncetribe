@@ -2,9 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import {purple} from 'theme'
 import {BtFlatButton} from 'styled'
-import Tribe from 'icons/Tribe'
-
-
 
 const Container = styled.div`
   display: flex;
@@ -12,9 +9,8 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-grow: 1;
-  padding: '20px'
+  padding: 20px;
 `
-//{icon, headline, note, btnLabel, onClick }
 
 const Headline = styled.div`
   font-size: 23px;
