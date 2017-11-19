@@ -8,16 +8,11 @@ import {EmptyPanel} from 'components/EmptyPanel'
 
 class BouncesPanel extends Component {
   render () {
-    //also check for dashboard component for display
     let {User, user} = this.props.viewer
     let isSelf = user.id===User.id
-
-    let hasBounces = !!User.bounces.length
-    let isDash = this.props.route.path.substr(0,6)==='/dash/'
-
+    let hasBounces = !!User.bounces.count
     return (
-      (hasBounces || isDash) ?
-      <ProjectListSm {...this.props} />
+      hasBounces ? <ProjectListSm {...this.props} />
       :
       <EmptyPanel
         icon={<Bounce width={100} fill={"#D3D3D3"} />}
@@ -42,6 +37,7 @@ export default Relay.createContainer(
             id
             handle
             bounces ( first:999 ) {
+              count
               edges {
                 node {
                   id

@@ -8,11 +8,12 @@ class ProjectsPanel extends Component {
   render () {
     let {user, User} = this.props.viewer
     let isSelf = user.id===User.id
-    let hasProjects = !!User.projects.length
-    let isDash = this.props.route.path.substr(0,6)==='/dash/'
+    let hasProjects = !!User.projects.count
+
+    console.log('PP user', User.handle, isSelf)
 
     return (
-      (hasProjects || isDash) ? <ProjectListSm {...this.props} /> :
+      hasProjects ? <ProjectListSm {...this.props} /> :
       <EmptyPanel
         icon={<Music height={113} fill={"#D3D3D3"} />}
         headline={isSelf ? `Everyone wants to hear it...` : `User has no projects`}
@@ -41,6 +42,7 @@ export default Relay.createContainer(
               first: 999
               orderBy: createdAt_ASC
             ){
+              count
               edges {
                 node {
                   id

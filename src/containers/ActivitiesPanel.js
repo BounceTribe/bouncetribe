@@ -14,7 +14,7 @@ class ActiviesPanel extends Component {
   get activities () {
     let {comments, bounces, projects} = this.props.viewer.User
     let commentProjects = []
-    let list = comments.edges.map((edge, index) =>{
+    let list = comments.edges.map((edge, index) => {
       let project = edge.node.project || {}
       if (commentProjects.includes(project.id)) {
         console.log('dupe, dupe');
