@@ -35,9 +35,15 @@ export const DialogRow = styled.div`
   padding: 25px 0;
   border-bottom: 1px solid ${grey400};
 `
+
+export const UpperInvite = styled.div`
+  display: flex;
+  padding: 27px;
+  font-size: 14px;
+  align-items: center;
+`
 const FbDialogRow = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 100%;
@@ -90,7 +96,6 @@ export const DashView = styled(View)`
 
 export const DashHeader = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-start;
   width: 90vw;
   padding-top: 0px;
@@ -98,7 +103,6 @@ export const DashHeader = styled.div`
 
 export const DashHeaderRow = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 90vw;
@@ -107,7 +111,6 @@ export const DashHeaderRow = styled.div`
 
 export const TopPanel = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-content: center;
   width: 100%;
@@ -125,7 +128,6 @@ export const ImgColumn = styled.div`
 `
 
 export const TopColumn = styled.div`
-  flex-direction: row;
   justify-content: space-between;
 `
 
@@ -233,7 +235,6 @@ export class FbList extends Component {
             border: `1px solid ${grey400}`,
             borderRadius: '5px',
             minWidth: '60px',
-            width: '60px',
             height: '40px'
           }}
           disabled={invited}

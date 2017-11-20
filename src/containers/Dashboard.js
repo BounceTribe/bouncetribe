@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, TopColumn, ImgColumn, FeedbackRating, DashProfile, BotRow} from 'styled/Dashboard'
+import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, TopColumn, ImgColumn, FeedbackRating, DashProfile, BotRow, UpperInvite} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {EmptyPanel} from 'components/EmptyPanel'
 import {Dialog, TextField, Snackbar} from 'material-ui'
@@ -140,28 +140,28 @@ class Dashboard extends Component {
             borderBottom:`1px solid ${grey400}`,
             padding: '16px 27px 13px 27px',
           }}
-          contentStyle={{width: '580px'}} >
+          contentStyle={{width: '580px', minHeight: '400px'}} >
 
           <DialogRow style={{paddingTop: '0'}}>
-            <div style={{display: 'flex', padding: '27px', fontSize:'14px'}}>
-              <Tribe width={30} />
-              <div style={{alignSelf: 'center', paddingLeft: '7px'}}>Send an invitation to your friend</div>
-            </div>
+            <UpperInvite>
+              <Tribe width={30} style={{paddingRight: '7px'}}/>
+              Send an invitation to your friend
+            </UpperInvite>
             <DialogSpacer>
-
               <TextField
                 label={'Email'}
                 errorText={this.state.emailError}
                 name={'email'}
-                onChange={(ev, em) => this.setState({
-                  email: em, emailError: null
-                })}
+                onChange={ (ev, em) =>
+                  this.setState({ email: em, emailError: null })
+                }
                 placeholder={'Email'}
               />
               <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
             </DialogSpacer>
           </DialogRow>
-          <DialogRow>{this.state.suggestions}</DialogRow>
+          {!!this.state.suggestions.length &&
+             <DialogRow>{this.state.suggestions}</DialogRow>}
         </Dialog>
 
         <DashHeader>
@@ -196,7 +196,7 @@ class Dashboard extends Component {
               friends={user.friends}
               inviteTribe={() => this.setState({invite: true}) }
               showTribe={this.state.showTribe}
-              flipTribe={() => this.setState({showTribe: !this.state.showTribe})}
+              flipTribe={() => this.setState({showTribe:  !this.state.showTribe})}
               mentors={user.mentors} //TODO
               inviteMentors={() => this.setState({inviteMentors: true}) }
               showMentors={this.state.showMentors}

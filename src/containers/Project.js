@@ -437,9 +437,7 @@ class Project extends Component {
                 onClick={
                   ()=>{
                     this.props.relay.commitUpdate(
-                      new DeleteProject({
-                        id: allProjects.edges[0].node.id,
-                      }),{
+                      new DeleteProject({id: allProjects.edges[0].node.id}),{
                         onSuccess: ()=>{
                           this.props.router.push(`/projects/${user.handle}`)
                         }
@@ -453,6 +451,7 @@ class Project extends Component {
           <Dialog
             open={this.state.edit}
             onRequestClose={()=>{this.setState({edit:false})}}
+            autoScrollBodyContent
             title={'Edit Project'}
             actionsContainerStyle={{
               display: 'flex',
@@ -473,10 +472,7 @@ class Project extends Component {
                     description: this.state.description,
                   }
                   this.props.relay.commitUpdate(
-                    new UpdateProject({
-                      project,
-                      genresIds: this.state.genre
-                    })
+                    new UpdateProject({ project, genresIds: this.state.genre })
                   )
                   this.setState({edit: false})
                 }} />
@@ -487,11 +483,11 @@ class Project extends Component {
               type={'text'}
               value={this.state.title}
               disabled
-              fullWidth={true} />
+              fullWidth />
             <SelectField
               floatingLabelText={'Genre'}
               value={this.state.genre}
-              fullWidth={true}
+              fullWidth
               onChange={(e, index, value)=>{ this.setState({genre:value}) }}
               selectedMenuItemStyle={{ color: purple }} >
               {this.state.genres}
@@ -499,11 +495,11 @@ class Project extends Component {
             <TextField
               name={'description'}
               floatingLabelText={'Instructions'}
-              multiLine={true}
+              multiLine
               rows={3}
               value={this.state.description}
               onChange={(e)=>{this.setState({description:e.target.value})}}
-              fullWidth={true}/>
+              fullWidth />
             <SharingModal>
               <Choice>
                 <RoundButton
