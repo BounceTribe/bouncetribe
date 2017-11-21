@@ -5,6 +5,7 @@ import UpdateUser from 'mutations/UpdateUser'
 import {BtFlatButton} from 'styled'
 import {purple, white} from 'theme'
 import changePassword from 'utils/changePassword'
+import auth from 'utils/auth'
 
 
 
@@ -17,16 +18,23 @@ class UserSettings extends Component {
       pass1: '',
       pass2: '',
       passwordError: '',
+      hide: false
     })
   }
 
   sendUpdate() {
     let userId = this.props.user.id
     let updateObj = Object.assign({userId}, this.state)
-    console.log('usdateobj', updateObj);
+    let newStatus = this.state.deactivated
+    if (newStatus && newStatus!==this.props.user.deactivated) {
+      //prevents showing other dialod before booting to login
+      this.setState({hide: true})
+    }
     Relay.Store.commitUpdate(
       new UpdateUser(updateObj),{
-        onSuccess: res => {this.props.onSave()},
+        onSuccess: res => {
+          newStatus ? auth.logout() : this.props.onSave()
+        },
         onFailure: res => {
           //handle failure
         }
@@ -61,13 +69,73 @@ class UserSettings extends Component {
   }
 
   render() {
+    console.log('user', this.props.user);
+    let emailPassword =
+    <div>
+      <h3>Email Notifications</h3>
+      {/* <Checkbox
+        label={"Disable all"}
+        checked={this.state.doNotEmail}
+        style={{padding: '10px 0'}}
+        onCheck={(e, val) => this.setState({doNotEmail: val})}
+      /> */}
+      <Checkbox
+        label={"Project Feedback"}
+        checked={!this.state.doNotEmailPF}
+        style={{padding: '10px 0'}}
+        onCheck={(e, val) => this.setState({doNotEmailPF: !val})}
+      />
+      <Checkbox
+        label={"Project Bounced"}
+        checked={!this.state.doNotEmailPB}
+        style={{padding: '10px 0'}}
+        onCheck={(e, val) => this.setState({doNotEmailPB: !val})}
+      />
+      <Checkbox
+        label={"Tribe Requests"}
+        checked={!this.state.doNotEmailTR}
+        style={{padding: '10px 0'}}
+        onCheck={(e, val) => this.setState({doNotEmailTR : !val})}
+      />
+      <Checkbox
+        label={"Tribe Request Accepted"}
+        checked={!this.state.doNotEmailTA}
+        style={{padding: '10px 0'}}
+        onCheck={(e, val) => this.setState({doNotEmailTA: !val})}
+      /><br />
+      <TextField
+        disabled={this.props.user.auth0UserId.includes('facebook|')}
+        floatingLabelText={'New Password'}
+        value={this.state.pass1}
+        type={'password'}
+        onChange={(e, pass1) => this.checkPasswords({pass1, pass2: this.state.pass2})}
+      /><br />
+      <TextField
+        disabled={this.props.user.auth0UserId.includes('facebook|')}
+        floatingLabelText={'Confirm Password'}
+        errorText={this.state.passwordError}
+        value={this.state.pass2}
+        type={'password'}
+        inputStyle={{marginTop: '0'}}
+        onChange={(e, pass2) => this.checkPasswords({pass1: this.state.pass1, pass2})}
+      /><br />
+      <BtFlatButton
+        disabled={!this.state.pass1 || !!this.state.passwordError}
+        label={'Submit'}
+        backgroundColor={purple}
+        labelStyle={{ color: white }}
+        onClick={this.submitPass}
+      /><br />
+    </div>
+
     return (
       <Dialog
         title={"Settings"}
         autoScrollBodyContent
         modal
+        bodyStyle={{minHeight: '220px'}}
         titleStyle={{ fontSize: '28px'}}
-        open={this.props.open}
+        open={this.props.open && !this.state.hide}
         actions={[
           <FlatButton
             label={"Cancel"}
@@ -83,62 +151,12 @@ class UserSettings extends Component {
           />
         ]}
       >
-        {this.props.user.deactivated
-          && <h4 style={{color: 'red'}}>Activate your account to continue!</h4>}
-        <h3>Email Notifications</h3>
-        {/* <Checkbox
-          label={"Disable all"}
-          checked={this.state.doNotEmail}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmail: val})}
-        /> */}
-        <Checkbox
-          label={"Project Feedback"}
-          checked={!this.state.doNotEmailPF}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailPF: !val})}
-        />
-        <Checkbox
-          label={"Project Bounced"}
-          checked={!this.state.doNotEmailPB}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailPB: !val})}
-        />
-        <Checkbox
-          label={"Tribe Requests"}
-          checked={!this.state.doNotEmailTR}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailTR : !val})}
-        />
-        <Checkbox
-          label={"Tribe Request Accepted"}
-          checked={!this.state.doNotEmailTA}
-          style={{padding: '10px 0'}}
-          onCheck={(e, val) => this.setState({doNotEmailTA: !val})}
-        /><br />
-        <TextField
-          disabled={this.props.user.auth0UserId.includes('facebook|')}
-          floatingLabelText={'New Password'}
-          value={this.state.pass1}
-          type={'password'}
-          onChange={(e, pass1) => this.checkPasswords({pass1, pass2: this.state.pass2})}
-        /><br />
-        <TextField
-          disabled={this.props.user.auth0UserId.includes('facebook|')}
-          floatingLabelText={'Confirm Password'}
-          errorText={this.state.passwordError}
-          value={this.state.pass2}
-          type={'password'}
-          inputStyle={{marginTop: '0'}}
-          onChange={(e, pass2) => this.checkPasswords({pass1: this.state.pass1, pass2})}
-        /><br />
-        <BtFlatButton
-          disabled={!this.state.pass1 || !!this.state.passwordError}
-          label={'Submit'}
-          backgroundColor={purple}
-          labelStyle={{ color: white }}
-          onClick={this.submitPass}
-        /><br />
+        {this.props.user.deactivated ?
+          <h4 style={{paddingBottom: '50px'}}>
+            Your BounceTribe account is currently deactivated
+          </h4>
+        : emailPassword}
+
         <Toggle
           label={"Active Account"}
           toggled={!this.state.deactivated}

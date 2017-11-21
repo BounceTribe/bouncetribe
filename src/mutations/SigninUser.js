@@ -40,6 +40,7 @@ export default class SigninUserMutation extends Relay.Mutation {
                 user {
                   id
                   handle
+                  deactivated
                   auth0UserId
                   friends (
                     first: 1

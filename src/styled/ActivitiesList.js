@@ -3,9 +3,18 @@ import {BtLink} from 'styled'
 import {grey300, grey500} from 'theme'
 import React from 'react'
 
+export const ScrollBox = styled.div`
+  padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 100%;
+`
+
 const ActivityContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
   border-bottom: 1px solid ${grey300};
   padding: 20px 20px;
 `

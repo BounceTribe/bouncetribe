@@ -84,7 +84,7 @@ export const BtLink = styled(Link)`
   display: flex;
   color: ${grey700};
   text-decoration: none;
-  cursor: pointer;
+  cursor:${props => props.to ? 'pointer' : 'auto'};
 `
 
 export const Main = styled.main`

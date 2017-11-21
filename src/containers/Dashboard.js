@@ -119,6 +119,9 @@ class Dashboard extends Component {
     let selectedUser = this.state.selectedUser || {}
     let {user} = this.props.viewer
     let tab = this.state.tab
+
+    if (user.deactivated) return null
+
     return (
       <DashView>
         <Snackbar
@@ -227,6 +230,7 @@ class Dashboard extends Component {
         </BotRow>
       </DashView>
     )
+
   }
  }
 
@@ -237,6 +241,7 @@ class Dashboard extends Component {
         fragment on Viewer {
           user {
             id
+            deactivated
             handle
             email
             score

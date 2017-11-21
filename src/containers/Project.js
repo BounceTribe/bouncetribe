@@ -65,29 +65,27 @@ class Project extends Component {
           value={genre.id}
           key={genre.id} />
       ))
-      this.setState({
-        genres
-      })
+      this.setState({ genres })
     })
   }
 
   componentWillMount () {
     let {id: ownId} = this.props.viewer.user
-    console.log('projectmount', this.props);
+    let project = this.props.viewer.allProjects.edges[0].node
+    console.log('projectmount', this.props)
     if (ownId === this.props.viewer.User.id) {
       this.setState({
         ownProject:true,
-        title: this.props.viewer.allProjects.edges[0].node.title,
-        description: this.props.viewer.allProjects.edges[0].node.description,
-        genre: this.props.viewer.allProjects.edges[0].node.genres.edges[0].node.id,
-        privacy: this.props.viewer.allProjects.edges[0].node.privacy,
+        title: project.title,
+        description: project.description,
+        genre: project.genres.edges[0].node.id,
+        privacy: project.privacy,
         tabs: 'view'
       })
     } else {
       this.setState({ownProject:false})
     }
     let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
-    let project = this.props.viewer.allProjects.edges[0].node
     let projectOwnerId = this.props.viewer.User.id
     if (
       (
@@ -95,10 +93,8 @@ class Project extends Component {
         !friendIds.includes(projectOwnerId) &&
         project.privacy !== "PUBLIC"
       ) ||
-      (
-        ownId !== projectOwnerId &&
-        project.privacy === "PRIVATE"
-      )
+      ( ownId !== projectOwnerId && project.privacy === "PRIVATE" ) ||
+      ( project.creator.deactivated )
     ) {
       this.props.router.push(`/`)
     }
@@ -714,6 +710,7 @@ export default Relay.createContainer(
                 }
                 creator {
                   handle
+                  deactivated
                   id
                 }
                 genres (first: 3) {

@@ -646,7 +646,9 @@ export default Relay.createContainer(
             placename
             score
             projects { count }
-            friends { count }
+            friends (
+              filter: {deactivated: false}
+            ) { count }
             genres ( first: 20 ) {
               edges {
                 node {

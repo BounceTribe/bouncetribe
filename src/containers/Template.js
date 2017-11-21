@@ -183,9 +183,9 @@ class Template extends Component {
             onActionTouchTap={()=>this.setState({snackbarText: ''})}
             bodyStyle={{ backgroundColor: purple }}
           />
-          {user &&
+          {user && (this.state.settings || user.deactivated) &&
             <UserSettings
-              open={(this.state.settings || user.deactivated) ? true : false}
+              open //open conditions here ^^ to prevent unnecessary rendering
               user={user}
               onSave={this.settingsSave}
               onClose={()=>this.settingsClose()}
