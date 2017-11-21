@@ -41,6 +41,7 @@ const tribeSearch = (params, {location})=>{
     ...params,
     tribeFilter: {
       id_not: query.ownId,
+      deactivated: false,
       invitations_none: {
         actor: {
           id: query.ownId

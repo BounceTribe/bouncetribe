@@ -103,7 +103,7 @@ export const View = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 90%;
+  width: 100%;
   border: solid ${grey230} 1px;
   border-radius: 5px;
   min-height: 80vh;

@@ -25,7 +25,7 @@ class Dashboard extends Component {
       inviteMentors: false,
       email: null,
       emailError: null,
-      maxSuggestedFriends: 2,
+      maxSuggestedFriends: 20,
       selectedUser: {},
       suggestions: [],
       showMentors: true,
@@ -44,7 +44,6 @@ class Dashboard extends Component {
         edge.node.handle === this.props.params.userHandle)
       if (foundUser) {
         this.setState( {selectedUser: foundUser.node} )
-        this.suggestFriends(this.state.maxSuggestedFriends)
       } else {
         console.log('no found user; redirecting to first friend')
         this.selectUser(edges[0].node)
@@ -54,6 +53,8 @@ class Dashboard extends Component {
       console.log('dash no tribe');
       //notribe
     }
+    this.suggestFriends(this.state.maxSuggestedFriends)
+
   }
 
 

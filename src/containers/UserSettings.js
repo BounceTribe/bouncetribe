@@ -69,7 +69,7 @@ class UserSettings extends Component {
   }
 
   render() {
-    console.log('user', this.props.user);
+    let user = user
     let emailPassword =
     <div>
       <h3>Email Notifications</h3>
@@ -104,14 +104,14 @@ class UserSettings extends Component {
         onCheck={(e, val) => this.setState({doNotEmailTA: !val})}
       /><br />
       <TextField
-        disabled={this.props.user.auth0UserId.includes('facebook|')}
+        disabled={user.auth0UserId.includes('facebook|')}
         floatingLabelText={'New Password'}
         value={this.state.pass1}
         type={'password'}
         onChange={(e, pass1) => this.checkPasswords({pass1, pass2: this.state.pass2})}
       /><br />
       <TextField
-        disabled={this.props.user.auth0UserId.includes('facebook|')}
+        disabled={user.auth0UserId.includes('facebook|')}
         floatingLabelText={'Confirm Password'}
         errorText={this.state.passwordError}
         value={this.state.pass2}
@@ -151,17 +151,17 @@ class UserSettings extends Component {
           />
         ]}
       >
-        {this.props.user.deactivated ?
+        {user.deactivated ?
           <h4 style={{paddingBottom: '50px'}}>
             Your BounceTribe account is currently deactivated
           </h4>
         : emailPassword}
 
         <Toggle
-          label={"Active Account"}
+          label={user.deactivated ? "Activate Account" : "Active Account"}
           toggled={!this.state.deactivated}
           labelPosition={'right'}
-          style={{fontSize: '18px', marginTop: '10px'}}
+          style={{fontSize: '18px', marginTop: '20px'}}
           onToggle={(e, val) => this.setState({deactivated: !val})}
         />
 
