@@ -42,6 +42,7 @@ export const Single = styled.div`
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
+  transition: background-color 2s ease-out;
   border: 1px solid ${grey300};
   border-radius: 6px;
   padding: 10px 30px;

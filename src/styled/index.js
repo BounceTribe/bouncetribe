@@ -52,17 +52,18 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) =
   user = user || {}
   //set the ratio of size between the avatar and the online icon
   const iconSize = size * 18/60
-  console.log('USER', user);
   let online = false
   if (user.lastPing) {
     let now = Moment()
     online = now.diff(user.lastPing, 'seconds') < 315
   }
   return  (
-    <div style={{
-      height: `${size}px`,
-      cursor: pointer ? 'pointer' : 'auto'
-    }} onClick={onClick} >
+    <div
+      style={{
+        height: `${size}px`,
+        cursor: pointer ? 'pointer' : 'auto'
+      }}
+      onClick={onClick} >
       <Avatar
         src={(user.portrait && !user.disabled) ? user.portrait.url : `${url}/logo.png`}
         style={{border: 0, objectFit: 'cover'}}

@@ -64,7 +64,7 @@ class Comments extends Component {
         }
       },
       ()=>{
-        document.getElementById('new').scrollIntoView(true)
+        document.getElementById('new').scrollIntoView({behavior:'smooth',block: 'start'})
       }
     )
 
@@ -82,11 +82,7 @@ class Comments extends Component {
     })
     return this.state.comments.map(edge=>{
       let {node: comment} = edge
-      return (
-        <SingleComment
-          comment={comment}
-          key={comment.id}
-        />
+      return ( <SingleComment comment={comment} key={comment.id} />
       )
     })
   }
@@ -108,44 +104,21 @@ class Comments extends Component {
           <ButtonColumn>
             <RoundButton
               secondary
-              icon={
-                <Comment
-                  height={40}
-                  width={40}
-                />
-              }
+              icon={<Comment height={40} width={40}/>}
               onTouchTap={()=>{this.dropMarker('COMMENT')}}
             />
-            <ButtonLabel>
-              Idea
-            </ButtonLabel>
+            <ButtonLabel>Idea</ButtonLabel>
           </ButtonColumn>
           <ButtonColumn>
             <RoundButton
-              icon={
-                <Heart
-                  height={40}
-                  width={40}
-                />
-              }
+              icon={<Heart height={40} width={40}/>}
               onTouchTap={()=>{this.dropMarker('LIKE')}}
             />
-            <ButtonLabel>
-              Like
-            </ButtonLabel>
+            <ButtonLabel>Like</ButtonLabel>
           </ButtonColumn>
         </ButtonRow>
-        <CommentBox
-          hide={(ownProject)}
-        >
-
-
-        </CommentBox>
-        <CommentScroller>
-          {this.comments}
-        </CommentScroller>
-
-
+        <CommentBox hide={(ownProject)} />
+        <CommentScroller> {this.comments} </CommentScroller>
       </Container>
     )
   }

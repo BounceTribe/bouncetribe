@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View, Button, RoundButton} from 'styled'
-import {Container, Header, HeaderOptions, List} from 'styled/list'
+import {Header, HeaderOptions, List} from 'styled/list'
 import {ProjectItem, Left, Artwork, Info, ProjectTitle, Trio, TrioItem, BigBubble, ButtonRow} from 'styled/ProjectList'
 import {IconTextContainer, IconText} from 'styled'
 import Music from 'icons/Music'
@@ -151,26 +151,26 @@ class ProjectList extends Component {
   render () {
     return (
       <View>
-          <Header>
-            <IconTextContainer
-              to={`/projects/${this.props.viewer.User.handle}`}
-            >
-              <Music
-                style={{ display: 'flex', marginBottom: '5px' }}
-                fill={purple}
-              />
-              <IconText>My Projects</IconText>
-            </IconTextContainer>
-            <HeaderOptions>
-              <Button
-                to={`/projects/${this.props.viewer.user.handle}/new`}
-                icon={<Upload fill={white} />}
-                label={'New Project'}
-                primary
-              />
-            </HeaderOptions>
-          </Header>
-          <List>{this.projects}</List>
+        <Header>
+          <IconTextContainer
+            to={`/projects/${this.props.viewer.User.handle}`}
+          >
+            <Music
+              style={{ display: 'flex', marginBottom: '5px' }}
+              fill={purple}
+            />
+            <IconText>My Projects</IconText>
+          </IconTextContainer>
+          <HeaderOptions>
+            <Button
+              to={`/projects/${this.props.viewer.user.handle}/new`}
+              icon={<Upload fill={white} />}
+              label={'New Project'}
+              primary
+            />
+          </HeaderOptions>
+        </Header>
+        <List>{this.projects}</List>
       </View>
     )
   }
@@ -197,18 +197,12 @@ export default Relay.createContainer(
                 node {
                   id
                   title
-                  artwork {
-                    url
-                  }
+                  artwork {url}
                   privacy
-                  comments (
-                    first: 999
-                  ){
+                  comments (first: 999){
                     edges {
                       node {
-                        author {
-                          id
-                        }
+                        author {id}
                         type
                       }
                     }
