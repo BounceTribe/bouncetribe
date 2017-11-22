@@ -69,9 +69,11 @@ class Project extends Component {
     })
   }
 
+  get project() { return this.props.viewer.allProjects.edges[0].node }
+
   componentWillMount () {
     let {id: ownId} = this.props.viewer.user
-    let project = this.props.viewer.allProjects.edges[0].node
+    let project = this.project
     console.log('projectmount', this.props)
     if (ownId === this.props.viewer.User.id) {
       this.setState({
@@ -102,7 +104,7 @@ class Project extends Component {
 
   componentDidMount(){
     let user = this.props.viewer.user
-    let project = this.props.viewer.allProjects.edges[0].node
+    let project = this.project
     let bounces = project.bounces.edges
     let friendIds = user.friends.edges.map(edge => edge.node.id)
     let bouncedByIds = bounces.map(edge => edge.node.bouncer.id)
@@ -116,7 +118,7 @@ class Project extends Component {
 
   componentWillReceiveProps(nextProps) {
     // let focus
-    // let oldComments = this.props.viewer.allProjects.edges[0].node.comments.edges.map(edge=>edge.node.id)
+    // let oldComments = this.project.comments.edges.map(edge=>edge.node.id)
     // this.setState(
     //   (prevState)=>{
     //     let active = prevState.active
@@ -142,14 +144,11 @@ class Project extends Component {
   }
 
   currentTime = (time) =>  this.setState({ time })
-
-
   getDuration = (duration) => this.setState({ duration })
-
 
   dropMarker = (type) => {
     this.setState((prevState)=> {
-      // let {edges} = this.props.viewer.allProjects.edges[0].node.comments
+      // let {edges} = this.project.comments
       // edges.push({node:{
       //   id: 'newText',
       //   timestamp: this.state.time,
@@ -157,7 +156,7 @@ class Project extends Component {
       //     id: this.props.viewer.user.id
       //   },
       //   project: {
-      //     id: this.props.viewer.allProjects.edges[0].node.id
+      //     id: this.project.id
       //   },
       //   text: "",
       //   type
@@ -170,7 +169,7 @@ class Project extends Component {
           text: "",
           author: this.props.viewer.user,
           timestamp: this.state.time,
-          project: this.props.viewer.allProjects.edges[0].node
+          project: this.project
         }
       }
     })
@@ -190,9 +189,7 @@ class Project extends Component {
     this.setState( (prevState) => {
       let {active} = prevState
       active.splice(active.indexOf(index),1)
-      return {
-        active
-      }
+      return { active }
     })
   }
 
@@ -212,20 +209,16 @@ class Project extends Component {
           active={(this.state.active.includes(index+1))}
           activate={this.activate}
           deactivate={this.deactivate}
-          userId={this.props.viewer.user.id}
+          user={this.props.viewer.user}
           tabs={this.state.tabs} />
       )
     })
   }
 
   titleChange = (title) => {
-    this.setState({
-      title,
-      titleUnique: true
-    })
+    this.setState({ title, titleUnique: true })
     if (this.debounce) {
       clearTimeout(this.debounce)
-
     }
     this.debounce = setTimeout(()=>{
       ensureUsersProjectTitleUnique(this.props.viewer.user.id, title).then(unique=>{
@@ -234,15 +227,13 @@ class Project extends Component {
     },1000)
   }
 
-  handleSelection = (selection) => {
-    this.setState({selection})
-  }
+  handleSelection = (selection) => this.setState({selection})
 
   artworkSuccess = (file) => {
     this.setState({artworkEditorOpen: false})
     this.props.relay.commitUpdate(
       new UpdateProject({
-        project: this.props.viewer.allProjects.edges[0].node,
+        project: this.project,
         artworkId: file.id,
       }), {
         onSuccess: success => console.log('artwork success'),
@@ -257,9 +248,11 @@ class Project extends Component {
     }
   }
 
-
   filteredComments = () => {
-    let comments = (this.state.new) ? this.props.viewer.allProjects.edges[0].node.comments.edges.concat({node:this.state.new}) : this.props.viewer.allProjects.edges[0].node.comments.edges
+    let commentEdges = this.project.comments.edges
+    console.log('commentEdges', commentEdges)
+
+    let comments = (this.state.new) ? commentEdges.concat({node:this.state.new}) : commentEdges
 
     if (this.state.tabs === 'listen') {
       comments = comments.filter( (comment) => {
@@ -273,7 +266,7 @@ class Project extends Component {
       })
     }
 
-    if (this.props.viewer.user.id !== this.props.viewer.allProjects.edges[0].node.creator.id) {
+    if (this.props.viewer.user.id !== this.project.creator.id) {
       comments = comments.filter( (comment) => {
         return !comment.node.session
       })
@@ -282,7 +275,7 @@ class Project extends Component {
   }
 
   setBounce = () => {
-    let project = this.props.viewer.allProjects.edges[0].node
+    let project = this.project
     let {id: selfId} = this.props.viewer.user
     let {id: projectId} = project
     if (this.state.bounced) {
@@ -290,9 +283,7 @@ class Project extends Component {
         edge.node.bouncer.id===selfId)
         console.log('thisbounce', thisBounce);
       this.props.relay.commitUpdate(
-        new DeleteBounce({
-          id: thisBounce.node.id
-        }), {
+        new DeleteBounce({ id: thisBounce.node.id }), {
           onSuccess: (response) => {
             this.setState({bounced: false})
             console.log('success', response)},
@@ -638,6 +629,8 @@ export default Relay.createContainer(
           user {
             id
             handle
+            lastPing
+            portrait {url}
             friends (
               first: 999
               filter: {deactivated: false}
@@ -662,6 +655,7 @@ export default Relay.createContainer(
             id
             email
             handle
+            lastPing
             placename
             experience
             portrait {url}
@@ -682,6 +676,7 @@ export default Relay.createContainer(
                 node {
                   id
                   handle
+                  deactivated
                   portrait { url }
                 }
               }
@@ -703,6 +698,7 @@ export default Relay.createContainer(
                       id
                       bouncer {
                         id
+                        deactivated
                         handle
                       }
                     }
@@ -745,6 +741,8 @@ export default Relay.createContainer(
                       author {
                         id
                         handle
+                        lastPing
+                        deactivated
                         portrait { url }
                       }
                       project { id }
@@ -756,6 +754,7 @@ export default Relay.createContainer(
                             text
                             author {
                               handle
+                              deactivated
                               portrait { url }
                             }
                           }

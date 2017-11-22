@@ -144,26 +144,6 @@ export const SCCol = styled.div`
   margin-left: 10px;
 `
 
-export const SCImg = styled.img`
-  display: flex;
-  height: 25px;
-  width: 25px;
-  object-fit: cover;
-  border-radius: 25px;
-`
-
-export const SCPortrait = (props) => {
-  return(
-    <BtLink
-      to={props.to}
-    >
-      <SCImg
-        src={props.src}
-      />
-    </BtLink>
-  )
-}
-
 export const SCHandleText = styled.div`
   display: flex;
   font-weight: 400;

@@ -56,9 +56,7 @@ class ProjectList extends Component {
           return edge.node.type === 'LIKE'
         })
         return (
-          <ProjectItem
-            key={project.id}
-          >
+          <ProjectItem key={project.id} >
             <Left>
               <Artwork
                 src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
@@ -66,9 +64,7 @@ class ProjectList extends Component {
                 to={`/${owner.handle}/${project.title}`}
               />
               <Info>
-                <ProjectTitle
-                  to={`/${owner.handle}/${project.title}`}
-                >
+                <ProjectTitle to={`/${owner.handle}/${project.title}`} >
                   {project.title}
                 </ProjectTitle>
                 <Trio>
@@ -76,38 +72,26 @@ class ProjectList extends Component {
                     <Headphones
                       height={30}
                       width={30}
-                      style={{
-                        margin: '0 5px 0 0px'
-                      }}
+                      style={{margin: '0 5px 0 0px'}}
                     />
                     {(project.comments.length > 0) ? this.uniqueCommenters(project.comments) : 0}
                   </TrioItem>
                   <TrioItem>
-                    <BigBubble
-                      secondary
-                    >
-                      <Comment
-                        height={20}
-                        width={20}
-                      />
+                    <BigBubble secondary >
+                      <Comment height={20} width={20} />
                     </BigBubble>
                     {comments.length}
                   </TrioItem>
                   <TrioItem>
                     <BigBubble>
-                      <Heart
-                        height={20}
-                        width={20}
-                      />
+                      <Heart height={20} width={20} />
                     </BigBubble>
                     {likes.length}
                   </TrioItem>
                 </Trio>
               </Info>
-
             </Left>
             <ButtonRow>
-
               <RoundButton
                 tooltip="Private"
                 backgroundColor={(project.privacy === 'PRIVATE') ? purple : grey300}
@@ -140,7 +124,6 @@ class ProjectList extends Component {
                     width={50}
                   />
                 }
-
                 onClick={()=>this.setPrivacy(project, 'TRIBE')}
               />
               <RoundButton
@@ -154,13 +137,11 @@ class ProjectList extends Component {
                       lineHeight: '60px',
                       height: '60px'
                     }}
-
                   />
                 }
                 onClick={()=>this.setPrivacy(project, 'PUBLIC')}
               />
             </ButtonRow>
-
           </ProjectItem>
         )
       }
@@ -170,38 +151,26 @@ class ProjectList extends Component {
   render () {
     return (
       <View>
-        <Container>
           <Header>
-              <IconTextContainer
-                to={`/projects/${this.props.viewer.User.handle}`}
-              >
-                <Music
-                  style={{
-                    display: 'flex',
-                    marginBottom: '5px'
-                  }}
-                  fill={purple}
-                />
-                <IconText>
-                  My Projects
-                </IconText>
-              </IconTextContainer>
+            <IconTextContainer
+              to={`/projects/${this.props.viewer.User.handle}`}
+            >
+              <Music
+                style={{ display: 'flex', marginBottom: '5px' }}
+                fill={purple}
+              />
+              <IconText>My Projects</IconText>
+            </IconTextContainer>
             <HeaderOptions>
               <Button
                 to={`/projects/${this.props.viewer.user.handle}/new`}
-                icon={
-                  <Upload fill={white} />
-                }
+                icon={<Upload fill={white} />}
                 label={'New Project'}
                 primary
               />
-
             </HeaderOptions>
           </Header>
-          <List>
-            {this.projects}
-          </List>
-        </Container>
+          <List>{this.projects}</List>
       </View>
     )
   }

@@ -52,7 +52,7 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) =
   user = user || {}
   //set the ratio of size between the avatar and the online icon
   const iconSize = size * 18/60
-
+  console.log('USER', user);
   let online = false
   if (user.lastPing) {
     let now = Moment()
@@ -103,7 +103,7 @@ export const View = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: calc(100% - 40px);
   border: solid ${grey230} 1px;
   border-radius: 5px;
   min-height: 80vh;

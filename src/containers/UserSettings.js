@@ -69,7 +69,7 @@ class UserSettings extends Component {
   }
 
   render() {
-    let user = user
+    let user = this.props.user
     let emailPassword =
     <div>
       <h3>Email Notifications</h3>

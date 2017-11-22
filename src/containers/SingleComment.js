@@ -1,9 +1,8 @@
 import React, {Component} from 'react'
-import {Single, Bottom, Time, Text, Center, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, CommentP, SCPortrait, SCCol, SCText} from 'styled/Comments'
-import {RoundButton} from 'styled'
+import {Single, Bottom, Time, Text, Center, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, CommentP, SCCol, SCText} from 'styled/Comments'
+import {RoundButton, BtAvatar} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
-import {url} from 'config'
 import formatTime from 'utils/formatTime'
 import TextField from 'material-ui/TextField'
 import UpdateComment from 'mutations/UpdateComment'
@@ -16,14 +15,21 @@ import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
 
 class SingleComment extends Component {
 
-  state = {
-    text: "",
-    newSubcomment: ""
+  constructor(props) {
+    super()
+    this.state = {
+      text: props.comment.text,
+      newSubcomment: "",
+      children: ((props.comment.children || {}).edges || []).map(edge => edge.node)
+    }
+    console.log('singlecommentprops', props, this.state);
+
   }
 
-  componentWillMount(){
-    this.setState({text: this.props.comment.text})
-  }
+
+  // componentWillMount(){
+  //   this.setState({,})
+  // }
 
   editComment = (e) => {
     if (e.charCode === 13) {
@@ -49,7 +55,6 @@ class SingleComment extends Component {
         )
         this.props.deactivate(this.props.index)
       }
-
     }
   }
 
@@ -60,25 +65,18 @@ class SingleComment extends Component {
           id={this.props.comment.id}
           value={this.state.text}
           onChange={(e,newValue)=>{this.setState({text:newValue})}}
-          fullWidth={true}
+          fullWidth
           autoFocus={(this.props.focus === this.props.comment.id || this.props.index === 0)}
           onKeyPress={this.editComment}
-          style={{
-            marginTop: '-16px',
-          }}
-          inputStyle={{
-            color: grey700,
-            fontSize: '16px'
-          }}
+          style={{ marginTop: '-16px', }}
+          inputStyle={{ color: grey700, fontSize: '16px' }}
           underlineFocusStyle={{
             borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple
           }}
         />
       )
     } else {
-      return (
-        <CommentP>{this.props.comment.text}</CommentP>
-      )
+      return (<CommentP>{this.props.comment.text}</CommentP>)
     }
   }
 
@@ -91,7 +89,7 @@ class SingleComment extends Component {
   hider = () => {
     if (this.props.index === 0) {
       return false
-    } else if (this.props.userId !== this.props.comment.author.id && this.props.tabs === 'listen') {
+    } else if (this.props.user.id !== this.props.comment.author.id && this.props.tabs === 'listen') {
       return true
     } else {
       return false
@@ -114,10 +112,7 @@ class SingleComment extends Component {
         />
         <Center>
           <Text>
-            <Handle
-              // comment={(type === 'COMMENT')}
-              to={`/${author.handle}`}
-            >
+            <Handle to={author.deactivated ? null : `/${author.handle}`} >
               {author.handle}
             </Handle>
             {this.text()}
@@ -125,12 +120,12 @@ class SingleComment extends Component {
           <Bottom>
             <BotLink
               onClick={()=>{this.props.activate(this.props.index)}}
-              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.userId !== this.props.comment.author.id)}
+              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.user.id !== this.props.comment.author.id)}
             >
               Edit
             </BotLink>
             <BotLink
-              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.userId !== this.props.comment.author.id)}
+              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.user.id !== this.props.comment.author.id)}
               onClick={()=>{
                 console.log("this.props.comment.project.id", this.props.comment.project.id )
                 Relay.Store.commitUpdate(
@@ -149,7 +144,7 @@ class SingleComment extends Component {
               onClick={()=>{
                 Relay.Store.commitUpdate(
                   new AddToCommentUpvotes({
-                    upvotesUserId: this.props.userId,
+                    upvotesUserId: this.props.user.id,
                     upvotesCommentId: this.props.comment.id
                   })
                 )
@@ -160,10 +155,10 @@ class SingleComment extends Component {
             <BotLink
               hideLink={(this.props.tabs === 'listen')}
               onClick={()=>{
-                this.setState((prevState)=>{return {subcomments: !prevState.subcomments}})
+                this.setState({subcomments: !this.state.subcomments})
               }}
             >
-              Comments | {(this.props.comment.children) ?  this.props.comment.children.edges.length : 0}
+              Comments | {(!!this.state.children.length) ?  this.state.children.length : 0}
             </BotLink>
             <BotLink hideLink={false} >
 
@@ -171,18 +166,13 @@ class SingleComment extends Component {
           </Bottom>
           {(this.state.subcomments) ?
             <SCContainer>
-            {this.props.comment.children.edges.map(edge=>{
-              let imgUrl = (edge.node.sender.portrait || {}).url || `${url}/logo.png`
+            {this.state.children.map(child=>{
               return (
-                <SubComment key={edge.node.id} >
-                  <SCPortrait src={imgUrl} />
+                <SubComment key={child.id} >
+                  <BtAvatar user={child.author} size={30} />
                   <SCCol>
-                    <SCHandle>
-                      {edge.node.author.handle}
-                    </SCHandle>
-                    <SCText>
-                      {edge.node.text}
-                    </SCText>
+                    <SCHandle>{child.author.handle}</SCHandle>
+                    <SCText>{child.text}</SCText>
                   </SCCol>
                 </SubComment>
               )
@@ -195,13 +185,23 @@ class SingleComment extends Component {
               style={{ marginLeft: '35px' }}
               onKeyPress={(e)=>{
                 if (e.charCode === 13) {
+                  let newSubcommentData = {
+                    authorId: this.props.user.id,
+                    author: this.props.user, //for real time
+                    type: 'COMMENT',
+                    text: this.state.newSubcomment,
+                    parentId: this.props.comment.id
+                  }
                   Relay.Store.commitUpdate(
-                    new CreateComment({
-                      authorId: this.props.userId,
-                      type: 'COMMENT',
-                      text: this.state.newSubcomment,
-                      parentId: this.props.comment.id
-                    })
+                    new CreateComment(newSubcommentData), {
+                      onSuccess: success => {
+                        console.log('newSubcomment', this.state.children)
+                        this.setState({
+                          children: this.state.children.concat(newSubcommentData)
+                        })
+                      },
+                      failure: failure => console.log('fail subcomment', failure)
+                    }
                   )
                   this.setState({newSubcomment: ""})
                 }
@@ -210,9 +210,7 @@ class SingleComment extends Component {
             </SCContainer> : null
           }
         </Center>
-        <Time>
-          {formatTime(timestamp)}
-        </Time>
+        <Time>{formatTime(timestamp)}</Time>
       </Single>
     )
   }

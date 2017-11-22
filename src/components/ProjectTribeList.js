@@ -121,6 +121,7 @@ class ProjectTribeList extends Component {
           width: '100%',
           border: `1px solid ${grey200}`,
           borderRadius: `6px`,
+          marginBottom: '20px',
           display: (this.props.recentCommenters.length > 0) ? '' : 'none'
         }}
       >
@@ -146,7 +147,7 @@ class ProjectTribeList extends Component {
         />
         <Divider/> */}
         <ListItem
-          primaryText={'Tribe Members'}
+          primaryText={'Feedback Contributors'}
           style={{
             fontSize: '16px',
             color: purple,
