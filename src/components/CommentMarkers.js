@@ -36,7 +36,7 @@ class CommentMarkers extends Component {
         <Marker
           onClick={()=>{
             console.log(document.getElementById(comment.id))
-            document.getElementById(comment.id).scrollIntoView({behavior:'smooth',block: 'start'})
+            document.getElementById(comment.id).scrollIntoView({behavior:'instant',block: 'nearest'})
             document.getElementById(comment.id).style.backgroundColor = purple;
             setTimeout(()=>{document.getElementById(comment.id).style.backgroundColor = white}, 200)
             document.getElementById(comment.id).style.transition = 'background-color 2s';

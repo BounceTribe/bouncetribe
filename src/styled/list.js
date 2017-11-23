@@ -2,12 +2,6 @@ import styled from 'styled-components'
 import {grey230, grey40, size} from 'theme'
 import {Link} from 'react-router'
 
-export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`
 const xPadding = 30
 
 export const Header = styled.div`

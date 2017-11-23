@@ -91,6 +91,7 @@ export const Marker = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `
 
 export const Bot = styled.div`

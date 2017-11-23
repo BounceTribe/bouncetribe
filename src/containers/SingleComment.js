@@ -82,7 +82,7 @@ class SingleComment extends Component {
 
   componentDidMount(){
     if(this.props.focus === this.props.comment.id){
-      document.getElementById(this.props.comment.id).scrollIntoView({behavior:'smooth',block: 'start'})
+      document.getElementById(this.props.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
     }
   }
 

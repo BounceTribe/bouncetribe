@@ -64,7 +64,7 @@ class Comments extends Component {
         }
       },
       ()=>{
-        document.getElementById('new').scrollIntoView({behavior:'smooth',block: 'start'})
+        document.getElementById('new').scrollIntoView({behavior:'smooth',block: 'nearest'})
       }
     )
 
