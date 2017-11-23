@@ -60,7 +60,6 @@ export const Single = styled.div`
       flex-direction: column;
       justify-content: center;
       padding-left: 20px;
-      width: 170px;
     `
       export const Handle = styled(BtLink)`
         display: flex;
@@ -77,7 +76,7 @@ export const Single = styled.div`
           cursor: pointer;
           color: ${grey700};
           display: ${({hideLink})=> (hideLink) ? 'none': ''};
-          padding-right: 10px;
+          padding: 0 5px;
           font-size: 12px;
         `
         export const UpVote = styled(BotLink)`
@@ -89,6 +88,7 @@ export const Single = styled.div`
       flex-direction: column;
       color: ${grey900};
       font-size: 16px;
+      ${'' /* flex-grow: 1; */}
       word-break: break-all;
       padding: 0 20px;
     `
@@ -98,6 +98,7 @@ export const Single = styled.div`
       display: flex;
       flex-direction: column;
       color: ${grey700};
+      margin-left: auto;
       align-self: center;
     `
 

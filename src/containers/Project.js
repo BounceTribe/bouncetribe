@@ -180,9 +180,7 @@ class Project extends Component {
     this.setState( (prevState) => {
       let {active} = prevState
       active.push(index)
-      return {
-        active
-      }
+      return { active }
     })
   }
 
@@ -251,10 +249,7 @@ class Project extends Component {
 
   filteredComments = () => {
     let commentEdges = this.project.comments.edges
-    console.log('commentEdges', commentEdges)
-
     let comments = (this.state.new) ? commentEdges.concat({node:this.state.new}) : commentEdges
-
     if (this.state.tabs === 'listen') {
       comments = comments.filter( (comment) => {
         return comment.node.author.id === this.props.viewer.user.id
