@@ -68,8 +68,9 @@ class Project extends Component {
       this.setState({ genres })
     })
   }
+  project = this.props.viewer.allProjects.edges[0].node
 
-  get project() { return this.props.viewer.allProjects.edges[0].node }
+  // get project() { return this.props.viewer.allProjects.edges[0].node }
 
   componentWillMount () {
     let {id: ownId} = this.props.viewer.user
@@ -590,7 +591,7 @@ class Project extends Component {
                   active={(this.state.active.includes('new'))}
                   activate={this.activate}
                   deactivate={this.deactivate}
-                  userId={user.id}
+                  user={user}
                   tabs={this.state.tabs}
                   commentCreated={()=>{this.setState({new: false})}} /> :
                 null

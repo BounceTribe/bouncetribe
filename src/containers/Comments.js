@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import PropTypes from 'prop-types'
-// import TextField from 'material-ui/TextField'
 import {RoundButton} from 'styled'
 import {Container, ButtonRow, ButtonColumn, ButtonLabel, CommentBox, CommentScroller} from 'styled/Comments'
 import CreateComment from 'mutations/CreateComment'
@@ -59,36 +58,26 @@ class Comments extends Component {
           author: this.props.viewer.user,
           canEdit: true
         }})
-        return {
-          comments
-        }
-      },
-      ()=>{
-        document.getElementById('new').scrollIntoView({behavior:'smooth',block: 'nearest'})
+        return { comments } }, () => {
+          document.getElementById('new').scrollIntoView({behavior:'smooth',block: 'nearest'})
       }
     )
-
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.viewer.allComments.edges && this.state.comments.length === 0) {
+    if (nextProps.viewer.allComments.edges && this.state.comments.length===0) {
       this.setState({comments: nextProps.viewer.allComments.edges})
     }
   }
 
   get comments () {
-    this.state.comments.sort((a, b) => {
-      return a.node.timestamp - b.node.timestamp
-    })
+    this.state.comments.sort((a, b) => (a.node.timestamp - b.node.timestamp))
     return this.state.comments.map(edge=>{
       let {node: comment} = edge
-      return ( <SingleComment comment={comment} key={comment.id} />
-      )
+
+      return ( <SingleComment comment={comment} key={comment.id} user={this.props.viewer.user}/> )
     })
   }
-
-
-
 
   render () {
     let ownProject = (this.props.viewer.user.handle === this.props.params.userHandle)
@@ -98,9 +87,7 @@ class Comments extends Component {
           comments={this.state.comments}
           duration={this.state.duration}
         />
-        <ButtonRow
-          hide={((ownProject) || (this.props.router.location.pathname.includes('/view')))}
-        >
+        <ButtonRow hide={ownProject} >
           <ButtonColumn>
             <RoundButton
               secondary
@@ -117,7 +104,7 @@ class Comments extends Component {
             <ButtonLabel>Like</ButtonLabel>
           </ButtonColumn>
         </ButtonRow>
-        <CommentBox hide={(ownProject)} />
+        <CommentBox hide={ownProject} />
         <CommentScroller> {this.comments} </CommentScroller>
       </Container>
     )

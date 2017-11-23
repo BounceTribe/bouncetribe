@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Single, Bottom, Time, Text, Center, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, CommentP, SCCol, SCText} from 'styled/Comments'
+import {Single, MainRow, Bottom, Time, Text, InfoOptions, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, CommentP, SCCol, SCText} from 'styled/Comments'
 import {RoundButton, BtAvatar} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
@@ -22,18 +22,14 @@ class SingleComment extends Component {
       newSubcomment: "",
       children: ((props.comment.children || {}).edges || []).map(edge => edge.node)
     }
-    console.log('singlecommentprops', props, this.state);
-
+    console.log('singleprops', props)
+    this.isFirst = (props.index === 0)
+    this.isOwnComment = (props.user.id === props.comment.author.id)
   }
-
-
-  // componentWillMount(){
-  //   this.setState({,})
-  // }
 
   editComment = (e) => {
     if (e.charCode === 13) {
-      if (this.props.index === 0) {
+      if (this.isFirst) {
         Relay.Store.commitUpdate(
           new CreateComment({
             authorId: this.props.comment.author.id,
@@ -48,10 +44,7 @@ class SingleComment extends Component {
         this.setState({text: ""})
       } else {
         Relay.Store.commitUpdate(
-          new UpdateComment({
-            id: this.props.comment.id,
-            text: this.state.text,
-          })
+          new UpdateComment({id: this.props.comment.id, text: this.state.text})
         )
         this.props.deactivate(this.props.index)
       }
@@ -59,16 +52,16 @@ class SingleComment extends Component {
   }
 
   text = () => {
-    if (this.props.active || this.props.index === 0) {
+    if (this.props.active || this.isFirst) {
       return (
         <TextField
           id={this.props.comment.id}
           value={this.state.text}
           onChange={(e,newValue)=>{this.setState({text:newValue})}}
           fullWidth
-          autoFocus={(this.props.focus === this.props.comment.id || this.props.index === 0)}
+          autoFocus={(this.props.focus === this.props.comment.id || this.isFirst)}
           onKeyPress={this.editComment}
-          style={{ marginTop: '-16px', }}
+          // style={{ marginTop: '-16px', }}
           inputStyle={{ color: grey700, fontSize: '16px' }}
           underlineFocusStyle={{
             borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple
@@ -76,7 +69,7 @@ class SingleComment extends Component {
         />
       )
     } else {
-      return (<CommentP>{this.props.comment.text}</CommentP>)
+      return (<Text>{this.state.text}</Text>)
     }
   }
 
@@ -87,83 +80,81 @@ class SingleComment extends Component {
   }
 
   hider = () => {
-    if (this.props.index === 0) {
-      return false
-    } else if (this.props.user.id !== this.props.comment.author.id && this.props.tabs === 'listen') {
-      return true
-    } else {
-      return false
-    }
+    let listenTab = (this.props.tabs === 'listen')
+    if (this.props.index===0) return false
+    else if (!this.isOwnComment && listenTab) return true
+    else return false
   }
 
   render() {
     let {author, timestamp, type, id, upvotes} = this.props.comment
     return (
       <Single id={id} hide={this.hider()} >
-        <RoundButton
-          icon={(type === 'COMMENT') ?
-            <Comment height={25} width={25} fill={white} />
-            :
-            <Heart height={25} width={25} fill={white} />
-          }
-          mini
-          secondary={(type === 'COMMENT')}
-          style={{ marginTop: '30px' }}
-        />
-        <Center>
-          <Text>
+        <MainRow>
+          <RoundButton
+            icon={(type === 'COMMENT') ?
+              <Comment height={25} width={25} fill={white} />
+              :
+              <Heart height={25} width={25} fill={white} />
+            }
+            mini
+            style={{display: 'flex'}}
+            secondary={(type === 'COMMENT')}
+          />
+          <InfoOptions>
             <Handle to={author.deactivated ? null : `/${author.handle}`} >
               {author.handle}
             </Handle>
-            {this.text()}
-          </Text>
-          <Bottom>
-            <BotLink
-              onClick={()=>{this.props.activate(this.props.index)}}
-              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.user.id !== this.props.comment.author.id)}
-            >
-              Edit
-            </BotLink>
-            <BotLink
-              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.user.id !== this.props.comment.author.id)}
-              onClick={()=>{
-                console.log("this.props.comment.project.id", this.props.comment.project.id )
-                Relay.Store.commitUpdate(
-                  new DeleteComment({
-                    id: this.props.comment.id,
-                    projectId: this.props.comment.project.id
-                  })
-                )
-              }}
-            >
-              Delete
-            </BotLink>
-            <UpVote
-              secondary={(type==='COMMENT')}
-              hideLink={(this.props.tabs === 'listen' || this.props.session)}
-              onClick={()=>{
-                Relay.Store.commitUpdate(
-                  new AddToCommentUpvotes({
-                    upvotesUserId: this.props.user.id,
-                    upvotesCommentId: this.props.comment.id
-                  })
-                )
-              }}
-            >
-              Upvote | {(upvotes) ? upvotes.edges.length : 0}
-            </UpVote>
-            <BotLink
-              hideLink={(this.props.tabs === 'listen')}
-              onClick={()=>{
-                this.setState({subcomments: !this.state.subcomments})
-              }}
-            >
-              Comments | {(!!this.state.children.length) ?  this.state.children.length : 0}
-            </BotLink>
-            <BotLink hideLink={false} >
+            <Bottom>
+              <BotLink
+                onClick={()=>{this.props.activate(this.props.index)}}
+                hideLink={(this.props.tabs === 'view' || this.isFirst || !this.isOwnComment)}
+              >
+                Edit
+              </BotLink>
+              <BotLink
+                hideLink={(this.props.tabs === 'view' || this.isFirst || !this.isOwnComment)}
+                onClick={()=>{
+                  Relay.Store.commitUpdate(
+                    new DeleteComment({
+                      id: this.props.comment.id,
+                      projectId: this.props.comment.project.id
+                    })
+                  )
+                }}
+              >
+                Delete
+              </BotLink>
+              <UpVote
+                secondary={(type==='COMMENT')}
+                hideLink={(this.props.tabs === 'listen' || this.props.session)}
+                onClick={()=>{
+                  Relay.Store.commitUpdate(
+                    new AddToCommentUpvotes({
+                      upvotesUserId: this.props.user.id,
+                      upvotesCommentId: this.props.comment.id
+                    })
+                  )
+                }}
+              >
+                Upvote | {(upvotes) ? upvotes.edges.length : 0}
+              </UpVote>
+              <BotLink
+                hideLink={(this.props.tabs === 'listen')}
+                onClick={()=>{
+                  this.setState({subcomments: !this.state.subcomments})
+                }}
+              >
+                Comments | {(!!this.state.children.length) ?  this.state.children.length : 0}
+              </BotLink>
+            </Bottom>
+          </InfoOptions>
 
-            </BotLink>
-          </Bottom>
+          {this.text()}
+
+          <Time>{formatTime(timestamp)}</Time>
+        </MainRow>
+        {/* <MainRow>
           {(this.state.subcomments) ?
             <SCContainer>
             {this.state.children.map(child=>{
@@ -209,8 +200,7 @@ class SingleComment extends Component {
             />
             </SCContainer> : null
           }
-        </Center>
-        <Time>{formatTime(timestamp)}</Time>
+        </MainRow> */}
       </Single>
     )
   }

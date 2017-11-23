@@ -199,11 +199,7 @@ export const RoundButton = (props) => {
     <ButtonLink to={props.to} title={props.title} >
       <IconButton
         tooltip={props.tooltip}
-        style={{
-          height: '60px',
-          width: '60px',
-          padding: '0px'
-        }}
+        style={{ height: '60px', width: '60px', padding: '0px' }}
         tooltipStyles={{
           marginTop: "18px",
           left: "0",
@@ -214,10 +210,7 @@ export const RoundButton = (props) => {
       >
         <MuiThemeProvider muiTheme={ (props.big) ? bigTheme : btTheme } >
           <FloatingActionButton
-            style={{
-              boxShadow: 0,
-              ...props.style
-            }}
+            style={{ boxShadow: 0, ...props.style }}
             secondary={props.secondary}
             backgroundColor={props.backgroundColor}
             onClick={props.onClick}
