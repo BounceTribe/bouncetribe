@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Single, MainRow, Bottom, Time, Text, InfoOptions, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, CommentP, SCCol, SCText} from 'styled/Comments'
+import {Single, MainRow, Bottom, Time, Text, InfoOptions, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, InfoRow, SCCol, SCText} from 'styled/Comments'
 import {RoundButton, BtAvatar} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
@@ -27,6 +27,7 @@ class SingleComment extends Component {
     this.isFirst = (props.index === 0)
     this.isOwnComment = (props.user.id === props.comment.author.id)
   }
+
 
   editComment = () => {
     if (this.isFirst) {
@@ -62,7 +63,7 @@ class SingleComment extends Component {
           autoFocus={(this.props.focus === this.props.comment.id || this.isFirst)}
           onKeyPress={(e)=>e.charCode===13 && this.editComment(e)}
           // style={{ marginTop: '-16px', }}
-          textareaStyle={{ color: grey700, fontSize:'16px', wordBreak:'break-all', }}
+          textareaStyle={{ color: grey700, fontSize:'16px', wordBreak:'break-all', lineHeight: '18px' }}
           style={{display:'flex', flexDirection:'column',
 margin:'0 20px'}}
           underlineFocusStyle={{
@@ -81,34 +82,101 @@ margin:'0 20px'}}
     }
   }
 
-  hider = (hide) => {
-    if (hide) return true
-    let listenTab = (this.props.tabs === 'listen')
+  addUpvote = () => Relay.Store.commitUpdate(
+    new AddToCommentUpvotes({
+      upvotesUserId: this.props.user.id,
+      upvotesCommentId: this.props.comment.id
+    })
+  )
+
+  deleteComment = () => Relay.Store.commitUpdate(
+    new DeleteComment({
+      id: this.props.comment.id,
+      projectId: this.props.comment.project.id
+    }), {
+      onSuccess: (res)=>this.setState({deleted: true})
+    }
+  )
+
+  hider = () => {
     if (this.props.index===0) return false
-    else if (!this.isOwnComment && listenTab) return true
+    else if (!this.isOwnComment && this.props.tabs==='listen') return true
     else return false
+  }
+
+  subComments = () => {
+
+    return (
+    <MainRow>
+      <SCContainer>
+        {this.state.children.map(child=>{
+          return (
+            <SubComment key={child.id} >
+              <BtAvatar user={child.author} size={30} />
+              <SCCol>
+                <SCHandle>{child.author.handle}</SCHandle>
+                <SCText>{child.text}</SCText>
+              </SCCol>
+            </SubComment>
+          )
+        })}
+        <TextField
+          value={this.state.newSubcomment}
+          name={'newSubcomment'}
+          hintText={'Add a comment'}
+          onChange={(e,newValue)=>{this.setState({newSubcomment:newValue})}}
+          style={{ marginLeft: '35px' }}
+          onKeyPress={(e)=>{
+            if (e.charCode === 13) {
+              let newSubcommentData = {
+                authorId: this.props.user.id,
+                author: this.props.user, //for real time
+                type: 'COMMENT',
+                text: this.state.newSubcomment,
+                parentId: this.props.comment.id
+              }
+              Relay.Store.commitUpdate(
+                new CreateComment(newSubcommentData), {
+                  onSuccess: success => {
+                    console.log('newSubcomment', this.state.children)
+                    this.setState({
+                      children: this.state.children.concat(newSubcommentData)
+                    })
+                  },
+                  failure: failure => console.log('fail subcomment', failure)
+                }
+              )
+              this.setState({newSubcomment: ""})
+            }
+          }}
+        />
+      </SCContainer>
+    </MainRow>)
   }
 
   render() {
     let {author, timestamp, type, id, upvotes} = this.props.comment
     let hideEditDelete = this.props.tabs==='view' || this.isFirst || !this.isOwnComment
+    let listenTab = this.props.tabs==='listen'
     return (
       <Single id={id} hide={this.hider() || this.state.deleted} >
         <MainRow>
-          <RoundButton
-            icon={(type === 'COMMENT') ?
-              <Comment height={25} width={25} fill={white} />
-              :
-              <Heart height={25} width={25} fill={white} />
-            }
-            mini
-            style={{display: 'flex'}}
-            secondary={(type === 'COMMENT')}
-          />
           <InfoOptions>
-            <Handle to={author.deactivated ? null : `/${author.handle}`} >
-              {author.handle}
-            </Handle>
+            <InfoRow>
+              <RoundButton
+                icon={(type === 'COMMENT') ?
+                  <Comment height={25} width={25} fill={white} />
+                  :
+                  <Heart height={25} width={25} fill={white} />
+                }
+                mini
+                // style={{display: 'flex'}}
+                secondary={(type === 'COMMENT')}
+              />
+              <Handle to={author.deactivated ? null : `/${author.handle}`} >
+                {author.handle}
+              </Handle>
+            </InfoRow>
             <Bottom>
               <BotLink
                 onClick={()=>{this.props.active ?
@@ -116,98 +184,34 @@ margin:'0 20px'}}
                 hideLink={hideEditDelete}
               >
                 Edit
-              </BotLink>|
+              </BotLink>{listenTab && '|'}
               <BotLink
                 hideLink={hideEditDelete}
-                onClick={()=>{
-                  Relay.Store.commitUpdate(
-                    new DeleteComment({
-                      id: this.props.comment.id,
-                      projectId: this.props.comment.project.id
-                    }),
-                    {onSuccess: (res)=>this.setState({deleted: true})
-                    }
-                  )
-                }}
+                onClick={this.deleteComment}
               >
                 Delete
               </BotLink>
               <UpVote
                 secondary={(type==='COMMENT')}
-                hideLink={(this.props.tabs === 'listen' || this.props.session)}
-                onClick={()=>{
-                  Relay.Store.commitUpdate(
-                    new AddToCommentUpvotes({
-                      upvotesUserId: this.props.user.id,
-                      upvotesCommentId: this.props.comment.id
-                    })
-                  )
-                }}
+                hideLink={(listenTab)}
+                onClick={this.addUpvote}
               >
-                Upvote | {(upvotes) ? upvotes.edges.length : 0}
+                Upvote | {upvotes ? upvotes.edges.length : 0}
               </UpVote>
               <BotLink
-                hideLink={(this.props.tabs === 'listen')}
+                hideLink={(listenTab)}
                 onClick={()=>{
                   this.setState({subcomments: !this.state.subcomments})
                 }}
               >
-                Comments | {(!!this.state.children.length) ?  this.state.children.length : 0}
+                Comments | {this.state.children.length}
               </BotLink>
             </Bottom>
           </InfoOptions>
-
           {this.text()}
-
           <Time>{formatTime(timestamp)}</Time>
         </MainRow>
-        {/* <MainRow>
-          {(this.state.subcomments) ?
-            <SCContainer>
-            {this.state.children.map(child=>{
-              return (
-                <SubComment key={child.id} >
-                  <BtAvatar user={child.author} size={30} />
-                  <SCCol>
-                    <SCHandle>{child.author.handle}</SCHandle>
-                    <SCText>{child.text}</SCText>
-                  </SCCol>
-                </SubComment>
-              )
-            })}
-            <TextField
-              value={this.state.newSubcomment}
-              name={'newSubcomment'}
-              hintText={'Add a comment'}
-              onChange={(e,newValue)=>{this.setState({newSubcomment:newValue})}}
-              style={{ marginLeft: '35px' }}
-              onKeyPress={(e)=>{
-                if (e.charCode === 13) {
-                  let newSubcommentData = {
-                    authorId: this.props.user.id,
-                    author: this.props.user, //for real time
-                    type: 'COMMENT',
-                    text: this.state.newSubcomment,
-                    parentId: this.props.comment.id
-                  }
-                  Relay.Store.commitUpdate(
-                    new CreateComment(newSubcommentData), {
-                      onSuccess: success => {
-                        console.log('newSubcomment', this.state.children)
-                        this.setState({
-                          children: this.state.children.concat(newSubcommentData)
-                        })
-                      },
-                      failure: failure => console.log('fail subcomment', failure)
-                    }
-                  )
-                  this.setState({newSubcomment: ""})
-                }
-              }}
-            />
-            </SCContainer> : null
-          }
-        </MainRow> */}
+        {this.state.subcomments && this.subcomments}
       </Single>
     )
   }

@@ -589,7 +589,7 @@ class Project extends Component {
                   user={user}
                   tabs={this.state.tabs}
                   commentCreated={()=>{this.setState({new: false})}} /> :
-                null
+                  null
               }
               {this.comments}
             </CommentScroller>

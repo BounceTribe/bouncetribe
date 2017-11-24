@@ -73,7 +73,6 @@ class TribeFind extends Component {
     let {user} = viewer
     return (
       <View>
-        <Container>
           <Header>
             <IconTextContainer to={`/tribe/${user.handle}`} >
               <Tribe fill={purple} />
@@ -128,7 +127,6 @@ class TribeFind extends Component {
           </FindH3>
 
           {(this.state.searching) ? this.props.children : null}
-        </Container>
       </View>
     )
   }

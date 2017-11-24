@@ -68,7 +68,7 @@ export const TrackContainer = styled.div`
   width: 85%;
   max-width: 900px;
   justify-content: center;
-  margin-bottom: 50px;
+  ${'' /* margin-bottom: 50px; */}
 `
 export const MarkerContainer = styled.div`
   position: absolute;

@@ -14,17 +14,18 @@ export const ButtonRow = styled.div`
   justify-content: center;
 `
 
-export const ButtonColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`
+  export const ButtonColumn = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 20px;
+  `
 
-export const ButtonLabel = styled.span`
-  display: flex;
-  margin-top: 15px;
-  font-size: 14px;
-`
+    export const ButtonLabel = styled.span`
+      display: flex;
+      margin-top: 15px;
+      font-size: 14px;
+    `
 
 export const CommentBox = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
@@ -47,30 +48,35 @@ export const Single = styled.div`
   border-radius: 6px;
   width: 100%;
   margin: 10px;
-  display: ${({hide})=> (hide) ? 'none': ''};
+  display: ${({hide}) => (hide) ? 'none': ''};
   min-width: 0;
 `
   export const MainRow = styled.div`
     display: flex;
-    padding: 20px 30px;
+    padding: 20px 30px 10px 20px;
     min-width: 0;
   `
     export const InfoOptions = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding-left: 20px;
     `
-      export const Handle = styled(BtLink)`
+      export const InfoRow = styled.div`
         display: flex;
-        color: ${({comment}) => (comment) ? blue : purple};
-        padding-right: 10px;
-        margin-top: auto;
-        font-weight: 400;
+        justify-content: space-between;
+        align-items: center;
       `
+        export const Handle = styled(BtLink)`
+          color: ${({comment}) => (comment) ? blue : purple};
+          padding-left: 15px;
+          font-weight: 400;
+        `
       export const Bottom = styled.div`
+        display: flex;
         margin-top: auto;
         font-size: 13px;
+        padding-top: 5px;
+        justify-content: flex-end;
       `
         export const BotLink = styled.span`
           cursor: pointer;
@@ -80,6 +86,7 @@ export const Single = styled.div`
           font-size: 12px;
         `
         export const UpVote = styled(BotLink)`
+          flex-shrink: 0;
           color: ${({secondary}) => (secondary) ? blue: purple};
           font-weight: bold;
         `
@@ -88,7 +95,7 @@ export const Single = styled.div`
       flex-direction: column;
       color: ${grey900};
       font-size: 16px;
-      ${'' /* flex-grow: 1; */}
+      align-self: center;
       word-break: break-all;
       padding: 0 20px;
     `
@@ -98,7 +105,7 @@ export const Single = styled.div`
       display: flex;
       flex-direction: column;
       color: ${grey700};
-      margin-left: auto;
+      ${'' /* margin-left: auto; */}
       align-self: center;
     `
 
