@@ -133,6 +133,7 @@ export default Relay.createContainer(
                 text
                 author {
                   handle
+                  id
                 }
                 timestamp
                 project {

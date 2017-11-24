@@ -38,19 +38,6 @@ import FlatButton from 'material-ui/FlatButton'
 
 class Project extends Component {
 
-  state = {
-    time: 0,
-    tabs: 'listen',
-    markers: [],
-    active: [],
-    edit: false,
-    artworkEditorOpen: false,
-    selection: false,
-    delete: false,
-    bounced: false,
-    showBounceButton: false,
-  }
-
   static childContextTypes = {
     duration: PropTypes.number,
     time: PropTypes.number
@@ -58,6 +45,54 @@ class Project extends Component {
 
   constructor(props) {
     super(props)
+    this.project = this.props.viewer.allProjects.edges[0].node
+    this.user = this.props.viewer.user
+    this.User = this.props.viewer.User
+    this.isOwner = this.user.id === this.User.id
+    let friendIds = this.user.friends.edges.map(edge => edge.node.id)
+    this.isFriends = friendIds.includes(this.User.id)
+
+    this.state = {
+      title: this.project.title,
+      description: this.project.description,
+      genre: this.project.genres.edges[0].node.id,
+      privacy: this.project.privacy,
+      tabs: this.isOwner ?  'view' : 'listen',
+      time: 0,
+      markers: [],
+      active: [],
+      edit: false,
+      artworkEditorOpen: false,
+      selection: false,
+      delete: false,
+      bounced: false,
+      comments: this.project.comments.edges.map(edge=>edge.node)
+    }
+  }
+
+  componentWillMount () {
+    let notFriends = !this.isFriends
+    if (
+      ( !this.isOwner && notFriends && this.project.privacy !== "PUBLIC" ) ||
+      ( !this.isOwner && this.project.privacy === "PRIVATE" ) ||
+      ( this.project.creator.deactivated )
+    ) {
+      this.props.router.push(`/`)
+    }
+  }
+
+  componentDidMount(){
+    console.log('project didmount', this.state)
+    let user = this.user
+    let project = this.project
+    let bounces = project.bounces.edges
+    let friendIds = user.friends.edges.map(edge => edge.node.id)
+    let bouncedByIds = bounces.map(edge => edge.node.bouncer.id)
+    let projectOwnerId = this.User.id
+    this.setState({
+      disableComments: !this.isFriends,
+      bounced: bouncedByIds.includes(user.id)
+    })
     getAllGenres().then(results=>{
       let genres = results.map(genre=>(
         <MenuItem
@@ -67,74 +102,6 @@ class Project extends Component {
       ))
       this.setState({ genres })
     })
-  }
-  project = this.props.viewer.allProjects.edges[0].node
-
-  // get project() { return this.props.viewer.allProjects.edges[0].node }
-
-  componentWillMount () {
-    let {id: ownId} = this.props.viewer.user
-    let project = this.project
-    console.log('projectmount', this.props)
-    if (ownId === this.props.viewer.User.id) {
-      this.setState({
-        ownProject:true,
-        title: project.title,
-        description: project.description,
-        genre: project.genres.edges[0].node.id,
-        privacy: project.privacy,
-        tabs: 'view'
-      })
-    } else {
-      this.setState({ownProject:false})
-    }
-    let friendIds = this.props.viewer.user.friends.edges.map(edge => edge.node.id)
-    let projectOwnerId = this.props.viewer.User.id
-    if (
-      (
-        ownId !== projectOwnerId &&
-        !friendIds.includes(projectOwnerId) &&
-        project.privacy !== "PUBLIC"
-      ) ||
-      ( ownId !== projectOwnerId && project.privacy === "PRIVATE" ) ||
-      ( project.creator.deactivated )
-    ) {
-      this.props.router.push(`/`)
-    }
-  }
-
-  componentDidMount(){
-    let user = this.props.viewer.user
-    let project = this.project
-    let bounces = project.bounces.edges
-    let friendIds = user.friends.edges.map(edge => edge.node.id)
-    let bouncedByIds = bounces.map(edge => edge.node.bouncer.id)
-    let projectOwnerId = this.props.viewer.User.id
-    this.setState({
-      disableComments: !friendIds.includes(projectOwnerId),
-      showBounceButton: user.id !== projectOwnerId,
-      bounced: bouncedByIds.includes(user.id)
-    })
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // let focus
-    // let oldComments = this.project.comments.edges.map(edge=>edge.node.id)
-    // this.setState(
-    //   (prevState)=>{
-    //     let active = prevState.active
-    //     nextProps.viewer.allProjects.edges[0].node.comments.edges.forEach( (edge, index) => {
-    //       if (!oldComments.includes(edge.node.id)) {
-    //         active.push(index)
-    //         focus= edge.node.id
-    //       }
-    //     })
-    //     return {
-    //       focus,
-    //       active
-    //     }
-    //   }
-    // )
   }
 
   getChildContext() {
@@ -149,12 +116,12 @@ class Project extends Component {
 
   dropMarker = (type) => {
     this.setState((prevState)=> {
-      // let {edges} = this.project.comments
+      // let {edges} = this.state.comments
       // edges.push({node:{
       //   id: 'newText',
       //   timestamp: this.state.time,
       //   author: {
-      //     id: this.props.viewer.user.id
+      //     id: this.user.id
       //   },
       //   project: {
       //     id: this.project.id
@@ -168,7 +135,7 @@ class Project extends Component {
           id: 'new',
           type: type,
           text: "",
-          author: this.props.viewer.user,
+          author: this.user,
           timestamp: this.state.time,
           project: this.project
         }
@@ -193,9 +160,8 @@ class Project extends Component {
   }
 
   get comments () {
-
-    return this.filteredComments().map((edge, index)=>{
-      let {node: comment} = edge
+    console.log('getting');
+    return this.filteredComments().map((comment, index)=>{
       if (comment.id === 'new') {
         return null
       }
@@ -208,7 +174,7 @@ class Project extends Component {
           active={(this.state.active.includes(index+1))}
           activate={this.activate}
           deactivate={this.deactivate}
-          user={this.props.viewer.user}
+          user={this.user}
           tabs={this.state.tabs} />
       )
     })
@@ -220,7 +186,7 @@ class Project extends Component {
       clearTimeout(this.debounce)
     }
     this.debounce = setTimeout(()=>{
-      ensureUsersProjectTitleUnique(this.props.viewer.user.id, title).then(unique=>{
+      ensureUsersProjectTitleUnique(this.user.id, title).then(unique=>{
         this.setState({titleUnique: unique})
       })
     },1000)
@@ -242,29 +208,29 @@ class Project extends Component {
   }
 
   openArtworkEditor = () => {
-    if (this.state.ownProject) {
-      this.setState({artworkEditorOpen: true})
-    }
+    this.isOwner && this.setState({artworkEditorOpen: true})
   }
 
   filteredComments = () => {
-    let commentEdges = this.project.comments.edges
-    let comments = (this.state.new) ? commentEdges.concat({node:this.state.new}) : commentEdges
+    let comments = (this.state.new) ?
+      this.state.comments.concat(this.state.new) : this.state.comments
+    console.log('fltcm', comments);
+
     if (this.state.tabs === 'listen') {
       comments = comments.filter( (comment) => {
-        return comment.node.author.id === this.props.viewer.user.id
+        return comment.author.id === this.user.id
       })
     }
 
     if (this.state.selection) {
       comments = comments.filter( (comment) => {
-        return comment.node.author.handle === this.state.selection
+        return comment.author.handle === this.state.selection
       })
     }
 
-    if (this.props.viewer.user.id !== this.project.creator.id) {
+    if (this.user.id !== this.project.creator.id) {
       comments = comments.filter( (comment) => {
-        return !comment.node.session
+        return !comment.session
       })
     }
     return comments
@@ -272,7 +238,7 @@ class Project extends Component {
 
   setBounce = () => {
     let project = this.project
-    let {id: selfId} = this.props.viewer.user
+    let {id: selfId} = this.user
     let {id: projectId} = project
     if (this.state.bounced) {
       let thisBounce = project.bounces.edges.find(edge =>
@@ -304,6 +270,7 @@ class Project extends Component {
   }
 
   render () {
+    console.log('render', this.state);
     let {User, user, allProjects} = this.props.viewer
     let { node: project } = allProjects.edges[0]
     let {ownProject} = this.state
@@ -385,7 +352,7 @@ class Project extends Component {
                 onClick={()=>{this.setState({edit:true})}} />
             </TitleGenre>
             <Summary>{project.description}</Summary>
-            {this.state.showBounceButton &&
+            {this.isOwner &&
               <BtFlatButton
                 label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
                 backgroundColor={(this.state.bounced) ? purple : white}
@@ -586,7 +553,13 @@ class Project extends Component {
                   deactivate={this.deactivate}
                   user={user}
                   tabs={this.state.tabs}
-                  commentCreated={()=>{this.setState({new: false})}} /> :
+                  commentCreated={(newComment)=>{
+                    this.setState({
+                      new: false,
+                      comments: this.state.comments.concat(this.state.new)
+                    })
+
+                  }} /> :
                   null
               }
               {this.comments}
@@ -747,7 +720,9 @@ export default Relay.createContainer(
                             id
                             text
                             author {
+                              id
                               handle
+                              lastPing
                               deactivated
                               portrait { url }
                             }
@@ -770,3 +745,19 @@ export default Relay.createContainer(
     }
   }
 )
+// componentWillReceiveProps(nextProps) {
+  // let focus
+  // let oldCommentIds = this.state.comments.edges.map(edge=>edge.node.id)
+  // this.setState(
+  //   (prevState)=>{
+  //     let active = prevState.active
+  //     nextProps.viewer.allProjects.edges[0].node.comments.edges.forEach( (edge, index) => {
+  //       if (!oldCommentIds.includes(edge.node.id)) {
+  //         active.push(index)
+  //         focus= edge.node.id
+  //       }
+  //     })
+  //     return { focus, active }
+  //   }
+  // )
+// }

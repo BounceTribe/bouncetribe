@@ -29,8 +29,7 @@ class CommentMarkers extends Component {
   }
 
   get markers () {
-    return this.props.comments.map(edge=>{
-      let {node: comment} = edge
+    return this.props.comments.map(comment=>{
       let left = (comment.timestamp / this.context.duration) * 100 //making a percentage
       return (
         <Marker

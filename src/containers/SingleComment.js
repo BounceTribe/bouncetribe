@@ -17,11 +17,14 @@ class SingleComment extends Component {
 
   constructor(props) {
     super()
+    this.listenTab = props.tabs==='listen'
+
     this.state = {
       text: props.comment.text,
       newSubcomment: "",
-      deleted: false,
-      children: ((props.comment.children || {}).edges || []).map(edge => edge.node)
+      deleted: [],
+      children: ((props.comment.children || {}).edges || []).map(edge => edge.node),
+
     }
     console.log('singleprops', props)
     this.isFirst = (props.index === 0)
@@ -36,16 +39,17 @@ class SingleComment extends Component {
 
   editComment = () => {
     if (this.isFirst) {
+      let commentData = {
+        authorId: this.props.comment.author.id,
+        projectId: this.props.comment.project.id,
+        type: this.props.comment.type,
+        timestamp: this.props.comment.timestamp,
+        text: this.state.text,
+        sessionId: this.props.sessionId
+      }
       Relay.Store.commitUpdate(
-        new CreateComment({
-          authorId: this.props.comment.author.id,
-          projectId: this.props.comment.project.id,
-          type: this.props.comment.type,
-          timestamp: this.props.comment.timestamp,
-          text: this.state.text,
-          sessionId: this.props.sessionId
-        })
-      )
+        new CreateComment(commentData)
+      ) // TODO: success
       this.props.commentCreated()
       this.setState({text: ""})
     } else {
@@ -90,12 +94,12 @@ class SingleComment extends Component {
     })
   )
 
-  deleteComment = () => Relay.Store.commitUpdate(
+  deleteComment = (id) => Relay.Store.commitUpdate(
     new DeleteComment({
-      id: this.props.comment.id,
+      id,
       projectId: this.props.comment.project.id
     }), {
-      onSuccess: (res)=>this.setState({deleted: true})
+      onSuccess: (res)=>this.setState({deleted: this.state.deleted.concat([id])})
     }
   )
 
@@ -109,25 +113,40 @@ class SingleComment extends Component {
     return (
       <SCContainer>
         {this.state.children.map(child=>{
+          console.log('usre child', child);
           return (
-            <SubComment key={child.id} >
+            <SubComment key={child.id} hide={this.state.deleted.includes(child.id)}>
               <BtAvatar user={child.author} size={30} />
               <SCCol>
                 <SCHandle>{child.author.handle}</SCHandle>
-                <SCText>{child.text}</SCText>
+                {this.props.user.id===child.author.id && <Bottom>
+                  <BotLink
+                    onClick={()=>{this.props.active ?
+                      this.editComment() : this.props.activate(this.props.index)}}
+                  >Edit</BotLink>
+                  {'|'}
+                  <BotLink
+                    onClick={()=>this.deleteComment(child.id)}
+                  >Delete</BotLink>
+                </Bottom>}
               </SCCol>
+              <SCText>{child.text}</SCText>
             </SubComment>
           )
         })}
         <SubComment key={'input'} >
+          <BtAvatar user={this.props.user} size={30} />
+          <SCCol><SCHandle>{this.props.user.handle}</SCHandle></SCCol>
           <TextField
             ref='scTextField'
             value={this.state.newSubcomment}
             name={'newSubcomment'}
             hintText={'Add a comment'}
+            hintStyle={{fontSize: '14px'}}
             onChange={(e,newVal)=>this.setState({newSubcomment:newVal})}
             multiLine
             fullWidth
+            // underlineStyle={{margin: '0', padding: '0'}}
             textareaStyle={{
               color: grey700,
               fontSize:'14px',
@@ -136,6 +155,7 @@ class SingleComment extends Component {
             }}
             onKeyPress={(e)=>{
               if (e.charCode === 13 && !e.shiftKey) {
+                e.preventDefault()
                 let newSubcommentData = {
                   authorId: this.props.user.id,
                   author: this.props.user, //for real time
@@ -164,22 +184,20 @@ class SingleComment extends Component {
   }
 
   render() {
+    console.log('sc render', this.state);
     let {author, timestamp, type, id, upvotes} = this.props.comment
-    let hideEditDelete = this.props.tabs==='view' || this.isFirst || !this.isOwnComment
-    let listenTab = this.props.tabs==='listen'
+    let hideEditDelete = this.isFirst ||  !this.isOwnComment
     return (
-      <Single id={id} hide={this.hider() || this.state.deleted} >
+      <Single id={id} hide={this.hider() || this.state.deleted.includes(id)} >
         <MainRow>
           <InfoOptions>
             <InfoRow>
               <RoundButton
                 icon={(type === 'COMMENT') ?
                   <Comment height={25} width={25} fill={white} />
-                  :
-                  <Heart height={25} width={25} fill={white} />
+                  :<Heart height={25} width={25} fill={white} />
                 }
                 mini
-                // style={{display: 'flex'}}
                 secondary={(type === 'COMMENT')}
               />
               <Handle to={author.deactivated ? null : `/${author.handle}`} >
@@ -187,33 +205,27 @@ class SingleComment extends Component {
               </Handle>
             </InfoRow>
             <Bottom>
-              <BotLink
+              {!hideEditDelete && <BotLink
                 onClick={()=>{this.props.active ?
                   this.editComment() : this.props.activate(this.props.index)}}
-                hideLink={hideEditDelete}
-              >
-                Edit
-              </BotLink>{listenTab && '|'}
-              <BotLink
-                hideLink={hideEditDelete}
-                onClick={this.deleteComment}
-              >
-                Delete
-              </BotLink>
+              >Edit</BotLink>}
+              {!hideEditDelete && '|'}
+              {!hideEditDelete &&
+                <BotLink onClick={()=>this.deleteComment(id)}>Delete</BotLink>}
               <UpVote
                 secondary={(type==='COMMENT')}
-                hideLink={listenTab}
-                onClick={this.addUpvote}
-              >
-                Upvote | {upvotes ? upvotes.edges.length : 0}
-              </UpVote>
+                hideLink={this.listenTab}
+                onClick={!this.isOwnComment && this.addUpvote}
+              >Upvote | {upvotes ? upvotes.edges.length : 0}</UpVote>
               <BotLink
-                hideLink={listenTab}
+                hideLink={this.listenTab}
                 onClick={()=>{
                   this.setState({subcomments: !this.state.subcomments})
                 }}
               >
-                Comments | {this.state.children.length}
+                {this.state.children.length ?
+                  `View Comments | ${this.state.children.length}`
+                  : 'Add Comment'}
               </BotLink>
             </Bottom>
           </InfoOptions>
@@ -226,5 +238,19 @@ class SingleComment extends Component {
   }
 }
 
+// editAndDelete = () => {
+//   return (
+//     <div>
+//       <BotLink
+//         onClick={()=>{this.props.active ?
+//           this.editComment() : this.props.activate(this.props.index)}}
+//       >Edit</BotLink>
+//       {this.listenTab && '|'}
+//       <BotLink
+//         onClick={this.deleteComment}
+//       >Delete</BotLink>
+//     </div>
+//   )
+// }
 
 export default SingleComment

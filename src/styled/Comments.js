@@ -66,7 +66,7 @@ export const Single = styled.div`
         margin-top: auto;
         font-size: 13px;
         padding-top: 5px;
-        justify-content: flex-end;
+        ${'' /* justify-content: flex-end; */}
       `
         export const BotLink = styled.span`
           cursor: pointer;
@@ -109,23 +109,22 @@ export const SCContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 30px 0 60px;
-  ${'' /* flex-direction: column;
-  align-items: flex-start;
-  width: 100%; */}
 `
 
 export const SubComment = styled.div`
   display: flex;
   padding: 10px 0;
+  display: ${({hide}) => (hide) ? 'none': ''};
 `
 
 export const SCCol = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 10px;
+  padding: 0 10px;
+  justify-content: center;
 `
 
-export const SCHandleText = styled.div`
+export const SCHandleText = styled.pre`
   display: flex;
   font-weight: 400;
   color: ${grey700};
