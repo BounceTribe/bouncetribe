@@ -353,9 +353,7 @@ class Project extends Component {
                     {edge.node.name}
                   </InfluenceChip>
                 )
-              } else {
-                return <div key={edge.node.id} />
-              }
+              } else { return <div key={edge.node.id} /> }
             } )}
           </CommonInfluences>
         </ProfContainer>

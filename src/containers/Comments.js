@@ -46,21 +46,20 @@ class Comments extends Component {
         onFailure: failure => failure
       }
     )
-    this.setState(
-      (prevState,props)=> {
-        let comments = props.viewer.allComments.edges.concat({node:{
-          text: this.state.comment,
-          authorId: this.props.viewer.user.id,
-          projectId: this.state.projectId,
-          type,
-          timestamp,
-          id: 'new',
-          author: this.props.viewer.user,
-          canEdit: true
-        }})
-        return { comments } }, () => {
-          document.getElementById('new').scrollIntoView({behavior:'smooth',block: 'nearest'})
-      }
+    this.setState( (prevState, props) => {
+      let comments = props.viewer.allComments.edges.concat({node:{
+        text: this.state.comment,
+        authorId: this.props.viewer.user.id,
+        projectId: this.state.projectId,
+        type,
+        timestamp,
+        id: 'new',
+        author: this.props.viewer.user,
+        canEdit: true
+      }})
+      return { comments } }, () => document.getElementById('new')
+        .scrollIntoView({behavior:'smooth',block: 'nearest'})
+
     )
   }
 
@@ -74,7 +73,6 @@ class Comments extends Component {
     this.state.comments.sort((a, b) => (a.node.timestamp - b.node.timestamp))
     return this.state.comments.map(edge=>{
       let {node: comment} = edge
-
       return ( <SingleComment comment={comment} key={comment.id} user={this.props.viewer.user}/> )
     })
   }

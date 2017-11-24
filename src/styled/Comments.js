@@ -13,14 +13,12 @@ export const ButtonRow = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   justify-content: center;
 `
-
   export const ButtonColumn = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 15px 20px;
   `
-
     export const ButtonLabel = styled.span`
       display: flex;
       margin-top: 15px;
@@ -33,13 +31,6 @@ export const CommentBox = styled.div`
   align-items: center;
   width: 100%;
 `
-
-
-export const CommentP = styled.p`
-  font-size: 16px;
-  color: ${grey700};
-`
-
 export const Single = styled.div`
   display: flex;
   flex-direction: column;
@@ -54,7 +45,6 @@ export const Single = styled.div`
   export const MainRow = styled.div`
     display: flex;
     padding: 20px 30px 10px 20px;
-    min-width: 0;
   `
     export const InfoOptions = styled.div`
       display: flex;
@@ -81,12 +71,11 @@ export const Single = styled.div`
         export const BotLink = styled.span`
           cursor: pointer;
           color: ${grey700};
-          display: ${({hideLink})=> (hideLink) ? 'none': ''};
+          display: ${({hideLink})=> hideLink ? 'none': ''};
           padding: 0 5px;
           font-size: 12px;
         `
         export const UpVote = styled(BotLink)`
-          flex-shrink: 0;
           color: ${({secondary}) => (secondary) ? blue: purple};
           font-weight: bold;
         `
@@ -96,16 +85,16 @@ export const Single = styled.div`
       color: ${grey900};
       font-size: 16px;
       align-self: center;
+      flex-grow: 1;
       word-break: break-all;
       padding: 0 20px;
     `
     export const Time = styled.div`
       font-size: 14px;
-      ${'' /* width: 60px; */}
       display: flex;
       flex-direction: column;
       color: ${grey700};
-      ${'' /* margin-left: auto; */}
+      margin-left: auto;
       align-self: center;
     `
 
@@ -119,12 +108,15 @@ export const CommentScroller = styled.div`
 export const SCContainer = styled.div`
   display: flex;
   flex-direction: column;
+  padding: 0 30px 0 60px;
+  ${'' /* flex-direction: column;
   align-items: flex-start;
-  width: 100%;
+  width: 100%; */}
 `
 
 export const SubComment = styled.div`
   display: flex;
+  padding: 10px 0;
 `
 
 export const SCCol = styled.div`

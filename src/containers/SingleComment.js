@@ -28,6 +28,11 @@ class SingleComment extends Component {
     this.isOwnComment = (props.user.id === props.comment.author.id)
   }
 
+  componentDidMount(){
+    if(this.props.focus === this.props.comment.id){
+      document.getElementById(this.props.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
+    }
+  }
 
   editComment = () => {
     if (this.isFirst) {
@@ -57,28 +62,24 @@ class SingleComment extends Component {
         <TextField
           id={this.props.comment.id}
           value={this.state.text}
-          onChange={(e,newValue)=>{this.setState({text:newValue})}}
+          onChange={(e,newVal)=>{this.setState({text:newVal})}}
           fullWidth
           multiLine
           autoFocus={(this.props.focus === this.props.comment.id || this.isFirst)}
           onKeyPress={(e)=>e.charCode===13 && this.editComment(e)}
-          // style={{ marginTop: '-16px', }}
-          textareaStyle={{ color: grey700, fontSize:'16px', wordBreak:'break-all', lineHeight: '18px' }}
-          style={{display:'flex', flexDirection:'column',
-margin:'0 20px'}}
+          textareaStyle={{
+            color: grey700,
+            fontSize:'16px',
+            wordBreak:'break-all',
+            lineHeight: '18px'
+          }}
           underlineFocusStyle={{
             borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple
           }}
         />
       )
     } else {
-      return (<Text>{this.state.text}</Text>)
-    }
-  }
-
-  componentDidMount(){
-    if(this.props.focus === this.props.comment.id){
-      document.getElementById(this.props.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
+      return (this.state.text)
     }
   }
 
@@ -104,10 +105,8 @@ margin:'0 20px'}}
     else return false
   }
 
-  subComments = () => {
-
+  subcomments = () => {
     return (
-    <MainRow>
       <SCContainer>
         {this.state.children.map(child=>{
           return (
@@ -120,38 +119,48 @@ margin:'0 20px'}}
             </SubComment>
           )
         })}
-        <TextField
-          value={this.state.newSubcomment}
-          name={'newSubcomment'}
-          hintText={'Add a comment'}
-          onChange={(e,newValue)=>{this.setState({newSubcomment:newValue})}}
-          style={{ marginLeft: '35px' }}
-          onKeyPress={(e)=>{
-            if (e.charCode === 13) {
-              let newSubcommentData = {
-                authorId: this.props.user.id,
-                author: this.props.user, //for real time
-                type: 'COMMENT',
-                text: this.state.newSubcomment,
-                parentId: this.props.comment.id
-              }
-              Relay.Store.commitUpdate(
-                new CreateComment(newSubcommentData), {
-                  onSuccess: success => {
-                    console.log('newSubcomment', this.state.children)
-                    this.setState({
-                      children: this.state.children.concat(newSubcommentData)
-                    })
-                  },
-                  failure: failure => console.log('fail subcomment', failure)
+        <SubComment key={'input'} >
+          <TextField
+            ref='scTextField'
+            value={this.state.newSubcomment}
+            name={'newSubcomment'}
+            hintText={'Add a comment'}
+            onChange={(e,newVal)=>this.setState({newSubcomment:newVal})}
+            multiLine
+            fullWidth
+            textareaStyle={{
+              color: grey700,
+              fontSize:'14px',
+              wordBreak:'break-all',
+              lineHeight: '16px'
+            }}
+            onKeyPress={(e)=>{
+              if (e.charCode === 13 && !e.shiftKey) {
+                let newSubcommentData = {
+                  authorId: this.props.user.id,
+                  author: this.props.user, //for real time
+                  type: 'COMMENT',
+                  text: this.state.newSubcomment,
+                  parentId: this.props.comment.id
                 }
-              )
-              this.setState({newSubcomment: ""})
-            }
-          }}
-        />
-      </SCContainer>
-    </MainRow>)
+                Relay.Store.commitUpdate(
+                  new CreateComment(newSubcommentData), {
+                    onSuccess: success => {
+                      console.log('newSubcomment', this.state.children)
+                      this.refs.scTextField.blur();
+                      this.setState({
+                        children: this.state.children.concat(newSubcommentData),
+                        newSubcomment: ''
+                      })
+                    },
+                    onFailure: failure => console.log('fail subcomment', failure)
+                  }
+                )
+              }
+            }}
+          />
+        </SubComment>
+      </SCContainer>)
   }
 
   render() {
@@ -193,13 +202,13 @@ margin:'0 20px'}}
               </BotLink>
               <UpVote
                 secondary={(type==='COMMENT')}
-                hideLink={(listenTab)}
+                hideLink={listenTab}
                 onClick={this.addUpvote}
               >
                 Upvote | {upvotes ? upvotes.edges.length : 0}
               </UpVote>
               <BotLink
-                hideLink={(listenTab)}
+                hideLink={listenTab}
                 onClick={()=>{
                   this.setState({subcomments: !this.state.subcomments})
                 }}
@@ -208,10 +217,10 @@ margin:'0 20px'}}
               </BotLink>
             </Bottom>
           </InfoOptions>
-          {this.text()}
+          <Text>{this.text()}</Text>
           <Time>{formatTime(timestamp)}</Time>
         </MainRow>
-        {this.state.subcomments && this.subcomments}
+        {this.state.subcomments && this.subcomments()}
       </Single>
     )
   }
