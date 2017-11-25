@@ -54,6 +54,7 @@ class SingleComment extends Component {
       , {
         onSuccess: success => {
           // TODO: get id back from relay
+          // TODO: upvotes
           console.log('comment res', success )
           commentData.author = this.props.user
           this.props.commentCreated(commentData)
