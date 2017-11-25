@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import Relay from 'react-relay'
+import {white, purple, blue, grey700} from 'theme'
 import {Single, MainRow, Bottom, Time, Text, InfoOptions, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, InfoRow, SCCol, SCText} from 'styled/Comments'
 import {RoundButton, BtAvatar} from 'styled'
 import Heart from 'icons/Heart'
@@ -6,8 +8,6 @@ import Comment from 'icons/Comment'
 import formatTime from 'utils/formatTime'
 import TextField from 'material-ui/TextField'
 import UpdateComment from 'mutations/UpdateComment'
-import Relay from 'react-relay'
-import {white, purple, blue, grey700} from 'theme'
 import CreateComment from 'mutations/CreateComment'
 import DeleteComment from 'mutations/DeleteComment'
 import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
@@ -18,6 +18,7 @@ class SingleComment extends Component {
   constructor(props) {
     super()
     this.listenTab = props.tabs==='listen'
+    this.comment = props.comment
 
     this.state = {
       text: props.comment.text,
@@ -32,29 +33,37 @@ class SingleComment extends Component {
   }
 
   componentDidMount(){
-    if(this.props.focus === this.props.comment.id){
-      document.getElementById(this.props.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
+    console.log('sc mount', this.state);
+    if(this.props.focus === this.comment.id){
+      document.getElementById(this.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
     }
   }
 
   editComment = () => {
     if (this.isFirst) {
       let commentData = {
-        authorId: this.props.comment.author.id,
-        projectId: this.props.comment.project.id,
-        type: this.props.comment.type,
-        timestamp: this.props.comment.timestamp,
+        authorId: this.comment.author.id,
+        projectId: this.comment.project.id,
+        type: this.comment.type,
+        timestamp: this.comment.timestamp,
         text: this.state.text,
         sessionId: this.props.sessionId
       }
       Relay.Store.commitUpdate(
         new CreateComment(commentData)
-      ) // TODO: success
-      this.props.commentCreated()
-      this.setState({text: ""})
+      , {
+        onSuccess: success => {
+          // TODO: get id back from relay
+          console.log('comment res', success )
+          commentData.author = this.props.user
+          this.props.commentCreated(commentData)
+          this.setState({text: ""})
+        }
+      }
+    )
     } else {
       Relay.Store.commitUpdate(
-        new UpdateComment({id: this.props.comment.id, text: this.state.text})
+        new UpdateComment({id: this.comment.id, text: this.state.text})
       )
       this.props.deactivate(this.props.index)
     }
@@ -64,13 +73,18 @@ class SingleComment extends Component {
     if (this.props.active || this.isFirst) {
       return (
         <TextField
-          id={this.props.comment.id}
+          id={this.comment.id}
           value={this.state.text}
-          onChange={(e,newVal)=>{this.setState({text:newVal})}}
+          onChange={(e,newVal)=>this.setState({text:newVal})}
           fullWidth
           multiLine
-          autoFocus={(this.props.focus === this.props.comment.id || this.isFirst)}
-          onKeyPress={(e)=>e.charCode===13 && this.editComment(e)}
+          autoFocus={(this.props.focus === this.comment.id || this.isFirst)}
+          onKeyPress={(e)=>{
+            if (e.charCode === 13 && !e.shiftKey) {
+              e.preventDefault()
+              this.editComment()
+            }
+          }}
           textareaStyle={{
             color: grey700,
             fontSize:'16px',
@@ -78,7 +92,7 @@ class SingleComment extends Component {
             lineHeight: '18px'
           }}
           underlineFocusStyle={{
-            borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple
+            borderColor: (this.comment.type === 'COMMENT' ) ? blue : purple
           }}
         />
       )
@@ -90,14 +104,14 @@ class SingleComment extends Component {
   addUpvote = () => Relay.Store.commitUpdate(
     new AddToCommentUpvotes({
       upvotesUserId: this.props.user.id,
-      upvotesCommentId: this.props.comment.id
+      upvotesCommentId: this.comment.id
     })
   )
 
   deleteComment = (id) => Relay.Store.commitUpdate(
     new DeleteComment({
       id,
-      projectId: this.props.comment.project.id
+      projectId: this.comment.project.id
     }), {
       onSuccess: (res)=>this.setState({deleted: this.state.deleted.concat([id])})
     }
@@ -161,7 +175,7 @@ class SingleComment extends Component {
                   author: this.props.user, //for real time
                   type: 'COMMENT',
                   text: this.state.newSubcomment,
-                  parentId: this.props.comment.id
+                  parentId: this.comment.id
                 }
                 Relay.Store.commitUpdate(
                   new CreateComment(newSubcommentData), {
@@ -184,8 +198,7 @@ class SingleComment extends Component {
   }
 
   render() {
-    console.log('sc render', this.state);
-    let {author, timestamp, type, id, upvotes} = this.props.comment
+    let {author, timestamp, type, id, upvotes} = this.comment
     let hideEditDelete = this.isFirst ||  !this.isOwnComment
     return (
       <Single id={id} hide={this.hider() || this.state.deleted.includes(id)} >

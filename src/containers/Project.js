@@ -59,6 +59,7 @@ class Project extends Component {
       privacy: this.project.privacy,
       tabs: this.isOwner ?  'view' : 'listen',
       time: 0,
+      newIndex: 0,
       markers: [],
       active: [],
       edit: false,
@@ -66,7 +67,8 @@ class Project extends Component {
       selection: false,
       delete: false,
       bounced: false,
-      comments: this.project.comments.edges.map(edge=>edge.node)
+      comments: this.project.comments.edges.map(edge=>edge.node),
+      newText: ''
     }
   }
 
@@ -86,9 +88,9 @@ class Project extends Component {
     let user = this.user
     let project = this.project
     let bounces = project.bounces.edges
-    let friendIds = user.friends.edges.map(edge => edge.node.id)
+    // let friendIds = user.friends.edges.map(edge => edge.node.id)
     let bouncedByIds = bounces.map(edge => edge.node.bouncer.id)
-    let projectOwnerId = this.User.id
+    // let projectOwnerId = this.User.id
     this.setState({
       disableComments: !this.isFriends,
       bounced: bouncedByIds.includes(user.id)
@@ -113,86 +115,60 @@ class Project extends Component {
 
   currentTime = (time) =>  this.setState({ time })
   getDuration = (duration) => this.setState({ duration })
+  handleSelection = (selection) => this.setState({selection})
 
   dropMarker = (type) => {
-    this.setState((prevState)=> {
-      // let {edges} = this.state.comments
-      // edges.push({node:{
-      //   id: 'newText',
-      //   timestamp: this.state.time,
-      //   author: {
-      //     id: this.user.id
-      //   },
-      //   project: {
-      //     id: this.project.id
-      //   },
-      //   text: "",
-      //   type
-      // }})
-      return {
-        // markers: edges,
+    this.setState({
         new: {
           id: 'new',
           type: type,
-          text: "",
+          text: this.state.newText,
           author: this.user,
           timestamp: this.state.time,
           project: this.project
         }
-      }
-    })
-  }
-
-  activate = (index) => {
-    this.setState( (prevState) => {
-      let {active} = prevState
-      active.push(index)
-      return { active }
-    })
-  }
-
-  deactivate = (index) => {
-    this.setState( (prevState) => {
-      let {active} = prevState
-      active.splice(active.indexOf(index),1)
-      return { active }
-    })
+      })
   }
 
   get comments () {
     console.log('getting');
     return this.filteredComments().map((comment, index)=>{
-      if (comment.id === 'new') {
-        return null
-      }
-      return (
-        <SingleComment
+      return <SingleComment
           index={index + 1}
           comment={comment}
           key={comment.id}
           focus={this.state.focus}
           active={(this.state.active.includes(index+1))}
-          activate={this.activate}
-          deactivate={this.deactivate}
+          deactivate={()=>
+            this.setState({active: this.state.active.filter(id=>id!==(index+1))})}
+          activate={()=>
+            this.setState({active: this.state.active.concat(index+1)})}
           user={this.user}
           tabs={this.state.tabs} />
-      )
+
     })
+  }
+
+  filteredComments = () => {
+    let comments = this.state.comments
+    if (this.state.tabs === 'listen') {
+      comments = comments.filter( comment => comment.author.id === this.user.id )
+    }
+    if (this.state.selection) {
+      comments = comments.filter( comment => comment.author.handle===this.state.selection)
+    }
+    return comments
   }
 
   titleChange = (title) => {
     this.setState({ title, titleUnique: true })
-    if (this.debounce) {
-      clearTimeout(this.debounce)
-    }
+    this.debounce && clearTimeout(this.debounce)
     this.debounce = setTimeout(()=>{
       ensureUsersProjectTitleUnique(this.user.id, title).then(unique=>{
         this.setState({titleUnique: unique})
       })
     },1000)
   }
-
-  handleSelection = (selection) => this.setState({selection})
 
   artworkSuccess = (file) => {
     this.setState({artworkEditorOpen: false})
@@ -209,31 +185,6 @@ class Project extends Component {
 
   openArtworkEditor = () => {
     this.isOwner && this.setState({artworkEditorOpen: true})
-  }
-
-  filteredComments = () => {
-    let comments = (this.state.new) ?
-      this.state.comments.concat(this.state.new) : this.state.comments
-    console.log('fltcm', comments);
-
-    if (this.state.tabs === 'listen') {
-      comments = comments.filter( (comment) => {
-        return comment.author.id === this.user.id
-      })
-    }
-
-    if (this.state.selection) {
-      comments = comments.filter( (comment) => {
-        return comment.author.handle === this.state.selection
-      })
-    }
-
-    if (this.user.id !== this.project.creator.id) {
-      comments = comments.filter( (comment) => {
-        return !comment.session
-      })
-    }
-    return comments
   }
 
   setBounce = () => {
@@ -549,14 +500,21 @@ class Project extends Component {
                   key={0}
                   focus={this.state.focus}
                   active={(this.state.active.includes('new'))}
-                  activate={this.activate}
-                  deactivate={this.deactivate}
+                  activate={()=>
+                    this.setState({active: this.state.active.concat('new')})}
+                  deactivate={()=>
+                    this.setState({active: this.state.active.filter(id=>id!=='new')})}
                   user={user}
                   tabs={this.state.tabs}
                   commentCreated={(newComment)=>{
+                    console.log('new state', this.state.new, newComment);
+                    let key = 'new' + this.state.newIndex
+                    newComment.key = key
+                    newComment.id = key
                     this.setState({
+                      newIndex: this.state.newIndex + 1,
                       new: false,
-                      comments: this.state.comments.concat(this.state.new)
+                      comments: this.state.comments.concat(newComment)
                     })
 
                   }} /> :

@@ -61,10 +61,11 @@ class UserSettings extends Component {
 
   checkPasswords = ({pass1, pass2}) => {
     this.setState({pass1, pass2})
-    let passwordError = pass1!==pass2 ? `Password doesn't match!` : ''
-    if (!passwordError && (pass1.length < 6)) {
-      passwordError = 'Password too short!'
-    }
+    console.log('this', this.state);
+    let passwordError = ''
+    if (pass1!==pass2) passwordError = `Password doesn't match!`
+    else if ( pass1.length < 6) passwordError = 'Password too short!'
+
     this.setState({ passwordError })
   }
 
@@ -116,7 +117,6 @@ class UserSettings extends Component {
         errorText={this.state.passwordError}
         value={this.state.pass2}
         type={'password'}
-        inputStyle={{marginTop: '0'}}
         onChange={(e, pass2) => this.checkPasswords({pass1: this.state.pass1, pass2})}
       /><br />
       <BtFlatButton
