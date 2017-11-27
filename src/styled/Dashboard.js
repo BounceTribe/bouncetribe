@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import React, {Component} from 'react'
-import {View, BtAvatar, BtLink, BtFlatButton} from 'styled'
+import {View, BtAvatar, BtFlatButton} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import Bolt from 'icons/Bolt'
@@ -12,7 +12,7 @@ import FlatButton from 'material-ui/FlatButton'
 import { ProfCol, ProfHandle, Score} from 'styled/Project'
 
 export const DashProfile = ({selectedUser}) => (
-  <div style={{display: 'flex', padding: '31px 31px 15px 31px'}}>
+  <div style={{display: 'flex', padding: '21px 31px 15px 31px', minHeight: '60px'}}>
     <BtAvatar user={selectedUser} size={60} />
     <ProfCol>
       <ProfHandle to={`/${selectedUser.handle}`} >
@@ -34,9 +34,15 @@ export const DialogRow = styled.div`
   padding: 25px 0;
   border-bottom: 1px solid ${grey400};
 `
+
+export const UpperInvite = styled.div`
+  display: flex;
+  padding: 27px;
+  font-size: 14px;
+  align-items: center;
+`
 const FbDialogRow = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 100%;
@@ -59,21 +65,27 @@ export const TopCol = styled.div`
   align-items: flex-start;
   margin-left: 30px;
 `
-export const DialogRow2 = styled(DialogRow)`
+//min height accomodates 3 project items
+export const BotRow = styled.div`
+  display: flex;
   justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+  max-height: 60vh;
+  min-height: 525px;
 `
 
 export const DashLeft = styled.div`
   display: flex;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: white;
   min-height: 50vh;
   flex: 0 0 285px;
   border: solid ${grey222} 1px;
-  border-radius: 10px;
+  border-radius: 5px;
   margin-right: 20px;
   padding: 9px 0px 9px 9px;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
 export const DashView = styled(View)`
@@ -83,31 +95,28 @@ export const DashView = styled(View)`
 
 export const DashHeader = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-start;
-  width: 80vw;
   padding-top: 0px;
 `
 
 export const DashHeaderRow = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 80vw;
+  width: 100vw;
+  padding: 0 20px;
   box-sizing: border-box;
 `
 
 export const TopPanel = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-content: center;
   width: 100%;
   height: 140px;
   background-color: white;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
-  border-radius: 10px;
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
+  border-radius: 5px;
   border: solid ${grey222} 1px;
   margin-top: 20px;
 `
@@ -118,7 +127,6 @@ export const ImgColumn = styled.div`
 `
 
 export const TopColumn = styled.div`
-  flex-direction: row;
   justify-content: space-between;
 `
 
@@ -129,20 +137,11 @@ export const FeedbackRating = styled.div`
   margin: 50px 50px 0 0;
 `
 
-export const UserName = styled.h1`
+export const UserName = styled(ProfHandle)`
   font-size: 1.5em;
   color: #555555;
   font-weight: normal;
   margin: -95px 0 0 115px;
-`
-
-export const NavLink = styled(BtLink)`
-  text-decoration: none;
-  color: ${grey119};
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: lighter;
-  margin: 13px 0 0 115px;
 `
 
 export const LogoText = styled.h2`
@@ -158,14 +157,14 @@ export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
   margin: 6px 0;
-  width: 80vw;
+  width: 100%;
+  ${'' /* padding-right: 40px; */}
 `
 
 const InviteStyled = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: "Helvetica Neue";
   font-size: 12pt;
   height: 40px;
   cursor: pointer;
@@ -174,10 +173,16 @@ const InviteStyled = styled.div`
 const Span7pxRight = styled.span`
   margin-right: 7px;
 `
-export const InviteButton = ({onClick, text}) => (
+const Span7pxLeft = styled.span`
+  margin-left: 7px;
+  font-size: 14px;
+  font-weight: 400;
+`
+export const InviteButton = ({onClick, text, rightText}) => (
   <InviteStyled onClick={onClick}>
     {text && <Span7pxRight>{text}</Span7pxRight>}
     <InviteIcon/>
+    {rightText && <Span7pxLeft>{rightText}</Span7pxLeft>}
   </InviteStyled>
 )
 
@@ -188,7 +193,6 @@ export const SendInviteBtn = ({onClick}) => (
     labelStyle={{
       color: `${white}`,
       fontSize: '14px',
-      fontFamily: 'Helvetica Neue',
       textTransform: 'none'
     }}
     icon={
@@ -214,7 +218,7 @@ export class FbList extends Component {
     return (
       <FbDialogRow user={friend} >
         <SubRow>
-          <BtAvatar user={friend} size={50} />
+          <BtAvatar user={friend} size={50} fbCircle />
           <Name style={{lineHeight:'48px', paddingLeft: '7px'}} to={`/${friend.handle}`}>
             {friend.handle}
           </Name>
@@ -226,12 +230,12 @@ export class FbList extends Component {
           }}
           backgroundColor={white}
           labelStyle={{ color: `${white}` }}
-          icon={ <AddFriend fill={(invited) ? white : purple} height={16} /> }
+          icon={ <AddFriend fill={'#3B5998'} height={16} /> }
           style={{
             border: `1px solid ${grey400}`,
             borderRadius: '5px',
-            width: '60px',
-            height: '4 0px'
+            minWidth: '60px',
+            height: '40px'
           }}
           disabled={invited}
         />

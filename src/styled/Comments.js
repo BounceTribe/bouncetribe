@@ -7,119 +7,104 @@ export const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: flex-start;
   width: 100%;
 `
 export const ButtonRow = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
-  flex-direction: row;
   justify-content: center;
 `
-
-export const ButtonColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
-  align-items: center;
-`
-
-export const ButtonLabel = styled.span`
-  display: flex;
-  margin-top: 15px;
-  font-size: 14px;
-`
+  export const ButtonColumn = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px 20px;
+  `
+    export const ButtonLabel = styled.span`
+      display: flex;
+      margin-top: 15px;
+      font-size: 14px;
+    `
 
 export const CommentBox = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width: 100%;
 `
-
 export const Single = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: flex-start;
+  flex-direction: column;
+  transition: background-color 1.5s ease-out;
   border: 1px solid ${grey300};
   border-radius: 6px;
-  padding: 10px 30px;
   width: 100%;
-  margin-bottom: 20px;
-  min-height: 40px;
-  box-sizing: border-box;
-  display: ${({hide})=> (hide) ? 'none': ''};
+  margin: 10px;
+  display: ${({hide}) => (hide) ? 'none': ''};
+  min-width: 0;
 `
-
-export const Bottom = styled.div`
-  font-size: 13px;
-`
-
-export const BotLink = styled.span`
-  cursor: pointer;
-  color: ${grey700};
-  display: ${({hideLink})=> (hideLink) ? 'none': ''};
-  margin-right: 10px;
-  font-size: 12px;
-`
-
-export const UpVote = styled(BotLink)`
-  color: ${({secondary}) => (secondary) ? blue: purple};
-  font-weight: bold;
-`
-
-export const Time = styled.div`
-  display: flex;
-  align-items: center;
-  margin-left: 20px;
-  font-size: 14px;
-  color: ${grey700};
-  margin-top: 40px;
-`
-
-export const Center = styled.div`
-  flex-direction: row;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  margin-left: 20px;
-  width: 90%;
-  flex-wrap: wrap;
-`
-
-export const CommentP = styled.p`
-  margin: 0;
-  font-size: 16px;
-  color: ${grey700};
-`
-
-export const Text = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  width: 100%;
-  text-align: left;
-  font-size: 16px;
-  color: ${grey900};
-  align-items: flex-start;
-  align-content: center;
-  min-height: 50px;
-  font-size: 16px;
-  margin-top: 40px;
-`
-
-export const Handle = styled(BtLink)`
-  display: flex;
-  color: ${({comment}) => (comment) ? blue : purple};
-  margin-right: 10px;
-  font-weight: 400;
-`
+  export const MainRow = styled.div`
+    display: flex;
+    padding: 20px 30px 10px 20px;
+  `
+    export const InfoOptions = styled.div`
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    `
+      export const InfoRow = styled.div`
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      `
+        export const Handle = styled(BtLink)`
+          color: ${({comment}) => (comment) ? blue : purple};
+          padding-left: 15px;
+          font-weight: 400;
+        `
+      export const Bottom = styled.div`
+        display: flex;
+        margin-top: auto;
+        font-size: 13px;
+        padding-top: 5px;
+        ${'' /* justify-content: flex-end; */}
+      `
+        export const BotLink = styled.span`
+          cursor: pointer;
+          color: ${grey700};
+          display: ${({hideLink}) => hideLink ? 'none': ''};
+          padding: 0 5px;
+          font-size: 12px;
+        `
+        export const UpVote = styled(BotLink)`
+          color: ${({secondary, hasUpvoted}) => {
+            if (hasUpvoted) return '#999999'
+            if (secondary) return blue
+            else return purple
+          }};
+          font-weight: bold;
+        `
+    export const Text = styled.div`
+      display: flex;
+      flex-direction: column;
+      color: ${grey900};
+      font-size: 16px;
+      align-self: center;
+      flex-grow: 1;
+      word-break: break-all;
+      padding: 0 20px;
+    `
+    export const Time = styled.div`
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      color: ${grey700};
+      margin-left: auto;
+      align-self: center;
+    `
 
 export const CommentScroller = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
   width: 100%;
 `
@@ -127,65 +112,38 @@ export const CommentScroller = styled.div`
 export const SCContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  margin-top: 15px;
+  padding: 0 30px 0 60px;
 `
 
 export const SubComment = styled.div`
   display: flex;
-  flex-direction: row;
-  margin: 10px 0;
+  padding: 10px 0;
+  display: ${({hide}) => (hide) ? 'none': ''};
 `
 
 export const SCCol = styled.div`
   display: flex;
   flex-direction: column;
-  margin-left: 10px;
+  padding: 0 10px;
+  justify-content: center;
 `
 
-export const SCImg = styled.img`
-  display: flex;
-  height: 25px;
-  width: 25px;
-  object-fit: cover;
-  border-radius: 25px;
-`
-
-export const SCPortrait = (props) => {
-  return(
-    <BtLink
-      to={props.to}
-    >
-      <SCImg
-        src={props.src}
-      />
-    </BtLink>
-  )
-}
-
-export const SCHandleText = styled.div`
+export const SCHandleText = styled.pre`
   display: flex;
   font-weight: 400;
   color: ${grey700};
   font-size: 14px;
 `
 
-export const SCHandle = (props) => {
-  return(
-    <BtLink
-      to={props.to}
-    >
-      <SCHandleText>
-        {props.children}
-      </SCHandleText>
-    </BtLink>
-  )
-}
+export const SCHandle = (props) => (
+  <BtLink to={props.to}>
+    <SCHandleText>{props.children}</SCHandleText>
+  </BtLink>
+)
+
 
 export const SCText = styled.div`
   display: flex;
   color: ${grey700};
-  margin-top: 10px;
   font-size: 13px;
 `

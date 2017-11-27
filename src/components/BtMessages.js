@@ -1,16 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
-
 import {white, grey400, grey500, purple} from 'theme'
 
 export const MsgsContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
-  flex-grow: 2;
   max-height: 50vh;
-  overflow-x: hidden;
   overflow-x: scroll;
-  padding: 20px 20px 0 20px;
+  padding: 20px 20px 1px 20px;
   border-bottom: 1px solid ${grey500};
   bottom: 0;
 `
@@ -22,7 +19,7 @@ const MsgBubble = styled.div`
   color: ${props => props.isSender ? grey500 : white};
   padding: 9px 14px;
   word-break: break-word;
-  white-space: pre-wrap
+  white-space: pre-wrap;
   flex: none;
 `
 const MsgTime = styled.div`
@@ -38,7 +35,7 @@ const MsgItem = styled.div`
   display: flex;
   flex: none;
   align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
-  max-width: 49%
+  max-width: 49%;
   flex-direction: column;
 `
 

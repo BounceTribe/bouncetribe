@@ -21,11 +21,10 @@ export const NotifyHeader = styled.h4`
 
 export const NotifyMessage = styled.div`
   font-size: 15px;
-  color: ${grey700}
+  color: ${grey700};
   margin-bottom: 4px;
   flex: 3;
-  `
-
+`
 
 export const NotifyDate = styled.div`
   font-size: 11px;
@@ -34,7 +33,7 @@ export const NotifyDate = styled.div`
 `
 
 export const Notification = ({notification: {type, triggeredBy, createdAt, notificationFor, project, session}}) => {
-
+  console.log('notifi', type, project);
   let header,
       message,
       link
@@ -42,25 +41,25 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
   switch (type) {
     case 'FRIEND_REQUEST': {
       header = "Tribe Request"
-      message = `${triggeredBy.handle} has invited you.`
+      message = `${triggeredBy.handle} has invited you to join their Tribe`
       link = `/${triggeredBy.handle}`
       break
     }
     case 'FRIEND_REQUEST_ACCEPTED': {
       header = "Request Accepted"
-      message = `${triggeredBy.handle} has accepted.`
+      message = `${triggeredBy.handle} has accepted`
       link = `/${triggeredBy.handle}`
       break
     }
     case 'SESSION_FEEDBACK_RECEIVED': {
       header = 'Feedback Received'
-      message = `${triggeredBy.handle} has given you feedback.`
+      message = `${triggeredBy.handle} has given you feedback`
       link = `/session/${notificationFor.handle}/${session.id}/mine`
       break
     }
     case 'PROJECT_FEEDBACK_RECEIVED': {
       header = 'Feedback Received'
-      message = `${triggeredBy.handle} has given you feedback.`
+      message = `${triggeredBy.handle} has given you feedback`
       link = `/${notificationFor.handle}/${project.title}`
       break
     }
@@ -74,6 +73,9 @@ export const Notification = ({notification: {type, triggeredBy, createdAt, notif
       break
     }
     case 'BOUNCED': {
+      header = 'Project Bounced'
+      message = `${triggeredBy.handle} has bounced your track.`
+      link = `/${notificationFor.handle}/${project.title}`
       break
     }
     default: {

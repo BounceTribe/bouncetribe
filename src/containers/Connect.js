@@ -11,13 +11,10 @@ class Connect extends Component {
     this.props.route.auth.showLock(this.props.viewer.user.auth0UserId)
   }
 
-
   render () {
     return (
       <Background>
-
         <Container>
-
           <Logo
             style={{
               display: 'flex',
@@ -30,15 +27,12 @@ class Connect extends Component {
             }}
             fill={'white'}
           />
-
           <Header>
             <b>Bounce</b>Tribe
           </Header>
-
           <Lock
             id='lock'
           />
-
         </Container>
       </Background>
     )

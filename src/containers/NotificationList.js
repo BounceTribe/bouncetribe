@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {View, IconTextContainer, IconText} from 'styled'
-import {Container, Header, NList} from 'styled/list'
+import {Header, NList} from 'styled/list'
 import {Notification} from 'styled/NotificationList'
 import Alerts from 'icons/Alerts'
 import {purple} from 'theme'
@@ -17,19 +17,15 @@ class NotificationList extends Component {
   render () {
     return (
       <View>
-        <Container>
-          <Header>
-            <IconTextContainer to={`/notifications`} >
-              <Alerts fill={purple} />
-              <IconText>
-                Notifications
-              </IconText>
-            </IconTextContainer>
-          </Header>
-          <NList>
-            {this.notifications}
-          </NList>
-        </Container>
+        <Header>
+          <IconTextContainer to={`/notifications`} >
+            <Alerts fill={purple} />
+            <IconText>Notifications</IconText>
+          </IconTextContainer>
+        </Header>
+        <NList>
+          {this.notifications}
+        </NList>
       </View>
     )
   }

@@ -1,7 +1,8 @@
- import React from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {white, grey230, grey215, size, grey800, grey700, purple, blue, btTheme, bigTheme} from 'theme'
 import {Link} from 'react-router'
+import FacebookCircle from 'icons/FacebookCircle'
 import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -12,10 +13,15 @@ import Online from 'icons/Online'
 import {url} from 'config'
 import Moment from 'moment'
 
+export const PanelScrollContainer = styled.div`
+  padding: 15px 0;
+  display: flex;
+`
+
 const PurpleBox = styled.div`
   display: inline-flex;
   align-items: center;
-  justify-content: center
+  justify-content: center;
   font-weight: bold;
   background-color: ${purple};
   color: ${white};
@@ -41,32 +47,36 @@ export const BtTextMarker = (props) => {
 }
 
 
-export const BtAvatar = ({user, size, hideStatus}) => {
+export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) => {
   size = size || 50
   user = user || {}
   //set the ratio of size between the avatar and the online icon
   const iconSize = size * 18/60
-
   let online = false
   if (user.lastPing) {
     let now = Moment()
     online = now.diff(user.lastPing, 'seconds') < 315
   }
-
   return  (
-    <div style={{height: `${size}px`}}>
+    <div
+      style={{
+        height: `${size}px`,
+        cursor: pointer ? 'pointer' : 'auto'
+      }}
+      onClick={onClick} >
       <Avatar
-        src={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
+        src={(user.portrait && !user.disabled) ? user.portrait.url : `${url}/logo.png`}
         style={{border: 0, objectFit: 'cover'}}
         to={`/${user.handle}`}
         size={size}
       />
-      <Online size={iconSize} online={online}
+      {fbCircle ? <FacebookCircle style={{ marginLeft: `-20px` }} />
+        : <Online size={iconSize} online={online}
         style={{
           marginLeft: `-${iconSize}px`,
           display: `${hideStatus ? 'none' : 'inline'}`
         }}
-      />
+      />}
     </div>
   )
 }
@@ -75,7 +85,7 @@ export const BtLink = styled(Link)`
   display: flex;
   color: ${grey700};
   text-decoration: none;
-  cursor: pointer;
+  cursor:${props => props.to ? 'pointer' : 'auto'};
 `
 
 export const Main = styled.main`
@@ -94,10 +104,11 @@ export const View = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%;
-  border: ${props => props.hideBorder ? 'none' : `solid ${grey230} 1px`};
-  border-radius: 10px;
+  width: calc(100% - 40px);
+  border: solid ${grey230} 1px;
+  border-radius: 5px;
   min-height: 80vh;
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
   margin: 100px 0 50px 0;
   ${size.m`
     margin-top: 0;
@@ -133,7 +144,7 @@ export const DropContainer = styled.div`
   min-width: 30%;
   max-width: 400px;
   height: 200px;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
 `
 
@@ -143,7 +154,7 @@ export const ImageDropContainer = styled.div`
   align-items: center;
   max-width: 800px;
   max-height: 800px;
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
   border: ${({image})=>(image) ? `none` : `2px dashed ${grey215}`};
 `
@@ -180,22 +191,15 @@ export const BtFlatButton = (props) => {
 }
 
 export const RoundButton = (props) => {
-
   let tooltipLength = 0
   if (props.tooltip) {
     tooltipLength = props.tooltip.length
   }
-
-
   return (
     <ButtonLink to={props.to} title={props.title} >
       <IconButton
         tooltip={props.tooltip}
-        style={{
-          height: '60px',
-          width: '60px',
-          padding: '0px'
-        }}
+        style={{ height: '60px', width: '60px', padding: '0px' }}
         tooltipStyles={{
           marginTop: "18px",
           left: "0",
@@ -206,10 +210,7 @@ export const RoundButton = (props) => {
       >
         <MuiThemeProvider muiTheme={ (props.big) ? bigTheme : btTheme } >
           <FloatingActionButton
-            style={{
-              boxShadow: 0,
-              ...props.style
-            }}
+            style={{ boxShadow: 0, ...props.style }}
             secondary={props.secondary}
             backgroundColor={props.backgroundColor}
             onClick={props.onClick}

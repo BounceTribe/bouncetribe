@@ -1,24 +1,39 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Background, Container, Lock, Header, Legal, LegalLink, LogoImg} from 'styled/Login'
-// import Logo from 'icons/Logo'
 import LoginLogo from 'icons/LoginLogo.png'
-// import {purple} from 'theme'
 import {url} from 'config'
 
 class Login extends Component {
 
+  state={ routeSet: false }
+
   componentDidMount() {
-    if (this.props.viewer.user) {
-      this.props.router.push('/')
-    } else {
-      this.props.route.auth.showLock(false)
-    }
+    console.log('login redirect:', localStorage.getItem('redirect'))
+    let user = this.props.viewer.user
+    console.log('login user', user);
+    user ? this.toSite(user) : this.props.route.auth.showLock(false)
+
   }
 
   componentWillReceiveProps (newProps) {
-    if (newProps.viewer.user) {
-      this.props.router.push('/')
+    if (!this.state.routeSet) {
+      let user = newProps.viewer.user
+      if (user) this.toSite(user)
+    }
+  }
+
+  toSite = (user) => {
+    let redirect = localStorage.getItem('redirect')
+    // let friends = user.friends.edges
+    if (redirect) {
+      console.log('Login.js - localstorage redirect and this', redirect, this);
+      localStorage.removeItem('redirect')
+      this.props.router.push(redirect)
+      this.setState({routeSet: true})
+    } else {
+      this.props.router.push(`/dash/`)
+      this.setState({routeSet: true})
     }
   }
 
@@ -27,17 +42,6 @@ class Login extends Component {
       <Background>
         <Container>
           <LogoImg src={`${url}/logo.png`} />
-          {/* <Logo
-            style={{
-              display: 'flex',
-              backgroundColor: purple,
-              height: '70px',
-              width: '70px',
-              borderRadius: '70px',
-              padding: '10px'
-            }}
-            fill={'white'}
-          /> */}
           <Header src={LoginLogo} />
           <Lock id='lock' />
           <Legal>
@@ -60,7 +64,18 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user { id }
+          user {
+            handle
+            id
+            friends (
+              first: 1
+              filter: {deactivated: false}
+            ) {
+              edges {
+                node { handle }
+              }
+            }
+          }
         }
       `,
     },

@@ -6,6 +6,7 @@ export default class CreateFriendRequest extends Mutation {
     return {
       actorId: this.props.actorId,
       recipientId: this.props.recipientId,
+      accepted: this.props.accepted,
     }
   }
 

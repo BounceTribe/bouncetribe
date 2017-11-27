@@ -1,14 +1,13 @@
 import React, {Component} from 'react'
-import {Single, Bottom, Time, Text, Center, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, CommentP, SCPortrait, SCCol, SCText} from 'styled/Comments'
-import {RoundButton} from 'styled'
+import Relay from 'react-relay'
+import {white, purple, blue, grey700} from 'theme'
+import {Single, MainRow, Bottom, Time, Text, InfoOptions, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, InfoRow, SCCol, SCText} from 'styled/Comments'
+import {RoundButton, BtAvatar} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
-import {url} from 'config'
 import formatTime from 'utils/formatTime'
 import TextField from 'material-ui/TextField'
 import UpdateComment from 'mutations/UpdateComment'
-import Relay from 'react-relay'
-import {white, purple, blue, grey700} from 'theme'
 import CreateComment from 'mutations/CreateComment'
 import DeleteComment from 'mutations/DeleteComment'
 import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
@@ -16,207 +15,266 @@ import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
 
 class SingleComment extends Component {
 
-  state = {
-    text: "",
-    newSubcomment: ""
+  constructor(props) {
+    super()
+    this.listenTab = props.tabs==='listen'
+    this.comment = props.comment
+    this.isFirst = (props.index === 0)
+    this.isOwnComment = (props.user.id === props.comment.author.id)
+    let commentUpvotes = ((props.comment.upvotes || {}).edges || []).map(edge=>edge.node.id)
+    let userUpvotes = ((props.user.upvotes || {}).edges || []).map(edge=>edge.node.id)
+    console.log(commentUpvotes, userUpvotes)
+    this.state = {
+      text: props.comment.text,
+      newUpvote: 0,
+      hasUpvoted: commentUpvotes.some(id=>(id===props.user.id)),
+      newSubcomment: "",
+      deleted: [],
+      children: ((props.comment.children || {}).edges || []).map(edge => edge.node),
+    }
+
   }
 
-  componentWillMount(){
-    this.setState({text: this.props.comment.text})
+  componentDidMount() {
+    console.log('sc mount', this)
+    if(this.props.focus === this.comment.id){
+      document.getElementById(this.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
+    }
   }
 
-  editComment = (e) => {
-    if (e.charCode === 13) {
-      if (this.props.index === 0) {
-        Relay.Store.commitUpdate(
-          new CreateComment({
-            authorId: this.props.comment.author.id,
-            projectId: this.props.comment.project.id,
-            type: this.props.comment.type,
-            timestamp: this.props.comment.timestamp,
-            text: this.state.text,
-            sessionId: this.props.sessionId
-          })
-        )
-        this.props.commentCreated()
-        this.setState({text: ""})
-      } else {
-        Relay.Store.commitUpdate(
-          new UpdateComment({
-            id: this.props.comment.id,
-            text: this.state.text,
-          })
-        )
-        this.props.deactivate(this.props.index)
+  editComment = () => {
+    if (this.isFirst) {
+      let commentData = {
+        authorId: this.comment.author.id,
+        projectId: this.comment.project.id,
+        type: this.comment.type,
+        timestamp: this.comment.timestamp,
+        text: this.state.text,
+        sessionId: this.props.sessionId
       }
-
+      Relay.Store.commitUpdate(new CreateComment(commentData), {
+        onSuccess: success => {
+          commentData.author = this.props.user
+          commentData.id = success.createComment.comment.id
+          commentData.key = success.createComment.comment.id
+          this.props.commentCreated(commentData)
+          this.setState({text: ""})
+        }
+      }
+    )
+    } else {
+      Relay.Store.commitUpdate(
+        new UpdateComment({id: this.comment.id, text: this.state.text})
+      )
+      this.props.deactivate(this.props.index)
     }
   }
 
   text = () => {
-    if (this.props.active || this.props.index === 0) {
+    if (this.props.active || this.isFirst) {
       return (
         <TextField
-          id={this.props.comment.id}
+          id={this.comment.id}
           value={this.state.text}
-          onChange={(e,newValue)=>{this.setState({text:newValue})}}
-          fullWidth={true}
-          autoFocus={(this.props.focus === this.props.comment.id || this.props.index === 0)}
-          onKeyPress={this.editComment}
-          style={{
-            marginTop: '-16px',
+          onChange={(e,newVal)=>this.setState({text:newVal})}
+          fullWidth
+          multiLine
+          autoFocus={(this.props.focus === this.comment.id || this.isFirst)}
+          onKeyPress={(e)=>{
+            if (e.charCode === 13 && !e.shiftKey) {
+              e.preventDefault()
+              this.editComment()
+            }
           }}
-          inputStyle={{
+          textareaStyle={{
             color: grey700,
-            fontSize: '16px'
+            fontSize:'16px',
+            wordBreak:'break-all',
+            lineHeight: '18px'
           }}
           underlineFocusStyle={{
-            borderColor: (this.props.comment.type === 'COMMENT' ) ? blue : purple
+            borderColor: (this.comment.type === 'COMMENT' ) ? blue : purple
           }}
         />
       )
     } else {
-      return (
-        <CommentP>{this.props.comment.text}</CommentP>
-      )
+      return (this.state.text)
     }
   }
 
-  componentDidMount(){
-    if(this.props.focus === this.props.comment.id){
-      document.getElementById(this.props.comment.id).scrollIntoView({behavior:'smooth',block: 'start'})
-    }
+  addUpvote = () => {
+
+    Relay.Store.commitUpdate(
+      new AddToCommentUpvotes({
+        upvotesUserId: this.props.user.id,
+        upvotesCommentId: this.comment.id
+      }), { onSuccess: (res) => {
+        console.log('upvote res', res);
+        this.setState({
+          newUpvote: this.state.newUpvote + 1,
+          hasUpvoted: true
+        })
+      } }
+    )
   }
+  deleteComment = (id) => Relay.Store.commitUpdate(
+    new DeleteComment({
+      id,
+      projectId: this.comment.projectId || this.comment.project.id
+    }), {
+      onSuccess: (res)=>this.setState({deleted: this.state.deleted.concat([id])})
+    }
+  )
 
   hider = () => {
-    if (this.props.index === 0) {
-      return false
-    } else if (this.props.userId !== this.props.comment.author.id && this.props.tabs === 'listen') {
-      return true
-    } else {
-      return false
-    }
+    if (this.props.index===0) return false
+    else if (!this.isOwnComment && this.props.tabs==='listen') return true
+    else return false
+  }
+
+  subcomments = () => {
+    return (
+      <SCContainer>
+        {this.state.children.map(child=>{
+          console.log('usre child', child);
+          return (
+            <SubComment key={child.id} hide={this.state.deleted.includes(child.id)}>
+              <BtAvatar user={child.author} size={30} />
+              <SCCol>
+                <SCHandle>{child.author.handle}</SCHandle>
+                {this.props.user.id===child.author.id && <Bottom>
+                  <BotLink
+                    onClick={()=>{this.props.active ?
+                      this.editComment() : this.props.activate(this.props.index)}}
+                  >Edit</BotLink>
+                  {'|'}
+                  <BotLink
+                    onClick={()=>this.deleteComment(child.id)}
+                  >Delete</BotLink>
+                </Bottom>}
+              </SCCol>
+              <SCText>{child.text}</SCText>
+            </SubComment>
+          )
+        })}
+        <SubComment key={'input'} >
+          <BtAvatar user={this.props.user} size={30} />
+          <SCCol><SCHandle>{this.props.user.handle}</SCHandle></SCCol>
+          <TextField
+            ref='scTextField'
+            value={this.state.newSubcomment}
+            name={'newSubcomment'}
+            hintText={'Add a comment'}
+            hintStyle={{fontSize: '14px'}}
+            onChange={(e,newVal)=>this.setState({newSubcomment:newVal})}
+            multiLine
+            fullWidth
+            textareaStyle={{
+              color: grey700,
+              fontSize:'14px',
+              wordBreak:'break-all',
+              lineHeight: '16px'
+            }}
+            onKeyPress={(e)=>{
+              if (e.charCode === 13 && !e.shiftKey) {
+                e.preventDefault()
+                let newSubcommentData = {
+                  authorId: this.props.user.id,
+                  author: this.props.user, //for real time
+                  type: 'COMMENT',
+                  text: this.state.newSubcomment,
+                  parentId: this.comment.id
+                }
+                Relay.Store.commitUpdate(
+                  new CreateComment(newSubcommentData), {
+                    onSuccess: success => {
+                      console.log('newSubcomment', this.state.children)
+                      this.refs.scTextField.blur();
+                      this.setState({
+                        children: this.state.children.concat(newSubcommentData),
+                        newSubcomment: ''
+                      })
+                    },
+                    onFailure: failure => console.log('fail subcomment', failure)
+                  }
+                )
+              }
+            }}
+          />
+        </SubComment>
+      </SCContainer>)
   }
 
   render() {
-    let {author, timestamp, type, id, upvotes} = this.props.comment
+    let {author, timestamp, type, id, upvotes} = this.comment
+    let {newUpvote} = this.state
+    let totalUpvotes = (upvotes||newUpvote) && (upvotes.edges.length + newUpvote)
+    let hideEditDelete = this.isFirst ||  !this.isOwnComment
     return (
-      <Single id={id} hide={this.hider()} >
-        <RoundButton
-          icon={(type === 'COMMENT') ?
-            <Comment height={25} width={25} fill={white} />
-            :
-            <Heart height={25} width={25} fill={white} />
-          }
-          mini
-          secondary={(type === 'COMMENT')}
-          style={{ marginTop: '30px' }}
-        />
-        <Center>
-          <Text>
-            <Handle
-              // comment={(type === 'COMMENT')}
-              to={`/${author.handle}`}
-            >
-              {author.handle}
-            </Handle>
-            {this.text()}
-          </Text>
-          <Bottom>
-            <BotLink
-              onClick={()=>{this.props.activate(this.props.index)}}
-              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.userId !== this.props.comment.author.id)}
-            >
-              Edit
-            </BotLink>
-            <BotLink
-              hideLink={(this.props.tabs === 'view' || this.props.index === 0 || this.props.userId !== this.props.comment.author.id)}
-              onClick={()=>{
-                console.log("this.props.comment.project.id", this.props.comment.project.id )
-                Relay.Store.commitUpdate(
-                  new DeleteComment({
-                    id: this.props.comment.id,
-                    projectId: this.props.comment.project.id
-                  })
-                )
-              }}
-            >
-              Delete
-            </BotLink>
-            <UpVote
-              secondary={(type==='COMMENT')}
-              hideLink={(this.props.tabs === 'listen' || this.props.session)}
-              onClick={()=>{
-                Relay.Store.commitUpdate(
-                  new AddToCommentUpvotes({
-                    upvotesUserId: this.props.userId,
-                    upvotesCommentId: this.props.comment.id
-                  })
-                )
-              }}
-            >
-              Upvote | {(upvotes) ? upvotes.edges.length : 0}
-            </UpVote>
-            <BotLink
-              hideLink={(this.props.tabs === 'listen')}
-              onClick={()=>{
-                this.setState((prevState)=>{return {subcomments: !prevState.subcomments}})
-              }}
-            >
-              Comments | {(this.props.comment.children) ?  this.props.comment.children.edges.length : 0}
-            </BotLink>
-            <BotLink hideLink={false} >
-
-            </BotLink>
-          </Bottom>
-          {(this.state.subcomments) ?
-            <SCContainer>
-            {this.props.comment.children.edges.map(edge=>{
-              let imgUrl = (edge.node.sender.portrait || {}).url || `${url}/logo.png`
-              return (
-                <SubComment key={edge.node.id} >
-                  <SCPortrait src={imgUrl} />
-                  <SCCol>
-                    <SCHandle>
-                      {edge.node.author.handle}
-                    </SCHandle>
-                    <SCText>
-                      {edge.node.text}
-                    </SCText>
-                  </SCCol>
-                </SubComment>
-              )
-            })}
-            <TextField
-              value={this.state.newSubcomment}
-              name={'newSubcomment'}
-              hintText={'Add a comment'}
-              onChange={(e,newValue)=>{this.setState({newSubcomment:newValue})}}
-              style={{ marginLeft: '35px' }}
-              onKeyPress={(e)=>{
-                if (e.charCode === 13) {
-                  Relay.Store.commitUpdate(
-                    new CreateComment({
-                      authorId: this.props.userId,
-                      type: 'COMMENT',
-                      text: this.state.newSubcomment,
-                      parentId: this.props.comment.id
-                    })
-                  )
-                  this.setState({newSubcomment: ""})
+      <Single id={id} hide={this.hider() || this.state.deleted.includes(id)} >
+        <MainRow>
+          <InfoOptions>
+            <InfoRow>
+              <RoundButton
+                icon={(type === 'COMMENT') ?
+                  <Comment height={25} width={25} fill={white} />
+                  : <Heart height={25} width={25} fill={white} />
                 }
-              }}
-            />
-            </SCContainer> : null
-          }
-        </Center>
-        <Time>
-          {formatTime(timestamp)}
-        </Time>
+                mini
+                secondary={(type === 'COMMENT')}
+              />
+              <Handle to={author.deactivated ? null : `/${author.handle}`} >
+                {author.handle}
+              </Handle>
+            </InfoRow>
+            <Bottom>
+              {!hideEditDelete && <BotLink
+                onClick={()=>{this.props.active ?
+                  this.editComment() : this.props.activate(this.props.index)}}
+              >Edit</BotLink>}
+              {!hideEditDelete && '|'}
+              {!hideEditDelete &&
+                <BotLink onClick={()=>this.deleteComment(id)}>Delete</BotLink>}
+              <UpVote
+                secondary={(type==='COMMENT')}
+                hideLink={this.listenTab}
+                hasUpvoted={this.state.hasUpvoted}
+                onClick={!this.isOwnComment && !this.state.hasUpvoted && this.addUpvote}
+              >Upvote | {totalUpvotes}</UpVote>
+              <BotLink
+                hideLink={this.listenTab}
+                onClick={()=>{
+                  this.setState({subcomments: !this.state.subcomments})
+                }}
+              >
+                {this.state.children.length ?
+                  `View Comments | ${this.state.children.length}`
+                  : 'Add Comment'}
+              </BotLink>
+            </Bottom>
+          </InfoOptions>
+          <Text>{this.text()}</Text>
+          <Time>{formatTime(timestamp)}</Time>
+        </MainRow>
+        {this.state.subcomments && this.subcomments()}
       </Single>
     )
   }
 }
 
+// editAndDelete = () => {
+//   return (
+//     <div>
+//       <BotLink
+//         onClick={()=>{this.props.active ?
+//           this.editComment() : this.props.activate(this.props.index)}}
+//       >Edit</BotLink>
+//       {this.listenTab && '|'}
+//       <BotLink
+//         onClick={this.deleteComment}
+//       >Delete</BotLink>
+//     </div>
+//   )
+// }
 
 export default SingleComment

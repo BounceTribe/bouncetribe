@@ -281,7 +281,10 @@ export const fetchFeed = (handle) => {
     body: JSON.stringify({
       query: /* GraphQL */`{
         User (handle: "${handle}") {
-          friends (first: 999) {
+          friends (
+            first: 999
+            filter: {deactivated: false}
+          ) {
             projects (
               first: 2
               filter: { privacy_not: PRIVATE }

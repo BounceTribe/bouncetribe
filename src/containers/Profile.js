@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, TopCol, Handle, InputRow, Location, ScoreRow, Score, Divider, Summary, Input, BotRow, BotRight, Label, InputError, SubRow, Experience, ExperienceRow} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, TopCol, Handle, Location, ScoreRow, Score, Divider, Summary, BotRow, BotRight, Label,  SubRow, Experience, ExperienceRow, EmailWebsite, MissingUserData} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
@@ -15,23 +15,22 @@ import 'react-select/dist/react-select.css'
 import 'theme/newSelect.css'
 import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
-import {handleValidator} from 'utils/handles'
+import {handleValidator, isUniqueField} from 'utils/handles'
 import {purple} from 'theme'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
-import UpdateFriendRequest from 'mutations/UpdateFriendRequest'
-import AddToFriends from 'mutations/AddToFriends'
 import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
-import Dialog from 'material-ui/Dialog'
-import {Button, BtAvatar} from 'styled'
-import Checkbox from 'material-ui/Checkbox'
-import Settings from 'icons/Settings'
+import {Dialog, TextField, FlatButton} from 'material-ui/'
+import {BtAvatar} from 'styled'
+import Edit from 'icons/Edit'
 import {Panel} from 'components/Panel'
 import {url} from 'config'
 import {TribeButton} from 'components/TribeButton'
+import {acceptFriendRequest} from 'utils/updateCommits'
+
 
 
 class Profile extends Component {
@@ -41,9 +40,8 @@ class Profile extends Component {
     genres: [],
     skills: [],
     influences: [],
-    handleError: '',
     experience: '',
-    tab: 'projects',
+    tab: 'activity',
     experiences: [
       { value: 'NOVICE', text: 'Novice (Just Started)' },
       { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
@@ -52,14 +50,18 @@ class Profile extends Component {
       { value: 'VETERAN', text: 'Veteran (25+ Years)' },
     ],
     notification: false,
-    tabs: 'projects',
-    settings: false,
     btnStatus: '',
-
+    editProfile: false,
+    userhandleError: '',
+    emailError: '',
+    summaryError: ''
   }
   componentDidMount = () => {
     //TODO-J this is a redirect: maybe there's better way to handle w/ router
-    this.props.router.replace(`/${this.props.router.params.userHandle}/projects`)
+    // let location = this.props.router.location;
+
+    this.props.router.push(`/${this.props.router.params.userHandle}/activity`)
+    console.log('profile mount props', this.props);
   }
 
   componentWillMount = () => {
@@ -75,17 +77,11 @@ class Profile extends Component {
       let {User} = this.props.viewer
       let genres = User.genres.edges.map(edge=>{
         let {node: genre} = edge
-        return {
-          value: genre.id,
-          label: genre.name
-        }
+        return { value: genre.id, label: genre.name }
       })
       let skills = User.skills.edges.map(edge=>{
         let {node: skill} = edge
-        return {
-          value: skill.id,
-          label: skill.name
-        }
+        return { value: skill.id, label: skill.name }
       })
       let influences = User.artistInfluences.edges.map(edge=>{
         let {node: influence} = edge
@@ -105,11 +101,11 @@ class Profile extends Component {
         portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
         website: User.website || '',
         email: User.email || '',
+        experience: User.experience || '',
         genres,
         skills,
         influences,
         experiences,
-        experience: User.experience || '',
       }
     })
   }
@@ -119,26 +115,17 @@ class Profile extends Component {
     this.setState( (prevState, props) => {
       let newGenres = genres.edges.map(edge=>{
         let {node: genre} = edge
-        return {
-          value: genre.id,
-          label: genre.name
-        }
+        return { value: genre.id, label: genre.name }
       })
       let newSkills = skills.edges.map(edge=>{
         let {node: skill} = edge
-        return {
-          value: skill.id,
-          label: skill.name
-        }
+        return { value: skill.id, label: skill.name }
       })
       let newInfluences = artistInfluences.edges.map(edge=>{
         let {node: influence} = edge
+        let {imageUrl, spotifyId, id} = influence
         return {
-          value: {
-            imageUrl: influence.imageUrl,
-            spotifyId: influence.spotifyId,
-            id: influence.id
-          },
+          value: { imageUrl, spotifyId, id },
           label: influence.name
         }
       })
@@ -146,47 +133,44 @@ class Profile extends Component {
         handle: handle || '',
         placename: placename || '',
         summary: summary || '',
-        score: score || '',
+        score: score || 0,
         website: website || '',
         email: email || '',
         portraitUrl: (portrait || {}).url || `${url}/logo.png`,
-        projects: projects.edges.length,
-        friends: friends.edges.length,
+        projects: projects.count,
+        friends: friends.count,
         genres: newGenres,
         skills: newSkills,
         influences: newInfluences,
         experience: experience || '',
       }
     })
-    let oldHandle = this.props.viewer.User.handle
-    if (oldHandle !== handle) {
-      this.props.router.replace(`/${handle}`)
-    }
+    // let oldHandle = this.props.viewer.User.handle
+    // console.log(oldHandle, handle);
+    // if (oldHandle !== handle) {
+    //   this.props.router.push(`/${handle}`)
+    // }
   }
 
-  accept = (inviteId) => {
-    console.log('accept', inviteId);
-    let {id: selfId} = this.props.viewer.user
-    let {id: newFriendId} = this.props.viewer.User
-    this.props.relay.commitUpdate(
-      new UpdateFriendRequest({ id: inviteId, accepted: true }),
-      {onSuccess: (response) => {
-          this.props.relay.commitUpdate(
-            new AddToFriends({ selfId, newFriendId }),
-            { onSuccess: res => this.setState({btnStatus: 'ACCEPTED'}) }
-          )
-        },
-        onFailure: (response) => { console.log('failure', response) }
-      }
-    )
-  }
+  accept = (requestId) => acceptFriendRequest({
+    requestId,
+    newFriendId: this.props.viewer.User.id,
+    props: this.props,
+    successCB: (response)=>this.setState({btnStatus: 'ACCEPTED'}),
+    failureCB: (response)=>console.log('failure from Profile', response),
+  })
 
   addToTribe = () => {
+    console.log('CFQ Profile');
     let {id: actorId} = this.props.viewer.user
     let {id: recipientId} = this.props.viewer.User
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({ actorId, recipientId, }),
-      { onSuccess: res => this.setState({btnStatus: 'SENT'}) }
+      new CreateFriendRequest({ actorId, recipientId, }), {
+        onSuccess: res => this.setState({
+          btnStatus: 'SENT',
+          notification: 'TRIBE REQUEST SENT'
+        })
+      }
     )
   }
 
@@ -194,153 +178,88 @@ class Profile extends Component {
     let {id: selfId} = this.props.viewer.user
     let {id: exfriendId} = this.props.viewer.User
     this.props.relay.commitUpdate(
-      new RemoveFromFriends({ selfId, exfriendId }),
-      {onSuccess: this.setState({btnStatus: 'REMOVED'})}
+      new RemoveFromFriends({ selfId, exfriendId }), {
+        onSuccess: this.setState({
+          btnStatus: 'REMOVED',
+          notification: 'REMOVED FROM TRIBE'
+        })
+      }
     )
   }
 
-  inputChange = (e) => {
-    let { name, value } = e.target
-    if (name === 'handle') {
-      let {handle: newHandle, error} = handleValidator(value)
-      this.setState((prevState, props)=>{
-        return {
-          [name]: newHandle,
-          handleError: error
-        }
-      })
-    } else if (name === 'summary' && value.length >= 150) {
-      this.setState((prevState, props)=>{
-        return {
-          [name]: prevState.summary,
-        }
-      })
-    } else {
-      this.setState((prevState, props)=>{
-        return {
-          [name]: value
-        }
-      })
-    }
-  }
-
-  inputSubmit = (e) => {
-    let {name, value} = e.target
-    console.log('submit name val', e);
-    if (this.state[`${name}Error`]) {
-      return
-    } else {
-      document.getElementById(name).blur()
-      this.props.relay.commitUpdate(
-        new UpdateUser({
-          userId: this.props.viewer.user.id,
-          [name]: value,
-        }), {
-          onSuccess: (success) => {
-            console.log('success');
-            name = name.toUpperCase()
-            if (name === 'PLACENAME') {
-              name = 'LOCATION'
-            }
-            this.setState({
-              notification: `${name} UPDATED.`
-            })
-          }
-        }
+  handleSet = (val) =>{
+    let {handle: newHandle, error} = handleValidator(val)
+    if (val!==this.props.viewer.User.handle) {
+      isUniqueField(val, 'email').then( result =>
+        !result && this.setState({emailError: 'Email already in use!'})
       )
     }
+    this.setState({ handle: newHandle, userhandleError: error })
+  }
+
+  emailSet = (val) => {
+    let error = ''
+    if (val!==this.props.viewer.User.email) {
+      isUniqueField(val, 'email').then( result => {
+        if (!result) error='Email already in use!'
+      })
+    }
+    this.setState({ email: val,  emailError: error })
+  }
+
+  summarySet = (val) => {
+    console.log('summary', val, val.length);
+    let error = ''
+    if (val.split(/\r\n|\r|\n/).length > 15) error='Too many lines'
+    if (val.length > 400) error='500 character limit exceeded'
+    this.setState({summary: val, summaryError: error})
   }
 
   genreChange = (val) => {
-    let genresIds = val.map(genre=>{
-      return genre.value
-    })
+    let genresIds = val.map(genre=>genre.value)
     this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.user.id,
-        genresIds
-      }), {
-        onSuccess: (success) => {
-          this.setState({
-            notification: `GENRE UPDATED.`
-          })
-        }
+      new UpdateUser({ userId: this.props.viewer.user.id, genresIds }), {
+        onSuccess: res => this.setState({ notification: `GENRE UPDATED` })
       }
     )
   }
 
   experienceChange = (experience) => {
+    let userId = this.props.viewer.user.id
     this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.user.id,
-        experience: experience.toUpperCase()
-      }), {
-        onSuccess: (success) => {
-          this.setState({
-            notification: `EXPERIENCE UPDATED.`
-          })
-        }
+      new UpdateUser({ userId, experience: experience.toUpperCase() }), {
+        onSuccess: res => this.setState({ notification: `EXPERIENCE UPDATED`})
       }
     )
   }
 
   skillChange = (val) => {
-    let skillsIds = val.map(skill=>{
-      return skill.value
-    })
+    let skillsIds = val.map(skill => skill.value)
+    let userId = this.props.viewer.user.id
     this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.user.id,
-        skillsIds
-      }), {
-        onSuccess: (success) => {
-          this.setState({
-            notification: `SKILLS UPDATED.`
-          })
-        }
+      new UpdateUser({ userId, skillsIds }), {
+        onSuccess: res => this.setState({ notification: `SKILLS UPDATED` })
       }
     )
   }
 
   influenceChange = (options) => {
     if (options.length < this.state.influences.length) {
-      let artistInfluencesIds = options.map((option) => {
-        return option.value.id
-      })
+      let artistInfluencesIds = options.map((option) => option.value.id)
+      let userId = this.props.viewer.user.id
       this.props.relay.commitUpdate(
-        new UpdateUser({
-          userId: this.props.viewer.user.id,
-          artistInfluencesIds
-        }), {
-          onSuccess: (success) => {
-            this.setState({
-              notification: `INFLUENCES UPDATED.`
-            })
-          }
+        new UpdateUser({userId,artistInfluencesIds}), {
+          onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
         }
       )
     } else {
-      let newInfluence = options.find((option) => {
-        return !option.value.id
-      })
+      let newInfluence = options.find((option) => !option.value.id)
       ensureBtArtistExists(newInfluence).then(artistId => {
-        let artistInfluencesIds = options.map((option) => {
-          if (option.value.id) {
-            return option.value.id
-          } else {
-            return artistId
-          }
-        })
+        let artistInfluencesIds = options.map(option=>option.value.id || artistId)
+        let userId = this.props.viewer.user.id
         this.props.relay.commitUpdate(
-          new UpdateUser({
-            userId: this.props.viewer.user.id,
-            artistInfluencesIds
-          }),{
-            onSuccess: (success) => {
-              this.setState({
-                notification: `INFLUENCES UPDATED.`
-              })
-            }
+          new UpdateUser({userId,artistInfluencesIds}),{
+            onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
           }
         )
       })
@@ -386,61 +305,99 @@ class Profile extends Component {
     )
   }
 
-  closeSnackbar = () => {
-    this.setState( (prevState, props) => {
-      return { notification: false }
-    })
+  setTab = (tab) => {
+    this.props.router.push(`/${this.props.router.params.userHandle}/${tab}`)
+    this.setState({ tab })
+    // window.scrollTo(0, document.body.scrollHeight)
   }
 
-  tabs = (value) => {
-    this.setState({tab:value})}
-
-  setTab = (tab) => {
-    this.props.router.replace(`${this.props.router.params.userHandle}/${tab}`)
-    this.setState({ tab })
-    window.scrollTo(0, document.body.scrollHeight)
+  setProfile = () => {
+    let {handle, placename, summary, email, website} = this.state
+    let userId = this.props.viewer.user.id
+    this.props.relay.commitUpdate(
+      new UpdateUser({ userId, handle, placename, summary, email, website }), {
+        onSuccess: (success) =>
+          this.setState({ notification: `PROFILE UPDATED`, editProfile: false })
+      }
+    )
   }
 
   topRow = () => {
-
-    let {handle, imageEditorOpen, placename, summary, website, email, handleError} = this.state
+    let { handle,
+          imageEditorOpen,
+          placename,
+          summary,
+          website,
+          email,
+          userhandleError,
+          emailError,
+          summaryError} = this.state
     let {User, user} = this.props.viewer
     let {score} = User
-    let projects = User.projects.edges.length
-    let friends = User.friends.edges.length
+    let projects = User.projects.count
+    let friends = User.friends.count
     let ownProfile = (User.id === user.id)
     return (
     <Top>
-      <Settings
-          onClick={()=>{this.setState({settings: true})}}
-          style={{
-            alignSelf: 'flex-end',
-            marginRight: '20px',
-            display: (ownProfile) ? '' : 'none',
-            cursor: 'pointer'
-          }}
-          title="Settings" />
+      <Edit
+        onClick={()=>{this.setState({editProfile: true})}}
+        fill={purple}
+        style={{
+          alignSelf: 'flex-end',
+          margin: '20px 20px 0 0',
+          display: (ownProfile) ? '' : 'none',
+          cursor: 'pointer'
+        }}
+      />
       <Dialog
-        title={"Settings"}
+        title={"Edit Profile"}
+        modal
+        autoScrollBodyContent
+        open={this.state.editProfile}
+        onRequestClose={()=>{ this.setState({editProfile: false}) }}
+        titleStyle={{ fontSize: '28px' }}
         actions={[
-          <Button
-            label={"Close"}
-            onClick={()=>{ this.setState({settings: false}) }} /> ]}
-        open={this.state.settings}
-        modal={true}
-      >
-        <h3> Email Notifications </h3>
-        <Checkbox
-          label={"Disable all"}
-          checked={user.doNotEmail}
-          onCheck={(e, isChecked) => {
-            this.props.relay.commitUpdate(
-              new UpdateUser({
-                userId: this.props.viewer.user.id,
-                doNotEmail: isChecked
-              })
-            )
-          }}
+          <FlatButton
+            label="Cancel"
+            onClick={()=>this.setState({editProfile: false})}
+          />,
+          <FlatButton
+            label="Submit"
+            primary={true}
+            disabled={!!userhandleError || !!emailError || !!summaryError}
+            onClick={this.setProfile}
+          />
+        ]}>
+        <TextField
+          floatingLabelText={'Handle'}
+          errorText={userhandleError}
+          value={handle}
+          onChange={(e)=>this.handleSet(e.target.value)}
+        /><br />
+        <TextField
+          floatingLabelText={'Location'}
+          value={placename}
+          onChange={(e)=>this.setState({placename: e.target.value})}
+        /><br />
+        <TextField
+          floatingLabelText={'Summary'}
+          errorText={summaryError}
+          value={summary}
+          onChange={(e)=>this.summarySet(e.target.value)}
+          multiLine
+          rowsMax={5}
+          fullWidth
+        /><br />
+        <TextField
+          floatingLabelText={'Email'}
+          errorText={emailError}
+          value={email}
+          onChange={(e)=>this.emailSet(e.target.value)}
+        /><br />
+        <TextField
+          floatingLabelText={'Website'}
+          value={website}
+          onChange={(e)=>this.setState({website: e.target.value})}
         />
       </Dialog>
       <Row>
@@ -448,11 +405,8 @@ class Profile extends Component {
           <BtAvatar user={this.props.viewer.User}
             size={150}
             hideStatus={ownProfile}
-            onClick={()=>{
-              if (ownProfile) {
-                this.setState({imageEditorOpen: true})
-              }
-            }}
+            pointer={ownProfile}
+            onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
           />
           <ImageEditor
             open={imageEditorOpen}
@@ -461,36 +415,15 @@ class Profile extends Component {
             portraitSuccess={this.portraitSuccess}
           />
           <TopCol>
-            <InputRow>
-              <Handle
-                value={handle}
-                id={'handle'}
-                onChange={this.inputChange}
-                disabled={!ownProfile}
-                placeholder={'handle'}
-                name={'handle'}
-                onBlur={this.inputSubmit}
-                onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
-              />
-              <InputError>
-                {handleError}
-              </InputError>
-            </InputRow>
-            <InputRow
-              hide={(!ownProfile && placename.length < 1)}
-            >
-              <PinIcon/>
-              <Location
-                value={placename}
-                onChange={this.inputChange}
-                placeholder={(ownProfile) ? 'add your location' : ''}
-                name={'placename'}
-                id={'placename'}
-                disabled={!ownProfile}
-                onBlur={this.inputSubmit}
-                onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
-              />
-            </InputRow>
+            <Handle>{User.handle}</Handle>
+            <span>
+              {(User.placename || ownProfile) && <PinIcon/>}
+              <Location>{User.placename}</Location>
+              <MissingUserData hide={User.placename || !ownProfile}
+                onClick={()=>{this.setState({editProfile: true})}}>
+                Add your location
+              </MissingUserData>
+            </span>
             <ScoreRow>
               <Bolt/>
               <Score>{score}</Score>
@@ -510,45 +443,34 @@ class Profile extends Component {
           btnStatus={this.state.btnStatus}
         />
       </Row>
-      <Divider/>
+      {(User.summary || User.email || User.website || ownProfile) && <Divider/>}
       <Row>
         <Left>
-          <Summary
-            value={summary}
-            name={'summary'}
-            id={'summary'}
-            onChange={this.inputChange}
-            placeholder={(ownProfile) ? 'add your summary' : ''}
-            disabled={!ownProfile}
-            onBlur={this.inputSubmit}
-            onKeyPress={(e)=>
-              (e.charCode===13 && e.shiftKey) && this.inputSubmit(e) }
-            ownProfile={ownProfile}
-          />
+          <Summary>
+            {User.summary}
+            <MissingUserData hide={User.summary || !ownProfile}
+              onClick={()=>{this.setState({editProfile: true})}}>
+              Add your summary
+            </MissingUserData>
+          </Summary>
         </Left>
         <Right>
-          <InputRow hide={(!ownProfile)} >
-            <Email/>
-            <Input
-              value={email}
-              placeholder={(ownProfile) ? 'add your email' : ''}
-              onChange={this.inputChange}
-              disabled
-            />
-          </InputRow>
-          <InputRow hide={(!ownProfile && website.length < 1)}>
-            <Link/>
-            <Input
-              value={website}
-              name={'website'}
-              id={'website'}
-              placeholder={(ownProfile) ? 'add your website' : ''}
-              onChange={this.inputChange}
-              disabled={!ownProfile}
-              onBlur={this.inputSubmit}
-              onKeyPress={(e)=>{(e.charCode===13) && this.inputSubmit(e)}}
-            />
-          </InputRow>
+          <EmailWebsite>
+            <Email style={{marginRight: '10px'}} />
+            {User.email}
+            <MissingUserData hide={User.email || !ownProfile}
+              onClick={()=>{this.setState({editProfile: true})}}>
+              Add your email
+            </MissingUserData>
+          </EmailWebsite>
+          <EmailWebsite>
+            <Link style={{marginRight: '10px'}} />
+            {User.website}
+            <MissingUserData hide={User.website || !ownProfile}
+              onClick={()=>{this.setState({editProfile: true})}}>
+              Add your website
+            </MissingUserData>
+          </EmailWebsite>
         </Right>
       </Row>
     </Top>)
@@ -564,8 +486,8 @@ class Profile extends Component {
           open={notification ? true : false} //requires boolean input
           message={notification}
           autoHideDuration={2000}
-          onRequestClose={this.closeSnackbar}
-          onActionTouchTap={this.closeSnackbar}
+          onRequestClose={()=>this.setState({notification: false})}
+          onActionTouchTap={()=>this.setState({notification: false})}
           bodyStyle={{ backgroundColor: purple }}
         />
         {this.topRow()}
@@ -575,11 +497,12 @@ class Profile extends Component {
             topBar={null}
             tabChange={(tab)=>this.setTab(tab)}
             labels={['activity', 'projects', 'bounces']}
-            locks={[true, false, false]}
+            locks={[false, false, false]}
+            values={[0,0,0]}
             content={this.props.children}
           />
           <BotRight>
-            <Label hide={(!ownProfile && experience.length < 1)} >
+            <Label hide={(!ownProfile && !experience.length)} >
               Experience
             </Label>
             {(ownProfile) ? (
@@ -598,7 +521,7 @@ class Profile extends Component {
                 </SelectField>
               </ExperienceRow>
             ) : (
-              <ExperienceRow hide={(!ownProfile && experience.length < 1)} >
+              <ExperienceRow hide={(!ownProfile && !experience.length)} >
                 <ExperienceIcon style={{ marginRight: '5px' }} />
                 <Experience
                   value={formatEnum(experience)}
@@ -608,49 +531,47 @@ class Profile extends Component {
               </ExperienceRow>
             )}
 
-            <Label hide={(!ownProfile && genres.length < 1)} >
+            <Label hide={(!ownProfile && !genres.length)} >
               Genres
             </Label>
             <Async
               loadOptions={this.loadGenres}
               value={genres}
               onChange={this.genreChange}
-              multi={true}
+              multi
               className={(ownProfile) ? 'async' : 'async others'}
               disabled={!ownProfile}
               placeholder={'add your genres'}
-              style={{ display:(!ownProfile && genres.length < 1) ? 'none':''}}
+              style={{ display:(!ownProfile && !genres.length) ? 'none':'',  margin: '4px 0 8px 0'}}
             />
-            <Label hide={(!ownProfile && skills.length < 1)} >
+            <Label hide={(!ownProfile && !skills.length)} >
               Skills
             </Label>
             <Async
               loadOptions={this.loadSkills}
               value={skills}
               onChange={this.skillChange}
-              multi={true}
+              multi
               className={(ownProfile) ? 'async' : 'async others'}
               disabled={!ownProfile}
               placeholder={'add your skills'}
               style={{
-                display: (!ownProfile && skills.length < 1) ? 'none' : ''
+                display: (!ownProfile && !skills.length) ? 'none' : '',  margin: '4px 0 8px 0'
               }}
             />
-            <Label
-              hide={(!ownProfile && influences.length < 1)}
-            >
+            <Label hide={(!ownProfile && !influences.length)} >
               Influences
-            </Label><div></div>
+            </Label>
             <Async
               value={influences}
               loadOptions={this.influenceOptions}
-              multi={true}
+              multi
               onChange={this.influenceChange}
               className={(ownProfile) ? 'async influences' : 'async influences others'}
               disabled={!ownProfile}
               placeholder={'add your influences'}
               style={{
-                display: (!ownProfile && influences.length < 1) ? 'none' : ''
+                display: (!ownProfile && !influences.length) ? 'none' : '', margin: '4px 0 8px 0'
               }}
             />
           </BotRight>
@@ -671,13 +592,13 @@ export default Relay.createContainer(
           user {
             id
             handle
+            email
             friends (
               first: 999
-            ) {
+              filter: {deactivated: false}
+             ) {
               edges {
-                node {
-                  id
-                }
+                node { id }
               }
             }
             invitations (
@@ -691,9 +612,7 @@ export default Relay.createContainer(
               edges {
                 node {
                   id
-                  actor {
-                    id
-                  }
+                  actor { id }
                 }
               }
             }
@@ -708,9 +627,7 @@ export default Relay.createContainer(
             ) {
               edges {
                 node {
-                  recipient {
-                    id
-                  }
+                  recipient { id }
                 }
               }
             }
@@ -728,45 +645,11 @@ export default Relay.createContainer(
             website
             placename
             score
-            projects (
-              first: 8
-              orderBy: createdAt_ASC
-            ){
-              edges {
-                node {
-                  id
-                  title
-                  createdAt
-                  artwork {
-                    url
-                  }
-                  privacy
-                  comments (
-                    first: 999
-                  ) {
-                    edges {
-                      node {
-                        id
-                        type
-                      }
-                    }
-                  }
-
-                }
-              }
-            }
+            projects { count }
             friends (
-              first: 999
-            ){
-              edges {
-                node {
-                  id
-                }
-              }
-            }
-            genres (
-              first: 20
-            ) {
+              filter: {deactivated: false}
+            ) { count }
+            genres ( first: 20 ) {
               edges {
                 node {
                   id
@@ -774,9 +657,7 @@ export default Relay.createContainer(
                 }
               }
             }
-            skills (
-              first: 20
-            ) {
+            skills ( first: 20 ) {
               edges {
                 node {
                   id
@@ -784,9 +665,7 @@ export default Relay.createContainer(
                 }
               }
             }
-            artistInfluences (
-              first: 20
-            ){
+            artistInfluences ( first: 20 ) {
               edges {
                 node {
                   id

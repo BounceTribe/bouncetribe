@@ -1,61 +1,56 @@
 import React from 'react'
 import styled from 'styled-components'
 import {Tabs, Tab} from 'material-ui'
-import {grey600, grey200, grey222, purple} from 'theme'
+import {grey600, grey200, grey222, purple, white} from 'theme'
 import Lock from 'icons/Lock'
+import {BtTextMarker} from 'styled'
 
 
 const Container = styled.div`
-  display: inline-flex;
+  display: flex;
   flex-direction: column;
-  border-radius: 10px;
-  background-color: white;
-  min-height: 50vh;
-  border: solid ${grey222} 1px;
-  border-radius: 10px;
-  padding: 0 20px;
-  padding: 0;
+  background-color: ${white};
+  border-radius: 5px;
   width: 100%;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
+  min-width: 550px;
+  border: ${props => props.hideBorder ? `none`: `solid ${grey222} 1px`};
+  box-shadow: ${props => props.hideBorder ? `none`: '0 1px 2px 0 rgba(202, 202, 202, 0.5)'};
 `
 
-const TabLabel = ({text, locked}) => (
+const TabLabel = ({text, locked, value}) => (
   <span>
     {text}
     {locked && <Lock style={{display: 'inline-flex'}} /> }
+    {!locked && !!value &&
+      <BtTextMarker size={20} fontHeight={14} value={value} radius={10}/>}
   </span>
 )
 
-export const Panel = ({topBar, content, tab, tabChange, labels, locks}) => {
-  let buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
+const buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
+
+export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, empty, hideBorder}) => {
   return (
-    <Container>
+    <Container hideBorder={hideBorder}>
       {topBar}
-      <Tabs
-        style={{ margin: '6px 0 10px 1px' }}
-        tabItemContainerStyle={{ borderBottom: `2px solid ${grey200}` }}
+      {!empty && <Tabs
+        // style={{ margin: '0 0 10px 0', borderRadius: '5px' }}
+        tabItemContainerStyle={{
+          borderBottom: `2px solid ${grey200}`,
+          borderTopLeftRadius: '5px',
+          borderTopRightRadius: '5px' }}
         inkBarStyle={{ backgroundColor: purple }}
-        onChange={tabValue=>tabChange(tabValue)}
+        onChange={ tabValue => tabChange(tabValue) }
         value={tab} >
-        <Tab
-          icon={( <TabLabel text={labels[0] + ' '} locked={locks[0]} /> )}
-          value={labels[0]}
-          buttonStyle={buttonStyle}
-          style={{ cursor: locks[0] ? 'not-allowed' : 'pointer' }}
-          disabled={locks[0]} />
-        <Tab
-          icon={( <TabLabel text={labels[1] + ' '} locked={locks[1]} /> )}
-          value={labels[1]}
-          buttonStyle={buttonStyle}
-          style={{ cursor: locks[1] ? 'not-allowed' : 'pointer' }}
-          disabled={locks[1]} />
-        <Tab
-          icon={( <TabLabel text={labels[2] + ' '} locked={locks[2]} /> )}
-          value={labels[2]}
-          buttonStyle={buttonStyle}
-          style={{ cursor: locks[2] ? 'not-allowed' : 'pointer' }}
-          disabled={locks[2]} />
-      </Tabs>
+        {labels.map( (label, index) =>
+          <Tab
+            key={index}
+            icon={( <TabLabel text={label + ' '} locked={locks[index]} value={values[index]} /> )}
+            value={label}
+            buttonStyle={buttonStyle}
+            style={{ cursor: locks[index] ? 'not-allowed' : 'pointer' }}
+            disabled={locks[index]} />
+        )}
+      </Tabs>}
       {content}
     </Container>
   )

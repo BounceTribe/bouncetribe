@@ -78,7 +78,6 @@ const RemoveFromTribe = ({onClick}) => (
   />
 )
 const buttonType = (props) => {
-  console.log('btnType props', props);
   let btn;
   //Will hit if button has been clicked
   //These are all 'disabled' buttons
@@ -96,9 +95,7 @@ const buttonType = (props) => {
     default:
       btn = null;
   }
-  if (btn) {
-    return btn
-  }
+  if (btn) return btn
 
   let {user, User} = props.viewer
   let friends = user.friends.edges.map(edge => edge.node.id)
@@ -109,7 +106,7 @@ const buttonType = (props) => {
     //User is Tribe member
     return <RemoveFromTribe onClick={()=>props.unfriend()} />
   } else if (inviters.includes(User.id)) {
-    //Waiting on self to accept
+    //Waiting on self/user to accept
     let invite = user.invitations.edges.find((edge)=>edge.node.actor.id === User.id)
     return <AcceptTribeRequest onClick={()=>{props.accept(invite.node.id)}} />
   } else if (requestees.includes(User.id)) {

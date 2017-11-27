@@ -52,10 +52,14 @@ export const Genre = styled.span`
   flex-wrap: nowrap;
 `
 
-export const Summary = styled.p`
+export const Summary = styled.pre`
   display: flex;
   font-size: 15px;
   margin-top: 30px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
 `
 
 export const TrackContainer = styled.div`
@@ -64,7 +68,7 @@ export const TrackContainer = styled.div`
   width: 85%;
   max-width: 900px;
   justify-content: center;
-  margin-bottom: 50px;
+  ${'' /* margin-bottom: 50px; */}
 `
 export const MarkerContainer = styled.div`
   position: absolute;
@@ -87,6 +91,7 @@ export const Marker = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `
 
 export const Bot = styled.div`

@@ -22,9 +22,7 @@ const Handle = styled.span`
   color: ${props => props.selected ? purple : grey600};
   font-weight: ${props => props.selected ? 500 : 400};
   cursor: pointer;
-  &:hover{
-    color: ${purple}
-  }
+  &:hover{color: ${purple}}
 `
 
 const Header = styled.span`
@@ -45,23 +43,50 @@ const makeRows = (users, select, selected) => (
 )
 
 export const FriendList = (props) => {
-  let {friends, category, invite, show, flip, select, selected} = props;
-  const users = ((friends || {}).edges || []).map(edge=>edge.node)
-  const list = show ? makeRows(users, select, selected) : [];
-  list.push(
-    <FriendRow key={'invite'}>
-      <InviteButton onClick={invite} />
+  let { friends,
+        mentors,
+        inviteTribe,
+        inviteMentors,
+        showTribe,
+        showMentors,
+        flipTribe,
+        flipMentors,
+        select,
+        selected} = props
+
+  const friendNodes = ((friends || {}).edges || []).map(edge=>edge.node)
+  const mentorNodes = ((mentors || {}).edges || []).map(edge=>edge.node)
+
+  const friendList = showTribe ? makeRows(friendNodes, select, selected) : []
+  friendList.push(
+    <FriendRow key={'inviteTribe'}>
+      <InviteButton onClick={inviteTribe} rightText={'Add Tribe Member'}/>
+    </FriendRow>
+  )
+
+  const mentorList = showMentors ? makeRows(mentorNodes, select, selected) : []
+  mentorList.push(
+    <FriendRow key={'addMentors'}>
+      <InviteButton onClick={inviteMentors} rightText={'Add Mentor'}/>
     </FriendRow>
   )
 
   return (
     <div style={{overflowY: 'scroll', overflowX: 'hidden', width: '100%'}}>
-      <FriendRow onClick={flip} key={category}>
-        <Header>{category}</Header>
-        {show ? <Collapse style={{paddingRight: '9px'}} color={grey600}/>
+      <FriendRow onClick={flipMentors} key={'My Mentors'}>
+        <Header>{'My Mentors'}</Header>
+        {showMentors ? <Collapse style={{paddingRight: '9px'}} color={grey600}/>
          : <Expand style={{paddingRight: '9px'}} color={grey600}/>}
       </FriendRow>
-      {list}
+      {mentorList}
+
+      <FriendRow onClick={flipTribe} key={'Tribe Members'}>
+        <Header>{'Tribe Members'}</Header>
+        {showTribe ? <Collapse style={{paddingRight: '9px'}} color={grey600}/>
+         : <Expand style={{paddingRight: '9px'}} color={grey600}/>}
+      </FriendRow>
+      {friendList}
+
     </div>
   )
 }

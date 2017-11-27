@@ -1,45 +1,62 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, NavLink, TopColumn, ImgColumn, FeedbackRating, DashProfile} from 'styled/Dashboard'
+import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, TopColumn, ImgColumn, FeedbackRating, DashProfile, BotRow, UpperInvite} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
-import {BotRow} from 'styled/Profile'
-import {Dialog, TextField} from 'material-ui'
+import {EmptyPanel} from 'components/EmptyPanel'
+import {Dialog, TextField, Snackbar} from 'material-ui'
 import {grey400, purple} from 'theme'
+import Tribe from 'icons/Tribe'
 import Bolt from 'icons/Bolt'
 import {BtAvatar, IconTextContainer, IconText} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {Panel} from 'components/Panel'
 import sendEmailInvite from 'utils/sendEmailInvite'
-import Snackbar from 'material-ui/Snackbar'
+import {isUniqueField} from 'utils/handles'
+
 
 class Dashboard extends Component {
 
   constructor(props) {
-    super(props);
+    console.log('props', props)
+    super(props)
     this.state = {
       invite: false,
+      inviteMentors: false,
       email: null,
-      maxSuggestedFriends: 2,
+      emailError: null,
+      maxSuggestedFriends: 20,
       selectedUser: {},
       suggestions: [],
       showMentors: true,
       showTribe: true,
       showBand: true,
-      tab: 'projects',
-      snackbarText: '',
-      snackbar: false
+      tab: props.location.pathname.split('/')[3] ||'projects',
+      snackbarText: ''
     }
   }
 
   componentDidMount() {
-    if (this.props.viewer.user.friends.edges.length) {
-      let selectedUser = this.props.viewer.user.friends.edges[0].node;
-      this.setState( {selectedUser} )
-      this.props.router.push(`/dash/projects/${selectedUser.handle}`)
-      this.suggestFriends(this.state.maxSuggestedFriends);
+    console.log('dashmount props', this.props)
+    let edges = this.props.viewer.user.friends.edges
+    if (edges.length) {
+      let foundUser = edges.find(edge =>
+        edge.node.handle === this.props.params.userHandle)
+      if (foundUser) {
+        this.setState( {selectedUser: foundUser.node} )
+      } else {
+        console.log('no found user; redirecting to first friend')
+        this.selectUser(edges[0].node)
+        this.props.router.push(`/dash/${edges[0].node.handle}/projects`)
+      }
+    } else {
+      console.log('dash no tribe');
+      //notribe
     }
+    this.suggestFriends(this.state.maxSuggestedFriends)
+
   }
+
 
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
@@ -56,169 +73,202 @@ class Dashboard extends Component {
   }
 
   selectUser = (selectedUser) => {
-    let location = this.props.location.pathname
-    location = location.replace(this.state.selectedUser.handle, selectedUser.handle)
-    this.props.router.push(location)
+    let oldPath = this.props.location.pathname
+    let newPath = oldPath.replace(this.state.selectedUser.handle, selectedUser.handle)
+    this.props.router.push(newPath)
     this.setState({selectedUser})
   }
 
   sendInvite = () => {
-    let user = this.props.viewer.user
-    let query = {
-      byId: user.id,
-      toEmail: this.state.email,
-      byHandle: user.handle
-    }
-    sendEmailInvite(query).then(result => {
-      if (result.status===200) {
-        this.setState({
-          snackbarText: 'Invite Sent!',
-          snackbar: open,
-          invite: false,
-          email: ''
-        })
+    let toEmail = this.state.email
+    isUniqueField(toEmail, 'email').then( result => {
+      if (!result) {
+        this.setState({emailError: 'Already a member!'})
       } else {
-        this.setState({
-          snackbarText: 'Error Sending Email!',
-          snackbar: open,
-          invite: false
+        let user = this.props.viewer.user
+        let {id: byId, handle: byHandle} = user
+        let query = { byId, toEmail, byHandle }
+        sendEmailInvite(query).then( result => {
+          if (result.status===200) {
+            this.setState({
+              snackbarText: 'INVITE SENT',
+              invite: false,
+              email: ''
+            })
+          } else {
+            this.setState({ snackbarText: 'ERROR SENDING EMAIL', })
+          }
         })
       }
     })
-    this.setState({invite: false, email: ''})
   }
 
   createFriendRequest = (recipientId) => {
     let {id: actorId} = this.props.viewer.user
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({
-        actorId,
-        recipientId,
-      })
+      new CreateFriendRequest({ actorId, recipientId})
     )
   }
 
   setTab = (tab) => {
-    this.props.router.push('/dash/' + tab + '/' + this.state.selectedUser.handle)
+    this.props.router.push('/dash/' + this.state.selectedUser.handle + '/' + tab)
     this.setState({ tab })
-    window.scrollTo(0, document.body.scrollHeight)
+    // window.scrollTo(0, document.body.scrollHeight)
   }
 
   render () {
     let selectedUser = this.state.selectedUser || {}
-    let user = this.props.viewer.user || {}
+    let {user} = this.props.viewer
     let tab = this.state.tab
-    // console.log('user:', user)
-    // console.log('render - this', this)
+
+    if (user.deactivated) return null
+
     return (
       <DashView>
         <Snackbar
-          open={this.state.snackbar ? true : false} //requires boolean input
+          open={!!this.state.snackbarText}
           message={this.state.snackbarText}
           autoHideDuration={2000}
-          onRequestClose={()=>this.setState({snackbar:false})}
-          onActionTouchTap={()=>this.setState({snackbar:false})}
+          onRequestClose={()=>this.setState({snackbarText: ''})}
+          onActionTouchTap={()=>this.setState({snackbarText: ''})}
           bodyStyle={{ backgroundColor: purple }} />
+        <Dialog
+          title={"Invite to Your Tribe"}
+          modal={false}
+          open={this.state.invite}
+          onRequestClose={()=>{ this.setState({invite: false}) }}
+          autoScrollBodyContent={true}
+          bodyStyle={{padding: '0'}}
+          titleStyle={{
+            fontSize: '28px',
+            borderBottom:`1px solid ${grey400}`,
+            padding: '16px 27px 13px 27px',
+          }}
+          contentStyle={{width: '580px', minHeight: '400px'}} >
+
+          <DialogRow style={{paddingTop: '0'}}>
+            <UpperInvite>
+              <Tribe width={30} style={{paddingRight: '7px'}}/>
+              Send an invitation to your friend
+            </UpperInvite>
+            <DialogSpacer>
+              <TextField
+                label={'Email'}
+                errorText={this.state.emailError}
+                name={'email'}
+                onChange={ (ev, em) =>
+                  this.setState({ email: em, emailError: null })
+                }
+                placeholder={'Email'}
+              />
+              <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
+            </DialogSpacer>
+          </DialogRow>
+          {!!this.state.suggestions.length &&
+             <DialogRow>{this.state.suggestions}</DialogRow>}
+        </Dialog>
+
         <DashHeader>
           <DashHeaderRow>
             <IconTextContainer to={`/tribe/${user.handle}`} >
               <BtAvatar size={40} hideStatus />
-              <IconText>
-                My Tribe
-              </IconText>
+              <IconText>My Tribe</IconText>
             </IconTextContainer>
             <InviteButton
               onClick={()=>{this.setState({invite: true})}}
               text={'Invite Member'} />
-            <Dialog
-              title={"Invite to Your Tribe"}
-              modal={false}
-              open={this.state.invite}
-              onRequestClose={()=>{ this.setState({invite: false}) }}
-              autoScrollBodyContent={true}
-              bodyStyle={{padding: '0'}}
-              contentStyle={{borderRadius: '5px'}}
-              titleStyle={{
-                fontSize: '28px',
-                borderBottom:`1px solid ${grey400}`,
-                padding: '16px 27px 13px 27px',
-                fontFamily: 'Helvetica Neue'
-              }} >
-              <DialogRow>
-                <DialogSpacer>
-                  <TextField
-                    label={'Email'}
-                    name={'email'}
-                    onChange={(ev, em)=>{this.setState({email: em})}}
-                    placeholder={'Email'}
-                  />
-                  <SendInviteBtn onClick={()=>{ this.sendInvite() }} />
-                </DialogSpacer>
-              </DialogRow>
-              <DialogRow>{this.state.suggestions}</DialogRow>
-            </Dialog>
           </DashHeaderRow>
         </DashHeader>
-        <Divider widthPercent={100} />
+        <Divider/>
         <TopPanel>
           <TopColumn>
             <ImgColumn>
               <BtAvatar user={user} size={80} hideStatus />
             </ImgColumn>
-            <UserName>{user.handle}</UserName>
-            <NavLink to={`/${user.handle}`}>
-              Edit Profile
-            </NavLink>
+            <UserName to={`/${user.handle}`}>{user.handle}</UserName>
           </TopColumn>
-          <FeedbackRating style={{justifyContent:'flex-end'}}>
+          <FeedbackRating>
             <Bolt style={{ marginRight: '15px' }} />
-              {selectedUser.score}
+            {user.score || 0}
           </FeedbackRating>
         </TopPanel>
         <BotRow>
           <DashLeft>
             <FriendList
+              select={this.selectUser}
               selected={selectedUser}
               friends={user.friends}
-              category={'Tribe Members'}
-              invite={() => this.setState({invite: true}) }
-              flip={() => this.setState({showTribe: !this.state.showTribe})}
-              select={this.selectUser}
-              show={this.state.showTribe} />
+              inviteTribe={() => this.setState({invite: true}) }
+              showTribe={this.state.showTribe}
+              flipTribe={() => this.setState({showTribe:  !this.state.showTribe})}
+              mentors={user.mentors} //TODO
+              inviteMentors={() => this.setState({inviteMentors: true}) }
+              showMentors={this.state.showMentors}
+              flipMentors={() =>
+                this.setState({showMentors: !this.state.showMentors})}
+              />
           </DashLeft>
-          <Panel
-            tab={tab}
-            topBar={<DashProfile selectedUser={selectedUser} />}
-            tabChange={(newTab)=>this.setTab(newTab)}
-            labels={['projects', 'bounces', 'messages']}
-            locks={[false, false, false]}
-            content={this.state.selectedUser && this.props.children} />
+          {selectedUser.id ?
+            <Panel
+              tab={tab}
+              topBar={<DashProfile selectedUser={selectedUser} />}
+              tabChange={(newTab)=>this.setTab(newTab)}
+              labels={['projects', 'bounces', 'messages']}
+              locks={[false, false, false]}
+              values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
+              content={this.state.selectedUser && this.props.children}
+              scroll={true} />
+            :
+            <Panel empty
+              content={
+                <EmptyPanel
+                  icon={<Tribe height={93} fill={"#D3D3D3"} />}
+                  headline={`It's a little quiet here...`}
+                  note={`Invite your friends to begin building your tribe`}
+                  btnLabel={`Invite Friends`}
+                  btnClick={()=>this.setState({invite: true})}/>}/>
+          }
         </BotRow>
       </DashView>
     )
+
   }
  }
 
  export default Relay.createContainer( Dashboard, {
     initialVariables: { userHandle: '' },
-    fragments: { viewer: () => Relay.QL`
+    fragments: {
+      viewer: () => Relay.QL`
         fragment on Viewer {
           user {
             id
+            deactivated
             handle
             email
+            score
             portrait { url }
-            friends (first: 999) {
+            friends (
+              first: 999
+              filter: {deactivated: false}
+            ) {
+              count
               edges {
                 node {
                   id
                   handle
                   score
                   lastPing
+                  bounces { count }
+                  projects { count }
                   portrait { url }
                 }
               }
             }
+          }
+          User (handle: $userHandle) {
+            handle
+            id
+            email
           }
         }
       `,

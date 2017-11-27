@@ -1,18 +1,15 @@
 import Relay, {Mutation} from 'react-relay'
 
 export default class AddToFriends extends Mutation {
-
   getVariables () {
     return {
       friends1UserId: this.props.selfId,
       friends2UserId: this.props.newFriendId,
     }
   }
-
   getMutation () {
     return Relay.QL`mutation{addToFriends}`
   }
-
   getFatQuery () {
     return Relay.QL`
       fragment on AddToFriendsPayload {
@@ -32,7 +29,4 @@ export default class AddToFriends extends Mutation {
       },
     }]
   }
-
-
-
 }

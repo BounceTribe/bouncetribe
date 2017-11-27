@@ -5,6 +5,7 @@ import {grey200, grey400, grey800, white} from 'theme'
 export const ProfileView = styled(View)`
   background-color: transparent;
   border: none;
+  box-shadow: none;
   padding: 60px;
 `
 
@@ -17,22 +18,21 @@ export const Divider = styled.hr`
 export const Top = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+
   width: 100%;
   background-color: ${white};
-  border-radius: 10px;
+  border-radius: 5px;
   border: solid ${grey400} 1px;
-  padding-top: 40px;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
 export const TopCol = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: flex-start;
-  margin-left: 30px;
+  ${'' /* margin-left: 30px; */}
+  padding: 18px 30px;
 `
 
 export const Row = styled.div`
@@ -47,7 +47,6 @@ export const Row = styled.div`
 
 export const SubRow = styled.div`
   display: flex;
-  flex-direction: row;
 `
 
 export const Left = styled.div`
@@ -92,15 +91,18 @@ export const Input = styled.input`
   width: ${(props)=>inputWidth(props,8)}px;
 `
 
-export const Handle = styled(Input)`
+export const Handle = styled.div`
+  font-family: HelveticaNeue-Light;
   font-size: 30px;
-  width: ${(props)=>inputWidth(props,17)}px;
+  color: #333333;
+  letter-spacing: 0;
   margin-left: 0;
 `
 
-export const Location = styled(Input)`
-  font-size: 15px;
-  width: ${(props)=>inputWidth(props,8)}px;
+export const Location = styled.span`
+  font-size: 16px;
+  margin-left: 8px;
+  color: #4A4A4A;
 `
 
 export const InputRow = styled.div`
@@ -118,7 +120,6 @@ export const ScoreRow = styled.div`
   justify-content: flex-start;
   align-items: baseline;
   height: 20px;
-  margin-top: 10px;
 `
 
 export const Score = styled.span`
@@ -127,61 +128,69 @@ export const Score = styled.span`
   margin-left: 10px;
 `
 
-export const Summary = styled.textarea`
-  display: ${({value, ownProfile}) => (!value && !ownProfile) ? 'none' : 'flex'};
-  width: 100%;
-  height: 100%;
-  border: 0;
-  outline: none;
+export const Summary = styled.p`
   font-size: 14px;
-  line-height: 20px;
+  line-height: 24px;
   color: ${grey800};
   min-height: 100px;
-  resize: none;
-  padding-top: 50px;
+  white-space: pre-wrap;
+`
+export const EmailWebsite = styled.span`
+  display: ${props => props.hide ? 'none' : 'inline-flex'}
+  margin: 0 50px 10px 10px;
+  font-family: HelveticaNeue;
+  font-size: 14px;
+  color: #4A4A4A;
+`
+
+export const MissingUserData = styled.span`
+  cursor: pointer;
+  display: ${props => props.hide ? 'none' : 'inline'}
 `
 
 export const BotRow = styled.div`
   display: flex;
-  justify-content: space-between;
   width: 100%;
   margin-top: 20px;
+  height: 60vh;
+  min-height: 420px;
 `
 
 export const BotLeft = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
   background-color: ${white};
-  min-height: 50vh;
+  ${'' /* min-height: 50vh; */}
   width: 66%;
-  border: solid ${grey400} 1px;
-  border-radius: 10px;
   margin-right: 15px;
   padding-bottom: 40px;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
+  border: solid ${grey400} 1px;
+  border-radius: 5px;
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
 export const BotRight = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: ${white};
   min-height: 50vh;
+  flex-grow: 1;
   width: 33%;
   border: solid ${grey400} 1px;
-  border-radius: 10px;
-  padding: 0 20px;
+  border-radius: 5px;
+  padding: 10px 20px;
   margin-left: 15px;
-  padding-bottom: 40px;
-  box-shadow: 0 1px 2px 0 rgba(83,83,83,0.50);
+  ${'' /* padding-bottom: 40px; */}
+  overflow: visible;
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
 export const Label = styled.label`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   font-size: 15px;
   font-weight: bold;
-  margin-top: 40px
+  ${'' /* padding-top: 40px; */}
   color: ${grey800};
 `
 
@@ -193,6 +202,6 @@ export const InputError = styled.span`
 
 export const Experience = styled(Input)`
   font-size: 14px;
-  width: ${(props)=>inputWidth(props,11)}px;
+  ${'' /* width: ${(props)=>inputWidth(props,11)}px; */}
   margin-bottom: 0;
 `

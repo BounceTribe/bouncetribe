@@ -1,73 +1,54 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Bar, Logo, NavList, NavLink, Portrait, NavText, Notification, NotifyContainer, NotifyMessage, ViewAll} from 'styled/TopNav'
-import {BtFlatButton, Button} from 'styled'
+import {BtFlatButton} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
 import Music from 'icons/Music'
-import Headphones from 'icons/Headphones'
 import Alerts from 'icons/Alerts'
 import {DropdownMenuItem, DropHr} from 'components/Dropdown'
 import auth from 'utils/auth'
 import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
 import UpdateNotification from 'mutations/UpdateNotification'
-import Dialog from 'material-ui/Dialog'
-import Checkbox from 'material-ui/Checkbox'
-// import {Container} from 'styled/list'
-
-
-import UpdateUser from 'mutations/UpdateUser'
 
 class TopNav extends Component {
+
   state = {
     dropdownOpen: false,
     notificationMenu: false,
     portraitMenu: false,
-    settings: false
+  }
+
+  closeMenu = () => {
+    //delay 200ms to allow menu item click to work
+    setTimeout(()=>this.setState({
+      portraitMenu: false,
+      notificationMenu: false
+    }), 200)
   }
 
   render() {
-    let {handle, portraitUrl, user} = this.props
+    let {portraitUrl, user} = this.props
+    let {handle} = user
+    let friendHandle = user.friends.edges.length ? user.friends.edges[0].node.handle : null
+
     return (
       <Bar>
-        <Dialog
-          title={"Settings"}
-          actions={[
-            <Button
-              label={"Close"}
-              onClick={() => this.setState({settings: false})}
-            />
-          ]}
-          open={this.state.settings}
-          modal={true}
-        >
-          <h3>Email Notifications</h3>
-          <Checkbox
-            label={"Disable all"}
-            checked={user.doNotEmail}
-            onCheck={(e, isChecked) => {
-              Relay.Store.commitUpdate(
-                new UpdateUser({
-                  userId: user.id,
-                  doNotEmail: isChecked
-                })
-              )
-            }}
-          />
-        </Dialog>
-        <Logo to={'/'} />
+        {/* <div onClick={()=>this.props.redirect()}> */}
+          <Logo to={`/dash/${friendHandle ? friendHandle + '/projects' : '' }`} />
+        {/* </div> */}
         <NavList>
           {/* <NavLink to={`/tribe/${handle}/find`} >
             <Headphones height={18} />
             <NavText>Find Your Mentor</NavText>
           </NavLink> */}
-          <NavLink
+          {/* <NavLink
             to={((((user || {}).project || {}).edges || []).length > 0) ? `/sessions/${handle}/${user.projects.edges[0].node.title}` : `/sessions/${handle}`}
           >
             <Headphones />
             <NavText>Sessions</NavText>
-          </NavLink>
+          </NavLink> */}
           <NavLink to={`/projects/${handle}`}>
             <Music height={18} />
             <NavText>Projects</NavText>
@@ -98,20 +79,19 @@ class TopNav extends Component {
                   })
                 }
               }}
-              touchTapCloseDelay={0}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               targetOrigin={{ horizontal: 'right', vertical: 'top' }}
             >
               {((((user || {}).notifications || {}).edges || []).length > 0) ?
                 user.notifications.edges.map(edge=>(
-                  <Notification key={edge.node.id} notification={edge.node} />
+                  <Notification onClick={this.closeMenu} key={edge.node.id} notification={edge.node} />
                 ) )
                 :
                 <NotifyContainer style={{border: 0}}>
                   <NotifyMessage>No new notifications</NotifyMessage>
                 </NotifyContainer>
               }
-              <ViewAll to={`/notifications`}>View All</ViewAll>
+              <ViewAll onClick={this.closeMenu} to={`/notifications`}>View All</ViewAll>
             </IconMenu>
           </NavLink>
           <IconMenu
@@ -123,24 +103,22 @@ class TopNav extends Component {
             )}
             open={this.state.portraitMenu}
             onRequestChange={()=>{
-              this.setState((prevState) => (
-                {portraitMenu: !prevState.portraitMenu}
-              ) )
+              this.setState({portraitMenu: !this.state.portraitMenu})
             }}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
-            <DropdownMenuItem text="Dashboard" to={`/`} />
-            <DropdownMenuItem text="View Profile" to={`/${handle}`} />
-            <DropdownMenuItem text="My Tribe" to={`/tribe/${handle}`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="Dashboard"  to={`/`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="View Profile" to={`/${handle}`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="Tribe Members" to={`/tribe/${handle}`} />
             <DropHr/>
-            <DropdownMenuItem text="Settings"
-              onClick={()=>{ this.setState({settings: true}) }} />
-            <DropdownMenuItem text="Help"
-              href={"http://bouncetribe.com/support/"}
-            />
+            <DropdownMenuItem onClick={() => {
+              this.props.openSettings()
+              this.closeMenu()
+            } } text="Settings" />
+            <DropdownMenuItem onClick={this.closeMenu} text="Help" href={"http://bouncetribe.com/support/"} />
             <DropHr/>
-            <DropdownMenuItem text="Log Out" to={'/logout'} onClick={auth.logout} />
+            <DropdownMenuItem text="Log Out" onClick={auth.logout} />
           </IconMenu>
           {/*
           <Portrait

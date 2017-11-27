@@ -106,6 +106,7 @@ export default Relay.createContainer(
             email
             friends (
               first: 20
+              filter: {deactivated: false}
             ) {
               edges {
                 node {

@@ -17,9 +17,7 @@ export default class SigninUserMutation extends Relay.Mutation {
   getFatQuery() {
     return Relay.QL`fragment on SigninPayload {
       token
-      viewer {
-        user
-      }
+      viewer { user }
       user
     }`
   }
@@ -41,11 +39,23 @@ export default class SigninUserMutation extends Relay.Mutation {
               viewer {
                 user {
                   id
+                  handle
+                  deactivated
+                  auth0UserId
+                  friends (
+                    first: 1
+                    filter: {deactivated: false}
+                  ) {
+                    edges {
+                      node { handle }
+                    }
+                  }
                 }
                 id
               }
               user {
                 id
+                handle
               }
             }
           `,

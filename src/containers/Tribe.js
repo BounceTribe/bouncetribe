@@ -25,6 +25,7 @@ class Tribe extends Component {
   }
 
   render () {
+    console.log('tribeprops', this.props);
     let {User, user} = this.props.viewer
     let person = (User) ? (User) : (user)
     let {handle} = person
@@ -51,14 +52,15 @@ class Tribe extends Component {
       </Header>
     )
     return (
-      <View hideBorder>
+      <View>
         <Panel
-          style={{border: 'none'}}
+          hideBorder
           tab={tab}
           topBar={top}
-          tabChange={(tab)=>this.setTab(tab)}
-          labels={['members', 'requests', 'messages']}
-          locks={[false, true, true]}
+          tabChange={(tab)=>this.setTab(tab, this.props.userHandle)}
+          labels={['members', 'requests']}
+          values={[User.friends.count, user.invitations.count]}
+          locks={[false, User.id!==user.id]}
           content={this.props.children}
         />
       </View>
@@ -72,23 +74,21 @@ export default Relay.createContainer(
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-          user { id }
-          User (handle: $userHandle) {
-            handle
+          user {
             id
-            email
             invitations (
               filter: {
                 accepted: false
                 ignored: false
               }
-              first: 999
-              orderBy: createdAt_ASC
-            ) {
-              edges {
-                node { id }
-              }
-            }
+            ) { count }
+            friends { count }
+           }
+          User (handle: $userHandle) {
+            handle
+            id
+            email
+            friends { count }
           }
         }
       `,

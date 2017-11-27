@@ -13,16 +13,17 @@ import {connectAuth0Accounts} from 'utils/connectAuth0Accounts'
 import {browserHistory} from 'react-router'
 
 class AuthService {
-
   constructor() {
 
+
+    let showSignup = window.location.href.includes('/acceptinvite/')
     this.defaultOptions = {
       auth: {
         params: {
           scope: 'openid email update:current_user_identities',
           state: 'default'
         },
-        redirectUrl: `${url}/login`,
+        redirectUrl: `${url}/login/`,
         responseType: 'token',
         connectionScopes: {
           'facebook': ['email', 'public_profile', 'user_friends']
@@ -37,6 +38,7 @@ class AuthService {
         logo: `${url}/logo.png`,
         primaryColor: purple,
       },
+      initialScreen: showSignup ? 'signUp' : 'login',
       languageDictionary: {
         emailInputPlaceholder: "rockstar@band.com",
         title: "BounceTribe"
@@ -67,7 +69,7 @@ class AuthService {
           scope: 'openid email update:current_user_identities'
         },
         responseType: 'token',
-        redirectUrl: `${url}/login`,
+        redirectUrl: `${url}/login/`,
         connectionScopes: {
           'facebook': ['email', 'public_profile', 'user_actions.music', 'user_friends']
         }
@@ -91,7 +93,6 @@ class AuthService {
     }
     let now = new Date()
     let exp =  new Date(parseInt(expString, 10)) //10 = radix
-
     if (exp < now) {
       this.logout()
       return false
@@ -104,7 +105,8 @@ class AuthService {
     localStorage.removeItem('idToken')
     localStorage.removeItem('accessToken')
     localStorage.removeItem('exp')
-    location.reload()
+    localStorage.removeItem('redirect')
+    location.replace('/login/')
   }
 
   getToken () {
@@ -120,16 +122,9 @@ class AuthService {
   }
 
   authFlow = (result) => {
-    let {
-      exp,
-      email,
-      sub
-    } = result.idTokenPayload
-    let {
-      idToken,
-      accessToken,
-      state,
-    } = result
+    console.log('authflow result', result);
+    let { exp, email, sub }             = result.idTokenPayload
+    let { idToken, accessToken, state } = result
 
     if (!email) {
 
@@ -198,11 +193,7 @@ class AuthService {
   }
 
   setToken = (authFields) => {
-    let {
-      idToken,
-      exp,
-      accessToken
-    } = authFields
+    let { idToken, exp, accessToken } = authFields
     localStorage.setItem('idToken', idToken)
     localStorage.setItem('accessToken', accessToken)
     localStorage.setItem('exp', exp * 1000)
@@ -218,6 +209,8 @@ class AuthService {
           handle: authFields.handle
         }), {
           onSuccess: (response) => {
+            console.log('createUser response', response)
+            debugger;
             this.signinUser(authFields)
             let userId = response.createUser.user.id
             resolve(userId)
@@ -234,18 +227,14 @@ class AuthService {
   signinUser = (authFields) => {
     return new Promise ( (resolve, reject) => {
       Relay.Store.commitUpdate(
-        new SigninUser({
-          idToken: authFields.idToken
-        }), {
+        new SigninUser({ idToken: authFields.idToken }), {
           onSuccess: (response) => {
             this.setToken(authFields)
             let userId = response.signinUser.viewer.user.id
             //this.addFriends()
             resolve(userId)
           },
-          onFailure: (response) => {
-            reject(response.getError())
-          }
+          onFailure: (response) => reject(response.getError())
         }
       )
     })
@@ -263,8 +252,6 @@ class AuthService {
       })
     })
   }
-
-
 
   updateUser = (userId, profile) => {
     let {
@@ -313,24 +300,18 @@ class AuthService {
         Promise.all([
           findUserIds(socialIds),
           findUserIds(`"${userId}"`)
-        ])
-        .then((result)=>{
+        ]).then( result => {
           let newFriends = result[0]
           let selfId = result[1][0]
           newFriends.forEach( (newFriendId)=>{
             Relay.Store.commitUpdate(
-              new AddToFriends({
-                newFriendId,
-                selfId
-              })
+              new AddToFriends({ newFriendId, selfId })
             )
           })
-
         })
       }
     })
   }
-
 
 }
 

@@ -36,12 +36,13 @@ class TribeFind extends Component {
   }
 
   createFriendRequest = (recipientId) => {
+    console.log('TF createfriend request')
     let {id: actorId} = this.props.viewer.user
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({
-        actorId,
-        recipientId,
-      })
+      new CreateFriendRequest({ actorId, recipientId, }), {
+        onSuccess: res => console.log('CFQ success', res),
+        onFailure: res => console.log('CFQ FAIL', res)
+      }
     )
   }
 
@@ -72,7 +73,6 @@ class TribeFind extends Component {
     let {user} = viewer
     return (
       <View>
-        <Container>
           <Header>
             <IconTextContainer to={`/tribe/${user.handle}`} >
               <Tribe fill={purple} />
@@ -113,7 +113,7 @@ class TribeFind extends Component {
               label={'Search'}
               name={'search'}
               onChange={(event, newValue) => {
-                router.replace({
+                router.push({
                   query: {
                     handle: newValue,
                     ownId: user.id
@@ -127,7 +127,6 @@ class TribeFind extends Component {
           </FindH3>
 
           {(this.state.searching) ? this.props.children : null}
-        </Container>
       </View>
     )
   }

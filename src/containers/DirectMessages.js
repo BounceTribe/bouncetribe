@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-
 import TextField from 'material-ui/TextField'
 import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
@@ -106,24 +105,26 @@ class DirectMessages extends Component {
   }
 
   msgKeyDown = (e) => {
-    if (e.keyCode===13 && !e.shiftKey && this.state.message) {
+    if (e.keyCode===13 && !e.shiftKey) {
       e.preventDefault()
-      let savedText = this.state.message
-      this.setState({message: ''})
-      this.props.relay.commitUpdate(
-        new CreateMessage({
-          text: savedText,
-          senderId: this.props.viewer.user.id,
-          recipientId: this.props.viewer.User.id
-        }), {
-          onSuccess: (success) => { console.log('send success') },
-          onFailure: (failure) => {
-            console.log('message send fail', failure);
-            this.setState({message: savedText})
+      if (this.state.message) {
+        let savedText = this.state.message
+        this.setState({message: ''})
+        this.props.relay.commitUpdate(
+          new CreateMessage({
+            text: savedText,
+            senderId: this.props.viewer.user.id,
+            recipientId: this.props.viewer.User.id
+          }), {
+            onSuccess: (success) => { console.log('send success') },
+            onFailure: (failure) => {
+              console.log('message send fail', failure);
+              this.setState({message: savedText})
+            }
+            //display error message in snackbar?
           }
-          //display error message in snackbar?
-        }
-      )
+        )
+      }
     }
   }
 
@@ -145,25 +146,42 @@ class DirectMessages extends Component {
           msgList={this.formatMessages(messages)}
           lastEl={scrollPlaceholder}
         />
-        <TextField
-          fullWidth
-          multiLine
-          name="message"
-          style={{display: 'flex', padding: '0 15px 0 15px'}}
-          inputStyle={{marginRight: '25px'}}
-          underlineShow={false}
-          hintText={'Your message...'}
-          value={this.state.message}
-          onChange={(e)=>this.setState({message: e.target.value})}
-          onKeyDown={(e)=>{this.msgKeyDown(e)}}
-        />
+        <div style={{padding: '0 15px'}}>
+          <TextField
+            fullWidth
+            multiLine
+            rowsMax={5}
+            name="message"
+            style={{display: 'flex', flexDirection: 'column-reverse'}}
+            underlineShow={false}
+            hintText={'Your message...'}
+            value={this.state.message}
+            onChange={(e)=>this.setState({message: e.target.value})}
+            onKeyDown={(e)=>{this.msgKeyDown(e)}}
+          />
+        </div>
       </div>
     )
   }
 }
 
 export default Relay.createContainer( DirectMessages, {
-   initialVariables: { userHandle: '' },
+  initialVariables: {
+    userHandle: '',
+    projectTitle: '',
+    projectFilter: {},
+  },
+  prepareVariables: (urlParams)=>{
+    return {
+      ...urlParams,
+      projectFilter: {
+        title: urlParams.projectTitle,
+        creator: {
+          handle: urlParams.userHandle
+        }
+      }
+    }
+  },
    fragments: { viewer: () => Relay.QL`
        fragment on Viewer {
          user {

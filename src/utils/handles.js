@@ -2,28 +2,21 @@ import {graphCool} from 'config'
 import {randomString} from 'utils/random'
 const nonAlphanumeric = /[^a-zA-Z\w_:]/gi
 
-const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /login/i, /signup/i, /messages/i]
+const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /login/i, /signup/i, /messages/i, /dash/i, /session/i, /projects/i, /bounces/i, /unsubscribe/i, /notribe/i, /acceptinvite/i, /acceptrequest/i]
 
 
-const isUniqueHandle = (handle) => {
+export const isUniqueField = (value, type) => {
+  type = type || 'handle'
   return fetch(graphCool.simple,{
     method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       query: `{
-        User (handle: "${handle}") {
-          email
-        }
+        User (${type}: "${value}") { email }
       }`
     }),
   }).then(result=>result.json()).then(json=>{
-    if (json.data.User) {
-      return false
-    } else {
-      return true
-    }
+    return json.data.User ? false : true
   })
 }
 
@@ -74,7 +67,7 @@ export const generateHandle = (email) => {
       newHandle = newHandle.slice(0,15)
     }
     newHandle = sanitizeHandle(newHandle)
-    isUniqueHandle(newHandle).then(
+    isUniqueField(newHandle).then(
       result => {
         if (result) {
           resolve(newHandle)
