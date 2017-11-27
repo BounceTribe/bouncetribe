@@ -52,27 +52,19 @@ class ProjectNew extends Component {
   createProject = () => {
     let project = this.state
     let {user} = this.props.viewer
+    console.log('creating project', project);
     this.props.relay.commitUpdate(
-      new CreateProject({
-        project,
-        user,
-      }), {
+      new CreateProject({project, user}), {
         onSuccess: success => {
-
-          if (project.privacy === 'PUBLIC') {
-            this.props.router.push(`/sessions/${user.handle}/${project.title}/find`)
-          } else  {
+          console.log('success', success)
             this.props.router.push(`/${user.handle}/${project.title}`)
-          }
-
-        }
+        },
+        onFailure: failure => console.log('fail', failure)
       }
     )
   }
 
   audioDropped = ({audioProgress, title, size}) => {
-
-
     if (title) {
       this.updateProgress()
       ensureUsersProjectTitleUnique(this.props.viewer.user.id, title)
