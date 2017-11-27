@@ -1,5 +1,7 @@
 import {graphCool} from 'config'
 
+
+
 const uploadFile = (file, name) => {
   return new Promise ((resolve, reject) => {
 

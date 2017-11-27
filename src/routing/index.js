@@ -7,6 +7,7 @@ import Profile from 'containers/Profile'
 import Project from 'containers/Project'
 import ProjectList from 'containers/ProjectList'
 import ProjectNew from 'containers/ProjectNew'
+import Session from 'containers/Session'
 import Tribe from 'containers/Tribe'
 import TribeAll from 'containers/TribeAll'
 import TribeRequests from 'containers/TribeRequests'
@@ -184,12 +185,12 @@ const createRoutes = () => (
         queries={ViewerQuery}
         prepareParams={ownCommentsFilter} /> */}
       {/* </Route> */}
-      {/* <Route
+      <Route
         path={'/session/:userHandle/:sessionId/:tab'}
         onEnter={userOnly}
         component={Session}
         queries={ViewerQuery}
-        render={({props}) => props ? <Session {...props} /> : <Loading />} /> */}
+        render={({props}) => props ? <Session {...props} /> : <Loading />} />
     </Route>
 
 

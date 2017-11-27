@@ -240,7 +240,7 @@ class SingleComment extends Component {
                 hideLink={this.listenTab}
                 hasUpvoted={this.state.hasUpvoted}
                 onClick={!this.isOwnComment && !this.state.hasUpvoted && this.addUpvote}
-              >Upvote | {totalUpvotes}</UpVote>
+              >Upvote{this.state.hasUpvoted && 'd'} | {totalUpvotes}</UpVote>
               <BotLink
                 hideLink={this.listenTab}
                 onClick={()=>{
