@@ -134,17 +134,17 @@ class Project extends Component {
     console.log('getting');
     return this.filteredComments().map((comment, index)=>{
       return <SingleComment
-          index={index + 1}
-          comment={comment}
-          key={comment.id}
-          focus={this.state.focus}
-          active={(this.state.active.includes(index+1))}
-          deactivate={()=>
-            this.setState({active: this.state.active.filter(id=>id!==(index+1))})}
-          activate={()=>
-            this.setState({active: this.state.active.concat(index+1)})}
-          user={this.user}
-          tabs={this.state.tabs} />
+        index={index + 1}
+        comment={comment}
+        key={comment.id}
+        focus={this.state.focus}
+        active={(this.state.active.includes(index+1))}
+        deactivate={()=>
+          this.setState({active: this.state.active.filter(id=>id!==(index+1))})}
+        activate={()=>
+          this.setState({active: this.state.active.concat(index+1)})}
+        user={this.user}
+        tabs={this.state.tabs} />
 
     })
   }
@@ -493,11 +493,11 @@ class Project extends Component {
               </ButtonColumn>
             </ButtonRow>
             <CommentScroller>
-              {(this.state.new) ?
+              {(this.state.new) &&
                 <SingleComment
+                  key={0}
                   index={0}
                   comment={this.state.new}
-                  key={0}
                   focus={this.state.focus}
                   active={(this.state.active.includes('new'))}
                   activate={()=>
@@ -508,17 +508,13 @@ class Project extends Component {
                   tabs={this.state.tabs}
                   commentCreated={(newComment)=>{
                     console.log('new state', this.state.new, newComment);
-                    let key = 'new' + this.state.newIndex
-                    newComment.key = key
-                    newComment.id = key
                     this.setState({
-                      newIndex: this.state.newIndex + 1,
                       new: false,
                       comments: this.state.comments.concat(newComment)
                     })
+                    console.log('added comment', this.state.comments);
 
-                  }} /> :
-                  null
+                  }} />
               }
               {this.comments}
             </CommentScroller>
@@ -573,6 +569,11 @@ export default Relay.createContainer(
                   id
                   name
                 }
+              }
+            }
+            upvotes (first: 999) {
+              edges {
+                node {id}
               }
             }
           }

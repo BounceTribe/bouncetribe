@@ -21,9 +21,13 @@ class SingleComment extends Component {
     this.comment = props.comment
     this.isFirst = (props.index === 0)
     this.isOwnComment = (props.user.id === props.comment.author.id)
-
+    let commentUpvotes = ((props.comment.upvotes || {}).edges || []).map(edge=>edge.node.id)
+    let userUpvotes = ((props.user.upvotes || {}).edges || []).map(edge=>edge.node.id)
+    console.log(commentUpvotes, userUpvotes)
     this.state = {
       text: props.comment.text,
+      newUpvote: 0,
+      hasUpvoted: commentUpvotes.some(id=>(id===props.user.id)),
       newSubcomment: "",
       deleted: [],
       children: ((props.comment.children || {}).edges || []).map(edge => edge.node),
@@ -31,8 +35,8 @@ class SingleComment extends Component {
 
   }
 
-  componentDidMount(){
-    console.log('sc mount', this.state);
+  componentDidMount() {
+    console.log('sc mount', this)
     if(this.props.focus === this.comment.id){
       document.getElementById(this.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
     }
@@ -50,10 +54,9 @@ class SingleComment extends Component {
       }
       Relay.Store.commitUpdate(new CreateComment(commentData), {
         onSuccess: success => {
-          // TODO: get id back from relay
-          // TODO: upvotes
-          console.log('comment res', success )
           commentData.author = this.props.user
+          commentData.id = success.createComment.comment.id
+          commentData.key = success.createComment.comment.id
           this.props.commentCreated(commentData)
           this.setState({text: ""})
         }
@@ -99,17 +102,25 @@ class SingleComment extends Component {
     }
   }
 
-  addUpvote = () => Relay.Store.commitUpdate(
-    new AddToCommentUpvotes({
-      upvotesUserId: this.props.user.id,
-      upvotesCommentId: this.comment.id
-    })
-  )
+  addUpvote = () => {
 
+    Relay.Store.commitUpdate(
+      new AddToCommentUpvotes({
+        upvotesUserId: this.props.user.id,
+        upvotesCommentId: this.comment.id
+      }), { onSuccess: (res) => {
+        console.log('upvote res', res);
+        this.setState({
+          newUpvote: this.state.newUpvote + 1,
+          hasUpvoted: true
+        })
+      } }
+    )
+  }
   deleteComment = (id) => Relay.Store.commitUpdate(
     new DeleteComment({
       id,
-      projectId: this.comment.project.id
+      projectId: this.comment.projectId || this.comment.project.id
     }), {
       onSuccess: (res)=>this.setState({deleted: this.state.deleted.concat([id])})
     }
@@ -158,7 +169,6 @@ class SingleComment extends Component {
             onChange={(e,newVal)=>this.setState({newSubcomment:newVal})}
             multiLine
             fullWidth
-            // underlineStyle={{margin: '0', padding: '0'}}
             textareaStyle={{
               color: grey700,
               fontSize:'14px',
@@ -197,6 +207,8 @@ class SingleComment extends Component {
 
   render() {
     let {author, timestamp, type, id, upvotes} = this.comment
+    let {newUpvote} = this.state
+    let totalUpvotes = (upvotes||newUpvote) && (upvotes.edges.length + newUpvote)
     let hideEditDelete = this.isFirst ||  !this.isOwnComment
     return (
       <Single id={id} hide={this.hider() || this.state.deleted.includes(id)} >
@@ -206,7 +218,7 @@ class SingleComment extends Component {
               <RoundButton
                 icon={(type === 'COMMENT') ?
                   <Comment height={25} width={25} fill={white} />
-                  :<Heart height={25} width={25} fill={white} />
+                  : <Heart height={25} width={25} fill={white} />
                 }
                 mini
                 secondary={(type === 'COMMENT')}
@@ -226,8 +238,9 @@ class SingleComment extends Component {
               <UpVote
                 secondary={(type==='COMMENT')}
                 hideLink={this.listenTab}
-                onClick={!this.isOwnComment && this.addUpvote}
-              >Upvote | {upvotes ? upvotes.edges.length : 0}</UpVote>
+                hasUpvoted={this.state.hasUpvoted}
+                onClick={!this.isOwnComment && !this.state.hasUpvoted && this.addUpvote}
+              >Upvote | {totalUpvotes}</UpVote>
               <BotLink
                 hideLink={this.listenTab}
                 onClick={()=>{

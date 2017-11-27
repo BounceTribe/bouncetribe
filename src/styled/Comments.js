@@ -71,12 +71,16 @@ export const Single = styled.div`
         export const BotLink = styled.span`
           cursor: pointer;
           color: ${grey700};
-          display: ${({hideLink})=> hideLink ? 'none': ''};
+          display: ${({hideLink}) => hideLink ? 'none': ''};
           padding: 0 5px;
           font-size: 12px;
         `
         export const UpVote = styled(BotLink)`
-          color: ${({secondary}) => (secondary) ? blue: purple};
+          color: ${({secondary, hasUpvoted}) => {
+            if (hasUpvoted) return '#999999'
+            if (secondary) return blue
+            else return purple
+          }};
           font-weight: bold;
         `
     export const Text = styled.div`

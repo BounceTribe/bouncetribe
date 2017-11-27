@@ -66,20 +66,32 @@ export default class CreateComment extends Relay.Mutation {
     `
   }
   getConfigs () {
-    return [{
-      type: 'RANGE_ADD',
-        parentName: 'comment',
-      parentID: this.props.parentId,
-      connectionName: 'comments',
-      edgeName: 'commentEdge',
-      rangeBehaviors: {
-      // When the ships connection is not under the influence
-      // of any call, append the ship to the end of the connection
-      '': 'append',
-      // Prepend the ship, wherever the connection is sorted by age
-      'orderby(newest)': 'prepend',
-      }
-    }]
+    return [
+      {
+        type: 'RANGE_ADD',
+          parentName: 'comment',
+        parentID: this.props.parentId,
+        connectionName: 'comments',
+        edgeName: 'commentEdge',
+        rangeBehaviors: {
+          '': 'append',
+          // Prepend the ship, wherever the connection is sorted by age
+          'orderby(newest)': 'prepend',
+        }
+      },
+      {
+        type: 'REQUIRED_CHILDREN',
+        children: [
+          Relay.QL`
+            fragment on CreateCommentPayload {
+              comment
+            }
+          `,
+        ],
+      },
+
+
+  ]
   }
 
 
