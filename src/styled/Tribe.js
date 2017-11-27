@@ -36,9 +36,7 @@ export const Value = styled.span`
 const Score = ({score}) => (
   <Pair>
     <Bolt/>
-    <Value>
-      {score}
-    </Value>
+    <Value>{score}</Value>
   </Pair>
 )
 

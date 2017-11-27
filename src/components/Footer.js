@@ -7,7 +7,7 @@ const Col = styled.div`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 20px 10% 30px 10%;
+  padding: 20px 20px 30px 20px;
   width: 100%;
   box-sizing: border-box;
   font-size: 13px;

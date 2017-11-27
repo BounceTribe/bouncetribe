@@ -96,7 +96,6 @@ export const DashView = styled(View)`
 export const DashHeader = styled.div`
   display: flex;
   justify-content: flex-start;
-  width: 90vw;
   padding-top: 0px;
 `
 
@@ -104,7 +103,8 @@ export const DashHeaderRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 90vw;
+  width: 100vw;
+  padding: 0 20px;
   box-sizing: border-box;
 `
 
@@ -157,7 +157,8 @@ export const Divider = styled.hr`
   border: 1px solid #E5E5E5;
   height: 1px;
   margin: 6px 0;
-  width: 90vw;
+  width: 100%;
+  ${'' /* padding-right: 40px; */}
 `
 
 const InviteStyled = styled.div`

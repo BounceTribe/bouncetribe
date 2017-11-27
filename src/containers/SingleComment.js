@@ -19,17 +19,16 @@ class SingleComment extends Component {
     super()
     this.listenTab = props.tabs==='listen'
     this.comment = props.comment
+    this.isFirst = (props.index === 0)
+    this.isOwnComment = (props.user.id === props.comment.author.id)
 
     this.state = {
       text: props.comment.text,
       newSubcomment: "",
       deleted: [],
       children: ((props.comment.children || {}).edges || []).map(edge => edge.node),
-
     }
-    console.log('singleprops', props)
-    this.isFirst = (props.index === 0)
-    this.isOwnComment = (props.user.id === props.comment.author.id)
+
   }
 
   componentDidMount(){
@@ -49,9 +48,7 @@ class SingleComment extends Component {
         text: this.state.text,
         sessionId: this.props.sessionId
       }
-      Relay.Store.commitUpdate(
-        new CreateComment(commentData)
-      , {
+      Relay.Store.commitUpdate(new CreateComment(commentData), {
         onSuccess: success => {
           // TODO: get id back from relay
           // TODO: upvotes

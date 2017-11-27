@@ -10,7 +10,7 @@ export const Bar = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 0 10%;
+  padding: 0 20px;
   height: 50px;
   background-color: ${grey40};
   box-sizing: border-box;
@@ -51,12 +51,7 @@ export const LogoImg = styled.div`
   background-position: center;
 `
 
-export const Logo = (props) => (
-  <Title {...props} >
-    <LogoImg/>
-  </Title>
-)
-
+export const Logo = (props) => (<Title {...props} ><LogoImg/></Title>)
 
 export const NavImg = styled.img`
   display: flex;
