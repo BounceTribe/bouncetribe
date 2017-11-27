@@ -65,8 +65,8 @@ export const Summary = styled.pre`
 export const TrackContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 85%;
-  max-width: 900px;
+  width: 80%;
+  ${'' /* max-width: 900px; */}
   justify-content: center;
   ${'' /* margin-bottom: 50px; */}
 `
@@ -99,7 +99,9 @@ export const Bot = styled.div`
   justify-content: center;
   align-items: flex-start;
   margin-top: 50px;
-  width: 85%;
+  width: calc(100% - 40px);
+
+  padding: 0 20px;
 `
 
 export const LeftList = styled.div`

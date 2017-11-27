@@ -432,10 +432,10 @@ class Project extends Component {
         </Top>
         <Tabs
           style={{
-            width: '85%',
-            marginTop: '6px',
+            width: '80%',
+            padding: '0 20px',
             display: (ownProject) ? 'none' : '',
-            marginBottom: '25px',
+            marginBottom: '6px 0 25px 0',
           }}
           inkBarStyle={{ backgroundColor: purple }}
           value={this.state.tabs} >
@@ -470,7 +470,7 @@ class Project extends Component {
               handleSelection={this.handleSelection}
               selection={this.state.selection} />
           </LeftList>
-          <CommentContainer>
+          <CommentContainer listenTab={this.state.tabs==='listen'}>
             <CommentMarkers
               comments={this.filteredComments()}
               duration={this.state.duration} />

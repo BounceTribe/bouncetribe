@@ -2,11 +2,8 @@ import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import {grey200, purple, grey700} from 'theme'
-// import {BtAvatar} from 'styled'
 import Avatar from 'material-ui/Avatar'
 import {url} from 'config'
-
-
 
 class ProjectTribeList extends Component {
 

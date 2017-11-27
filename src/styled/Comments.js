@@ -7,7 +7,7 @@ export const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: 100%;
+  width: ${({listenTab}) => (listenTab) ? '85%' : '100%'};
 `
 export const ButtonRow = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
@@ -30,6 +30,7 @@ export const CommentBox = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  padding: 20px;
 `
 export const Single = styled.div`
   display: flex;
@@ -58,7 +59,7 @@ export const Single = styled.div`
       `
         export const Handle = styled(BtLink)`
           color: ${({comment}) => (comment) ? blue : purple};
-          padding-left: 15px;
+          padding-left: 13px;
           font-weight: 400;
         `
       export const Bottom = styled.div`
@@ -83,20 +84,22 @@ export const Single = styled.div`
           }};
           font-weight: bold;
         `
-    export const Text = styled.div`
+    export const Text = styled.pre`
       display: flex;
       flex-direction: column;
       color: ${grey900};
       font-size: 16px;
       align-self: center;
-      flex-grow: 1;
+      margin: 0 0 17px 0;
       word-break: break-all;
       padding: 0 20px;
+      white-space: pre-wrap;
     `
     export const Time = styled.div`
       font-size: 14px;
       display: flex;
       flex-direction: column;
+      margin-bottom: 17px;
       color: ${grey700};
       margin-left: auto;
       align-self: center;
