@@ -7,6 +7,7 @@ import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
 import Email from 'icons/Email'
 import Link from 'icons/Link'
+import Online from 'icons/Online'
 import ExperienceIcon from 'icons/Experience'
 import ImageEditor from 'components/ImageEditor'
 import UpdateUser from 'mutations/UpdateUser'
@@ -30,6 +31,7 @@ import {Panel} from 'components/Panel'
 import {url} from 'config'
 import {TribeButton} from 'components/TribeButton'
 import {acceptFriendRequest} from 'utils/updateCommits'
+import {isOnline} from 'utils/isOnline'
 
 
 
@@ -344,9 +346,10 @@ class Profile extends Component {
         fill={purple}
         style={{
           alignSelf: 'flex-end',
-          margin: '20px 20px 0 0',
+          padding: '20px 20px 0 0',
           display: (ownProfile) ? '' : 'none',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          position: 'absolute'
         }}
       />
       <Dialog
@@ -401,11 +404,12 @@ class Profile extends Component {
         />
       </Dialog>
       <Row>
-        <SubRow>
+        <SubRow style={{paddingTop:'60px'}}>
           <BtAvatar user={this.props.viewer.User}
             size={150}
-            hideStatus={ownProfile}
+            hideStatus
             pointer={ownProfile}
+            style={{marginTop: '60px'}}
             onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
           />
           <ImageEditor
@@ -415,7 +419,9 @@ class Profile extends Component {
             portraitSuccess={this.portraitSuccess}
           />
           <TopCol>
-            <Handle>{User.handle}</Handle>
+            <Handle>
+              {User.handle} {!ownProfile && <Online size={20} online={isOnline(User)}/>}
+            </Handle>
             <span>
               {(User.placename || ownProfile) && <PinIcon/>}
               <Location>{User.placename}</Location>
@@ -635,6 +641,7 @@ export default Relay.createContainer(
           User (handle: $userHandle) {
             id
             experience
+            lastPing
             email
             handle
             summary

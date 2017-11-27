@@ -18,7 +18,6 @@ export const Divider = styled.hr`
 export const Top = styled.div`
   display: flex;
   flex-direction: column;
-
   width: 100%;
   background-color: ${white};
   border-radius: 5px;
@@ -31,7 +30,6 @@ export const TopCol = styled.div`
   flex-direction: column;
   justify-content: space-around;
   align-items: flex-start;
-  ${'' /* margin-left: 30px; */}
   padding: 18px 30px;
 `
 

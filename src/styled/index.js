@@ -11,7 +11,7 @@ import IconButton from 'material-ui/IconButton'
 import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
-import Moment from 'moment'
+import {isOnline} from 'utils/isOnline'
 
 export const PanelScrollContainer = styled.div`
   padding: 15px 0;
@@ -46,17 +46,11 @@ export const BtTextMarker = (props) => {
   )
 }
 
-
 export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) => {
   size = size || 50
   user = user || {}
   //set the ratio of size between the avatar and the online icon
   const iconSize = size * 18/60
-  let online = false
-  if (user.lastPing) {
-    let now = Moment()
-    online = now.diff(user.lastPing, 'seconds') < 315
-  }
   return  (
     <div
       style={{
@@ -71,7 +65,7 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) =
         size={size}
       />
       {fbCircle ? <FacebookCircle style={{ marginLeft: `-20px` }} />
-        : <Online size={iconSize} online={online}
+        : <Online size={iconSize} online={isOnline(user)}
         style={{
           marginLeft: `-${iconSize}px`,
           display: `${hideStatus ? 'none' : 'inline'}`
