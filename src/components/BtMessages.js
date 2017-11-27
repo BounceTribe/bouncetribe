@@ -15,8 +15,8 @@ const MsgBubble = styled.div`
   display: flex;
   border-radius: 5px;
   border: 1px solid ${grey500};
-  background-color: ${props => props.isSender ? white : purple};
-  color: ${props => props.isSender ? grey500 : white};
+  background-color: ${props => props.receiving ? white : purple};
+  color: ${props => props.receiving ? grey500 : white};
   padding: 9px 14px;
   word-break: break-word;
   white-space: pre-wrap;
@@ -25,27 +25,27 @@ const MsgBubble = styled.div`
 const MsgTime = styled.div`
   display: flex;
   flex: none;
-  align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
+  align-self: ${props => props.receiving ? 'flex-start' : 'flex-end'};
   padding: 6px 15px 13px 11px;
   color: ${grey400};
   font-size: 14px;
-  text-align: ${props => props.isSender ? 'left' : 'right'};
+  text-align: ${props => props.receiving ? 'left' : 'right'};
 `
 const MsgItem = styled.div`
   display: flex;
   flex: none;
-  align-self: ${props => props.isSender ? 'flex-start' : 'flex-end'};
+  align-self: ${props => props.receiving ? 'flex-start' : 'flex-end'};
   max-width: 49%;
   flex-direction: column;
 `
 
 const mapMessages = (messages) => (
   messages.map( (msg) =>
-    <MsgItem key={msg.id} isSender={msg.isSender}>
-      <MsgBubble isSender={msg.isSender}>
+    <MsgItem key={msg.id} receiving={msg.receiving}>
+      <MsgBubble receiving={msg.receiving}>
         {msg.text}
       </MsgBubble>
-      <MsgTime isSender={msg.isSender}>
+      <MsgTime receiving={msg.receiving}>
         {msg.time}
       </MsgTime>
     </MsgItem>

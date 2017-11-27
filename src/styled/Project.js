@@ -9,6 +9,8 @@ export const Top = styled.div`
   justify-content: center;
   align-items: flex-start;
   margin: 60px;
+  padding-top: ${({isOwner}) => (isOwner) ? '60px' : '0'}
+
 `
 
 export const Art = styled.img`

@@ -224,11 +224,12 @@ class Project extends Component {
     console.log('render', this.state);
     let {User, user, allProjects} = this.props.viewer
     let { node: project } = allProjects.edges[0]
-    let {ownProject} = this.state
+    let {isOwner} = this
+    console.log('isOwner', isOwner);
     let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
       <View>
-        <ProfContainer hide={(ownProject)} >
+        <ProfContainer hide={(isOwner)} >
           <ProfTop>
             <ProfLeft>
               <Portrait
@@ -275,12 +276,12 @@ class Project extends Component {
             } )}
           </CommonInfluences>
         </ProfContainer>
-        <Top>
+        <Top isOwner={isOwner}>
           <Art
             src={ (project.artwork) ? project.artwork.url : `${url}/artwork.png`}
             alt={'Project Art'}
             onClick={this.openArtworkEditor}
-            ownProject={ownProject} />
+            isOwner={isOwner} />
           <ImageEditor
             open={this.state.artworkEditorOpen}
             onRequestClose={()=>this.setState({artworkEditorOpen:false})}
@@ -296,7 +297,7 @@ class Project extends Component {
               </Genre>
               <Edit fill={purple}
                 style={{
-                  display: (ownProject) ? '' : 'none',
+                  display: (isOwner) ? '' : 'none',
                   cursor: 'pointer',
                   marginLeft: '15px'
                 }}
@@ -434,7 +435,7 @@ class Project extends Component {
           style={{
             width: '80%',
             padding: '0 20px',
-            display: (ownProject) ? 'none' : '',
+            display: (isOwner) ? 'none' : '',
             marginBottom: '6px 0 25px 0',
           }}
           inkBarStyle={{ backgroundColor: purple }}
@@ -460,7 +461,7 @@ class Project extends Component {
 
         <Bot>
           <LeftList
-            hide={( (this.state.tabs === 'listen') && (!ownProject) ) || (this.state.disableComments)} >
+            hide={( (this.state.tabs === 'listen') && (!isOwner) ) || (this.state.disableComments)} >
             <ProjectTribeList
               self={user}
               project={project}
@@ -475,7 +476,7 @@ class Project extends Component {
               comments={this.filteredComments()}
               duration={this.state.duration} />
             <ButtonRow
-              hide={(ownProject || this.state.tabs === 'view' || this.state.disableComments)} >
+              hide={(isOwner || this.state.tabs === 'view' || this.state.disableComments)} >
               <ButtonColumn>
                 <RoundButton
                   big

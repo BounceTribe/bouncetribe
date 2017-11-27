@@ -22,6 +22,7 @@ class DirectMessages extends Component {
       message: '',
       new: []
     }
+    console.log('dm mount', this)
 
     this.feedSub.subscribe(
       {
@@ -48,11 +49,7 @@ class DirectMessages extends Component {
       }, (error, result) => {
         if (result) {
           let newMessage = result.Message
-          this.setState( (prevState) => {
-            let {newMessages} = prevState
-            newMessages.unshift(newMessage)
-            return { newMessages }
-          } )
+          this.setState({newMessages: this.state.newMessages.concat([newMessage])})
         }
       }
     )
@@ -77,6 +74,16 @@ class DirectMessages extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps) {
+    debugger;
+    return !(nextProps.route.path.includes('/bounces') ||
+    nextProps.route.path.includes('/projects'))
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('dm newprosp', nextProps.viewer.User.receivedMessages);
+  }
+
   temporaryFilter = (msgList) => {
     let userId = this.props.viewer.user.id
     let theirId = this.props.viewer.User.id
@@ -98,7 +105,7 @@ class DirectMessages extends Component {
         time = created.subtract(1, 'days').format('MMMM Do h:mm a')
       }
       msg.time = time;
-      msg.isSender = (msg.sender.id===this.props.viewer.user.id)
+      msg.receiving = (msg.sender.id!==this.props.viewer.user.id)
       return msg
     } )
     return msgList
@@ -116,7 +123,7 @@ class DirectMessages extends Component {
             senderId: this.props.viewer.user.id,
             recipientId: this.props.viewer.User.id
           }), {
-            onSuccess: (success) => { console.log('send success') },
+            onSuccess: (success) => { console.log('send success', success) },
             onFailure: (failure) => {
               console.log('message send fail', failure);
               this.setState({message: savedText})

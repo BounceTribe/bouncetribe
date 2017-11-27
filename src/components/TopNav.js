@@ -66,7 +66,8 @@ class TopNav extends Component {
               onRequestChange={(open)=>{
                 this.setState((prevState) =>
                   ({notificationMenu: !prevState.notificationMenu}))
-                if (!open) {
+                if (open) {
+                  console.log('notif', user.notifications);
                   user.notifications.edges.forEach( (edge) => {
                     if (!edge.node.checked) {
                       Relay.Store.commitUpdate(
