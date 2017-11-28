@@ -110,7 +110,6 @@ class ProjectNew extends Component {
 
   clearTimer = () => clearInterval(this.timer)
 
-
   audioSuccess = (file) => {
     console.log('audioSuccess')
     this.clearTimer()
@@ -121,7 +120,6 @@ class ProjectNew extends Component {
       audioProgress: false
     })
   }
-
 
   get uploader () {
     let {track, audioProgress} = this.state
@@ -160,7 +158,6 @@ class ProjectNew extends Component {
     })
     if (this.debounce) {
       clearTimeout(this.debounce)
-
     }
     this.debounce = setTimeout(()=>{
       ensureUsersProjectTitleUnique(this.props.viewer.user.id, title).then(unique=>{
@@ -171,7 +168,7 @@ class ProjectNew extends Component {
 
   get form () {
     let {title, tracksIds, audioProgress, privacy, titleUnique, genre} = this.state
-    if (audioProgress  && audioProgress !== 'GENERATING') {
+    if (audioProgress && audioProgress !== 'GENERATING') {
       return (
         <Row>
           <Left>

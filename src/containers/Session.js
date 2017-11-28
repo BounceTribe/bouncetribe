@@ -486,32 +486,18 @@ class Session extends Component {
                   <RoundButton
                     big
                     secondary
-                    icon={
-                      <Comment
-                        height={50}
-                        width={50}
-                      />
-                    }
+                    icon={ <Comment height={50} width={50} /> }
                     onTouchTap={()=>{this.dropMarker('COMMENT')}}
                   />
-                  <ButtonLabel>
-                    Idea
-                  </ButtonLabel>
+                  <ButtonLabel>Idea</ButtonLabel>
                 </ButtonColumn>
                 <ButtonColumn>
                   <RoundButton
                     big
-                    icon={
-                      <Heart
-                        height={50}
-                        width={50}
-                      />
-                    }
+                    icon={ <Heart height={50} width={50} /> }
                     onTouchTap={()=>{this.dropMarker('LIKE')}}
                   />
-                  <ButtonLabel>
-                    Like
-                  </ButtonLabel>
+                  <ButtonLabel>Like</ButtonLabel>
                 </ButtonColumn>
               </ButtonRow>
               <ButtonRow
@@ -524,7 +510,6 @@ class Session extends Component {
               <ButtonRow
                 hide={(params.tab === 'theirs' || !commentsReceived)}
               >
-
                 <ButtonColumn>
                   <FeedbackImage
                     src={bad}
