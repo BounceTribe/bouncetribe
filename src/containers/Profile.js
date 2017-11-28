@@ -404,12 +404,11 @@ class Profile extends Component {
         />
       </Dialog>
       <Row>
-        <SubRow style={{paddingTop:'60px'}}>
+        <SubRow style={{padding:'60px 0'}}>
           <BtAvatar user={this.props.viewer.User}
             size={150}
             hideStatus
             pointer={ownProfile}
-            style={{marginTop: '60px'}}
             onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
           />
           <ImageEditor
@@ -420,7 +419,8 @@ class Profile extends Component {
           />
           <TopCol>
             <Handle>
-              {User.handle} {!ownProfile && <Online size={20} online={isOnline(User)}/>}
+              {User.handle}
+              {!ownProfile && isOnline(User) && <Online size={20} online/>}
             </Handle>
             <span>
               {(User.placename || ownProfile) && <PinIcon/>}
@@ -470,7 +470,7 @@ class Profile extends Component {
             </MissingUserData>
           </EmailWebsite>
           <EmailWebsite>
-            <Link style={{marginRight: '10px'}} />
+            {User.website && <Link style={{marginRight: '10px'}}/>}
             {User.website}
             <MissingUserData hide={User.website || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>

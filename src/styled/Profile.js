@@ -6,7 +6,7 @@ export const ProfileView = styled(View)`
   background-color: transparent;
   border: none;
   box-shadow: none;
-  padding: 60px;
+  ${'' /* padding: 60px; */}
 `
 
 export const Divider = styled.hr`
