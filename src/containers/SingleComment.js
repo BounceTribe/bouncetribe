@@ -36,7 +36,6 @@ class SingleComment extends Component {
   }
 
   componentDidMount() {
-    console.log('sc mount', this)
     if(this.props.focus === this.comment.id){
       document.getElementById(this.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
     }
@@ -103,7 +102,6 @@ class SingleComment extends Component {
   }
 
   addUpvote = () => {
-
     Relay.Store.commitUpdate(
       new AddToCommentUpvotes({
         upvotesUserId: this.props.user.id,
@@ -117,6 +115,7 @@ class SingleComment extends Component {
       } }
     )
   }
+  
   deleteComment = (id) => Relay.Store.commitUpdate(
     new DeleteComment({
       id,

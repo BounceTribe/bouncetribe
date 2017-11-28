@@ -27,9 +27,7 @@ class DirectMessages extends Component {
     this.feedSub.subscribe(
       {
         query: /* GraphQL */`subscription createMessage {
-          Message (
-            filter: { mutation_in: [CREATED] }
-          ) {
+          Message ( filter: { mutation_in: [CREATED] } ) {
             node {
               sender {
                 id
@@ -47,6 +45,7 @@ class DirectMessages extends Component {
           }
         }`
       }, (error, result) => {
+        console.log('feedsub error result', error, result)
         if (result) {
           let newMessage = result.Message
           this.setState({newMessages: this.state.newMessages.concat([newMessage])})
@@ -72,12 +71,6 @@ class DirectMessages extends Component {
     if (this.state.message==='') {
       this.msgsEnd.scrollIntoView({ behaviour: 'smooth' })
     }
-  }
-
-  shouldComponentUpdate(nextProps) {
-    debugger;
-    return !(nextProps.route.path.includes('/bounces') ||
-    nextProps.route.path.includes('/projects'))
   }
 
   componentWillReceiveProps(nextProps) {
@@ -123,8 +116,8 @@ class DirectMessages extends Component {
             senderId: this.props.viewer.user.id,
             recipientId: this.props.viewer.User.id
           }), {
-            onSuccess: (success) => { console.log('send success', success) },
-            onFailure: (failure) => {
+                onSuccess: (success) => { console.log('send success', success) },
+                onFailure: (failure) => {
               console.log('message send fail', failure);
               this.setState({message: savedText})
             }
@@ -181,8 +174,8 @@ export default Relay.createContainer( DirectMessages, {
   prepareVariables: (urlParams)=>{
     return {
       ...urlParams,
-      projectFilter: {
-        title: urlParams.projectTitle,
+      messageFilter: {
+        title: urlParams.userHandle,
         creator: {
           handle: urlParams.userHandle
         }

@@ -84,7 +84,7 @@ class Project extends Component {
   }
 
   componentDidMount(){
-    console.log('project didmount', this.state)
+    console.log('project didmount', this)
     let user = this.user
     let project = this.project
     let bounces = project.bounces.edges
@@ -209,7 +209,7 @@ class Project extends Component {
           bouncerId: selfId,
           projectId: projectId,
           type: 'BOUNCE',
-          text: ' '
+          text: ''
         }), {
           onSuccess: (response) => {
             this.setState({bounced: true})
@@ -221,12 +221,7 @@ class Project extends Component {
   }
 
   render () {
-    console.log('render', this.state);
-    let {User, user, allProjects} = this.props.viewer
-    let { node: project } = allProjects.edges[0]
-    console.log('project', project);
-    let {isOwner} = this
-    console.log('isOwner', isOwner);
+    let {User, user, project, isOwner} = this
     let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
       <View>
@@ -305,7 +300,7 @@ class Project extends Component {
                 onClick={()=>{this.setState({edit:true})}} />
             </TitleGenre>
             <Summary>{project.description}</Summary>
-            {this.isOwner &&
+            {!this.isOwner &&
               <BtFlatButton
                 label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
                 backgroundColor={(this.state.bounced) ? purple : white}
@@ -338,7 +333,7 @@ class Project extends Component {
                 onClick={
                   ()=>{
                     this.props.relay.commitUpdate(
-                      new DeleteProject({id: allProjects.edges[0].node.id}),{
+                      new DeleteProject({id: project.id}),{
                         onSuccess: ()=>{
                           this.props.router.push(`/projects/${user.handle}`)
                         }
@@ -367,7 +362,7 @@ class Project extends Component {
                 label={'Save'}
                 onClick={()=>{
                   let project = {
-                    id: allProjects.edges[0].node.id,
+                    id: project.id,
                     privacy: this.state.privacy,
                     title: this.state.title,
                     description: this.state.description,
@@ -467,7 +462,7 @@ class Project extends Component {
               self={user}
               project={project}
               tribe={User.friends.edges}
-              recentCommenters={allProjects.edges[0].node.comments.edges}
+              recentCommenters={project.comments.edges}
               router={this.props.router}
               handleSelection={this.handleSelection}
               selection={this.state.selection} />
