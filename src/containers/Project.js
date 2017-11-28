@@ -224,6 +224,7 @@ class Project extends Component {
     console.log('render', this.state);
     let {User, user, allProjects} = this.props.viewer
     let { node: project } = allProjects.edges[0]
+    console.log('project', project);
     let {isOwner} = this
     console.log('isOwner', isOwner);
     let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)

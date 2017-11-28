@@ -108,9 +108,8 @@ class ProjectNew extends Component {
     }, 500)
   }
 
-  clearTimer = () => {
-    clearInterval(this.timer)
-  }
+  clearTimer = () => clearInterval(this.timer)
+
 
   audioSuccess = (file) => {
     console.log('audioSuccess')
@@ -127,11 +126,7 @@ class ProjectNew extends Component {
   get uploader () {
     let {track, audioProgress} = this.state
     if (!track && audioProgress && audioProgress !== 'COMPLETE' ) {
-      return (
-        <Spinner
-          style={{height: '200px'}}
-        />
-      )
+      return ( <Spinner style={{height: '200px'}} /> )
     } else if (!this.state.track) {
       return (
         <AudioUploader
@@ -143,9 +138,7 @@ class ProjectNew extends Component {
     } else {
       return (
         <TrackContainer>
-          <AudioPlayer
-            track={this.state.track}
-          />
+          <AudioPlayer track={this.state.track} />
         </TrackContainer>
       )
     }
