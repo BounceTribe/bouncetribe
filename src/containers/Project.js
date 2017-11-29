@@ -221,6 +221,7 @@ class Project extends Component {
 
   render () {
     let {User, user, project, isOwner} = this
+    console.log('isowner', isOwner);
     let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
       <View contentWidth={80}>

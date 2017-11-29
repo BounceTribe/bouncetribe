@@ -22,8 +22,8 @@ class SingleComment extends Component {
     this.isFirst = (props.index === 0)
     this.isOwnComment = (props.user.id === props.comment.author.id)
     let commentUpvotes = ((props.comment.upvotes || {}).edges || []).map(edge=>edge.node.id)
-    let userUpvotes = ((props.user.upvotes || {}).edges || []).map(edge=>edge.node.id)
-    console.log(commentUpvotes, userUpvotes)
+    // let userUpvotes = ((props.user.upvotes || {}).edges || []).map(edge=>edge.node.id)
+    // console.log(commentUpvotes, userUpvotes)
     this.state = {
       text: props.comment.text,
       newUpvote: 0,
@@ -115,7 +115,7 @@ class SingleComment extends Component {
       } }
     )
   }
-  
+
   deleteComment = (id) => Relay.Store.commitUpdate(
     new DeleteComment({
       id,

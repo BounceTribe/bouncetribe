@@ -95,6 +95,7 @@ export const Single = styled.div`
       word-break: break-all;
       padding: 0 20px;
       white-space: pre-wrap;
+      flex-grow: 1;
     `
     export const Time = styled.div`
       font-size: 14px;
