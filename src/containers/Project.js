@@ -359,14 +359,16 @@ class Project extends Component {
               <BtFlatButton
                 label={'Save'}
                 onClick={()=>{
-                  let project = {
+                  let updatedProject = {
                     id: project.id,
                     privacy: this.state.privacy,
                     title: this.state.title,
                     description: this.state.description,
                   }
                   this.props.relay.commitUpdate(
-                    new UpdateProject({ project, genresIds: this.state.genre })
+                    new UpdateProject({
+                      project: updatedProject,
+                      genresIds: this.state.genre })
                   )
                   this.setState({edit: false})
                 }} />

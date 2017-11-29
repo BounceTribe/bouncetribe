@@ -54,9 +54,13 @@ class Dashboard extends Component {
       //notribe
     }
     this.suggestFriends(this.state.maxSuggestedFriends)
-
   }
 
+  componentWillUnmount() {
+    //direct messages
+    localStorage.removeItem('newMessages')
+    localStorage.removeItem('message')
+  }
 
   suggestFriends = (max) => {
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
@@ -73,6 +77,8 @@ class Dashboard extends Component {
   }
 
   selectUser = (selectedUser) => {
+    localStorage.removeItem('newMessages')
+    localStorage.removeItem('message')
     let oldPath = this.props.location.pathname
     let newPath = oldPath.replace(this.state.selectedUser.handle, selectedUser.handle)
     this.props.router.push(newPath)

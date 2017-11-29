@@ -14,30 +14,44 @@ class DirectMessages extends Component {
       'wss://subscriptions.graph.cool/v1/bt-api',
       { reconnect: true, }
     )
-    this.state = {
-      active: [],
-      received: [],
-      sent: [],
-      newMessages: [],
-      message: '',
-      new: []
-    }
+    let savedText = JSON.parse(localStorage.getItem('message')) || {}
+    let useSaved =  (this.props.params.userHandle===savedText.forHandle)
+      this.state = {
+        active: [],
+        received: [],
+        sent: [],
+        newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
+        message: useSaved ? savedText.text : '',
+        new: []
+      }
+
+
     console.log('dm mount', this)
 
     this.feedSub.subscribe(
       {
         query: /* GraphQL */`subscription createMessage {
-          Message ( filter: { mutation_in: [CREATED] } ) {
+          Message (
+            filter: {
+              OR: [ {
+                mutation_in: [CREATED]
+                node: {
+                  recipient: {id: "${this.props.viewer.User.id}"}
+                  sender: { id: "${this.props.viewer.user.id}"}
+                }
+              },{
+                mutation_in: [CREATED]
+                node: {
+                  recipient: { id: "${this.props.viewer.user.id}"}
+                  sender: {id: "${this.props.viewer.User.id}"}
+                }
+              }
+            ]
+           }
+          ) {
             node {
-              sender {
-                id
-                handle
-                portrait { url }
-              }
-              recipient {
-                id
-                handle
-              }
+              sender { id }
+              recipient { id }
               text
               id
               createdAt
@@ -45,36 +59,43 @@ class DirectMessages extends Component {
           }
         }`
       }, (error, result) => {
-        console.log('feedsub error result', error, result)
+        console.log('feedsub error or result', error, result)
         if (result) {
           let newMessage = result.Message
-          this.setState({newMessages: this.state.newMessages.concat([newMessage])})
+          let isSender = newMessage.node.sender.id===this.props.viewer.user.id
+          this.setState({
+            newMessages: this.state.newMessages.concat([newMessage]),
+            message: isSender ? '' : this.state.message
+          })
         }
       }
     )
   }
 
-  prepMessages = (list) => {
-    return this.temporaryFilter(list).sort((a, b) => {
-      let dateA = new Date(a.node.createdAt)
-      let dateB = new Date(b.node.createdAt)
-      return dateB - dateA
-    })
+  componentWillUnmount() {
+    console.log('unmounting', this.props)
+    // this.props.viewer.User.handle
+    let otherNew = localStorage.getItem('newMessages') || []
+    this.state.newMessages.length && localStorage.setItem('newMessages', JSON.stringify(this.state.newMessages.concat(otherNew)))
+    this.state.message && localStorage.setItem('message', JSON.stringify({
+      text: this.state.message,
+      forHandle: this.props.viewer.User.handle
+    }))
   }
-  // this component remounts whenever a new user is selected.
-  // it probably shouldnt...
-  // componentDidMount(){
-  //   console.log('MOUNTED, user - ', this.props.viewer.User.handle);
+
+  // componentWillUpdate(nextProps) {
+  //   if (nextProps.params.userHandle!==this.props.params.userHandle) {
+  //     this.setState({message: ''})
+  //   }
   // }
 
-  componentDidUpdate () {
+  componentDidUpdate(prevProps) {
+    if (prevProps.params.userHandle!==this.props.params.userHandle) {
+      this.setState({message: ''})
+    }
     if (this.state.message==='') {
       this.msgsEnd.scrollIntoView({ behaviour: 'smooth' })
     }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log('dm newprosp', nextProps.viewer.User.receivedMessages);
   }
 
   temporaryFilter = (msgList) => {
@@ -84,6 +105,14 @@ class DirectMessages extends Component {
       (msg.node.sender.id===userId && msg.node.recipient.id===theirId) ||
       (msg.node.sender.id===theirId && msg.node.recipient.id===userId)
     )
+  }
+
+  prepMessages = (list) => {
+    return this.temporaryFilter(list).sort((a, b) => {
+      let dateA = new Date(a.node.createdAt)
+      let dateB = new Date(b.node.createdAt)
+      return dateB - dateA
+    })
   }
 
   formatMessages = (list) => {
@@ -116,12 +145,13 @@ class DirectMessages extends Component {
             senderId: this.props.viewer.user.id,
             recipientId: this.props.viewer.User.id
           }), {
-                onSuccess: (success) => { console.log('send success', success) },
-                onFailure: (failure) => {
+            onSuccess: (success) => {
+            console.log('send success', success)
+          },
+            onFailure: (failure) => {
               console.log('message send fail', failure);
               this.setState({message: savedText})
             }
-            //display error message in snackbar?
           }
         )
       }
@@ -132,6 +162,7 @@ class DirectMessages extends Component {
     let theirMessages = this.props.viewer.User.receivedMessages.edges
     let userMessages = this.props.viewer.user.receivedMessages.edges
     let messages = theirMessages.concat(userMessages).concat(this.state.newMessages)
+    messages = [...new Set(messages)]
     let scrollPlaceholder =
       <div style={{ float:"left", clear: "both" }}
         ref={(el) => this.msgsEnd = el} />
@@ -169,16 +200,13 @@ export default Relay.createContainer( DirectMessages, {
   initialVariables: {
     userHandle: '',
     projectTitle: '',
-    projectFilter: {},
+    messageFilter: {},
   },
   prepareVariables: (urlParams)=>{
     return {
       ...urlParams,
       messageFilter: {
-        title: urlParams.userHandle,
-        creator: {
-          handle: urlParams.userHandle
-        }
+        sender: { handle: urlParams.userHandle },
       }
     }
   },
