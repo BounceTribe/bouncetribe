@@ -15,7 +15,7 @@ class DirectMessages extends Component {
       { reconnect: true, }
     )
     let savedText = JSON.parse(localStorage.getItem('message')) || {}
-    let useSaved =  (this.props.params.userHandle===savedText.forHandle)
+    let useSaved =  this.props.params.userHandle===savedText.forHandle
       this.state = {
         active: [],
         received: [],
@@ -24,8 +24,6 @@ class DirectMessages extends Component {
         message: useSaved ? savedText.text : '',
         new: []
       }
-
-
     console.log('dm mount', this)
 
     this.feedSub.subscribe(
