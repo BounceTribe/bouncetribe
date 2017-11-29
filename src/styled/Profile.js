@@ -6,7 +6,6 @@ export const ProfileView = styled(View)`
   background-color: transparent;
   border: none;
   box-shadow: none;
-  ${'' /* padding: 60px; */}
 `
 
 export const Divider = styled.hr`
@@ -28,14 +27,13 @@ export const Top = styled.div`
 export const TopCol = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: flex-start;
   padding: 18px 30px;
 `
 
 export const Row = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   width:100%;
@@ -45,6 +43,7 @@ export const Row = styled.div`
 
 export const SubRow = styled.div`
   display: flex;
+  padding: 30px 0;
 `
 
 export const Left = styled.div`
@@ -62,13 +61,13 @@ export const Right = styled.div`
   padding-left: 20px;
 `
 
-export const Portrait = styled.img`
-  height: 150px;
-  width: 150px;
-  border-radius: 150px;
-  object-fit: cover;
-  cursor: ${({ownProfile})=>(ownProfile) ? 'pointer' : '' };
-`
+// export const Portrait = styled.img`
+//   height: 150px;
+//   width: 150px;
+//   border-radius: 150px;
+//   object-fit: cover;
+//   cursor: ${({ownProfile})=>(ownProfile) ? 'pointer' : '' };
+// `
 const inputWidth = (props, multiplier) => {
   let {value, placeholder} = props
   let width = value.length * multiplier
@@ -99,7 +98,7 @@ export const Handle = styled.div`
 
 export const Location = styled.span`
   font-size: 16px;
-  margin-left: 8px;
+  margin: 6px 0 6px 8px;
   color: #4A4A4A;
 `
 
@@ -134,9 +133,8 @@ export const Summary = styled.p`
   white-space: pre-wrap;
 `
 export const EmailWebsite = styled.span`
-  display: ${props => props.hide ? 'none' : 'inline-flex'}
+  display: ${props => props.hide ? 'none' : 'inline-flex'};
   margin: 0 50px 10px 10px;
-  font-family: HelveticaNeue;
   font-size: 14px;
   color: #4A4A4A;
 `
@@ -154,35 +152,35 @@ export const BotRow = styled.div`
   min-height: 420px;
 `
 
-export const BotLeft = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: ${white};
-  ${'' /* min-height: 50vh; */}
-  width: 66%;
-  margin-right: 15px;
-  padding-bottom: 40px;
-  border: solid ${grey400} 1px;
-  border-radius: 5px;
-  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-`
+  export const BotLeft = styled.div`
+    display: flex;
+    flex-direction: column;
+    background-color: ${white};
+    ${'' /* min-height: 50vh; */}
+    width: 66%;
+    margin-right: 15px;
+    padding-bottom: 40px;
+    border: solid ${grey400} 1px;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
+  `
 
-export const BotRight = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: 5px;
-  background-color: ${white};
-  min-height: 50vh;
-  flex-grow: 1;
-  width: 33%;
-  border: solid ${grey400} 1px;
-  border-radius: 5px;
-  padding: 10px 20px;
-  margin-left: 15px;
-  ${'' /* padding-bottom: 40px; */}
-  overflow: visible;
-  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-`
+  export const BotRight = styled.div`
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    background-color: ${white};
+    min-height: 50vh;
+    flex-grow: 1;
+    width: 33%;
+    border: solid ${grey400} 1px;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-left: 15px;
+    ${'' /* padding-bottom: 40px; */}
+    overflow: visible;
+    box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
+  `
 
 export const Label = styled.label`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};

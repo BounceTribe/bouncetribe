@@ -404,7 +404,7 @@ class Profile extends Component {
         />
       </Dialog>
       <Row>
-        <SubRow style={{padding:'60px 0'}}>
+        <SubRow>
           <BtAvatar user={this.props.viewer.User}
             size={150}
             hideStatus
@@ -422,21 +422,19 @@ class Profile extends Component {
               {User.handle}
               {!ownProfile && isOnline(User) && <Online size={20} online/>}
             </Handle>
-            <span>
-              {(User.placename || ownProfile) && <PinIcon/>}
-              <Location>{User.placename}</Location>
+            <Location>
+              {(User.placename || ownProfile) &&
+                <PinIcon style={{marginRight: '8px'}} />}
+              {User.placename}
               <MissingUserData hide={User.placename || !ownProfile}
                 onClick={()=>{this.setState({editProfile: true})}}>
                 Add your location
               </MissingUserData>
-            </span>
+            </Location>
             <ScoreRow>
-              <Bolt/>
-              <Score>{score}</Score>
-              <Music height={20} />
-              <Score>{projects}</Score>
-              <Tribe height={20} />
-              <Score>{friends}</Score>
+              <Bolt/> <Score>{score}</Score>
+              <Music height={20} /> <Score>{projects}</Score>
+              <Tribe height={20} /> <Score>{friends}</Score>
             </ScoreRow>
           </TopCol>
         </SubRow>
@@ -470,7 +468,8 @@ class Profile extends Component {
             </MissingUserData>
           </EmailWebsite>
           <EmailWebsite>
-            {User.website && <Link style={{marginRight: '10px'}}/>}
+            {(User.website || ownProfile) &&
+              <Link style={{marginRight: '10px'}}/>}
             {User.website}
             <MissingUserData hide={User.website || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
