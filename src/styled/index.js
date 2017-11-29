@@ -99,9 +99,11 @@ export const View = styled.section`
   flex-direction: column;
   align-items: center;
   width: calc(100% - 40px);
+  padding: ${({contentWidth}) => (contentWidth) ? `0 ${(100-contentWidth)/2}%` : '0'};
   border: solid ${grey230} 1px;
   border-radius: 5px;
   min-height: 80vh;
+  box-sizing: border-box;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
   margin: 70px 0 20px 0;
   ${size.m`

@@ -9,62 +9,24 @@ import Pause from 'material-ui/svg-icons/av/pause'
 
 class AudioPlayer extends Component {
 
-  state = {
-    time: 0,
-  }
+  state = { time: 0, }
 
   componentDidMount () {
     let audio = this.audio
-
-    audio.addEventListener('durationchange', (e) => {
-      this.setState({
-        duration: Math.ceil(audio.seekable.end(0))
-      })
-      if (this.props.getDuration) {
-        this.props.getDuration(audio.seekable.end(0))
-      }
+    audio.addEventListener('durationchange', e => {
+      this.setState({ duration: Math.ceil(audio.seekable.end(0)) })
+      if (this.props.getDuration) this.props.getDuration(audio.seekable.end(0))
     })
 
-    audio.addEventListener('canplay', (e) => {
-      this.setState({
-        canPlay: true
-      })
-    })
+    audio.addEventListener('canplay', e => this.setState({canPlay: true}) )
 
-    audio.addEventListener('timeupdate', (e) => {
+    audio.addEventListener('timeupdate', e => {
       this.setState( (prevState,props) => {
-        if (this.props.currentTime) {
-          this.props.currentTime(audio.currentTime)
-        }
-        return {
-          time: audio.currentTime
-        }
+        if (this.props.currentTime) this.props.currentTime(audio.currentTime)
+        return {time: audio.currentTime}
       })
     })
   }
-
-  play = () => {
-    this.audio.play()
-    this.setState({
-      playing: true
-    })
-  }
-
-  pause = () => {
-    this.audio.pause()
-    this.setState({
-      playing: false
-    })
-  }
-
-  toggle = () => {
-    if (this.state.playing) {
-      this.pause()
-    } else {
-      this.play()
-    }
-  }
-
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.track.url !== this.props.track.url) {
@@ -72,61 +34,53 @@ class AudioPlayer extends Component {
     }
   }
 
+  play = () => {
+    this.audio.play()
+    this.setState({ playing: true })
+  }
+  pause = () => {
+    this.audio.pause()
+    this.setState({ playing: false })
+  }
+  toggle = () => {
+    if (this.state.playing) this.pause()
+    else this.play()
+  }
+
   get buttonIcon () {
     if (this.state.playing) {
-      return (
-        <Pause
-          viewBox={'4 5 15 15'}
-        />
-      )
+      return ( <Pause viewBox={'4 5 15 15'} /> )
     } else {
-      return (
-        <PlayArrow
-          viewBox={'4 5 15 15'}
-        />
-      )
+      return ( <PlayArrow viewBox={'4 5 15 15'} /> )
     }
   }
 
   time = () => {
     let {time, duration} = this.state
     if (duration) {
-      return (
-        <span>{formatTime(time)}</span>
-      )
+      return (<span>{formatTime(time)}</span>)
     }
   }
 
-  scrub = (e) => {
-
+  scrub = e => {
     let width = e.target.clientWidth
     let click = e.nativeEvent.offsetX
-
     let newPosition = click / width
     let newTime = this.state.duration * newPosition
-
     this.setState((prevState, props)=>{
       this.audio.currentTime = newTime
-      return {
-        time: newTime
-      }
+      return {time: newTime}
     })
-
   }
 
   render () {
     let {track} = this.props
     return (
       <Container>
-
         <ButtonProgress>
-          <RoundButton
-            onClick={this.toggle}
-            icon={this.buttonIcon}
-          />
+          <RoundButton onClick={this.toggle} icon={this.buttonIcon} />
           <Progress>{this.time()}</Progress>
         </ButtonProgress>
-
         <AudioVisualization
           visualization={track.visualization}
           scrub={this.scrub}
@@ -134,18 +88,9 @@ class AudioPlayer extends Component {
           time={this.state.time}
           project={this.props.project}
         />
-
-
-
-        <audio
-          loop
-          ref={(audio)=>{this.audio = audio}}
-        >
-          <source
-            src={track.url}
-          />
+        <audio loop ref={(audio)=>{this.audio = audio}} >
+          <source src={track.url} />
         </audio>
-
       </Container>
     )
   }

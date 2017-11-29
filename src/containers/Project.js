@@ -145,7 +145,6 @@ class Project extends Component {
           this.setState({active: this.state.active.concat(index+1)})}
         user={this.user}
         tabs={this.state.tabs} />
-
     })
   }
 
@@ -224,7 +223,7 @@ class Project extends Component {
     let {User, user, project, isOwner} = this
     let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
-      <View>
+      <View contentWidth={80}>
         <ProfContainer hide={(isOwner)} >
           <ProfTop>
             <ProfLeft>
@@ -299,12 +298,11 @@ class Project extends Component {
                 }}
                 onClick={()=>{this.setState({edit:true})}} />
             </TitleGenre>
-            <Summary>{project.description}</Summary>
             {!this.isOwner &&
               <BtFlatButton
-                label={(this.state.bounced) ? 'Bounced' : 'Bounce to Tribe'}
-                backgroundColor={(this.state.bounced) ? purple : white}
-                labelStyle={{ color: (this.state.bounced) ? white : purple}}
+                label={this.state.bounced ? 'Bounced' : 'Bounce to Tribe'}
+                backgroundColor={this.state.bounced ? purple : white}
+                labelStyle={{ color: this.state.bounced ? white : purple}}
                 icon={
                   <Bounce
                     fill={(this.state.bounced) ? white : purple}
@@ -313,11 +311,11 @@ class Project extends Component {
                 onClick={()=>{this.setBounce()}}
                 style={{
                   border: `1px solid ${grey400}`,
-                  borderRadius: '5px',
                   width: '170px',
                   marginTop: '20px'
                 }} />
             }
+            <Summary>{project.description}</Summary>
           </Info>
           <Dialog
             modal={false}
@@ -429,10 +427,10 @@ class Project extends Component {
         </Top>
         <Tabs
           style={{
-            width: '80%',
-            padding: '0 20px',
+            width: '100%',
+            // padding: '0 20px',
             display: (isOwner) ? 'none' : '',
-            marginBottom: '6px 0 25px 0',
+            margin: '6px 0 25px 0',
           }}
           inkBarStyle={{ backgroundColor: purple }}
           value={this.state.tabs} >

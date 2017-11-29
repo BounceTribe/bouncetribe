@@ -15,7 +15,6 @@ export const ButtonProgress = styled.div`
 `
 
 export const Progress = styled.span`
-  position: absolute;
-  margin-top: 43px;
+  margin-top: auto;
   font-size: 12px;
 `

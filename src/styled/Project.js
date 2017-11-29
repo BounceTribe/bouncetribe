@@ -5,12 +5,10 @@ import {BtLink} from 'styled'
 
 export const Top = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: flex-start;
   margin: 60px;
   padding-top: ${({isOwner}) => (isOwner) ? '60px' : '0'}
-
 `
 
 export const Art = styled.img`
@@ -30,13 +28,13 @@ export const Info = styled.div`
 
 export const TitleGenre = styled.div`
   display: flex;
-  flex-direction: row;
   margin-top: 30px;
 `
 
 export const Title = styled.div`
   display: flex;
   font-size: 25px;
+  white-space: nowrap;
   color: ${grey800};
 `
 
@@ -67,10 +65,10 @@ export const Summary = styled.pre`
 export const TrackContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
   ${'' /* max-width: 900px; */}
   justify-content: center;
-  ${'' /* margin-bottom: 50px; */}
+  margin-bottom: 50px;
 `
 export const MarkerContainer = styled.div`
   position: absolute;
@@ -101,8 +99,8 @@ export const Bot = styled.div`
   justify-content: center;
   align-items: flex-start;
   margin-top: 50px;
-  width: calc(100% - 40px);
-
+  width: 100%;
+  ${'' /* width: calc(100% - 40px); */}
   padding: 0 20px;
 `
 
@@ -124,14 +122,13 @@ export const ProfContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 80%;
+  width: 100%;
   margin-top: 20px;
 
 `
 
 export const ProfTop = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
@@ -159,7 +156,6 @@ export const Portrait = (props) => {
 
 export const ProfLeft = styled.div`
   display: flex;
-  flex-direction: row;
 `
 
 export const ProfCol = styled.div`
@@ -178,7 +174,6 @@ export const ProfHandle = styled(BtLink)`
 
 export const Score = styled.div`
   display: flex;
-  flex-direction: row;
   color: ${grey500};
   font-size: 18px;
   font-weight: 400;
@@ -186,7 +181,6 @@ export const Score = styled.div`
 
 export const MoreInfo = styled.div`
   display: flex;
-  flex-direction: row;
   align-self: flex-end;
   align-items: flex-end;
   justify-content: flex-end;
@@ -201,7 +195,6 @@ export const Divider = styled.hr`
 
 export const CommonInfluences = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   width: 50%;
   margin-left: 50%;
