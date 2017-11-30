@@ -61,12 +61,13 @@ class AudioVisualization extends Component {
     }
   }
 
-  componentWillReceiveProps (prevProps) {
-    if (prevProps.time !== this.props.time) {
+  componentWillReceiveProps (nextProps) {
+    // if (nextProps.time !== this.props.time) {
+      console.log('new visual propTIMEs', nextProps)
       let c = this.canvas.getContext('2d')
       c.clearRect(0, 0, this.state.width, this.state.height)
       this.draw()
-    }
+    // }
   }
 
   render () {

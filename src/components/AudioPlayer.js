@@ -22,16 +22,11 @@ class AudioPlayer extends Component {
 
     audio.addEventListener('timeupdate', e => {
       this.setState( (prevState,props) => {
-        if (this.props.currentTime) this.props.currentTime(audio.currentTime)
+        if (this.props.setCurrentTime)
+          this.props.setCurrentTime(audio.currentTime)
         return {time: audio.currentTime}
       })
     })
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.track.url !== this.props.track.url) {
-      console.log("this.audio", this.audio )
-    }
   }
 
   play = () => {
@@ -42,10 +37,7 @@ class AudioPlayer extends Component {
     this.audio.pause()
     this.setState({ playing: false })
   }
-  toggle = () => {
-    if (this.state.playing) this.pause()
-    else this.play()
-  }
+  toggle = () => this.state.playing ? this.pause() : this.play()
 
   get buttonIcon () {
     if (this.state.playing) {
@@ -62,15 +54,29 @@ class AudioPlayer extends Component {
     }
   }
 
-  scrub = e => {
-    let width = e.target.clientWidth
-    let click = e.nativeEvent.offsetX
-    let newPosition = click / width
-    let newTime = this.state.duration * newPosition
+  scrub = ({e, newTime}) => {
+    let width , click, newPosition
+    if (e) {
+      width = e.target.clientWidth
+      click = e.nativeEvent.offsetX
+      newPosition = click / width
+    }
+    newTime = newTime || this.state.duration * newPosition
+    console.log(' newTime, newposition, click', newTime, newPosition, click);
     this.setState((prevState, props)=>{
       this.audio.currentTime = newTime
       return {time: newTime}
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.track.url !== this.props.track.url) {
+      console.log("this.audio", this.audio )
+    }
+    if (nextProps.jumpToTime!==this.props.jumpToTime) {
+      console.log('jump to!', nextProps, this.props);
+      this.scrub({newTime: nextProps.jumpToTime})
+    }
   }
 
   render () {
@@ -83,7 +89,7 @@ class AudioPlayer extends Component {
         </ButtonProgress>
         <AudioVisualization
           visualization={track.visualization}
-          scrub={this.scrub}
+          scrub={(e)=>this.scrub({e})}
           duration={this.state.duration}
           time={this.state.time}
           project={this.props.project}

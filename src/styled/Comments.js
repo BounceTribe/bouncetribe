@@ -105,6 +105,7 @@ export const Single = styled.div`
       color: ${grey700};
       margin-left: auto;
       align-self: center;
+      cursor: pointer;
     `
 
 export const CommentScroller = styled.div`

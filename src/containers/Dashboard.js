@@ -224,9 +224,7 @@ class Dashboard extends Component {
           }
         </BotRow>
       </DashView>
-
     )
-
   }
  }
 

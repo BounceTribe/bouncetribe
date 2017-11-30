@@ -11,11 +11,7 @@ class CommentMarkers extends Component {
     duration: PropTypes.number,
   }
 
-  state = {
-    left: 0,
-    top: 0,
-    wide: 0
-  }
+  state = { left: 0, top: 0, wide: 0 }
 
   componentWillReceiveProps() {
     if (this.state.wide === 0) {
@@ -41,6 +37,7 @@ class CommentMarkers extends Component {
             document.getElementById(comment.id).style.transition = 'background-color 2s';
           }}
           key={comment.id}
+          className={comment.id}
           left={left}
           comment={(comment.type === 'COMMENT')}
         >

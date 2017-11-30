@@ -59,6 +59,7 @@ class Project extends Component {
       privacy: this.project.privacy,
       tabs: this.isOwner ?  'view' : 'listen',
       time: 0,
+      jumpToTime: 0,
       newIndex: 0,
       markers: [],
       active: [],
@@ -113,7 +114,7 @@ class Project extends Component {
     }
   }
 
-  currentTime = (time) =>  this.setState({ time })
+  setCurrentTime = (time) =>  this.setState({ time })
   getDuration = (duration) => this.setState({ duration })
   handleSelection = (selection) => this.setState({selection})
 
@@ -127,12 +128,17 @@ class Project extends Component {
           timestamp: this.state.time,
           project: this.project
         }
-      })
+    })
   }
 
+  jumpToTime = (time) => {
+    console.log('jumping', time)
+    this.setState({jumpToTime: time})
+  }
   get comments () {
     return this.filteredComments().map((comment, index)=>{
       return <SingleComment
+        jumpToTime={(time)=>this.jumpToTime(time)}
         index={index + 1}
         comment={comment}
         key={comment.id}
@@ -429,7 +435,6 @@ class Project extends Component {
         <Tabs
           style={{
             width: '100%',
-            // padding: '0 20px',
             display: (isOwner) ? 'none' : '',
             margin: '6px 0 25px 0',
           }}
@@ -449,14 +454,15 @@ class Project extends Component {
         <TrackContainer>
           <AudioPlayer
             track={project.tracks.edges[0].node}
-            currentTime={this.currentTime}
+            setCurrentTime={this.setCurrentTime}
+            jumpToTime={this.state.jumpToTime}
             project={project}
             getDuration={this.getDuration} />
         </TrackContainer>
 
         <Bot>
           <LeftList
-            hide={( (this.state.tabs === 'listen') && (!isOwner) ) || (this.state.disableComments)} >
+            hide={( (this.state.tabs === 'listen') && !isOwner ) || (this.state.disableComments)} >
             <ProjectTribeList
               self={user}
               project={project}
@@ -491,6 +497,7 @@ class Project extends Component {
             <CommentScroller>
               {(this.state.new) &&
                 <SingleComment
+                  jumpToTime={(time)=>this.jumpToTime(time)}
                   key={0}
                   index={0}
                   comment={this.state.new}

@@ -215,6 +215,10 @@ class SingleComment extends Component {
           <InfoOptions>
             <InfoRow>
               <RoundButton
+                onClick={()=>{
+                  console.log('button click', this.props, timestamp)
+                  this.props.jumpToTime(timestamp)
+                }}
                 icon={(type === 'COMMENT') ?
                   <Comment height={25} width={25} fill={white} />
                   : <Heart height={25} width={25} fill={white} />
@@ -253,7 +257,10 @@ class SingleComment extends Component {
             </Bottom>
           </InfoOptions>
           <Text>{this.text()}</Text>
-          <Time>{formatTime(timestamp)}</Time>
+          <Time onClick={()=>{
+            console.log('time click', this.props, timestamp)
+            this.props.jumpToTime(timestamp)
+          }}>{formatTime(timestamp)}</Time>
         </MainRow>
         {this.state.subcomments && this.subcomments()}
       </Single>
