@@ -35,7 +35,6 @@ export const DialogRow = styled.div`
 `
 const SubRow = styled.div`
   display: flex;
-  ${'' /* padding: 30px 0; */}
 `
 export const UpperInvite = styled.div`
   display: flex;
@@ -108,35 +107,6 @@ export const DashHeaderRow = styled.div`
   width: 100vw;
   padding: 0 20px;
   box-sizing: border-box;
-`
-
-export const TopPanel = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-  width: 100%;
-  height: 140px;
-  background-color: white;
-  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-  border-radius: 5px;
-  border: solid ${grey222} 1px;
-  margin-top: 20px;
-`
-
-export const ImgColumn = styled.div`
-  padding: 30px 0 30px 15px;
-  align-self: center;
-`
-
-export const TopColumn = styled.div`
-  justify-content: space-between;
-`
-
-export const FeedbackRating = styled.div`
-  color: ${grey119};
-  font-size: 30px;
-  font-weight: bold;
-  margin: 50px 50px 0 0;
 `
 
 export const UserName = styled(ProfHandle)`
@@ -245,3 +215,42 @@ export class FbList extends Component {
     )
   }
 }
+
+
+// export const TopPanel = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   align-content: center;
+//   width: 100%;
+//   height: 140px;
+//   background-color: white;
+//   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
+//   border-radius: 5px;
+//   border: solid ${grey222} 1px;
+//   margin-top: 20px;
+// `
+// export const ImgColumn = styled.div`
+//   padding: 30px 0 30px 15px;
+//   align-self: center;
+// `
+// export const TopColumn = styled.div`
+//   justify-content: space-between;
+// `
+// export const FeedbackRating = styled.div`
+//   color: ${grey119};
+//   font-size: 30px;
+//   font-weight: bold;
+//   margin: 50px 50px 0 0;
+// `
+//<TopPanel>
+//<TopColumn>
+//<ImgColumn>
+//<BtAvatar user={user} size={80} hideStatus />
+//</ImgColumn>
+//<UserName to={`/${user.handle}`}>{user.handle}</UserName>
+//</TopColumn>
+//<FeedbackRating>
+//<Bolt style={{ marginRight: '15px' }} />
+//{user.score || 0}
+//</FeedbackRating>
+//</TopPanel>

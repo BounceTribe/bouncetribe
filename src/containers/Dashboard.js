@@ -186,18 +186,6 @@ class Dashboard extends Component {
           </DashHeaderRow>
         </DashHeader>
         <Divider/>
-        <TopPanel>
-          <TopColumn>
-            <ImgColumn>
-              <BtAvatar user={user} size={80} hideStatus />
-            </ImgColumn>
-            <UserName to={`/${user.handle}`}>{user.handle}</UserName>
-          </TopColumn>
-          <FeedbackRating>
-            <Bolt style={{ marginRight: '15px' }} />
-            {user.score || 0}
-          </FeedbackRating>
-        </TopPanel>
         <BotRow>
           <DashLeft>
             <FriendList
@@ -236,6 +224,7 @@ class Dashboard extends Component {
           }
         </BotRow>
       </DashView>
+
     )
 
   }
