@@ -345,7 +345,7 @@ class Project extends Component {
             open={this.state.edit}
             onRequestClose={()=>{this.setState({edit:false})}}
             autoScrollBodyContent
-            title={'Edit Project'}
+            title={'Details'}
             actionsContainerStyle={{
               display: 'flex',
               justifyContent: 'space-between'
