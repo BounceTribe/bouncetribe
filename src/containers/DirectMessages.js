@@ -200,7 +200,7 @@ export default Relay.createContainer( DirectMessages, {
     projectTitle: '',
     messageFilter: {},
   },
-  prepareVariables: (urlParams)=>{
+  prepareVariables: (urlParams) => {
     return {
       ...urlParams,
       messageFilter: {
@@ -210,8 +210,22 @@ export default Relay.createContainer( DirectMessages, {
   },
    fragments: { viewer: () => Relay.QL`
        fragment on Viewer {
+         allProjects (
+           first: 1
+           filter: $messageFilter
+         ) {
+           edges {
+             node {
+               id
+               title
+               description
+               privacy
+               }
+             }
+           }
+         }
          user {
-           id
+           id2
            handle
            score
            portrait { url }

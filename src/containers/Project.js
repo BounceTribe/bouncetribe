@@ -131,7 +131,6 @@ class Project extends Component {
   }
 
   get comments () {
-    console.log('getting');
     return this.filteredComments().map((comment, index)=>{
       return <SingleComment
         index={index + 1}
@@ -221,7 +220,6 @@ class Project extends Component {
 
   render () {
     let {User, user, project, isOwner} = this
-    console.log('isowner', isOwner);
     let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)
     return (
       <View contentWidth={80}>
@@ -391,7 +389,7 @@ class Project extends Component {
             </SelectField>
             <TextField
               name={'description'}
-              floatingLabelText={'Instructions'}
+              floatingLabelText={'Details'}
               multiLine
               rows={3}
               value={this.state.description}
@@ -506,9 +504,11 @@ class Project extends Component {
                   tabs={this.state.tabs}
                   commentCreated={(newComment)=>{
                     console.log('new state', this.state.new, newComment);
+                    let newSorted = this.state.comments.concat(newComment)
+                      .sort((a,b)=>(a.timestamp-b.timestamp))
                     this.setState({
                       new: false,
-                      comments: this.state.comments.concat(newComment)
+                      comments: newSorted
                     })
                     console.log('added comment', this.state.comments);
 

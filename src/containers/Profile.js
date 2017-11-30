@@ -459,14 +459,14 @@ class Profile extends Component {
           </Summary>
         </Left>
         <Right>
-          <EmailWebsite>
+          {/* <EmailWebsite>
             <Email style={{marginRight: '10px'}} />
             {User.email}
             <MissingUserData hide={User.email || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
               Add your email
             </MissingUserData>
-          </EmailWebsite>
+          </EmailWebsite> */}
           <EmailWebsite>
             {(User.website || ownProfile) &&
               <Link style={{marginRight: '10px'}}/>}
