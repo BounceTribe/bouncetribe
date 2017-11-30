@@ -6,7 +6,6 @@ import Send from 'icons/Send'
 import Bolt from 'icons/Bolt'
 import {grey500, grey400, grey119, grey222, purple, white} from 'theme'
 import {Name} from 'styled/Tribe'
-import {SubRow} from 'styled/Profile'
 import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
 import { ProfCol, ProfHandle, Score} from 'styled/Project'
@@ -34,7 +33,10 @@ export const DialogRow = styled.div`
   padding: 25px 0;
   border-bottom: 1px solid ${grey400};
 `
-
+const SubRow = styled.div`
+  display: flex;
+  ${'' /* padding: 30px 0; */}
+`
 export const UpperInvite = styled.div`
   display: flex;
   padding: 27px;
