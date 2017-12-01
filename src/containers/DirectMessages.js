@@ -206,9 +206,15 @@ export default Relay.createContainer( DirectMessages, {
   prepareVariables: (urlParams) => {
     return {
       ...urlParams,
-      messageFilter: {
-        sender: { handle: urlParams.userHandle },
-      }
+      messageFilter: { OR:
+        [ {
+          sender: { handle: urlParams.userHandle },
+          recipient: { handle: 'subliminal_limee' },
+        }, {
+          recipient: { handle: urlParams.userHandle },
+          sender: { handle: 'subliminal_limee' },
+        }
+      ] }
     }
   },
   fragments: { viewer: () => Relay.QL`

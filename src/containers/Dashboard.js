@@ -125,10 +125,10 @@ class Dashboard extends Component {
   render () {
     let {user} = this.props.viewer
     let {tab, selectedUser} = this.state
-    if (this.props.relay.variables.thisUserHandle!==user.handle) {
-      this.props.relay.setVariables({thisUserHandle: user.handle})
-    }
-    console.log('dash render relay vars\n', this.props.relay.variables)
+    // if (this.props.relay.variables.thisUserHandle!==user.handle) {
+    //   this.props.relay.setVariables({thisUserHandle: user.handle})
+    // }
+    // console.log('dash render relay vars\n', this.props.relay.variables)
 
     if (user.deactivated) return null
     return (
@@ -260,11 +260,11 @@ class Dashboard extends Component {
               }
             }
           }
-          User (handle: $thisUserHandle) {
-            handle
-            id
-            email
-          }
+          # User (handle: $thisUserHandle) {
+          #   handle
+          #   id
+          #   email
+          # }
         }
       `,
     },
