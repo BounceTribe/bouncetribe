@@ -69,7 +69,7 @@ export default class CreateComment extends Relay.Mutation {
     return [
       {
         type: 'RANGE_ADD',
-          parentName: 'comment',
+        parentName: 'comment',
         parentID: this.props.parentId,
         connectionName: 'comments',
         edgeName: 'commentEdge',

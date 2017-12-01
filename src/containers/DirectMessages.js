@@ -22,8 +22,6 @@ class DirectMessages extends Component {
         received: [],
         sent: [],
         newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
-        // newMessages: [],
-        // message: '',
         message: useSaved ? savedText.text : '',
         new: []
       }
@@ -33,20 +31,21 @@ class DirectMessages extends Component {
         query: /* GraphQL */`subscription createMessage {
           Message (
             filter: {
-              OR: [ {
-                mutation_in: [CREATED]
-                node: {
-                  recipient: {id: "${this.props.viewer.User.id}"}
-                  sender: { id: "${this.props.viewer.user.id}"}
-                }
-              },{
+              # OR: [ {
+              #   mutation_in: [CREATED]
+              #   node: {
+              #     recipient: {id: "${this.props.viewer.User.id}"}
+              #     sender: { id: "${this.props.viewer.user.id}"}
+              #   }
+              # },
+              # {
                 mutation_in: [CREATED]
                 node: {
                   recipient: { id: "${this.props.viewer.user.id}"}
                   sender: {id: "${this.props.viewer.User.id}"}
                 }
-              }
-            ]
+            #   }
+            # ]
            }
           ) {
             node {
@@ -62,10 +61,10 @@ class DirectMessages extends Component {
         console.log('feedsub error or result', error, result)
         if (result) {
           let newMessage = result.Message.node
-          let isSender = newMessage.sender.id===this.props.viewer.user.id
+          // let isSender = newMessage.sender.id===this.props.viewer.user.id
           this.setState({
             newMessages: this.state.newMessages.concat([newMessage]),
-            message: isSender ? '' : this.state.message
+            // message: isSender ? '' : this.state.message
           })
         }
       }
@@ -73,10 +72,11 @@ class DirectMessages extends Component {
   }
 
   componentWillUnmount() {
-    console.log('unmounting', this.props)
-    // this.props.viewer.User.handle
+    // console.log('unmounting', this.props)
+
     let otherNew = localStorage.getItem('newMessages') || []
     this.state.newMessages.length && localStorage.setItem('newMessages', JSON.stringify(this.state.newMessages.concat(otherNew)))
+    //TODO make array of message saves
     this.state.message && localStorage.setItem('message', JSON.stringify({
       text: this.state.message,
       forHandle: this.props.viewer.User.handle
@@ -91,16 +91,12 @@ class DirectMessages extends Component {
       this.msgsEnd.scrollIntoView({ behaviour: 'smooth' })
     }
   }
+  //
+  // componentWillReceiveProps(nextProps) {
+  //   console.log('recprops dm', nextProps, this.props);
+  // }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      newMessages: [],
-    })
-    console.log('recprops dm', nextProps, this.props);
-
-  }
-
-  prepMessages = (list) => {
+  sortMessages = (list) => {
     return list.sort((a, b) => {
       let dateA = new Date(a.createdAt)
       let dateB = new Date(b.createdAt)
@@ -108,9 +104,18 @@ class DirectMessages extends Component {
     })
   }
 
-  formatMessages = (list) => {
+  storedMsgsFilter = (msgList) => {
+    let userId = this.props.viewer.user.id
+    let theirId = this.props.viewer.User.id
+    return msgList.filter(msg =>
+      (msg.sender.id===userId && msg.recipient.id===theirId) ||
+      (msg.sender.id===theirId && msg.recipient.id===userId)
+    )
+  }
 
-    let msgList = this.prepMessages(list)
+
+  formatMessages = (list) => {
+    let msgList = this.sortMessages(list)
     msgList = msgList.map(msg => {
       let time
       let created = moment.default(msg.createdAt)
@@ -142,7 +147,10 @@ class DirectMessages extends Component {
             recipientId: this.props.viewer.User.id
           }), {
             onSuccess: (success) => {
-            console.log('send success', success)
+              console.log('send success', success)
+              this.setState({
+                newMessages: this.state.newMessages.concat(success.createMessage.message),
+              })
           },
             onFailure: (failure) => {
               console.log('message send fail', failure);
@@ -155,7 +163,8 @@ class DirectMessages extends Component {
   }
 
   render() {
-    let messages = this.props.viewer.allMessages.edges.map(edge=>edge.node).concat(this.state.newMessages)
+    let messages = this.props.viewer.allMessages.edges.map(edge=>edge.node)
+    .concat(this.storedMsgsFilter(this.state.newMessages))
     messages = [...new Set(messages)]
     let scrollPlaceholder =
       <div style={{ float:"left", clear: "both" }}
