@@ -265,35 +265,17 @@ class ProjectNew extends Component {
     let {audioProgress, progress} = this.state
     return (
       <ProjectNewView>
-
         <Header>
-
-            <IconTextContainer
-            >
-              <Music
-                style={{
-                  display: 'flex',
-                  marginBottom: '5px'
-                }}
-                fill={purple}
-              />
-              <IconText
-                style={{
-                  cursor: ''
-                }}
-              >
-                New Project
-              </IconText>
-            </IconTextContainer>
+          <IconTextContainer>
+            <Music style={{ display: 'flex', marginBottom: '5px' }} fill={purple} />
+            <IconText style={{ cursor: '' }} > New Project </IconText>
+          </IconTextContainer>
         </Header>
-
         {
           (this.props.viewer.user.projects.edges.length < 9) ?
           (
             <Container>
-
               {this.uploader}
-
               <LinearProgress
                 mode={'determinate'}
                 value={progress}
@@ -301,19 +283,12 @@ class ProjectNew extends Component {
                   display: (!audioProgress || audioProgress === 'COMPLETE') ? 'none' : ''
                 }}
               />
-
               {this.form}
-
             </Container>
           ) : (
-            <h4>
-              Sorry, you've reached your 10 project limit.
-            </h4>
+            <h4>Sorry, you've reached your 10 project limit.</h4>
           )
         }
-
-
-
       </ProjectNewView>
     )
   }
@@ -330,13 +305,9 @@ export default Relay.createContainer(
             handle
             score
             ${AudioUploader.getFragment('self')}
-            projects (
-              first: 999
-            ) {
+            projects (first: 999) {
               edges {
-                node {
-                  id
-                }
+                node {id}
               }
             }
           }

@@ -9,28 +9,14 @@ class AudioVisualization extends Component {
   }
 
   draw = () => {
-    let {duration, time} = this.props
-    let progress = 0
-    if (duration && time) {
-      progress = time / duration
-    }
-
-    let {visualization} = this.props
-    let {
-      width,
-      height
-    } = this.state
+    let {duration, time, visualization} = this.props
+    let { width, height } = this.state
+    let progress = (duration && time) ? (time / duration) : 0
     let c = this.canvas.getContext('2d')
-
-    let data = visualization.map(val=>{
-
-      return val * 60
-    })
+    let data = visualization.map(val => val * 60)
     for (let i = 0; i < width; i+=3) {
-
       let position = i / width
       let sample = Math.floor(position * data.length)
-
       let top = (height - data[sample]) / 2
       c.beginPath()
       if (position < progress && c.strokeStyle !== purple) {
@@ -47,18 +33,11 @@ class AudioVisualization extends Component {
 
   componentDidMount () {
     let parentWidth = this.canvas.parentElement.clientWidth
-    this.setState((prevState,props)=>{
-      return {
-        width: parentWidth * .9,
-        height: 100
-      }
-    })
+    this.setState({ width: parentWidth * .9, height: 100 })
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (prevState.width === 0 ) {
-      this.draw()
-    }
+    (prevState.width === 0 ) && this.draw()
   }
 
   componentWillReceiveProps (nextProps) {

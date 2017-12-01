@@ -14,17 +14,19 @@ class DirectMessages extends Component {
       'wss://subscriptions.graph.cool/v1/bt-api',
       { reconnect: true, }
     )
-    let savedText = JSON.parse(localStorage.getItem('message')) || {}
-    let useSaved =  this.props.params.userHandle===savedText.forHandle
+    // let savedText = JSON.parse(localStorage.getItem('message')) || {}
+    // let useSaved =  this.props.params.userHandle===savedText.forHandle
       this.state = {
         active: [],
         received: [],
         sent: [],
-        newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
-        message: useSaved ? savedText.text : '',
+        // newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
+        newMessages: [],
+        message: '',
+        // message: useSaved ? savedText.text : '',
         new: []
       }
-    console.log('dm mount', this)
+    console.log('dm mount', this.props.viewer)
 
     this.feedSub.subscribe(
       {
@@ -199,6 +201,7 @@ export default Relay.createContainer( DirectMessages, {
     userHandle: '',
     projectTitle: '',
     messageFilter: {},
+    thisUserHandle: ''
   },
   prepareVariables: (urlParams) => {
     return {
@@ -208,75 +211,80 @@ export default Relay.createContainer( DirectMessages, {
       }
     }
   },
-   fragments: { viewer: () => Relay.QL`
-       fragment on Viewer {
-         allProjects (
-           first: 1
-           filter: $messageFilter
-         ) {
-           edges {
-             node {
-               id
-               title
-               description
-               privacy
-               }
-             }
-           }
-         }
-         user {
-           id2
-           handle
-           score
-           portrait { url }
-           receivedMessages (
-             first: 999
-             orderBy: id_ASC
-           ) {
-             edges {
-               node {
-                 id
-                 text
-                 createdAt
-                 sender {
-                   id
-                   handle
-                 }
-                 recipient {
-                   id
-                   handle
-                 }
-               }
-             }
-           }
-         }
-         User (handle: $userHandle) {
-           id
-           handle
-           portrait { url }
-           receivedMessages (
-             first: 999
-             orderBy: id_ASC
-           ) {
-             edges {
-               node {
-                 id
-                 text
-                 createdAt
-                 sender {
-                   id
-                   handle
-                 }
-                 recipient {
-                   id
-                   handle
-                 }
-               }
-             }
-           }
-         }
-       }
-     `,
-   },
- }
-)
+  fragments: { viewer: () => Relay.QL`
+    fragment on Viewer {
+      allMessages(
+        first: 999
+        filter: $messageFilter
+      ) {
+        edges {
+          node {
+            id
+            text
+            createdAt
+            sender {
+              id
+              handle
+            }
+            recipient {
+              id
+              handle
+            }
+          }
+        }
+      }
+      user {
+        id
+        handle
+        score
+        portrait { url }
+        receivedMessages (
+          first: 999
+          orderBy: id_ASC
+        ) {
+          edges {
+            node {
+              id
+              text
+              createdAt
+              sender {
+                id
+                handle
+              }
+              recipient {
+                id
+                handle
+              }
+            }
+          }
+        }
+      }
+      User (handle: $userHandle) {
+        id
+        handle
+        portrait { url }
+        receivedMessages (
+          first: 999
+          orderBy: id_ASC
+        ) {
+          edges {
+            node {
+              id
+              text
+              createdAt
+              sender {
+                id
+                handle
+              }
+              recipient {
+                id
+                handle
+              }
+            }
+          }
+        }
+      }
+    }
+    `,
+  },
+})

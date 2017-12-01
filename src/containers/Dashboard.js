@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {FbList, SendInviteBtn, DialogSpacer, DialogRow, TopPanel, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, UserName, TopColumn, ImgColumn, FeedbackRating, DashProfile, BotRow, UpperInvite} from 'styled/Dashboard'
+import {FbList, SendInviteBtn, DialogSpacer, DialogRow, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, DashProfile, BotRow, UpperInvite} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {EmptyPanel} from 'components/EmptyPanel'
 import {Dialog, TextField, Snackbar} from 'material-ui'
 import {grey400, purple} from 'theme'
 import Tribe from 'icons/Tribe'
-import Bolt from 'icons/Bolt'
+// import Bolt from 'icons/Bolt'
 import {BtAvatar, IconTextContainer, IconText} from 'styled'
 import {suggestedFriends} from 'utils/graphql'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
@@ -43,7 +43,7 @@ class Dashboard extends Component {
       let foundUser = edges.find(edge =>
         edge.node.handle === this.props.params.userHandle)
       if (foundUser) {
-        this.setState( {selectedUser: foundUser.node} )
+        this.setState( {selectedUser: foundUser.node || {}} )
       } else {
         console.log('no found user; redirecting to first friend')
         this.selectUser(edges[0].node)
@@ -123,12 +123,14 @@ class Dashboard extends Component {
   }
 
   render () {
-    let selectedUser = this.state.selectedUser || {}
     let {user} = this.props.viewer
-    let tab = this.state.tab
+    let {tab, selectedUser} = this.state
+    if (this.props.relay.variables.thisUserHandle!==user.handle) {
+      this.props.relay.setVariables({thisUserHandle: user.handle})
+    }
+    console.log('dash render relay vars\n', this.props.relay.variables)
 
     if (user.deactivated) return null
-
     return (
       <DashView>
         <Snackbar
@@ -229,7 +231,7 @@ class Dashboard extends Component {
  }
 
  export default Relay.createContainer( Dashboard, {
-    initialVariables: { userHandle: '' },
+    initialVariables: { userHandle: '' , thisUserHandle: ''},
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -249,7 +251,7 @@ class Dashboard extends Component {
                 node {
                   id
                   handle
-                  score
+                  # score
                   lastPing
                   bounces { count }
                   projects { count }
@@ -258,7 +260,7 @@ class Dashboard extends Component {
               }
             }
           }
-          User (handle: $userHandle) {
+          User (handle: $thisUserHandle) {
             handle
             id
             email
