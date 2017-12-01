@@ -179,7 +179,7 @@ class ProjectList extends Component {
 export default Relay.createContainer(
   ProjectList, {
     initialVariables: {
-      userHandle: ''
+      theirHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -188,7 +188,7 @@ export default Relay.createContainer(
             id
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             handle
             id
             email

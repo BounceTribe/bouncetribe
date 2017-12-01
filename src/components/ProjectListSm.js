@@ -14,21 +14,14 @@ export const ProjectsContainerSm = styled.div`
   overflow-y: scroll;
 `
 
-// const Spacer = styled.div`
-//   ${'' /* overflow-y: scroll; */}
-//   &:after {
-//     content: "";
-//     display: block;
-//     height: 15px;
-//     width: 100%;
-//   }
-// `
 const edgeFilter = (project, type) => (
   project.comments.edges.filter( (edge) => edge.node.type === type)
 )
 
 const makeList = (props) => {
-  let bounceTab = props.location.pathname.match(/\/bounces$/)
+  let urlFragment = `/bounces(/${props.viewer.user.handle})?$`
+  let regex = new RegExp(urlFragment, 'g')
+  let bounceTab = props.location.pathname.match(regex)
   let User = props.viewer.User
   let edges = bounceTab ? User.bounces.edges : User.projects.edges
   return edges.map((edge, index) => {

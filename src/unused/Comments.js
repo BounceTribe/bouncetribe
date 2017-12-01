@@ -25,8 +25,8 @@
 //
 //   constructor(props) {
 //     super(props)
-//     let {userHandle, projectTitle} = this.props.params
-//     getProjectId(userHandle, projectTitle).then( (projectId) => {
+//     let {theirHandle, projectTitle} = this.props.params
+//     getProjectId(theirHandle, projectTitle).then( (projectId) => {
 //       this.setState({projectId})
 //     })
 //   }
@@ -81,7 +81,7 @@
 //   render () {
 //     console.log('comments', this.state.comments);
 //
-//     let ownProject = (this.props.viewer.user.handle === this.props.params.userHandle)
+//     let ownProject = (this.props.viewer.user.handle === this.props.params.theirHandle)
 //     return (
 //       <Container>
 //         <CommentMarkers

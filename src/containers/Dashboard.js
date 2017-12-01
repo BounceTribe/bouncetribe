@@ -18,7 +18,7 @@ import {isUniqueField} from 'utils/handles'
 class Dashboard extends Component {
 
   constructor(props) {
-    console.log('props', props)
+    console.log('dash constructor props', props)
     super(props)
     this.state = {
       invite: false,
@@ -37,15 +37,13 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    console.log('dashmount props', this.props)
     let edges = this.props.viewer.user.friends.edges
     if (edges.length) {
       let foundUser = edges.find(edge =>
-        edge.node.handle === this.props.params.userHandle)
+        edge.node.handle === this.props.params.theirHandle)
       if (foundUser) {
         this.setState( {selectedUser: foundUser.node || {}} )
       } else {
-        console.log('no found user; redirecting to first friend')
         this.selectUser(edges[0].node)
         this.props.router.push(`/dash/${edges[0].node.handle}/projects`)
       }
@@ -117,7 +115,7 @@ class Dashboard extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.push('/dash/' + this.state.selectedUser.handle + '/' + tab)
+    this.props.router.push('/dash/' + this.state.selectedUser.handle + '/' + tab + '/' + this.props.viewer.user.handle)
     this.setState({ tab })
     // window.scrollTo(0, document.body.scrollHeight)
   }
@@ -125,11 +123,6 @@ class Dashboard extends Component {
   render () {
     let {user} = this.props.viewer
     let {tab, selectedUser} = this.state
-    // if (this.props.relay.variables.thisUserHandle!==user.handle) {
-    //   this.props.relay.setVariables({thisUserHandle: user.handle})
-    // }
-    // console.log('dash render relay vars\n', this.props.relay.variables)
-
     if (user.deactivated) return null
     return (
       <DashView>
@@ -231,7 +224,7 @@ class Dashboard extends Component {
  }
 
  export default Relay.createContainer( Dashboard, {
-    initialVariables: { userHandle: '' , thisUserHandle: ''},
+    initialVariables: { theirHandle: ''},
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -260,11 +253,6 @@ class Dashboard extends Component {
               }
             }
           }
-          # User (handle: $thisUserHandle) {
-          #   handle
-          #   id
-          #   email
-          # }
         }
       `,
     },

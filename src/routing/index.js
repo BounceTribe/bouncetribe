@@ -83,7 +83,7 @@ const createRoutes = () => (
       component={NotificationList}
       queries={ViewerQuery}
       render={({props}) => props ? <NotificationList {...props} /> : <Loading />} />
-    <Route path={'/projects/:userHandle'}
+    <Route path={'/projects/:theirHandle'}
       component={ProjectList}
       queries={ViewerQuery}
       onEnter={userOnly}
@@ -98,41 +98,41 @@ const createRoutes = () => (
       component={Dashboard}
       queries={ViewerQuery}
       render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
-      <Route path='/dash/:userHandle/projects'
+      <Route path='/dash/:theirHandle/projects(/:userHandle)'
         component={ProjectsPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
-      <Route path={'/dash/:userHandle/messages'}
+      <Route path={'/dash/:theirHandle/messages/:userHandle'}
         component={DirectMessages}
         queries={ViewerQuery}
         render={({props}) => props ? <DirectMessages {...props} /> : <Loading nested />} />
-      <Route path={'/dash/:userHandle/bounces'}
+      <Route path={'/dash/:theirHandle/bounces(/:userHandle)'}
         component={BouncesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
     </Route>
 
-    <Route path={'/:userHandle'}
+    <Route path={'/:theirHandle'}
       onEnter={userOnly}
       component={Profile}
       queries={ViewerQuery}
       render={({props}) => props ? <Profile {...props} /> : <Loading/>} >
-      <Route path={'/:userHandle/projects'}
+      <Route path={'/:theirHandle/projects'}
         component={ProjectsPanel}
         onEnter={userOnly}
         queries={ViewerQuery}
         render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />
-       <Route path={'/:userHandle/bounces'}
+       <Route path={'/:theirHandle/bounces'}
         onEnter={userOnly}
         component={BouncesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
-      <Route path={'/:userHandle/activity'}
+      <Route path={'/:theirHandle/activity'}
         component={ActivitiesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>} />
     </Route>
-    <Route path={'/tribe/:userHandle(/members)'}
+    <Route path={'/tribe/:theirHandle(/members)'}
       component={Tribe}
       queries={ViewerQuery}
       render={({props}) => props ? <Tribe {...props} /> : <Loading />} >
@@ -140,12 +140,12 @@ const createRoutes = () => (
         component={TribeAll}
         queries={ViewerQuery}
         render={({props}) => props ? <TribeAll {...props} /> : <Loading nested />} />
-      <Route path={'/tribe/:userHandle/requests(/:acceptFriendId)'}
+      <Route path={'/tribe/:theirHandle/requests(/:acceptFriendId)'}
         component={TribeRequests}
         queries={ViewerQuery}
         render={({props}) => props ? <TribeRequests {...props} /> : <Loading nested/>} />
     </Route>
-    <Route path={'/tribe/:userHandle/find/*'}
+    <Route path={'/tribe/:theirHandle/find/*'}
       component={TribeFind}
       queries={ViewerQuery}
       render={({props}) => props ? <TribeFind {...props} /> : <Loading />}
@@ -159,31 +159,31 @@ const createRoutes = () => (
         ignoreScrollBehavior />
     </Route>
     <Route
-      path={'/:userHandle/:projectTitle'}
+      path={'/:theirHandle/:projectTitle'}
       onEnter={userOnly}
       component={Project}
       queries={ViewerQuery}
       render={({props}) => props ? <Project {...props} /> : <Loading />} >
     </Route>
     {/* <Route
-      path={'/:userHandle/:projectTitle'}
+      path={'/:theirHandle/:projectTitle'}
       onEnter={userOnly}
       component={Project}
       queries={ViewerQuery}
       render={({props}) => props ? <Project {...props} /> : <Loading />} >
       {/* <Route
-        path={'/:userHandle/:projectTitle/view'}
+        path={'/:theirHandle/:projectTitle/view'}
         component={Comments}
         queries={ViewerQuery}
         prepareParams={commentFilter} />
       <Route
-        path={'/:userHandle/:projectTitle/:handle'}
+        path={'/:theirHandle/:projectTitle/:handle'}
         component={Comments}
         queries={ViewerQuery}
         prepareParams={ownCommentsFilter} /> */}
       {/* </Route> */}
       {/* <Route
-        path={'/session/:userHandle/:sessionId/:tab'}
+        path={'/session/:theirHandle/:sessionId/:tab'}
         onEnter={userOnly}
         component={Session}
         queries={ViewerQuery}
@@ -203,18 +203,18 @@ export default Routing
   auth={auth}
   render={({props}) => props ? <Dashboard {...props} /> : <Loading />} /> */
 
-/* <Route path={'/sessions/:userHandle'} onEnter={userOnly}>
+/* <Route path={'/sessions/:theirHandle'} onEnter={userOnly}>
   <IndexRoute
     component={AllSessions}
     queries={ViewerQuery}
     render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
   <Route
-    path={'/sessions/:userHandle/:project'}
+    path={'/sessions/:theirHandle/:project'}
     component={AllSessions}
     queries={ViewerQuery}
     render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
   <Route
-    path={'/sessions/:userHandle/:project/find'}
+    path={'/sessions/:theirHandle/:project/find'}
     component={AllSessions}
     queries={ViewerQuery}
     render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
@@ -231,7 +231,7 @@ export default Routing
 //       project: {
 //         title: params.projectTitle,
 //         creator: {
-//           handle: params.userHandle
+//           handle: params.theirHandle
 //         }
 //       }
 //     }
@@ -250,7 +250,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
@@ -262,7 +262,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
@@ -288,7 +288,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
@@ -303,7 +303,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
@@ -315,7 +315,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }

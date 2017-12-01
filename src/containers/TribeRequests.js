@@ -82,7 +82,7 @@ class TribeRequests extends Component {
 export default Relay.createContainer(
   TribeRequests, {
     initialVariables: {
-      userHandle: ''
+      theirHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -121,7 +121,7 @@ export default Relay.createContainer(
               }
             }
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             email
           }

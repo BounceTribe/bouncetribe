@@ -534,7 +534,7 @@ class Project extends Component {
 export default Relay.createContainer(
   Project, {
     initialVariables: {
-      userHandle: '',
+      theirHandle: '',
       projectTitle: '',
       projectFilter: {},
     },
@@ -544,7 +544,7 @@ export default Relay.createContainer(
         projectFilter: {
           title: urlParams.projectTitle,
           creator: {
-            handle: urlParams.userHandle
+            handle: urlParams.theirHandle
           }
         }
       }
@@ -582,7 +582,7 @@ export default Relay.createContainer(
               }
             }
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             email
             handle

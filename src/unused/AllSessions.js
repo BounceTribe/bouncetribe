@@ -30,7 +30,7 @@ class AllSessions extends Component {
     let edges = this.props.viewer.user.projects.edges
     if (!router.params.project && edges.length) {
       router.push(
-        `/sessions/${router.params.userHandle}/${edges[edges.length-1].node.title}`
+        `/sessions/${router.params.theirHandle}/${edges[edges.length-1].node.title}`
       )
     }
   }
@@ -147,7 +147,7 @@ class AllSessions extends Component {
               }}
               onTouchTap={()=>{
                 let {router} = this.props
-                router.push(`/sessions/${router.params.userHandle}/${this.currentProject().title}/find`)
+                router.push(`/sessions/${router.params.theirHandle}/${this.currentProject().title}/find`)
               }}
             />
           </NoProjectsCol>
@@ -310,9 +310,9 @@ class AllSessions extends Component {
                       let {router} = this.props
                       if (router.location.pathname.includes('/find')) {
                         this.setState({matches: false})
-                        router.push(`/sessions/${router.params.userHandle}/${project.title}/find`)
+                        router.push(`/sessions/${router.params.theirHandle}/${project.title}/find`)
                       } else {
-                        router.push(`/sessions/${router.params.userHandle}/${project.title}`)
+                        router.push(`/sessions/${router.params.theirHandle}/${project.title}`)
                       }
                     }}
                   />
@@ -336,7 +336,7 @@ class AllSessions extends Component {
                 }}
                 onTouchTap={()=>{
                   let {router} = this.props
-                  router.push(`/sessions/${router.params.userHandle}/${currentProject.title}/find`)
+                  router.push(`/sessions/${router.params.theirHandle}/${currentProject.title}/find`)
                 }}
 
               />

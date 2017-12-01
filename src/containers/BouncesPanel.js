@@ -11,6 +11,7 @@ class BouncesPanel extends Component {
     let {User, user} = this.props.viewer
     let isSelf = user.id===User.id
     let hasBounces = !!User.bounces.count
+    console.log('bp', this);
     return (
       hasBounces ? <ProjectListSm {...this.props} />
       :
@@ -25,7 +26,7 @@ class BouncesPanel extends Component {
 
 export default Relay.createContainer(
   BouncesPanel, {
-    initialVariables: { userHandle: '' },
+    initialVariables: { theirHandle: '' },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -33,7 +34,7 @@ export default Relay.createContainer(
             id
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             handle
             bounces ( first:999 ) {

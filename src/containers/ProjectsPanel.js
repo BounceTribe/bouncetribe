@@ -27,7 +27,7 @@ class ProjectsPanel extends Component {
 
 export default Relay.createContainer(
   ProjectsPanel, {
-    initialVariables: { userHandle: '' },
+    initialVariables: { theirHandle: '' },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -35,7 +35,7 @@ export default Relay.createContainer(
             id
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             handle
             projects (

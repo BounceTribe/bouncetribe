@@ -610,7 +610,7 @@ class Session extends Component {
 export default Relay.createContainer(
   Session, {
     initialVariables: {
-      userHandle: '',
+      theirHandle: '',
       sessionId: '',
       projectFilter: {},
     },

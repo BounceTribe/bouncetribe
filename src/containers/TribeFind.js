@@ -69,7 +69,7 @@ class TribeFind extends Component {
   }
 
   render () {
-    let {router, userHandle, viewer} = this.props
+    let {router, theirHandle, viewer} = this.props
     let {user} = viewer
     return (
       <View>
@@ -118,7 +118,7 @@ class TribeFind extends Component {
                     handle: newValue,
                     ownId: user.id
                   },
-                  pathname: `/tribe/${userHandle}/find/`
+                  pathname: `/tribe/${theirHandle}/find/`
                 })
                 this.setState({searching: true})
               }}
@@ -135,7 +135,7 @@ class TribeFind extends Component {
 export default Relay.createContainer(
   TribeFind, {
     initialVariables: {
-      userHandle: '',
+      theirHandle: '',
       suggestedFriendsFilter: {}
     },
     fragments: {
@@ -147,7 +147,7 @@ export default Relay.createContainer(
             auth0UserId
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             email
           }

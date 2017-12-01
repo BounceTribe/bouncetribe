@@ -14,22 +14,22 @@ class DirectMessages extends Component {
       'wss://subscriptions.graph.cool/v1/bt-api',
       { reconnect: true, }
     )
-    // let savedText = JSON.parse(localStorage.getItem('message')) || {}
-    // let useSaved =  this.props.params.userHandle===savedText.forHandle
+    // this.messages = this.props.viewer.allMessages.edges.map(edge=>edge.node)
+    let savedText = JSON.parse(localStorage.getItem('message')) || {}
+    let useSaved =  this.props.params.theirHandle===savedText.forHandle
       this.state = {
         active: [],
         received: [],
         sent: [],
-        // newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
-        newMessages: [],
-        message: '',
-        // message: useSaved ? savedText.text : '',
+        newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
+        // newMessages: [],
+        // message: '',
+        message: useSaved ? savedText.text : '',
         new: []
       }
-    console.log('dm mount', this.props.viewer)
+    console.log('dm mount', this)
 
-    this.feedSub.subscribe(
-      {
+    this.feedSub.subscribe( {
         query: /* GraphQL */`subscription createMessage {
           Message (
             filter: {
@@ -61,8 +61,8 @@ class DirectMessages extends Component {
       }, (error, result) => {
         console.log('feedsub error or result', error, result)
         if (result) {
-          let newMessage = result.Message
-          let isSender = newMessage.node.sender.id===this.props.viewer.user.id
+          let newMessage = result.Message.node
+          let isSender = newMessage.sender.id===this.props.viewer.user.id
           this.setState({
             newMessages: this.state.newMessages.concat([newMessage]),
             message: isSender ? '' : this.state.message
@@ -83,14 +83,8 @@ class DirectMessages extends Component {
     }))
   }
 
-  // componentWillUpdate(nextProps) {
-  //   if (nextProps.params.userHandle!==this.props.params.userHandle) {
-  //     this.setState({message: ''})
-  //   }
-  // }
-
   componentDidUpdate(prevProps) {
-    if (prevProps.params.userHandle!==this.props.params.userHandle) {
+    if (prevProps.params.theirHandle!==this.props.params.theirHandle) {
       this.setState({message: ''})
     }
     if (this.state.message==='') {
@@ -98,33 +92,35 @@ class DirectMessages extends Component {
     }
   }
 
-  temporaryFilter = (msgList) => {
-    let userId = this.props.viewer.user.id
-    let theirId = this.props.viewer.User.id
-    return msgList.filter(msg =>
-      (msg.node.sender.id===userId && msg.node.recipient.id===theirId) ||
-      (msg.node.sender.id===theirId && msg.node.recipient.id===userId)
-    )
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      newMessages: [],
+    })
+    console.log('recprops dm', nextProps, this.props);
+
   }
 
   prepMessages = (list) => {
-    return this.temporaryFilter(list).sort((a, b) => {
-      let dateA = new Date(a.node.createdAt)
-      let dateB = new Date(b.node.createdAt)
+    return list.sort((a, b) => {
+      let dateA = new Date(a.createdAt)
+      let dateB = new Date(b.createdAt)
       return dateB - dateA
     })
   }
 
   formatMessages = (list) => {
+
     let msgList = this.prepMessages(list)
     msgList = msgList.map(msg => {
-      msg = msg.node
       let time
       let created = moment.default(msg.createdAt)
       if (created.add(1, 'days') > moment.now()) {
         time = created.subtract(1, 'days').format('h:mm a')
       } else {
         time = created.subtract(1, 'days').format('MMMM Do h:mm a')
+      }
+      if (!msg) {
+        debugger
       }
       msg.time = time;
       msg.receiving = (msg.sender.id!==this.props.viewer.user.id)
@@ -159,9 +155,7 @@ class DirectMessages extends Component {
   }
 
   render() {
-    let theirMessages = this.props.viewer.User.receivedMessages.edges
-    let userMessages = this.props.viewer.user.receivedMessages.edges
-    let messages = theirMessages.concat(userMessages).concat(this.state.newMessages)
+    let messages = this.props.viewer.allMessages.edges.map(edge=>edge.node).concat(this.state.newMessages)
     messages = [...new Set(messages)]
     let scrollPlaceholder =
       <div style={{ float:"left", clear: "both" }}
@@ -197,22 +191,17 @@ class DirectMessages extends Component {
 }
 
 export default Relay.createContainer( DirectMessages, {
-  initialVariables: {
-    userHandle: '',
-    projectTitle: '',
-    messageFilter: {},
-    thisUserHandle: ''
-  },
+  initialVariables: { theirHandle: '', userHandle: '', messageFilter: {}, },
   prepareVariables: (urlParams) => {
     return {
       ...urlParams,
       messageFilter: { OR:
         [ {
-          sender: { handle: urlParams.userHandle },
-          recipient: { handle: 'subliminal_limee' },
-        }, {
+          sender: { handle: urlParams.theirHandle },
           recipient: { handle: urlParams.userHandle },
-          sender: { handle: 'subliminal_limee' },
+        }, {
+          recipient: { handle: urlParams.theirHandle },
+          sender: { handle: urlParams.userHandle },
         }
       ] }
     }
@@ -228,14 +217,8 @@ export default Relay.createContainer( DirectMessages, {
             id
             text
             createdAt
-            sender {
-              id
-              handle
-            }
-            recipient {
-              id
-              handle
-            }
+            sender {id,  handle}
+            recipient {id, handle}
           }
         }
       }
@@ -244,52 +227,8 @@ export default Relay.createContainer( DirectMessages, {
         handle
         score
         portrait { url }
-        receivedMessages (
-          first: 999
-          orderBy: id_ASC
-        ) {
-          edges {
-            node {
-              id
-              text
-              createdAt
-              sender {
-                id
-                handle
-              }
-              recipient {
-                id
-                handle
-              }
-            }
-          }
-        }
       }
-      User (handle: $userHandle) {
-        id
-        handle
-        portrait { url }
-        receivedMessages (
-          first: 999
-          orderBy: id_ASC
-        ) {
-          edges {
-            node {
-              id
-              text
-              createdAt
-              sender {
-                id
-                handle
-              }
-              recipient {
-                id
-                handle
-              }
-            }
-          }
-        }
-      }
+      User (handle: $theirHandle) {id, handle}
     }
     `,
   },

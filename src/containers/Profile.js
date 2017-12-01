@@ -62,7 +62,7 @@ class Profile extends Component {
     //TODO-J this is a redirect: maybe there's better way to handle w/ router
     // let location = this.props.router.location;
 
-    this.props.router.push(`/${this.props.router.params.userHandle}/activity`)
+    this.props.router.push(`/${this.props.router.params.theirHandle}/activity`)
     console.log('profile mount props', this.props);
   }
 
@@ -308,7 +308,7 @@ class Profile extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.push(`/${this.props.router.params.userHandle}/${tab}`)
+    this.props.router.push(`/${this.props.router.params.theirHandle}/${tab}`)
     this.setState({ tab })
     // window.scrollTo(0, document.body.scrollHeight)
   }
@@ -589,7 +589,7 @@ class Profile extends Component {
 export default Relay.createContainer(
   Profile, {
     initialVariables: {
-      userHandle: ''
+      theirHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -637,7 +637,7 @@ export default Relay.createContainer(
               }
             }
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             experience
             lastPing
