@@ -32,7 +32,6 @@ export default class CreateMessage extends Mutation {
         edgeName: 'messageEdge',
         rangeBehaviors: {
           '': 'append',
-          // Prepend the ship, wherever the connection is sorted by age
           'orderby(newest)': 'prepend',
         }
       },

@@ -88,13 +88,9 @@ class DirectMessages extends Component {
       this.setState({message: ''})
     }
     if (this.state.message==='') {
-      this.msgsEnd.scrollIntoView({ behaviour: 'smooth' })
+      this.msgsEnd.scrollIntoView({ behaviour: 'smooth', block: 'nearest' })
     }
   }
-  //
-  // componentWillReceiveProps(nextProps) {
-  //   console.log('recprops dm', nextProps, this.props);
-  // }
 
   sortMessages = (list) => {
     return list.sort((a, b) => {

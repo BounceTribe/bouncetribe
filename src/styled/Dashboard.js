@@ -66,13 +66,13 @@ export const TopCol = styled.div`
   align-items: flex-start;
   margin-left: 30px;
 `
-//min height accomodates 3 project items
+
 export const BotRow = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin-top: 20px;
-  max-height: 60vh;
+  max-height: 80vh;
   min-height: 525px;
 `
 
@@ -80,7 +80,7 @@ export const DashLeft = styled.div`
   display: flex;
   border-radius: 5px;
   background-color: white;
-  min-height: 50vh;
+  min-height: 60vh;
   flex: 0 0 285px;
   border: solid ${grey222} 1px;
   border-radius: 5px;
@@ -92,6 +92,8 @@ export const DashLeft = styled.div`
 export const DashView = styled(View)`
   background-color: transparent;
   border: none;
+  box-shadow: none;
+  
 `
 
 export const DashHeader = styled.div`
