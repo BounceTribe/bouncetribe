@@ -11,7 +11,7 @@ export const ButtonProgress = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-right: 10px;
+  padding-right: 10px;
 `
 
 export const Progress = styled.span`

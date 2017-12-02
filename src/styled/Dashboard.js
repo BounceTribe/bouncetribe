@@ -79,7 +79,7 @@ export const BotRow = styled.div`
 export const DashLeft = styled.div`
   display: flex;
   border-radius: 5px;
-  background-color: white;
+  background-color: ${white};
   min-height: 60vh;
   flex: 0 0 285px;
   border: solid ${grey222} 1px;
@@ -93,7 +93,7 @@ export const DashView = styled(View)`
   background-color: transparent;
   border: none;
   box-shadow: none;
-  
+
 `
 
 export const DashHeader = styled.div`

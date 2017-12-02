@@ -10,16 +10,16 @@ export const CommentContainer = styled.div`
   padding-bottom: 80px;
   width: ${({listenTab}) => (listenTab) ? '85%' : '100%'};
 `
-export const ButtonRow = styled.div`
-  display: ${({hide}) => (hide) ? 'none' : 'flex'};
-  justify-content: center;
-`
-  export const ButtonColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px 20px;
+  export const ButtonRow = styled.div`
+    display: ${({hide}) => (hide) ? 'none' : 'flex'};
+    justify-content: center;
   `
+    export const ButtonColumn = styled.div`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px 10px;
+    `
     export const ButtonLabel = styled.span`
       display: flex;
       margin-top: 15px;

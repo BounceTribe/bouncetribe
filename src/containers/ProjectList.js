@@ -152,9 +152,7 @@ class ProjectList extends Component {
     return (
       <View>
         <Header>
-          <IconTextContainer
-            to={`/projects/${this.props.viewer.User.handle}`}
-          >
+          <IconTextContainer to={`/projects/${this.props.viewer.User.handle}`}>
             <Music
               style={{ display: 'flex', marginBottom: '5px' }}
               fill={purple}

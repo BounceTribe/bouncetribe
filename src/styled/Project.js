@@ -98,9 +98,7 @@ export const Bot = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 50px;
   width: 100%;
-  ${'' /* width: calc(100% - 40px); */}
   padding: 0 20px;
 `
 
@@ -108,7 +106,6 @@ export const LeftList = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   width: 30%;
   margin-right: 20px;
-
 `
 
 export const CommentContainer = styled.div`
@@ -124,7 +121,6 @@ export const ProfContainer = styled.div`
   align-items: center;
   width: 100%;
   margin-top: 20px;
-
 `
 
 export const ProfTop = styled.div`
@@ -142,17 +138,11 @@ const PortImg = styled.img`
   object-fit: cover;
 `
 
-export const Portrait = (props) => {
-  return (
-    <BtLink
-      to={props.to}
-    >
-      <PortImg
-        src={props.src}
-      />
+export const Portrait = (props) => (
+    <BtLink to={props.to} >
+      <PortImg src={props.src} />
     </BtLink>
   )
-}
 
 export const ProfLeft = styled.div`
   display: flex;

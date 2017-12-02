@@ -3,10 +3,7 @@ import {purple, grey150} from 'theme'
 
 class AudioVisualization extends Component {
 
-  state = {
-    height: 0,
-    width: 0
-  }
+  state = {height: 0,width: 0}
 
   draw = () => {
     let {duration, time, visualization} = this.props
@@ -31,9 +28,19 @@ class AudioVisualization extends Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.setWidth);
+  }
+
   componentDidMount () {
+    window.addEventListener("resize", this.setWidth);
+    this.setWidth()
+  }
+
+  setWidth = () => {
     let parentWidth = this.canvas.parentElement.clientWidth
     this.setState({ width: parentWidth * .9, height: 100 })
+    this.draw()
   }
 
   componentDidUpdate (prevProps, prevState) {
@@ -41,20 +48,17 @@ class AudioVisualization extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    // if (nextProps.time !== this.props.time) {
-      console.log('new visual propTIMEs', nextProps)
+    if (nextProps.time !== this.props.time) {
       let c = this.canvas.getContext('2d')
       c.clearRect(0, 0, this.state.width, this.state.height)
       this.draw()
-    // }
+    }
   }
 
   render () {
     return (
       <canvas
-        ref={(canvas) => {
-          this.canvas = canvas
-        }}
+        ref={(canvas) => this.canvas = canvas}
         width={this.state.width}
         height={this.state.height}
         onClick={(e)=>this.props.scrub(e)}

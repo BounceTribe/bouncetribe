@@ -16,7 +16,7 @@ class ProjectsPanel extends Component {
       hasProjects ? <ProjectListSm {...this.props} /> :
       <EmptyPanel
         icon={<Music height={113} fill={"#D3D3D3"} />}
-        headline={isSelf ? `Everyone wants to hear it...` : `User has no projects`}
+        headline={isSelf ? `Everyone wants to hear it...` : `${User.handle} has no projects`}
         note={isSelf ? `Upload your first project!` : ``}
         btnLabel={isSelf ? `New Project` : ``}
         btnClick={()=>this.props.router.push(`/projects/${user.handle}/new`)}
@@ -58,9 +58,7 @@ export default Relay.createContainer(
                   creator {handle}
                   comments ( first: 999 ) {
                     edges {
-                      node {
-                        type
-                      }
+                      node { type }
                     }
                   }
                 }

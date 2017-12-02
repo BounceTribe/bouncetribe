@@ -17,7 +17,7 @@ class BouncesPanel extends Component {
       :
       <EmptyPanel
         icon={<Bounce width={100} fill={"#D3D3D3"} />}
-        headline={isSelf ? `Do you love someone’s project?` : `User has no bounces yet`}
+        headline={isSelf ? `Do you love someone’s project?` : `${User.handle} hasn't bounced any tracks yet`}
         note={isSelf ? `Bounce it to share with your tribe` : ``}
       />
     )

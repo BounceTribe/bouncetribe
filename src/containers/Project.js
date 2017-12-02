@@ -89,9 +89,7 @@ class Project extends Component {
     let user = this.user
     let project = this.project
     let bounces = project.bounces.edges
-    // let friendIds = user.friends.edges.map(edge => edge.node.id)
     let bouncedByIds = bounces.map(edge => edge.node.bouncer.id)
-    // let projectOwnerId = this.User.id
     this.setState({
       disableComments: !this.isFriends,
       bounced: bouncedByIds.includes(user.id)
@@ -114,27 +112,29 @@ class Project extends Component {
     }
   }
 
-  setCurrentTime = (time) =>  this.setState({ time })
-  getDuration = (duration) => this.setState({ duration })
-  handleSelection = (selection) => this.setState({selection})
+  setCurrentTime = time =>  this.setState({ time })
+  getDuration = duration => this.setState({ duration })
+  handleSelection = selection => this.setState({selection})
 
   dropMarker = (type) => {
     this.setState({
-        new: {
-          id: 'new',
-          type: type,
-          text: this.state.newText,
-          author: this.user,
-          timestamp: this.state.time,
-          project: this.project
-        }
+      new: {
+        id: 'new',
+        type: type,
+        text: this.state.newText,
+        author: this.user,
+        timestamp: this.state.time,
+        project: this.project
+      }
     })
   }
 
   jumpToTime = (time) => {
-    console.log('jumping', time)
+    document.getElementsByTagName('canvas')[0]
+      .scrollIntoView({behavior:'smooth'})
     this.setState({jumpToTime: time})
   }
+
   get comments () {
     return this.filteredComments().map((comment, index)=>{
       return <SingleComment
@@ -333,17 +333,16 @@ class Project extends Component {
               <FlatButton
                 label={"Delete"}
                 labelStyle={{color: '#DF5151'}}
-                onClick={
-                  ()=>{
-                    this.props.relay.commitUpdate(
-                      new DeleteProject({id: project.id}),{
-                        onSuccess: ()=>{
-                          this.props.router.push(`/projects/${user.handle}`)
-                        }
+                onClick={()=>{
+                  this.props.relay.commitUpdate(
+                    new DeleteProject({id: project.id}),{
+                      onSuccess: ()=>{
+                        this.props.router.push(`/projects/${user.handle}`)
                       }
-                    )
-                  }
-                } />
+                    }
+                  )
+                }}
+              />
             ]} >
             Are you sure you want to permanently delete this project?
           </Dialog>

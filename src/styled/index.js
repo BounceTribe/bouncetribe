@@ -7,7 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import IconButton from 'material-ui/IconButton'
+import Tooltip from 'material-ui-next/Tooltip'
 import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
@@ -187,37 +187,27 @@ export const BtFlatButton = (props) => {
 }
 
 export const RoundButton = (props) => {
-  let tooltipLength = 0
-  if (props.tooltip) {
-    tooltipLength = props.tooltip.length
-  }
   return (
-    <ButtonLink to={props.to} title={props.title} >
-      <IconButton
-        tooltip={props.tooltip}
-        style={{ height: '60px', width: '60px', padding: '0px' }}
-        tooltipStyles={{
-          marginTop: "18px",
-          left: "0",
-          right: "0",
-          fontSize: (tooltipLength > 10) ? "9px" : "10px",
-          paddingLeft: (tooltipLength > 10) ? "2px" : "8px",
-        }}
+    <MuiThemeProvider muiTheme={ props.big ? bigTheme : btTheme } >
+      <Tooltip
+        title={props.tooltip}
+        placement="bottom"
+        disableTriggerFocus={!props.tooltip}
+        disableTriggerHover={!props.tooltip}
+        disableTriggerTouch={!props.tooltip}
       >
-        <MuiThemeProvider muiTheme={ (props.big) ? bigTheme : btTheme } >
-          <FloatingActionButton
-            style={{ boxShadow: 0, ...props.style }}
-            secondary={props.secondary}
-            backgroundColor={props.backgroundColor}
-            onClick={props.onClick}
-            onTouchTap={props.onTouchTap}
-          >
-            {props.icon}
-          </FloatingActionButton>
-        </MuiThemeProvider>
-      </IconButton>
-
-    </ButtonLink>
+        <FloatingActionButton
+          href={props.to}
+          style={{ boxShadow: 0, ...props.style }}
+          secondary={props.secondary}
+          backgroundColor={props.backgroundColor}
+          onClick={props.onClick}
+          onTouchTap={props.onTouchTap}
+        >
+          {props.icon}
+        </FloatingActionButton>
+      </Tooltip>
+    </MuiThemeProvider>
   )
 }
 
