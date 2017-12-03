@@ -13,7 +13,9 @@ export default class ImageEditor extends Component {
         contentStyle={{
           height: '800px',
           width: '800px',
+          minHeight: '600px'
         }}
+        style={{minHeight: '600px'}}
         autoScrollBodyContent
       >
         <ImageUploader

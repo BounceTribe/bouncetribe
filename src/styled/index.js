@@ -47,6 +47,7 @@ export const BtTextMarker = (props) => {
 }
 
 export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) => {
+  // console.log('url', user.portrait.url);
   size = size || 50
   user = user || {}
   //set the ratio of size between the avatar and the online icon

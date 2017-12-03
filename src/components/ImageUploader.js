@@ -14,6 +14,9 @@ export default class ImageUploader extends Component {
   state = {
     image: false,
     croppedImage: false,
+    correctAspect: false,
+    imageName: '',
+    pixel: null,
     crop: {
       aspect: 1/1,
       x: 0,
@@ -24,45 +27,34 @@ export default class ImageUploader extends Component {
 
   onImageDrop = (files, rejectedFile) => {
     let file = files[0]
-
-    console.log(file)
-    this.setState({
-      image: file.preview,
-      imageName: file.name
-    })
-
+    this.setState({ image: file.preview, imageName: file.name })
   }
 
   uploadImage = () => {
     let imageName = this.state.imageName
     let {image, pixel} = this.state
-    console.log(this.state)
     let htmlImage = new Image()
-
-    htmlImage.onload = ()=>{
-      window.createImageBitmap(htmlImage, 0, 0 ,pixel.width, pixel.height).then(result=>{
+    htmlImage.onload = () => {
+      let width = pixel ? pixel.width : htmlImage.width
+      let height = pixel ? pixel.height : htmlImage.height
+      let x = pixel ? pixel.x : 0
+      let y = pixel ? pixel.y : 0
+      window.createImageBitmap(htmlImage, 0, 0, width, height).then(result=>{
         let canvas = document.createElement('canvas')
-        canvas.width = pixel.width
-        canvas.height = pixel.height
+        canvas.width = width
+        canvas.height = height
         let c = canvas.getContext('2d')
-        c.drawImage(htmlImage, pixel.x, pixel.y, pixel.width, pixel.height, 0, 0,pixel.width, pixel.height )
-
-        canvas.toBlob((blob)=>{
-          uploadFile(blob, imageName)
-          .then( fileId => {
+        c.drawImage(htmlImage, x, y, width, height, 0, 0, width, height)
+        canvas.toBlob(blob=>{
+          uploadFile(blob, imageName).then(fileId => {
             Relay.Store.commitUpdate(
-              new UpdateFile({
-                self: this.props.self,
-                fileId: fileId,
-              }), {
-                onSuccess: (transaction) => {
+              new UpdateFile({self: this.props.self, fileId: fileId}), {
+                onSuccess: transaction => {
                   let file = transaction.updateFile.file
                   this.setState({ croppedImage: file.url })
                   this.props.fileSuccess(file)
                 },
-                onFailure: (response) => {
-                  console.log('updateFile failure', response)
-                }
+                onFailure: res =>console.log('updateFile fail', res)
               }
             )
           })
@@ -72,24 +64,20 @@ export default class ImageUploader extends Component {
     htmlImage.src = image
   }
 
-
   get dropzoneOrCropper () {
-    console.log('dz or c', this.state);
     if (this.state.croppedImage) {
       return (
-        <CroppedImage
-          src={this.state.croppedImage}
-          alt={'project art'}
-        />
+        <CroppedImage src={this.state.croppedImage} alt={'project art'} />
       )
     } else if (this.state.image) {
-
       return (
-        <div>
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           <ReactCrop
             src={this.state.image}
             crop={this.state.crop}
-            onImageLoaded={(image)=>console.log('loaded', image)}
+            onImageLoaded={(image)=>{
+              (image.height===image.width) && this.setState({correctAspect:true})
+            }}
             keepSelection={true}
             onComplete={(crop, pixel)=>this.setState({ crop, pixel })}
           />
@@ -97,7 +85,8 @@ export default class ImageUploader extends Component {
             label="Save"
             onClick={this.uploadImage}
             primary
-            disabled={!this.state.pixel}
+            style={{alignSelf: 'center', margin: '10px'}}
+            // disabled={!(this.state.pixel || this.state.correctAspect)}
           />
         </div>
       )

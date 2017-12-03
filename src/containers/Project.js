@@ -490,7 +490,7 @@ class Project extends Component {
                   big
                   icon={ <Heart height={50} width={50} /> }
                   onTouchTap={()=>{this.dropMarker('LIKE')}} />
-                <ButtonLabel> Like </ButtonLabel>
+                <ButtonLabel>Like</ButtonLabel>
               </ButtonColumn>
             </ButtonRow>
             <CommentScroller>
@@ -512,12 +512,8 @@ class Project extends Component {
                     console.log('new state', this.state.new, newComment);
                     let newSorted = this.state.comments.concat(newComment)
                       .sort((a,b)=>(a.timestamp-b.timestamp))
-                    this.setState({
-                      new: false,
-                      comments: newSorted
-                    })
-                    console.log('added comment', this.state.comments);
-
+                    this.setState({ new: false, comments: newSorted })
+                    console.log('added comment', this.state.comments)
                   }} />
               }
               {this.comments}

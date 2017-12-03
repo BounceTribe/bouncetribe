@@ -139,10 +139,10 @@ const PortImg = styled.img`
 `
 
 export const Portrait = (props) => (
-    <BtLink to={props.to} >
-      <PortImg src={props.src} />
-    </BtLink>
-  )
+  <BtLink to={props.to} >
+    <PortImg src={props.src} />
+  </BtLink>
+)
 
 export const ProfLeft = styled.div`
   display: flex;
