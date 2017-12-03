@@ -10,6 +10,12 @@ import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
 import { ProfCol, ProfHandle, Score} from 'styled/Project'
 
+export const DashView = styled(View)`
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+`
+
 export const DashProfile = ({selectedUser}) => (
   <div style={{display: 'flex', padding: '21px 31px 15px 31px', minHeight: '60px'}}>
     <BtAvatar user={selectedUser} size={60} />
@@ -72,6 +78,7 @@ export const BotRow = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-top: 20px;
+  height: 80vh;
   max-height: 80vh;
   min-height: 525px;
 `
@@ -87,13 +94,6 @@ export const DashLeft = styled.div`
   margin-right: 20px;
   padding: 9px 0px 9px 9px;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-`
-
-export const DashView = styled(View)`
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-
 `
 
 export const DashHeader = styled.div`
