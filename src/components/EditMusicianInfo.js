@@ -103,6 +103,7 @@ export default class EditMusicianInfo extends Component {
 
 
   render() {
+    console.log('state', this.state);
     let {genres, skills, influences, experience} = this.state
     let experiences = this.state.experiences.map(experience=>(
       <MenuItem
@@ -116,10 +117,7 @@ export default class EditMusicianInfo extends Component {
         title={'Edit Musician Info'}
         open={this.props.open}
         onRequestClose={this.props.onRequestClose}
-        contentStyle={{
-          height: '800px',
-          width: '800px',
-        }}
+        contentStyle={{ height: '800px', width: '800px', }}
         autoScrollBodyContent
         actions={[
           <FlatButton
@@ -138,8 +136,7 @@ export default class EditMusicianInfo extends Component {
       >
         <Label>Experience</Label>
         <ExperienceRow>
-          <ExperienceIcon
-            style={{ marginRight: '5px' }} />
+          <ExperienceIcon style={{ marginRight: '5px' }} />
           <SelectField
             value={experience}
             fullWidth={true}
@@ -154,7 +151,7 @@ export default class EditMusicianInfo extends Component {
         <Async
           loadOptions={this.loadGenres}
           value={genres}
-          onChange={(e)=>this.setState({ genres: e.value })}
+          onChange={(e,i,val)=>this.setState({ genres: val.map(x=>x.value) })}
           multi
           className={'async'}
           placeholder={'add your genres'}
@@ -164,7 +161,7 @@ export default class EditMusicianInfo extends Component {
         <Async
           loadOptions={this.loadSkills}
           value={skills}
-          onChange={(e)=>this.setState({ skills: e.value })}
+          onChange={(e,i,val)=>this.setState({ skills: val.map(x=>x.value) })}
           multi
           className={'async'}
           placeholder={'add your skills'}
@@ -175,7 +172,7 @@ export default class EditMusicianInfo extends Component {
           value={influences}
           loadOptions={this.influenceOptions}
           multi
-          onChange={(e)=>this.setState({ influences: e.value })}
+          onChange={(e,i,val)=>this.setState({ influences: val.map(x=>x.value) })}
           className={'async influences'}
           placeholder={'add your influences'}
           style={{margin: '4px 0 8px 0'}}
