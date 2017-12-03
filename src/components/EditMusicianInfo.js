@@ -13,17 +13,16 @@ import FlatButton from 'material-ui/FlatButton'
 import UpdateUser from 'mutations/UpdateUser'
 import {purple} from 'theme'
 import MenuItem from 'material-ui/MenuItem'
+import {formatEnum} from 'utils/strings'
+
 
 export default class EditMusicianInfo extends Component {
 
   constructor(props) {
-    super()
-    this.state = Object.assign(...props, {
-      genres: [],
-      skills: [],
+    super(props)
+    this.state = Object.assign({...this.props}, {
       allGenres: [],
       allSkills: [],
-      influences: [],
       experience: '',
       experiences: [
         { value: 'NOVICE', text: 'Novice (Just Started)' },
@@ -35,79 +34,80 @@ export default class EditMusicianInfo extends Component {
     })
   }
 
-  componentDidMount() {
-    getAllGenres().then(allGenres=>
-      this.setState(allGenres)
-    )
-    getAllSkills().then(allSkills=>
-      this.setState(allSkills)
-    )
-  }
-
-  loadGenres = () => {
-    return new Promise( (resolve, reject)=> {
-      getAllGenres().then(allGenres=>{
-        let options = allGenres.map(genre=>{
-          return { value: genre.id, label: genre.name }
-        })
-        console.log('genres', options);
-        resolve({options})
-      })
+  loadGenres = () => new Promise((resolve, reject) =>
+    getAllGenres().then( allGenres => {
+      let options = allGenres.map(genre=>(
+        {value: genre.id, label: genre.name}
+      ))
+      resolve({options})
     })
-  }
+  )
 
-  loadSkills = () => {
-    return new Promise( (resolve, reject)=> {
-      getAllSkills().then(allSkills=>{
-        let options = allSkills.map(skill=>{
-          return { value: skill.id, label: skill.name }
-        })
-        resolve({options})
-      })
+  loadSkills = () => new Promise((resolve, reject) =>
+    getAllSkills().then( allSkills => {
+      let options = allSkills.map(skill=>(
+        {value: skill.id, label: skill.name}
+      ))
+      resolve({options})
     })
-  }
+  )
+
 
   influenceOptions = (query) => {
     return new Promise( (resolve, reject) =>
-      query ? searchArtists(query).then(options => resolve(options)) : resolve({options: []})
+      query ? searchArtists(query).then(options => {
+        console.log('infopt', options);
+        resolve(options)}) : resolve({options: []})
     )
   }
 
-  influenceChange = (options) => {
-    if (options.length < this.state.influences.length) {
-      let artistInfluencesIds = options.map((option) => option.value.id)
-      let userId = this.props.viewer.user.id
-      this.props.relay.commitUpdate(
-        new UpdateUser({userId,artistInfluencesIds}), {
-          onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
-        }
-      )
-    } else {
-      let newInfluence = options.find((option) => !option.value.id)
-      ensureBtArtistExists(newInfluence).then(artistId => {
-        let artistInfluencesIds = options.map(option=>option.value.id || artistId)
-        let userId = this.props.viewer.user.id
-        this.props.relay.commitUpdate(
-          new UpdateUser({userId,artistInfluencesIds}),{
-            onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
-          }
-        )
-      })
-    }
-  }
+  // influenceChange = (options) => {
+  //   if (options.length < this.state.influences.length) {
+  //     let artistInfluencesIds = options.map((option) => option.value.id)
+  //     let userId = this.props.viewer.user.id
+  //     this.props.relay.commitUpdate(
+  //       new UpdateUser({userId,artistInfluencesIds}), {
+  //         onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
+  //       }
+  //     )
+  //   } else {
+  //     let newInfluence = options.find((option) => !option.value.id)
+  //     ensureBtArtistExists(newInfluence).then(artistId => {
+  //       let artistInfluencesIds = options.map(option=>option.value.id || artistId)
+  //       let userId = this.props.viewer.user.id
+  //       this.props.relay.commitUpdate(
+  //         new UpdateUser({userId,artistInfluencesIds}),{
+  //           onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
+  //         }
+  //       )
+  //     })
+  //   }
+  // }
 
-  sendUpdate() {
-    let userId = this.props.user.id
-    let updateObj = Object.assign({userId}, this.state)
-    let newStatus = this.state.deactivated
-    if (newStatus && newStatus!==this.props.user.deactivated) {
-      //prevents showing other dialod before booting to login
-      this.setState({hide: true})
+  // genreChange = (val) => {
+  //   let genresIds = val.map(genre=>genre.value)
+  //   this.props.relay.commitUpdate(
+  //     new UpdateUser({ userId: this.props.viewer.user.id, genresIds }), {
+  //       onSuccess: res => this.setState({ notification: `GENRE UPDATED` })
+  //     }
+  //   )
+  // }
+
+  sendUpdate = () => {
+
+    let updateObj = {
+      userId: this.props.user.id,
+      genresIds: this.state.genres.map(genre=>genre.value),
+      skillsIds: this.state.skills.map(shill=>shill.value),
+      // experience: this.state.experience,
+      artistInfluencesIds: this.state.influences.map(option=>option.value.id)
     }
+
+    // let updateObj = Object.assign({userId}, this.state)
     Relay.Store.commitUpdate(
       new UpdateUser(updateObj),{
         onSuccess: res => this.props.onSave(),
-        onFailure: res => {}//handle failure
+        onFailure: res => {console.log('fail', updateObj, res)}//handle failure
       }
     )
   }
@@ -115,7 +115,6 @@ export default class EditMusicianInfo extends Component {
 
   render() {
     console.log('state', this.state);
-    console.log('options', this.influenceOptions());
     let {genres, skills, influences, experience} = this.state
     let experiences = this.state.experiences.map(experience=>(
       <MenuItem
@@ -134,15 +133,12 @@ export default class EditMusicianInfo extends Component {
         actions={[
           <FlatButton
             label={"Cancel"}
-            onClick={() => {
-              this.props.onClose()
-              // this.setState({show: false, pass1: '', pass2: ''})
-            }}
+            onClick={this.props.onClose}
           />,
           <FlatButton
             label={"Save"}
             primary
-            onClick={() => this.sendUpdate()}
+            onClick={this.sendUpdate}
           />
         ]}
       >
@@ -150,7 +146,7 @@ export default class EditMusicianInfo extends Component {
         <ExperienceRow>
           <ExperienceIcon style={{ marginRight: '5px' }} />
           <SelectField
-            value={experience}
+            value={formatEnum(experience)}
             fullWidth={true}
             onChange={(e)=>this.setState({experience: e.value})}
             hintText={'add your experience'}
@@ -163,7 +159,10 @@ export default class EditMusicianInfo extends Component {
         <Async
           loadOptions={this.loadGenres}
           value={genres}
-          onChange={(e,i,val)=>this.setState({ genres: val.map(x=>x.value) })}
+          onChange={(val)=>{
+            console.log('e i val', val);
+            this.setState({ genres: val.map(x=>x.value) })
+          }}
           multi
           className={'async'}
           placeholder={'add your genres'}
@@ -173,7 +172,7 @@ export default class EditMusicianInfo extends Component {
         <Async
           loadOptions={this.loadSkills}
           value={skills}
-          onChange={(e,i,val)=>this.setState({ skills: val.map(x=>x.value) })}
+          onChange={(val)=>this.setState({ skills: val.map(x=>x.value) })}
           multi
           className={'async'}
           placeholder={'add your skills'}
@@ -184,7 +183,10 @@ export default class EditMusicianInfo extends Component {
           value={influences}
           loadOptions={this.influenceOptions}
           multi
-          onChange={(e,i,val)=>this.setState({ influences: val.map(x=>x.value) })}
+          onChange={(val)=>{
+            console.log('VAL', val)
+            this.setState({ influences: val})
+          }}
           className={'async influences'}
           placeholder={'add your influences'}
           style={{margin: '4px 0 8px 0'}}

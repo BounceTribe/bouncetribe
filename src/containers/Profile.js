@@ -43,7 +43,7 @@ class Profile extends Component {
     notification: false,
     btnStatus: '',
     editProfile: false,
-    editMusicianInfo: false,
+    editMusicianInfo: true,
     userhandleError: '',
     emailError: '',
     summaryError: ''
@@ -393,7 +393,7 @@ class Profile extends Component {
   }
 
   render () {
-    let {genres, skills, influences, experience, experiences, notification} = this.state
+    let {genres, skills, influences, experience, notification} = this.state
     let {User, user} = this.props.viewer
     let ownProfile = (User.id === user.id)
     return (
@@ -416,26 +416,25 @@ class Profile extends Component {
             locks={[false, false, false]}
             values={[0,0,0]}
             content={this.props.children}
-          />
+          />  
           <BotRight>
-            <EditMusicianInfo
+            {(this.state.editMusicianInfo) && <EditMusicianInfo
               {...this.state}
-              open={this.state.editMusicianInfo || true}
+              open={true}
               user={user}
-              onSave={()=>this.musicianInfoSave}
+              onSave={()=>this.musicianInfoSave()}
               onClose={()=>this.setState({editMusicianInfo: false})}
-            />
-            <Edit
+            />}
+            {ownProfile && <Edit
               onClick={()=>{this.setState({editMusicianInfo: true})}}
               fill={purple}
               style={{
                 alignSelf: 'flex-end',
                 padding: '8px 0 0 0',
-                display: ownProfile && 'none',
                 cursor: 'pointer',
                 position: 'absolute'
               }}
-            />
+            />}
             <Label hide={(!ownProfile && !experience.length)} >
               Experience
             </Label>

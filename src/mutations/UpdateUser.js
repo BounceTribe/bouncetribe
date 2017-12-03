@@ -25,6 +25,7 @@ export default class UpdateUser extends Relay.Mutation {
   }
 
   getVariables () {
+    console.log('props', this.props);
     return {
       id: this.props.userId,
       name: this.props.name,
