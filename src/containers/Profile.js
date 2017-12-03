@@ -12,18 +12,16 @@ import ExperienceIcon from 'icons/Experience'
 import ImageEditor from 'components/ImageEditor'
 import EditMusicianInfo from 'components/EditMusicianInfo'
 import UpdateUser from 'mutations/UpdateUser'
-import {Async} from 'react-select'
 import 'react-select/dist/react-select.css'
 import 'theme/newSelect.css'
 import {handleValidator, isUniqueField} from 'utils/handles'
 import {purple} from 'theme'
-import MenuItem from 'material-ui/MenuItem'
 import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
 import {Dialog, TextField, FlatButton} from 'material-ui/'
-import {BtAvatar} from 'styled'
+import {BtAvatar, BtTagList} from 'styled'
 import Edit from 'icons/Edit'
 import {Panel} from 'components/Panel'
 import {url} from 'config'
@@ -42,13 +40,6 @@ class Profile extends Component {
     influences: [],
     experience: '',
     tab: 'activity',
-    experiences: [
-      { value: 'NOVICE', text: 'Novice (Just Started)' },
-      { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
-      { value: 'SKILLED', text: 'Skilled (3-9 Years)' },
-      { value: 'ACCOMPLISHED', text: 'Accomplished (10-24 Years)' },
-      { value: 'VETERAN', text: 'Veteran (25+ Years)' },
-    ],
     notification: false,
     btnStatus: '',
     editProfile: false,
@@ -67,14 +58,6 @@ class Profile extends Component {
 
   componentWillMount = () => {
     this.setState( (prevState, props) => {
-
-      let experiences = prevState.experiences.map(experience=>(
-        <MenuItem
-          primaryText={experience.text}
-          key={experience.value}
-          value={experience.value}
-        />
-      ))
       let {User} = this.props.viewer
       let genres = User.genres.edges.map(edge=>{
         let {node: genre} = edge
@@ -106,7 +89,6 @@ class Profile extends Component {
         genres,
         skills,
         influences,
-        experiences,
       }
     })
   }
@@ -162,7 +144,7 @@ class Profile extends Component {
   })
 
   addToTribe = () => {
-    console.log('CFQ Profile');
+    console.log('CFQ Profile')
     let {id: actorId} = this.props.viewer.user
     let {id: recipientId} = this.props.viewer.User
     this.props.relay.commitUpdate(
@@ -421,7 +403,7 @@ class Profile extends Component {
     return (
       <ProfileView>
         <Snackbar
-          open={notification ? true : false} //requires boolean input
+          open={!!notification} //requires boolean input
           message={notification}
           autoHideDuration={2000}
           onRequestClose={()=>this.setState({notification: false})}
@@ -441,10 +423,10 @@ class Profile extends Component {
           />
           <BotRight>
             <EditMusicianInfo
-              open={this.state.editMusicianInfo}
+              open={this.state.editMusicianInfo || true}
               user={user}
               onSave={this.musicianInfoSave}
-              onClose={()=>this.smusicianInfoClose()}
+              onClose={()=>this.musicianInfoClose()}
             />
             <Edit
               onClick={()=>{this.setState({editMusicianInfo: true})}}
@@ -452,7 +434,7 @@ class Profile extends Component {
               style={{
                 alignSelf: 'flex-end',
                 padding: '8px 0 0 0',
-                display: ownProfile ? '' : 'none',
+                display: ownProfile && 'none',
                 cursor: 'pointer',
                 position: 'absolute'
               }}
@@ -461,7 +443,7 @@ class Profile extends Component {
               Experience
             </Label>
             <ExperienceRow hide={(!ownProfile && !experience.length)} >
-              <ExperienceIcon style={{ marginRight: '5px' }} />
+              <ExperienceIcon style={{margin: '5px 5px 10px 0'}} />
               <Experience
                 value={formatEnum(experience)}
                 disabled
@@ -471,41 +453,15 @@ class Profile extends Component {
             <Label hide={(!ownProfile && !genres.length)} >
               Genres
             </Label>
-            <Async
-              value={genres}
-              multi
-              className={'async others'}
-              disabled
-              placeholder={'add your genres'}
-              style={{ display:(!genres.length) ? 'none':'',  margin: '4px 0 8px 0'}}
-            />
+            <BtTagList items={genres} />
             <Label hide={(!ownProfile && !skills.length)} >
               Skills
             </Label>
-            <Async
-              value={skills}
-              multi
-              className={'async others'}
-              disabled
-              placeholder={'add your skills'}
-              style={{
-                display: (!skills.length) ? 'none' : '',  margin: '4px 0 8px 0'
-              }}
-            />
+            <BtTagList items={skills}/>
             <Label hide={(!ownProfile && !influences.length)} >
               Influences
             </Label>
-            <Async
-              value={influences}
-              loadOptions={this.influenceOptions}
-              multi
-              className={'async influences others'}
-              disabled
-              placeholder={'add your influences'}
-              style={{
-                display: (!influences.length) ? 'none' : '', margin: '4px 0 8px 0'
-              }}
-            />
+            <BtTagList items={influences} grayTag />
           </BotRight>
         </BotRow>
       </ProfileView>

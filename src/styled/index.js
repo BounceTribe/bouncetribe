@@ -28,6 +28,33 @@ const PurpleBox = styled.div`
   font-weight: 400;
 `
 
+const BtTag = (props) => {
+  return <PurpleBox
+    style={{
+      height: `20px`,
+      padding: `7px 15px`,
+      margin: '5px 0 0 5px',
+      borderRadius: '24px',
+      fontSize: '14px',
+      color: props.grayTag && 'black',
+      backgroundColor: props.grayTag && '#D8D8D8',
+    }}>{props.text}
+  </PurpleBox>
+}
+
+export const BtTagList = (props) => {
+  return (
+    <div style={{padding: '5px 0'}}>
+      {props.items.map(item =>
+        <BtTag
+          key={item.value.spotifyId || item.value}
+          text={item.label}
+          {...props}/>
+        )}
+    </div>
+  )
+}
+
 // Purple box (or circle) with text -
 //visible only if value (or alwaysVis) is truthy
 export const BtTextMarker = (props) => {

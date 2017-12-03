@@ -12,12 +12,25 @@ import SelectField from 'material-ui/SelectField'
 import FlatButton from 'material-ui/FlatButton'
 import UpdateUser from 'mutations/UpdateUser'
 import {purple} from 'theme'
+import MenuItem from 'material-ui/MenuItem'
 
 export default class EditMusicianInfo extends Component {
 
   constructor(props) {
     super()
-    this.state = {...props}
+    this.state = Object.assign(...props, {
+      genres: [],
+      skills: [],
+      influences: [],
+      experience: '',
+      experiences: [
+        { value: 'NOVICE', text: 'Novice (Just Started)' },
+        { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
+        { value: 'SKILLED', text: 'Skilled (3-9 Years)' },
+        { value: 'ACCOMPLISHED', text: 'Accomplished (10-24 Years)' },
+        { value: 'VETERAN', text: 'Veteran (25+ Years)' },
+      ]
+    })
   }
 
 
@@ -46,34 +59,6 @@ export default class EditMusicianInfo extends Component {
   influenceOptions = (query) => {
     return new Promise( (resolve, reject) =>
       query ? searchArtists(query).then(options => resolve(options)) : resolve({options: []})
-    )
-  }
-
-  genreChange = (val) => {
-    let genresIds = val.map(genre=>genre.value)
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId: this.props.viewer.user.id, genresIds }), {
-        onSuccess: res => this.setState({ notification: `GENRE UPDATED` })
-      }
-    )
-  }
-
-  experienceChange = (experience) => {
-    let userId = this.props.viewer.user.id
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId, experience: experience.toUpperCase() }), {
-        onSuccess: res => this.setState({ notification: `EXPERIENCE UPDATED`})
-      }
-    )
-  }
-
-  skillChange = (val) => {
-    let skillsIds = val.map(skill => skill.value)
-    let userId = this.props.viewer.user.id
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId, skillsIds }), {
-        onSuccess: res => this.setState({ notification: `SKILLS UPDATED` })
-      }
     )
   }
 
@@ -110,7 +95,7 @@ export default class EditMusicianInfo extends Component {
     }
     Relay.Store.commitUpdate(
       new UpdateUser(updateObj),{
-        onSuccess: res => {this.props.onSave()},
+        onSuccess: res => this.props.onSave(),
         onFailure: res => {}//handle failure
       }
     )
@@ -118,8 +103,14 @@ export default class EditMusicianInfo extends Component {
 
 
   render() {
-    let {genres, skills, influences, experience, experiences} = this.state
-
+    let {genres, skills, influences, experience} = this.state
+    let experiences = this.state.experiences.map(experience=>(
+      <MenuItem
+        primaryText={experience.text}
+        key={experience.value}
+        value={experience.value}
+      />
+    ))
     return (
       <Dialog
         title={'Edit Musician Info'}
@@ -152,7 +143,7 @@ export default class EditMusicianInfo extends Component {
           <SelectField
             value={experience}
             fullWidth={true}
-            onChange={(e, index, value)=>{ this.experienceChange(value) }}
+            onChange={(e)=>this.setState({experience: e.value})}
             hintText={'add your experience'}
             selectedMenuItemStyle={{ color: purple }}
           >
@@ -163,7 +154,7 @@ export default class EditMusicianInfo extends Component {
         <Async
           loadOptions={this.loadGenres}
           value={genres}
-          onChange={this.genreChange}
+          onChange={(e)=>this.setState({ genres: e.value })}
           multi
           className={'async'}
           placeholder={'add your genres'}
@@ -173,7 +164,7 @@ export default class EditMusicianInfo extends Component {
         <Async
           loadOptions={this.loadSkills}
           value={skills}
-          onChange={this.skillChange}
+          onChange={(e)=>this.setState({ skills: e.value })}
           multi
           className={'async'}
           placeholder={'add your skills'}
@@ -184,7 +175,7 @@ export default class EditMusicianInfo extends Component {
           value={influences}
           loadOptions={this.influenceOptions}
           multi
-          onChange={this.influenceChange}
+          onChange={(e)=>this.setState({ influences: e.value })}
           className={'async influences'}
           placeholder={'add your influences'}
           style={{margin: '4px 0 8px 0'}}

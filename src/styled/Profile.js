@@ -182,6 +182,7 @@ export const BotRow = styled.div`
     box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
   `
 
+
 export const Label = styled.label`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   font-size: 15px;
