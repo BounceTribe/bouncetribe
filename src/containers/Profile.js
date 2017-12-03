@@ -28,27 +28,39 @@ import {url} from 'config'
 import {TribeButton} from 'components/TribeButton'
 import {acceptFriendRequest} from 'utils/updateCommits'
 import {isOnline} from 'utils/isOnline'
+import {mapUserInfo} from 'utils/mapUserInfo'
 
 
 
 class Profile extends Component {
 
-  state = {
-    imageEditorOpen: false,
-    genres: [],
-    skills: [],
-    influences: [],
-    experience: '',
-    tab: 'activity',
-    notification: false,
-    btnStatus: '',
-    editProfile: false,
-    editMusicianInfo: true,
-    userhandleError: '',
-    emailError: '',
-    summaryError: ''
-  }
+  constructor(props) {
+    super(props)
+    let {User} = this.props.viewer
+    let mappedInfo = mapUserInfo(props.viewer.User)
 
+    this.state = {
+      handle: User.handle || '',
+      placename: User.placename || '',
+      summary: User.summary || '',
+      portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
+      website: User.website || '',
+      email: User.email || '',
+      experience: User.experience || '',
+      genres: mappedInfo.genres,
+      skills: mappedInfo.skills,
+      influences: mappedInfo.influences,
+      imageEditorOpen: false,
+      tab: 'activity',
+      notification: false,
+      btnStatus: '',
+      editProfile: false,
+      editMusicianInfo: false,
+      userhandleError: '',
+      emailError: '',
+      summaryError: ''
+    }
+  }
   componentDidMount = () => {
     //TODO-J this is a redirect: maybe there's better way to handle w/ router
     // let location = this.props.router.location;
@@ -56,78 +68,15 @@ class Profile extends Component {
     console.log('profile mount props', this.props);
   }
 
-  componentWillMount = () => {
-    this.setState( (prevState, props) => {
-      let {User} = this.props.viewer
-      let genres = User.genres.edges.map(edge=>{
-        let {node: genre} = edge
-        return { value: genre.id, label: genre.name }
-      })
-      let skills = User.skills.edges.map(edge=>{
-        let {node: skill} = edge
-        return { value: skill.id, label: skill.name }
-      })
-      let influences = User.artistInfluences.edges.map(edge=>{
-        let {node: influence} = edge
-        return {
-          value: {
-            imageUrl: influence.imageUrl,
-            spotifyId: influence.spotifyId,
-            id: influence.id
-          },
-          label: influence.name
-        }
-      })
-      return {
-        handle: User.handle,
-        placename: User.placename || '',
-        summary: User.summary || '',
-        portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
-        website: User.website || '',
-        email: User.email || '',
-        experience: User.experience || '',
-        genres,
-        skills,
-        influences,
-      }
-    })
-  }
-
   componentWillReceiveProps (newProps) {
-    let {handle, placename, summary, portrait, score, projects, friends, website, email, genres, skills, artistInfluences, experience} = newProps.viewer.User
-    this.setState( (prevState, props) => {
-      let newGenres = genres.edges.map(edge=>{
-        let {node: genre} = edge
-        return { value: genre.id, label: genre.name }
-      })
-      let newSkills = skills.edges.map(edge=>{
-        let {node: skill} = edge
-        return { value: skill.id, label: skill.name }
-      })
-      let newInfluences = artistInfluences.edges.map(edge=>{
-        let {node: influence} = edge
-        let {imageUrl, spotifyId, id} = influence
-        return {
-          value: { imageUrl, spotifyId, id },
-          label: influence.name
-        }
-      })
-      return {
-        handle: handle || '',
-        placename: placename || '',
-        summary: summary || '',
-        score: score || 0,
-        website: website || '',
-        email: email || '',
+    let {portrait, projects, friends} = newProps.viewer.User
+    let mappedInfo = mapUserInfo(newProps.viewer.User)
+    this.setState(
+      Object.assign(this.state, mappedInfo, {
         portraitUrl: (portrait || {}).url || `${url}/logo.png`,
         projects: projects.count,
         friends: friends.count,
-        genres: newGenres,
-        skills: newSkills,
-        influences: newInfluences,
-        experience: experience || '',
-      }
-    })
+    }))
     // let oldHandle = this.props.viewer.User.handle
     // console.log(oldHandle, handle);
     // if (oldHandle !== handle) {
@@ -230,7 +179,7 @@ class Profile extends Component {
 
   musicianInfoSave = () => {
     this.setState( {
-      snackbarText: 'INFO UPDATED',
+      notification: 'INFO UPDATED',
       editMusicianInfo: false
     } )
   }
@@ -416,7 +365,7 @@ class Profile extends Component {
             locks={[false, false, false]}
             values={[0,0,0]}
             content={this.props.children}
-          />  
+          />
           <BotRight>
             {(this.state.editMusicianInfo) && <EditMusicianInfo
               {...this.state}

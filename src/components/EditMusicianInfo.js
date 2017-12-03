@@ -21,9 +21,6 @@ export default class EditMusicianInfo extends Component {
   constructor(props) {
     super(props)
     this.state = Object.assign({...this.props}, {
-      allGenres: [],
-      allSkills: [],
-      experience: '',
       experiences: [
         { value: 'NOVICE', text: 'Novice (Just Started)' },
         { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
@@ -55,9 +52,7 @@ export default class EditMusicianInfo extends Component {
 
   influenceOptions = (query) => {
     return new Promise( (resolve, reject) =>
-      query ? searchArtists(query).then(options => {
-        console.log('infopt', options);
-        resolve(options)}) : resolve({options: []})
+      query ? searchArtists(query).then(options => resolve(options)) : resolve({options: []})
     )
   }
 
@@ -84,26 +79,14 @@ export default class EditMusicianInfo extends Component {
   //   }
   // }
 
-  // genreChange = (val) => {
-  //   let genresIds = val.map(genre=>genre.value)
-  //   this.props.relay.commitUpdate(
-  //     new UpdateUser({ userId: this.props.viewer.user.id, genresIds }), {
-  //       onSuccess: res => this.setState({ notification: `GENRE UPDATED` })
-  //     }
-  //   )
-  // }
-
   sendUpdate = () => {
-
     let updateObj = {
       userId: this.props.user.id,
-      genresIds: this.state.genres.map(genre=>genre.value),
-      skillsIds: this.state.skills.map(shill=>shill.value),
-      // experience: this.state.experience,
+      genresIds: this.state.genres.map(genre=>genre.value || genre),
+      skillsIds: this.state.skills.map(skill=>skill.value || skill),
+      experience: this.state.experience.toUpperCase(),
       artistInfluencesIds: this.state.influences.map(option=>option.value.id)
     }
-
-    // let updateObj = Object.assign({userId}, this.state)
     Relay.Store.commitUpdate(
       new UpdateUser(updateObj),{
         onSuccess: res => this.props.onSave(),
@@ -146,9 +129,9 @@ export default class EditMusicianInfo extends Component {
         <ExperienceRow>
           <ExperienceIcon style={{ marginRight: '5px' }} />
           <SelectField
-            value={formatEnum(experience)}
+            value={experience}
             fullWidth={true}
-            onChange={(e)=>this.setState({experience: e.value})}
+            onChange={(e,i,val)=>this.setState({experience: val})}
             hintText={'add your experience'}
             selectedMenuItemStyle={{ color: purple }}
           >
