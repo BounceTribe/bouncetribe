@@ -21,6 +21,8 @@ export default class EditMusicianInfo extends Component {
     this.state = Object.assign(...props, {
       genres: [],
       skills: [],
+      allGenres: [],
+      allSkills: [],
       influences: [],
       experience: '',
       experiences: [
@@ -33,6 +35,14 @@ export default class EditMusicianInfo extends Component {
     })
   }
 
+  componentDidMount() {
+    getAllGenres().then(allGenres=>
+      this.setState(allGenres)
+    )
+    getAllSkills().then(allSkills=>
+      this.setState(allSkills)
+    )
+  }
 
   loadGenres = () => {
     return new Promise( (resolve, reject)=> {
@@ -40,6 +50,7 @@ export default class EditMusicianInfo extends Component {
         let options = allGenres.map(genre=>{
           return { value: genre.id, label: genre.name }
         })
+        console.log('genres', options);
         resolve({options})
       })
     })
@@ -104,6 +115,7 @@ export default class EditMusicianInfo extends Component {
 
   render() {
     console.log('state', this.state);
+    console.log('options', this.influenceOptions());
     let {genres, skills, influences, experience} = this.state
     let experiences = this.state.experiences.map(experience=>(
       <MenuItem

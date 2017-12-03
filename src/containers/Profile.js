@@ -235,10 +235,6 @@ class Profile extends Component {
     } )
   }
 
-  musicianInfoClose = () => {
-    this.setState({editMusicianInfo: false})
-  }
-
   topRow = () => {
     let { handle,
           imageEditorOpen,
@@ -423,10 +419,11 @@ class Profile extends Component {
           />
           <BotRight>
             <EditMusicianInfo
+              {...this.state}
               open={this.state.editMusicianInfo || true}
               user={user}
-              onSave={this.musicianInfoSave}
-              onClose={()=>this.musicianInfoClose()}
+              onSave={()=>this.musicianInfoSave}
+              onClose={()=>this.setState({editMusicianInfo: false})}
             />
             <Edit
               onClick={()=>{this.setState({editMusicianInfo: true})}}
