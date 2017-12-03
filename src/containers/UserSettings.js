@@ -156,7 +156,6 @@ class UserSettings extends Component {
             Your BounceTribe account is currently deactivated
           </h4>
         : emailPassword}
-
         <Toggle
           label={user.deactivated ? "Activate Account" : "Active Account"}
           toggled={!this.state.deactivated}

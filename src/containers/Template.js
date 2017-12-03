@@ -167,8 +167,8 @@ class Template extends Component {
 
   settingsSave = (passSave) => {
     this.setState( {
-        snackbarText: passSave ? 'PASSWORD CHANGED' : 'SETTINGS CHANGED',
-        settings: passSave ? true : false
+      snackbarText: passSave ? 'PASSWORD CHANGED' : 'SETTINGS CHANGED',
+      settings: passSave ? true : false
     } )
   }
 

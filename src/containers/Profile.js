@@ -5,20 +5,18 @@ import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
-import Email from 'icons/Email'
+// import Email from 'icons/Email'
 import Link from 'icons/Link'
 import Online from 'icons/Online'
 import ExperienceIcon from 'icons/Experience'
 import ImageEditor from 'components/ImageEditor'
+import EditMusicianInfo from 'components/EditMusicianInfo'
 import UpdateUser from 'mutations/UpdateUser'
 import {Async} from 'react-select'
 import 'react-select/dist/react-select.css'
 import 'theme/newSelect.css'
-import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
-import searchArtists from 'utils/searchArtists'
 import {handleValidator, isUniqueField} from 'utils/handles'
 import {purple} from 'theme'
-import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
@@ -54,14 +52,15 @@ class Profile extends Component {
     notification: false,
     btnStatus: '',
     editProfile: false,
+    editMusicianInfo: false,
     userhandleError: '',
     emailError: '',
     summaryError: ''
   }
+
   componentDidMount = () => {
     //TODO-J this is a redirect: maybe there's better way to handle w/ router
     // let location = this.props.router.location;
-
     this.props.router.push(`/${this.props.router.params.theirHandle}/activity`)
     console.log('profile mount props', this.props);
   }
@@ -217,57 +216,6 @@ class Profile extends Component {
     this.setState({summary: val, summaryError: error})
   }
 
-  genreChange = (val) => {
-    let genresIds = val.map(genre=>genre.value)
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId: this.props.viewer.user.id, genresIds }), {
-        onSuccess: res => this.setState({ notification: `GENRE UPDATED` })
-      }
-    )
-  }
-
-  experienceChange = (experience) => {
-    let userId = this.props.viewer.user.id
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId, experience: experience.toUpperCase() }), {
-        onSuccess: res => this.setState({ notification: `EXPERIENCE UPDATED`})
-      }
-    )
-  }
-
-  skillChange = (val) => {
-    let skillsIds = val.map(skill => skill.value)
-    let userId = this.props.viewer.user.id
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId, skillsIds }), {
-        onSuccess: res => this.setState({ notification: `SKILLS UPDATED` })
-      }
-    )
-  }
-
-  influenceChange = (options) => {
-    if (options.length < this.state.influences.length) {
-      let artistInfluencesIds = options.map((option) => option.value.id)
-      let userId = this.props.viewer.user.id
-      this.props.relay.commitUpdate(
-        new UpdateUser({userId,artistInfluencesIds}), {
-          onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
-        }
-      )
-    } else {
-      let newInfluence = options.find((option) => !option.value.id)
-      ensureBtArtistExists(newInfluence).then(artistId => {
-        let artistInfluencesIds = options.map(option=>option.value.id || artistId)
-        let userId = this.props.viewer.user.id
-        this.props.relay.commitUpdate(
-          new UpdateUser({userId,artistInfluencesIds}),{
-            onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
-          }
-        )
-      })
-    }
-  }
-
   portraitSuccess = (file) => {
     this.setState({imageEditorOpen: false})
     this.props.relay.commitUpdate(
@@ -278,32 +226,6 @@ class Profile extends Component {
         onSuccess: success => console.log(success),
         failure: failure => console.log('fail', failure)
       }
-    )
-  }
-
-  loadGenres = () => {
-    return new Promise( (resolve, reject)=> {
-      getAllGenres().then(allGenres=>{
-        let options = allGenres.map(genre=>{
-          return { value: genre.id, label: genre.name }
-        })
-        resolve({options})
-      })
-    })
-  }
-  loadSkills = () => {
-    return new Promise( (resolve, reject)=> {
-      getAllSkills().then(allSkills=>{
-        let options = allSkills.map(skill=>{
-          return { value: skill.id, label: skill.name }
-        })
-        resolve({options})
-      })
-    })
-  }
-  influenceOptions = (query) => {
-    return new Promise( (resolve, reject) =>
-      query ? searchArtists(query).then(options => resolve(options)) : resolve({options: []})
     )
   }
 
@@ -322,6 +244,17 @@ class Profile extends Component {
           this.setState({ notification: `PROFILE UPDATED`, editProfile: false })
       }
     )
+  }
+
+  musicianInfoSave = () => {
+    this.setState( {
+      snackbarText: 'INFO UPDATED',
+      editMusicianInfo: false
+    } )
+  }
+
+  musicianInfoClose = () => {
+    this.setState({editMusicianInfo: false})
   }
 
   topRow = () => {
@@ -366,7 +299,7 @@ class Profile extends Component {
           />,
           <FlatButton
             label="Submit"
-            primary={true}
+            primary
             disabled={!!userhandleError || !!emailError || !!summaryError}
             onClick={this.setProfile}
           />
@@ -500,68 +433,63 @@ class Profile extends Component {
           <Panel
             tab={this.state.tab}
             topBar={null}
-            tabChange={(tab)=>this.setTab(tab)}
+            tabChange={tab=>this.setTab(tab)}
             labels={['activity', 'projects', 'bounces']}
             locks={[false, false, false]}
             values={[0,0,0]}
             content={this.props.children}
           />
           <BotRight>
+            <EditMusicianInfo
+              open={this.state.editMusicianInfo}
+              user={user}
+              onSave={this.musicianInfoSave}
+              onClose={()=>this.smusicianInfoClose()}
+            />
+            <Edit
+              onClick={()=>{this.setState({editMusicianInfo: true})}}
+              fill={purple}
+              style={{
+                alignSelf: 'flex-end',
+                padding: '8px 0 0 0',
+                display: ownProfile ? '' : 'none',
+                cursor: 'pointer',
+                position: 'absolute'
+              }}
+            />
             <Label hide={(!ownProfile && !experience.length)} >
               Experience
             </Label>
-            {(ownProfile) ? (
-              <ExperienceRow>
-                <ExperienceIcon
-                  style={{ marginRight: '5px' }} />
-                <SelectField
-                  value={experience}
-                  fullWidth={true}
-                  onChange={(e, index, value)=>{ this.experienceChange(value) }}
-                  disabled={(!ownProfile)}
-                  hintText={'add your experience'}
-                  selectedMenuItemStyle={{ color: purple }}
-                >
-                  {experiences}
-                </SelectField>
-              </ExperienceRow>
-            ) : (
-              <ExperienceRow hide={(!ownProfile && !experience.length)} >
-                <ExperienceIcon style={{ marginRight: '5px' }} />
-                <Experience
-                  value={formatEnum(experience)}
-                  disabled={true}
-                  placeholder={'experience'}
-                />
-              </ExperienceRow>
-            )}
-
+            <ExperienceRow hide={(!ownProfile && !experience.length)} >
+              <ExperienceIcon style={{ marginRight: '5px' }} />
+              <Experience
+                value={formatEnum(experience)}
+                disabled
+                placeholder={'experience'}
+              />
+            </ExperienceRow>
             <Label hide={(!ownProfile && !genres.length)} >
               Genres
             </Label>
             <Async
-              loadOptions={this.loadGenres}
               value={genres}
-              onChange={this.genreChange}
               multi
-              className={(ownProfile) ? 'async' : 'async others'}
-              disabled={!ownProfile}
+              className={'async others'}
+              disabled
               placeholder={'add your genres'}
-              style={{ display:(!ownProfile && !genres.length) ? 'none':'',  margin: '4px 0 8px 0'}}
+              style={{ display:(!genres.length) ? 'none':'',  margin: '4px 0 8px 0'}}
             />
             <Label hide={(!ownProfile && !skills.length)} >
               Skills
             </Label>
             <Async
-              loadOptions={this.loadSkills}
               value={skills}
-              onChange={this.skillChange}
               multi
-              className={(ownProfile) ? 'async' : 'async others'}
-              disabled={!ownProfile}
+              className={'async others'}
+              disabled
               placeholder={'add your skills'}
               style={{
-                display: (!ownProfile && !skills.length) ? 'none' : '',  margin: '4px 0 8px 0'
+                display: (!skills.length) ? 'none' : '',  margin: '4px 0 8px 0'
               }}
             />
             <Label hide={(!ownProfile && !influences.length)} >
@@ -571,12 +499,11 @@ class Profile extends Component {
               value={influences}
               loadOptions={this.influenceOptions}
               multi
-              onChange={this.influenceChange}
-              className={(ownProfile) ? 'async influences' : 'async influences others'}
-              disabled={!ownProfile}
+              className={'async influences others'}
+              disabled
               placeholder={'add your influences'}
               style={{
-                display: (!ownProfile && !influences.length) ? 'none' : '', margin: '4px 0 8px 0'
+                display: (!influences.length) ? 'none' : '', margin: '4px 0 8px 0'
               }}
             />
           </BotRight>
