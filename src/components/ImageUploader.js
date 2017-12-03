@@ -86,7 +86,7 @@ export default class ImageUploader extends Component {
             onClick={this.uploadImage}
             primary
             style={{alignSelf: 'center', margin: '10px'}}
-            // disabled={!(this.state.pixel || this.state.correctAspect)}
+            disabled={!(this.state.pixel || this.state.correctAspect)}
           />
         </div>
       )
