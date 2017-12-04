@@ -11,16 +11,15 @@ import Online from 'icons/Online'
 import ExperienceIcon from 'icons/Experience'
 import ImageEditor from 'components/ImageEditor'
 import EditMusicianInfo from 'components/EditMusicianInfo'
+import EditProfile from 'components/EditProfile'
 import UpdateUser from 'mutations/UpdateUser'
 import 'react-select/dist/react-select.css'
 import 'theme/newSelect.css'
-import {handleValidator, isUniqueField} from 'utils/handles'
 import {purple} from 'theme'
 import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
-import {Dialog, TextField, FlatButton} from 'material-ui/'
 import {BtAvatar, BtTagList} from 'styled'
 import Edit from 'icons/Edit'
 import {Panel} from 'components/Panel'
@@ -47,24 +46,28 @@ class Profile extends Component {
       website: User.website || '',
       email: User.email || '',
       experience: User.experience || '',
+      score: User.score || 0,
       genres: mappedInfo.genres,
       skills: mappedInfo.skills,
       influences: mappedInfo.influences,
+      projects: User.projects.count,
+      friends: User.friends.count,
       imageEditorOpen: false,
       tab: 'activity',
       notification: false,
       btnStatus: '',
       editProfile: false,
       editMusicianInfo: false,
-      userhandleError: '',
-      emailError: '',
-      summaryError: ''
     }
   }
-  componentDidMount = () => {
-    //TODO-J this is a redirect: maybe there's better way to handle w/ router
-    // let location = this.props.router.location;
-    this.props.router.push(`/${this.props.router.params.theirHandle}/activity`)
+  componentWillMount = () => {
+    let {theirHandle} = this.props.router.params
+    if (location.pathname!==(
+      `/${theirHandle}/activity` ||
+      `/${theirHandle}/projects` ||
+      `/${theirHandle}/bounces` )) {
+      this.props.router.push(`/${theirHandle}/activity`)
+    }
     console.log('profile mount props', this.props);
   }
 
@@ -77,11 +80,6 @@ class Profile extends Component {
         projects: projects.count,
         friends: friends.count,
     }))
-    // let oldHandle = this.props.viewer.User.handle
-    // console.log(oldHandle, handle);
-    // if (oldHandle !== handle) {
-    //   this.props.router.push(`/${handle}`)
-    // }
   }
 
   accept = (requestId) => acceptFriendRequest({
@@ -119,34 +117,6 @@ class Profile extends Component {
     )
   }
 
-  handleSet = (val) =>{
-    let {handle: newHandle, error} = handleValidator(val)
-    if (val!==this.props.viewer.User.handle) {
-      isUniqueField(val, 'email').then( result =>
-        !result && this.setState({emailError: 'Email already in use!'})
-      )
-    }
-    this.setState({ handle: newHandle, userhandleError: error })
-  }
-
-  emailSet = (val) => {
-    let error = ''
-    if (val!==this.props.viewer.User.email) {
-      isUniqueField(val, 'email').then( result => {
-        if (!result) error='Email already in use!'
-      })
-    }
-    this.setState({ email: val,  emailError: error })
-  }
-
-  summarySet = (val) => {
-    console.log('summary', val, val.length);
-    let error = ''
-    if (val.split(/\r\n|\r|\n/).length > 15) error='Too many lines'
-    if (val.length > 400) error='500 character limit exceeded'
-    this.setState({summary: val, summaryError: error})
-  }
-
   portraitSuccess = (file) => {
     this.setState({imageEditorOpen: false})
     this.props.relay.commitUpdate(
@@ -166,17 +136,6 @@ class Profile extends Component {
     // window.scrollTo(0, document.body.scrollHeight)
   }
 
-  setProfile = () => {
-    let {handle, placename, summary, email, website} = this.state
-    let userId = this.props.viewer.user.id
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId, handle, placename, summary, email, website }), {
-        onSuccess: (success) =>
-          this.setState({ notification: `PROFILE UPDATED`, editProfile: false })
-      }
-    )
-  }
-
   musicianInfoSave = () => {
     this.setState( {
       notification: 'INFO UPDATED',
@@ -184,23 +143,26 @@ class Profile extends Component {
     } )
   }
 
+  profileSave = () => {
+    this.setState( {
+      notification: 'PROFILE UPDATED',
+      editProfile: false
+    } )
+  }
+
   topRow = () => {
-    let { handle,
-          imageEditorOpen,
-          placename,
-          summary,
-          website,
-          email,
-          userhandleError,
-          emailError,
-          summaryError} = this.state
+    let { imageEditorOpen, projects, friends, score } = this.state
     let {User, user} = this.props.viewer
-    let {score} = User
-    let projects = User.projects.count
-    let friends = User.friends.count
     let ownProfile = (User.id === user.id)
     return (
     <Top>
+      {this.state.editProfile && <EditProfile
+        open={true}
+        user={this.state}
+        userId={User.id}
+        onSave={()=>this.profileSave()}
+        onClose={()=>this.setState({editProfile: false})}
+      />}
       <Edit
         onClick={()=>{this.setState({editProfile: true})}}
         fill={purple}
@@ -212,63 +174,9 @@ class Profile extends Component {
           position: 'absolute'
         }}
       />
-      <Dialog
-        title={"Edit Profile"}
-        modal
-        autoScrollBodyContent
-        open={this.state.editProfile}
-        onRequestClose={()=>{ this.setState({editProfile: false}) }}
-        titleStyle={{ fontSize: '28px' }}
-        actions={[
-          <FlatButton
-            label="Cancel"
-            onClick={()=>this.setState({editProfile: false})}
-          />,
-          <FlatButton
-            label="Submit"
-            primary
-            disabled={!!userhandleError || !!emailError || !!summaryError}
-            onClick={this.setProfile}
-          />
-        ]}>
-        <TextField
-          floatingLabelText={'Handle'}
-          errorText={userhandleError}
-          value={handle}
-          onChange={(e)=>this.handleSet(e.target.value)}
-        /><br />
-        <TextField
-          floatingLabelText={'Location'}
-          value={placename}
-          onChange={(e)=>this.setState({placename: e.target.value})}
-        /><br />
-        <TextField
-          floatingLabelText={'Summary'}
-          errorText={summaryError}
-          value={summary}
-          onChange={(e)=>this.summarySet(e.target.value)}
-          multiLine
-          rowsMax={5}
-          fullWidth
-        /><br />
-        <TextField
-          floatingLabelText={'Email'}
-          errorText={emailError}
-          value={email}
-          onChange={(e)=>this.emailSet(e.target.value)}
-        /><br />
-        <TextField
-          floatingLabelText={'Website'}
-          value={website}
-          onChange={(e)=>this.setState({website: e.target.value})}
-        />
-      </Dialog>
       <Row>
         <SubRow>
-          <BtAvatar user={this.props.viewer.User}
-            size={150}
-            hideStatus
-            pointer={ownProfile}
+          <BtAvatar size={150} hideStatus user={User} pointer={ownProfile}
             onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
           />
           <ImageEditor
@@ -280,7 +188,7 @@ class Profile extends Component {
           <TopCol>
             <Handle>
               {User.handle}
-              {!ownProfile && isOnline(User) && <Online size={20} online/>}
+              {!ownProfile && isOnline(User) && <Online size={20} online />}
             </Handle>
             <Location>
               {(User.placename || ownProfile) &&
@@ -310,6 +218,15 @@ class Profile extends Component {
       {(User.summary || User.email || User.website || ownProfile) && <Divider/>}
       <Row>
         <Left>
+          <EmailWebsite>
+            {(User.website || ownProfile) &&
+              <Link style={{marginRight: '10px'}}/>}
+            {User.website}
+            <MissingUserData hide={User.website || !ownProfile}
+              onClick={()=>{this.setState({editProfile: true})}}>
+              Add your website
+            </MissingUserData>
+          </EmailWebsite>
           <Summary>
             {User.summary}
             <MissingUserData hide={User.summary || !ownProfile}
@@ -327,15 +244,6 @@ class Profile extends Component {
               Add your email
             </MissingUserData>
           </EmailWebsite> */}
-          <EmailWebsite>
-            {(User.website || ownProfile) &&
-              <Link style={{marginRight: '10px'}}/>}
-            {User.website}
-            <MissingUserData hide={User.website || !ownProfile}
-              onClick={()=>{this.setState({editProfile: true})}}>
-              Add your website
-            </MissingUserData>
-          </EmailWebsite>
         </Right>
       </Row>
     </Top>)
@@ -367,10 +275,10 @@ class Profile extends Component {
             content={this.props.children}
           />
           <BotRight>
-            {(this.state.editMusicianInfo) && <EditMusicianInfo
+            {this.state.editMusicianInfo && <EditMusicianInfo
               {...this.state}
               open={true}
-              user={user}
+              user={User}
               onSave={()=>this.musicianInfoSave()}
               onClose={()=>this.setState({editMusicianInfo: false})}
             />}
@@ -449,7 +357,6 @@ export default Relay.createContainer(
                 }
               }
             }
-            doNotEmail
             sentRequests (
               filter: {
                 accepted: false

@@ -73,6 +73,23 @@ class Project extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log('newprops')
+    let focus
+    let oldCommentIds = this.state.comments.edges.map(edge=>edge.node.id)
+    this.setState(prevState=>{
+        let active = prevState.active
+        nextProps.viewer.allProjects.edges[0].node.comments.edges.forEach( (edge, index) => {
+          if (!oldCommentIds.includes(edge.node.id)) {
+            active.push(index)
+            focus= edge.node.id
+          }
+        })
+        return { focus, active }
+      }
+    )
+  }
+
   componentWillMount () {
     let notFriends = !this.isFriends
     if (
@@ -704,19 +721,3 @@ export default Relay.createContainer(
     }
   }
 )
-// componentWillReceiveProps(nextProps) {
-  // let focus
-  // let oldCommentIds = this.state.comments.edges.map(edge=>edge.node.id)
-  // this.setState(
-  //   (prevState)=>{
-  //     let active = prevState.active
-  //     nextProps.viewer.allProjects.edges[0].node.comments.edges.forEach( (edge, index) => {
-  //       if (!oldCommentIds.includes(edge.node.id)) {
-  //         active.push(index)
-  //         focus= edge.node.id
-  //       }
-  //     })
-  //     return { focus, active }
-  //   }
-  // )
-// }

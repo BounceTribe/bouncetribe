@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import Dialog from 'material-ui/Dialog'
 import {Label, ExperienceRow} from 'styled/Profile'
-import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
+import {getAllGenres, getAllSkills} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
 import {Async} from 'react-select'
 import 'react-select/dist/react-select.css'
@@ -13,8 +13,7 @@ import FlatButton from 'material-ui/FlatButton'
 import UpdateUser from 'mutations/UpdateUser'
 import {purple} from 'theme'
 import MenuItem from 'material-ui/MenuItem'
-import {formatEnum} from 'utils/strings'
-
+// import {formatEnum} from 'utils/strings'
 
 export default class EditMusicianInfo extends Component {
 

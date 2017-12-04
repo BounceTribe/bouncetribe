@@ -50,6 +50,7 @@ export const Left = styled.div`
   display: flex;
   flex-direction: column;
   width: 70%;
+  min-height: 100px;
   padding-right: 50px;
 `
 
@@ -125,16 +126,16 @@ export const Score = styled.span`
   margin-left: 10px;
 `
 
-export const Summary = styled.p`
+export const Summary = styled.pre`
   font-size: 14px;
-  line-height: 24px;
+  line-height: 20px;
   color: ${grey800};
-  min-height: 100px;
   white-space: pre-wrap;
 `
+
 export const EmailWebsite = styled.span`
   display: ${props => props.hide ? 'none' : 'inline-flex'};
-  margin: 0 50px 10px 10px;
+  ${'' /* margin: 0 50px 10px 10px; */}
   font-size: 14px;
   color: #4A4A4A;
 `
