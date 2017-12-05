@@ -31,12 +31,10 @@ class TopNav extends Component {
   render() {
     let {portraitUrl, user} = this.props
     let {handle} = user
-    let friendHandle = user.friends.edges.length ? user.friends.edges[0].node.handle : null
-
     return (
       <Bar>
         {/* <div onClick={()=>this.props.redirect()}> */}
-          <Logo to={`/dash/${friendHandle ? friendHandle + '/projects' : '' }`} />
+          <Logo to={`/dash/}`} />
         {/* </div> */}
         <NavList>
           {/* <NavLink to={`/tribe/${handle}/find`} >

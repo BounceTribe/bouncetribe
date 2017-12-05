@@ -24,9 +24,7 @@ class Template extends Component {
 
   constructor(props) {
     super(props)
-    console.log({props});
     this.pathCheck(this.props)
-
     this.ping()
     let intervalId = setInterval(this.ping, 300000)
 
