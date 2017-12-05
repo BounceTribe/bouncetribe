@@ -3,6 +3,7 @@ import Relay from 'react-relay'
 import {FbList, SendInviteBtn, DialogSpacer, DialogRow, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, DashProfile, BotRow, UpperInvite} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {EmptyPanel} from 'components/EmptyPanel'
+import {ActivityList} from 'components/ActivityList'
 import {Dialog, TextField, Snackbar} from 'material-ui'
 import {grey400, purple} from 'theme'
 import Tribe from 'icons/Tribe'
@@ -36,22 +37,22 @@ class Dashboard extends Component {
     }
   }
 
+  componentWillMount() {console.log('first?')}
+
   componentDidMount() {
-    let edges = this.props.viewer.user.friends.edges
-    if (edges.length) {
-      let foundUser = edges.find(edge =>
-        edge.node.handle === this.props.params.theirHandle)
+    let friends = this.props.viewer.user.friends.edges.map(edge=>edge.node)
+    if (friends.length) {
+      let foundUser = friends.find(edge =>
+        edge.handle === this.props.params.theirHandle)
       if (foundUser) {
-        this.setState( {selectedUser: foundUser.node || {}} )
+        this.setState( {selectedUser: foundUser || {}} )
       } else {
-        this.selectUser(edges[0].node)
-        this.props.router.push(`/dash/${edges[0].node.handle}/projects`)
+        this.selectUser(friends[0])
+        this.props.router.push(`/dash/${friends[0].handle}/projects`)
       }
     } else {
       console.log('dash no tribe');
-      //notribe
     }
-    this.suggestFriends(this.state.maxSuggestedFriends)
   }
 
   componentWillUnmount() {
@@ -60,7 +61,13 @@ class Dashboard extends Component {
     localStorage.removeItem('message')
   }
 
+  inviteDialog = () => {
+    this.setState({invite: true})
+    this.suggestFriends()
+  }
+
   suggestFriends = (max) => {
+    max = max || this.state.maxSuggestedFriends
     suggestedFriends(this.props.viewer.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
         let list = suggestions.slice(0, max).map( friend =>
@@ -69,7 +76,7 @@ class Dashboard extends Component {
             createFriendRequest={() => this.createFriendRequest(friend.id)}
             friend={friend} />
         )
-        return {suggestions: list}
+        return {suggestions: list, invite: true}
       })
     })
   }
@@ -118,6 +125,38 @@ class Dashboard extends Component {
     this.props.router.push('/dash/' + this.state.selectedUser.handle + '/' + tab + '/' + this.props.viewer.user.handle)
     this.setState({ tab })
     // window.scrollTo(0, document.body.scrollHeight)
+  }
+
+  panelContent = ({tab, selectedUser}) => {
+    if (selectedUser.id) {
+      return (
+        <Panel
+          tab={tab}
+          topBar={<DashProfile selectedUser={selectedUser} />}
+          tabChange={(newTab)=>this.setTab(newTab)}
+          labels={['projects', 'bounces', 'messages']}
+          locks={[false, false, false]}
+          values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
+          content={this.state.selectedUser && this.props.children}
+          scroll={true} />
+        )
+    } else if (!this.props.viewer.user.friends.count) {
+      return (
+        <Panel empty
+          content={
+            <EmptyPanel
+              icon={<Tribe height={93} fill={"#D3D3D3"} />}
+              headline={`It's a little quiet here...`}
+              note={`Invite your friends to begin building your tribe`}
+              btnLabel={`Invite Friends`}
+              btnClick={()=>this.inviteDialog()}
+            />}
+        />
+      )
+    } else {
+
+    }
+
   }
 
   render () {
@@ -176,7 +215,7 @@ class Dashboard extends Component {
               <IconText>My Tribe</IconText>
             </IconTextContainer>
             <InviteButton
-              onClick={()=>{this.setState({invite: true})}}
+              onClick={()=>{this.inviteDialog()}}
               text={'Invite Member'} />
           </DashHeaderRow>
         </DashHeader>
@@ -187,7 +226,7 @@ class Dashboard extends Component {
               select={this.selectUser}
               selected={selectedUser}
               friends={user.friends}
-              inviteTribe={() => this.setState({invite: true}) }
+              inviteTribe={() => this.inviteDialog() }
               showTribe={this.state.showTribe}
               flipTribe={() => this.setState({showTribe:  !this.state.showTribe})}
               mentors={user.mentors} //TODO
@@ -197,26 +236,7 @@ class Dashboard extends Component {
                 this.setState({showMentors: !this.state.showMentors})}
               />
           </DashLeft>
-          {selectedUser.id ?
-            <Panel
-              tab={tab}
-              topBar={<DashProfile selectedUser={selectedUser} />}
-              tabChange={(newTab)=>this.setTab(newTab)}
-              labels={['projects', 'bounces', 'messages']}
-              locks={[false, false, false]}
-              values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
-              content={this.state.selectedUser && this.props.children}
-              scroll={true} />
-            :
-            <Panel empty
-              content={
-                <EmptyPanel
-                  icon={<Tribe height={93} fill={"#D3D3D3"} />}
-                  headline={`It's a little quiet here...`}
-                  note={`Invite your friends to begin building your tribe`}
-                  btnLabel={`Invite Friends`}
-                  btnClick={()=>this.setState({invite: true})}/>}/>
-          }
+          {this.panelContent({tab, selectedUser})}
         </BotRow>
       </DashView>
     )
@@ -224,7 +244,13 @@ class Dashboard extends Component {
  }
 
  export default Relay.createContainer( Dashboard, {
-    initialVariables: { theirHandle: ''},
+    initialVariables: { theirHandle: '', userHandle: ''},
+    prepareVariables: (urlParams) => {
+      console.log('prep PRAMS', urlParams);
+      return {
+
+      }
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -244,7 +270,7 @@ class Dashboard extends Component {
                 node {
                   id
                   handle
-                  # score
+                  score
                   lastPing
                   bounces { count }
                   projects { count }
