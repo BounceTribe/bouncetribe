@@ -18,6 +18,7 @@ import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
 import ProjectsPanel from 'containers/ProjectsPanel'
 import DirectMessages from 'containers/DirectMessages'
+import Feed from 'containers/Feed'
 import BouncesPanel from 'containers/BouncesPanel'
 import ActivitiesPanel from 'containers/ActivitiesPanel'
 import {Loading} from 'styled/Spinner'
@@ -98,6 +99,10 @@ const createRoutes = () => (
       component={Dashboard}
       queries={ViewerQuery}
       render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
+      <IndexRoute
+        component={Feed}
+        queries={ViewerQuery}
+        render={({props}) => props ? <Feed {...props} /> : <Loading nested />} />
       <Route path='/dash/:theirHandle/projects(/:userHandle)'
         component={ProjectsPanel}
         queries={ViewerQuery}
