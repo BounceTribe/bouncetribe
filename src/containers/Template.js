@@ -25,10 +25,6 @@ class Template extends Component {
   constructor(props) {
     super(props)
     this.pathCheck(this.props)
-    this.props.relay.setVariables({
-      userHandle: this.props.viewer.user.handle
-    })
-    
     this.ping()
     let intervalId = setInterval(this.ping, 300000)
 

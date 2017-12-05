@@ -1,0 +1,62 @@
+[
+  {
+    "timestamp": "2017-12-05T12:28:40.784Z",
+    "streakMinutes": null,
+    "isStreak": false,
+    "totalHours": 0
+  },
+  {
+    "timestamp": "2017-12-05T12:28:50.590Z",
+    "streakMinutes": 0.16343333333333335,
+    "isStreak": true,
+    "totalHours": 0.002723888888888889
+  },
+  {
+    "timestamp": "2017-12-05T12:29:02.517Z",
+    "streakMinutes": 0.3622166666666667,
+    "isStreak": true,
+    "totalHours": 0.006036944444444445
+  },
+  {
+    "timestamp": "2017-12-05T18:36:16.810Z",
+    "streakMinutes": 0,
+    "isStreak": false,
+    "totalHours": 0.006036944444444445
+  },
+  {
+    "timestamp": "2017-12-05T18:36:44.764Z",
+    "streakMinutes": 0.4659,
+    "isStreak": true,
+    "totalHours": 0.013801944444444443
+  },
+  {
+    "timestamp": "2017-12-05T18:37:18.474Z",
+    "streakMinutes": 1.0277333333333334,
+    "isStreak": true,
+    "totalHours": 0.02316583333333333
+  },
+  {
+    "timestamp": "2017-12-05T18:38:20.107Z",
+    "streakMinutes": 2.05495,
+    "isStreak": true,
+    "totalHours": 0.040286111111111106
+  },
+  {
+    "timestamp": "2017-12-05T18:39:00.667Z",
+    "streakMinutes": 2.73095,
+    "isStreak": true,
+    "totalHours": 0.051552777777777774
+  },
+  {
+    "timestamp": "2017-12-05T18:39:04.635Z",
+    "streakMinutes": 2.797066666666667,
+    "isStreak": true,
+    "totalHours": 0.05265472222222222
+  },
+  {
+    "timestamp": "2017-12-05T18:39:20.436Z",
+    "streakMinutes": 3.060416666666667,
+    "isStreak": true,
+    "totalHours": 0.05704388888888889
+  }
+]
