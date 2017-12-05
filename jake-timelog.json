@@ -58,5 +58,11 @@
     "streakMinutes": 3.060416666666667,
     "isStreak": true,
     "totalHours": 0.05704388888888889
+  },
+  {
+    "timestamp": "2017-12-05T18:51:08.462Z",
+    "streakMinutes": 14.860850000000001,
+    "isStreak": true,
+    "totalHours": 0.25371777777777776
   }
 ]
