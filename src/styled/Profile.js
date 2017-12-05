@@ -9,9 +9,9 @@ export const ProfileView = styled(View)`
 `
 
 export const Divider = styled.hr`
-  border: 1px solid ${grey200};
-  background-color: ${grey200};
-  height: 1px;
+  border: 1px solid #E3E3E3;
+  background-color: #E3E3E3;
+  height: 0px;
   width: 100%;
 `
 export const Top = styled.div`
@@ -20,7 +20,7 @@ export const Top = styled.div`
   width: 100%;
   background-color: ${white};
   border-radius: 5px;
-  border: solid ${grey400} 1px;
+  border: solid #E3E3E3 1px;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
 
@@ -93,14 +93,15 @@ export const Handle = styled.div`
   font-family: HelveticaNeue-Light;
   font-size: 30px;
   color: #333333;
-  letter-spacing: 0;
+  letter-spacing: 1px;
   margin-left: 0;
 `
 
 export const Location = styled.span`
-  font-size: 16px;
-  margin: 6px 0 6px 8px;
-  color: #4A4A4A;
+  font-size: 14px;
+  margin: 12px 0px 20px 0px;
+  color: #777777;
+  letter-spacing: 0.3px;
 `
 
 export const InputRow = styled.div`
@@ -124,20 +125,24 @@ export const Score = styled.span`
   font-size: 20px;
   margin-right: 50px;
   margin-left: 10px;
+  color: #555555;
+  font-weight: 400;
 `
 
 export const Summary = styled.pre`
   font-size: 14px;
   line-height: 20px;
-  color: ${grey800};
+  color: #777777;
   white-space: pre-wrap;
 `
 
 export const EmailWebsite = styled.span`
   display: ${props => props.hide ? 'none' : 'inline-flex'};
   ${'' /* margin: 0 50px 10px 10px; */}
+  margin-top: 15px;
   font-size: 14px;
-  color: #4A4A4A;
+  font-weight: 500;
+  color: #555555;
 `
 
 export const MissingUserData = styled.span`
@@ -161,7 +166,7 @@ export const BotRow = styled.div`
     width: 66%;
     margin-right: 15px;
     padding-bottom: 40px;
-    border: solid ${grey400} 1px;
+    ${'' /* border: solid ${grey400} 1px; */}
     border-radius: 5px;
     box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
   `
@@ -174,9 +179,9 @@ export const BotRow = styled.div`
     min-height: 50vh;
     flex-grow: 1;
     width: 33%;
-    border: solid ${grey400} 1px;
+    border: solid #E3E3E3 1px;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 20px 20px 20px 25px;
     margin-left: 15px;
     ${'' /* padding-bottom: 40px; */}
     overflow: visible;
@@ -187,9 +192,11 @@ export const BotRow = styled.div`
 export const Label = styled.label`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 500;
   ${'' /* padding-top: 40px; */}
-  color: ${grey800};
+  color: #555555;
+  margin-top: 30px;
+  margin-bottom: 5px;
 `
 
 export const InputError = styled.span`
@@ -199,7 +206,8 @@ export const InputError = styled.span`
 `
 
 export const Experience = styled(Input)`
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 300;
   ${'' /* width: ${(props)=>inputWidth(props,11)}px; */}
-  margin-bottom: 0;
+
 `
