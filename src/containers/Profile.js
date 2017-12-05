@@ -133,7 +133,6 @@ class Profile extends Component {
   setTab = (tab) => {
     this.props.router.push(`/${this.props.router.params.theirHandle}/${tab}`)
     this.setState({ tab })
-    // window.scrollTo(0, document.body.scrollHeight)
   }
 
   musicianInfoSave = () => {

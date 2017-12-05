@@ -61,7 +61,6 @@ export const Summary = styled.pre`
   overflow-wrap: break-word;
   word-break: break-all;
 `
-
 export const TrackContainer = styled.div`
   display: flex;
   flex-direction: column;

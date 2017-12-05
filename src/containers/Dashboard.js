@@ -3,7 +3,6 @@ import Relay from 'react-relay'
 import {FbList, SendInviteBtn, DialogSpacer, DialogRow, DashLeft, DashView, InviteButton, DashHeader, DashHeaderRow, Divider, DashProfile, BotRow, UpperInvite} from 'styled/Dashboard'
 import {FriendList} from 'components/FriendList'
 import {EmptyPanel} from 'components/EmptyPanel'
-import {ActivityList} from 'components/ActivityList'
 import {Dialog, TextField, Snackbar} from 'material-ui'
 import {grey400, purple} from 'theme'
 import Tribe from 'icons/Tribe'
@@ -15,19 +14,19 @@ import {Panel} from 'components/Panel'
 import sendEmailInvite from 'utils/sendEmailInvite'
 import {isUniqueField} from 'utils/handles'
 
-
 class Dashboard extends Component {
 
   constructor(props) {
     console.log('dash constructor props', props)
     super(props)
+    let selectedUser = this.findUser()
     this.state = {
+      selectedUser,
       invite: false,
       inviteMentors: false,
       email: null,
       emailError: null,
       maxSuggestedFriends: 20,
-      selectedUser: {},
       suggestions: [],
       showMentors: true,
       showTribe: true,
@@ -37,15 +36,18 @@ class Dashboard extends Component {
     }
   }
 
-  componentWillMount() {console.log('first?')}
-
-  componentDidMount() {
+  findUser = () => {
+    let selectedUser = {}
     let friends = this.props.viewer.user.friends.edges.map(edge=>edge.node)
     if (friends.length) {
-      let foundUser = friends.find(edge =>
-        edge.handle === this.props.params.theirHandle)
+      if (!this.props.params.theirHandle) {
+        return {}
+      }
+      let foundUser = friends.find(friend =>
+        friend.handle === this.props.params.theirHandle)
       if (foundUser) {
-        this.setState( {selectedUser: foundUser || {}} )
+        selectedUser =  foundUser || {}
+        // this.setState( {selectedUser: foundUser || {}} )
       } else {
         this.selectUser(friends[0])
         this.props.router.push(`/dash/${friends[0].handle}/projects`)
@@ -53,6 +55,7 @@ class Dashboard extends Component {
     } else {
       console.log('dash no tribe');
     }
+    return selectedUser
   }
 
   componentWillUnmount() {
@@ -117,7 +120,7 @@ class Dashboard extends Component {
   createFriendRequest = (recipientId) => {
     let {id: actorId} = this.props.viewer.user
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({ actorId, recipientId})
+      new CreateFriendRequest({actorId, recipientId})
     )
   }
 
@@ -154,6 +157,18 @@ class Dashboard extends Component {
         />
       )
     } else {
+      return (
+        <Panel
+          empty
+        // tab={tab}
+        // topBar={<DashProfile selectedUser={selectedUser} />}
+        // tabChange={(newTab)=>this.setTab(newTab)}
+        // labels={['projects', 'bounces', 'messages']}
+        // locks={[false, false, false]}
+        // values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
+        content={this.props.children}
+        scroll={true} />
+      )
 
     }
 
@@ -245,12 +260,6 @@ class Dashboard extends Component {
 
  export default Relay.createContainer( Dashboard, {
     initialVariables: { theirHandle: '', userHandle: ''},
-    prepareVariables: (urlParams) => {
-      console.log('prep PRAMS', urlParams);
-      return {
-
-      }
-    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {

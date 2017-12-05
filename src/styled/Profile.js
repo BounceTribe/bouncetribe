@@ -120,7 +120,6 @@ export const ScoreRow = styled.div`
   align-items: baseline;
   height: 20px;
 `
-
 export const Score = styled.span`
   font-size: 20px;
   margin-right: 50px;

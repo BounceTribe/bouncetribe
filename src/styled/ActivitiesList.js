@@ -21,6 +21,7 @@ const ActivityContainer = styled(BtLink)`
     color: ${purple}
   }
 `
+
 const ActivityDate = styled.div`
   font-size: 12px;
   color: ${grey500};
@@ -35,7 +36,7 @@ const ActivityText = styled.div`
   color: #4A4A4A;
 `
 export const Activity = ({date, icon, text, link}) => {
-  let formattedDate = new Date(Date.parse(date))
+  let formattedDate = date
     .toLocaleDateString('en-US', {month: 'short', 'day': 'numeric'})
 
   return (

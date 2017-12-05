@@ -10,8 +10,6 @@ class ProjectsPanel extends Component {
     let isSelf = user.id===User.id
     let hasProjects = !!User.projects.count
 
-    console.log('PP user', User.handle, isSelf)
-
     return (
       hasProjects ? <ProjectListSm {...this.props} /> :
       <EmptyPanel
