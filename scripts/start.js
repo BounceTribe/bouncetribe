@@ -5,7 +5,7 @@ process.env.BABEL_ENV = 'development';
 // that have already been set.
 // https://github.com/motdotla/dotenv
 require('dotenv').config({silent: true});
-
+var fs = require('fs-extra')
 var chalk = require('chalk');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
@@ -64,6 +64,40 @@ function setupCompiler(host, port, protocol) {
       //clearConsole();
     }
     console.log('Compiling...');
+    //jskes timecard
+    fs.readJson('jake-timelog.json', function(err, entries) {
+      if (!err) {
+        let len = entries.length
+        let streakMinutes = null
+        let isStreak = false
+        let totalHours = 0
+        if (len) {
+          let lastStreak = entries[len-1].streakMinutes
+          let lastTime = new Date(entries[len-1].timestamp)
+          let minutesSince = (Date.now() - lastTime.getTime()) / 60000
+
+          isStreak = (minutesSince < 20)
+          streakMinutes = isStreak ? minutesSince + lastStreak : 0
+          totalHours = entries[len-1].totalHours + (isStreak && minutesSince/60)
+
+          console.log({lastTime, lastStreak, minutesSince, totalHours})
+        }
+
+        let newEntry = {
+          timestamp: new Date(),
+          streakMinutes,
+          isStreak,
+          totalHours
+        }
+        console.log(newEntry);
+        entries.push(newEntry);
+        //create new files every 2 wks of time since 2017-12-05T12:28:40.784Z
+        fs.writeJson('jake-timelog.json', entries, function(err){
+          console.log('writing', err);
+        });
+      }
+    });
+
   });
 
   var isFirstCompile = true;

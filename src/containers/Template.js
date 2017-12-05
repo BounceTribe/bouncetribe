@@ -28,7 +28,7 @@ class Template extends Component {
     this.props.relay.setVariables({
       userHandle: this.props.viewer.user.handle
     })
-    
+
     this.ping()
     let intervalId = setInterval(this.ping, 300000)
 

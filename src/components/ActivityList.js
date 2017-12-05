@@ -11,6 +11,7 @@ const generateLink = (project) => (
   `/${project.creator.handle}/${project.title}`
  )
 
+
 const makeList = (props) => {
   console.log('listprops', props);
   let {comments, bounces, projects, dash} = props

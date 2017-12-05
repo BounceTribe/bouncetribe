@@ -21,6 +21,7 @@ const ActivityContainer = styled(BtLink)`
     color: ${purple}
   }
 `
+
 const ActivityDate = styled.div`
   font-size: 12px;
   color: ${grey500};
