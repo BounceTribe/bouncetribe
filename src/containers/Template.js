@@ -22,19 +22,23 @@ injectTapEventPlugin()
 
 class Template extends Component {
 
-  state = {
-    snackbarText: '',
-    settings: false
-  }
-
-  componentDidMount() {
+  constructor(props) {
+    super(props)
+    this.pathCheck(this.props)
+    this.props.relay.setVariables({
+      userHandle: this.props.viewer.user.handle
+    })
+    
     this.ping()
     let intervalId = setInterval(this.ping, 300000)
-    this.setState({
+
+    this.state = {
+      snackbarText: '',
+      settings: false,
       intervalId
-    })
-    console.log('template didmount', this.props)
-    this.pathCheck(this.props)
+    }
+    console.log('template constructo didmount', this.props)
+
   }
 
   componentWillReceiveProps(newProps) {
@@ -43,9 +47,7 @@ class Template extends Component {
     if (oldPath!==newPath) this.pathCheck(newProps)
   }
 
-  componentWillUnmount() {
-    clearInterval(this.state.intervalId)
-  }
+  componentWillUnmount() { clearInterval(this.state.intervalId) }
 
   pathCheck = (props) => {
     let newPath = props.location.pathname
@@ -83,8 +85,6 @@ class Template extends Component {
       this.redirect()
     }
   })
-
-  //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
   addInviteFriend = (newFriendId) => {
     let selfId = this.props.viewer.user.id
@@ -126,15 +126,11 @@ class Template extends Component {
   ping = () => {
     let {user} = this.props.viewer
     if (user) {
-      this.props.relay.commitUpdate( new SendPing({ user })
-      , {
-        onSuccess: success => {
-          console.log('ping res', success )
-        }
-      }
-    )
+      this.props.relay.commitUpdate( new SendPing({ user }), {
+        onSuccess: success => console.log('ping res', success )
+      } )
+    }
   }
-}
 
 
   get userOnly () {
@@ -207,8 +203,8 @@ class Template extends Component {
   }
 }
 
-export default Relay.createContainer(
-  Template, {
+export default Relay.createContainer( Template, {
+  initialVariables: { userHandle: '' },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {

@@ -76,7 +76,7 @@ class Project extends Component {
   componentWillReceiveProps(nextProps) {
     console.log('newprops')
     let focus
-    let oldCommentIds = this.state.comments.edges.map(edge=>edge.node.id)
+    let oldCommentIds = this.state.comments.map(comment=>comment.id)
     this.setState(prevState=>{
         let active = prevState.active
         nextProps.viewer.allProjects.edges[0].node.comments.edges.forEach( (edge, index) => {
