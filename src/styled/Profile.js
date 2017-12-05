@@ -93,7 +93,7 @@ export const Handle = styled.div`
   font-family: HelveticaNeue-Light;
   font-size: 30px;
   color: #333333;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   margin-left: 0;
 `
 
