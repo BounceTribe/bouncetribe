@@ -46,7 +46,13 @@ const makeList = (props) => {
       text={`${dash ? project.creator.handle + ' a' : 'A'}dded a new Project - ${project.title}`}
       link={generateLink(project)}/>
   ))
-  return list.sort( (a,b) => b.props.date - a.props.date)
+  console.log('list', list);
+  list = list.filter(item=>!!(item && item.props && item.props.date)).sort( (a,b) => {
+    // console.log('BAD DTE', !a.props.date && a.props);
+    return b.props.date - a.props.date
+  })
+  console.log('list', list);
+  return list
 }
 
 export const ActivityList = (props) => (
