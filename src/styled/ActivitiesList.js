@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import {BtLink} from 'styled'
-import {grey300, grey500} from 'theme'
+import {grey300, grey500, purple} from 'theme'
 import React from 'react'
 
 export const ScrollBox = styled.div`
@@ -12,11 +12,14 @@ export const ScrollBox = styled.div`
   width: 100%;
 `
 
-const ActivityContainer = styled.div`
+const ActivityContainer = styled(BtLink)`
   display: flex;
   align-items: center;
   border-bottom: 1px solid ${grey300};
   padding: 20px 20px;
+  &:hover > div {
+    color: ${purple}
+  }
 `
 const ActivityDate = styled.div`
   font-size: 12px;
@@ -36,12 +39,10 @@ export const Activity = ({date, icon, text, link}) => {
     .toLocaleDateString('en-US', {month: 'short', 'day': 'numeric'})
 
   return (
-    <ActivityContainer>
-      <BtLink to={link ? link : null}>
+      <ActivityContainer to={link ? link : null}>
         <ActivityDate>{formattedDate}</ActivityDate>
         <ActivityIcon>{icon}</ActivityIcon>
         <ActivityText>{text}</ActivityText>
-      </BtLink>
-    </ActivityContainer>
+      </ActivityContainer>
   )
 }

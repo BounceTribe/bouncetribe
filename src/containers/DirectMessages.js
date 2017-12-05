@@ -194,7 +194,7 @@ class DirectMessages extends Component {
     )
   }
 }
-
+//look into forceFetch/setVariables instead of localstorage
 export default Relay.createContainer( DirectMessages, {
   initialVariables: { theirHandle: '', userHandle: '', messageFilter: {}, },
   prepareVariables: (urlParams) => {
