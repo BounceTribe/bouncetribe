@@ -3,43 +3,35 @@ import Relay from 'react-relay'
 import Music from 'icons/Music'
 import {EmptyPanel} from 'components/EmptyPanel'
 import {ActivityList} from 'components/ActivityList'
+import {mapNodes} from 'utils/mapNodes'
 
-let mapNodes = items => items.edges.map(edge=>edge.node)
 
 let setCategories = (items, category) => {
   let nodes = mapNodes(items)
-  console.log('items', items)
-  console.log('category', category)
-  console.log('nodes', nodes)
-  return nodes.map(node => {
-    return Object.assign(...node, {category})
-  })
+  return nodes.map(node => Object.assign({...node}, {category}))
 }
 
 class Feed extends Component {
 
-  componentWillMount() {
+  get activities() {
     let friends = mapNodes(this.props.viewer.user.friends)
     let comments = []
     let bounces  = []
     let projects = []
     friends.forEach(friend => {
-      // let newComments = mapNodes(friends.comments)
-      // newComments.map(comment => {
-      //   return Object.assign(...comment, {category: 'comment'})
-      // })
-      comments = comments.concat(setCategories(friend.comments, 'comments'))
-      bounces = bounces.concat(setCategories(friend.bounces, 'bounces'))
-      projects = projects.concat(setCategories(friend.projects, 'projects'))
+      comments = comments.concat(setCategories(friend.comments, 'comment'))
+      bounces = bounces.concat(setCategories(friend.bounces, 'bounce'))
+      projects = projects.concat(setCategories(friend.projects, 'project'))
     })
     console.log({comments, bounces, projects});
+    return {comments, bounces, projects}
     // friends.map(friend)
     //assume friends.length
 
   }
 
   render () {
-    return <div>hi</div>
+    return <ActivityList {...this.activities} dash />
   //   let {user, User} = this.props.viewer
   //   let {comments, bounces, projects} = User
   //   let isSelf = user.id===User.id
@@ -85,6 +77,9 @@ export default Relay.createContainer( Feed, {
                   edges {
                     node {
                       id
+                      author {
+                        handle
+                      }
                       createdAt
                       project {
                         id
@@ -106,6 +101,9 @@ export default Relay.createContainer( Feed, {
                     edges {
                       node {
                         id
+                        bouncer {
+                          handle
+                        }
                         createdAt
                         project {
                           id

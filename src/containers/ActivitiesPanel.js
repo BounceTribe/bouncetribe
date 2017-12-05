@@ -3,7 +3,7 @@ import Relay from 'react-relay'
 import Music from 'icons/Music'
 import {EmptyPanel} from 'components/EmptyPanel'
 import {ActivityList} from 'components/ActivityList'
-
+import {mapNodes} from 'utils/mapNodes'
 
 class ActiviesPanel extends Component {
 
@@ -15,9 +15,9 @@ class ActiviesPanel extends Component {
     return (
       hasActivities ?
       <ActivityList
-        comments={comments}
-        bounces={bounces}
-        projects={projects}
+        comments={mapNodes(comments)}
+        bounces={mapNodes(bounces)}
+        projects={mapNodes(projects)}
       />
       :
       <EmptyPanel

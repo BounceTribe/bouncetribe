@@ -12,10 +12,11 @@ const generateLink = (project) => (
  )
 
 const makeList = (props) => {
-  let {comments, bounces, projects} = props
+  console.log('listprops', props);
+  let {comments, bounces, projects, dash} = props
   let commentProjects = []
-  let list = comments.edges.map((edge, index) => {
-    let project = edge.node.project || {}
+  let list = comments.map((comment, index) => {
+    let project = comment.project || {}
     if (commentProjects.includes(project.id)) {
       console.log('duplicate project ignored')
       return <div key={index}/>
@@ -23,29 +24,29 @@ const makeList = (props) => {
       commentProjects.push(project.id)
       return project.id &&
       <Activity
-        key={edge.node.id}
-        date={edge.node.createdAt}
+        key={comment.id}
+        date={new Date(comment.createdAt)}
         icon={<Tribe height={13}/>}
-        text={`Gave Feedback to ${project.title}`}
+        text={`${dash ? comment.author.handle + ' g' : 'G'}ave feedback to ${project.title}`}
         link={generateLink(project)}/>}
   })
-  list = list.concat(bounces.edges.map(edge =>
+  list = list.concat(bounces.map(bounce =>
     <Activity
-      key={edge.node.id}
-      date={edge.node.createdAt}
+      key={bounce.id}
+      date={new Date(bounce.createdAt)}
       icon={<Bounce width={19} fill={purple}/>}
-      text={`Bounced ${edge.node.project.title}`}
-      link={generateLink(edge.node.project)}/>
+      text={`${dash ? bounce.bouncer.handle + ' b' : 'B'}ounced ${bounce.project.title}`}
+      link={generateLink(bounce.project)}/>
   ))
-  list = list.concat(projects.edges.map(edge =>
+  list = list.concat(projects.map(project =>
     <Activity
-      key={edge.node.id}
-      date={edge.node.createdAt}
+      key={project.id}
+      date={new Date(project.createdAt)}
       icon={<Music height={13}/>}
-      text={`Added a new Project - ${edge.node.title}`}
-      link={generateLink(edge.node)}/>
+      text={`${dash ? project.creator.handle + ' a' : 'A'}dded a new Project - ${project.title}`}
+      link={generateLink(project)}/>
   ))
-  return list.sort( (a,b) => (new Date(b.props.date) - new Date(a.props.date)))
+  return list.sort( (a,b) => b.props.date - a.props.date)
 }
 
 export const ActivityList = (props) => (
