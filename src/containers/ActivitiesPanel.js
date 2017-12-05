@@ -31,6 +31,7 @@ class ActiviesPanel extends Component {
   }
 }
 
+
 export default Relay.createContainer( ActiviesPanel, {
   initialVariables: { theirHandle: '' },
   fragments: {
