@@ -19,7 +19,7 @@ class Dashboard extends Component {
   constructor(props) {
     console.log('dash constructor props', props)
     super(props)
-
+    this.userHandle = props.viewer.user.handle
     this.state = {
       selectedUser: this.getSelectedUser(props),
       noTribe: !this.props.viewer.user.friends.count,
@@ -39,7 +39,9 @@ class Dashboard extends Component {
 
   getSelectedUser = (props) => {
     let theirHandle = props.params.theirHandle
-    if (theirHandle && props.viewer.user.friends.count) {
+    if (!theirHandle) {
+      return null
+    } else if (props.viewer.user.friends.count) {
       let friends = props.viewer.user.friends.edges.map(edge=>edge.node)
       let selectedUser = friends.find(friend => friend.handle===theirHandle)
       if (selectedUser) {
@@ -52,15 +54,14 @@ class Dashboard extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('dash newprops', nextProps)
-    let { newTheirHandle } = nextProps.params
+    let newTheirHandle = nextProps.params.theirHandle
     let oldSelectedUser = this.state.selectedUser || {}
     if (newTheirHandle && (oldSelectedUser.handle===newTheirHandle)) {
-      console.log('same user');
+      return null
     } else {
       localStorage.removeItem('newMessages')
       localStorage.removeItem('message')
-      this.setState({selectedUser: this.getSelectedUser(nextProps)})
+      this.setState({ selectedUser: this.getSelectedUser(nextProps) })
     }
   }
 
@@ -88,6 +89,8 @@ class Dashboard extends Component {
     let oldPath = this.props.location.pathname
     if (oldPath==='/dash/') {
       this.props.router.push(`/dash/${selectedUser.handle}/projects/`)
+    } else if (selectedUser.handle===(this.state.selectedUser||{}).handle) {
+      this.props.router.push(`/dash/`)
     } else {
       let newPath = oldPath.replace(this.state.selectedUser.handle, selectedUser.handle)
       this.props.router.push(newPath)
@@ -132,9 +135,8 @@ class Dashboard extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.push('/dash/' + this.state.selectedUser.handle + '/' + tab + '/' + this.props.viewer.user.handle)
+    this.props.router.push(`/dash/${this.state.selectedUser.handle}/${tab}/${this.userHandle}`)
     this.setState({ tab })
-    // window.scrollTo(0, document.body.scrollHeight)
   }
 
   noTribePanel = () => (
@@ -146,21 +148,6 @@ class Dashboard extends Component {
       btnClick={()=>this.inviteDialog()}
     />
   )
-
-  panelContent = ({tab, selectedUser}) => {
-    return (
-      <Panel
-        empty={!selectedUser}
-        tab={tab}
-        topBar={selectedUser && <DashProfile selectedUser={selectedUser} />}
-        tabChange={(newTab)=>this.setTab(newTab)}
-        labels={['projects', 'bounces', 'messages']}
-        locks={[false, false, false]}
-        values={selectedUser && [0,0,0]}
-        content={this.state.noTribe ? this.noTribePanel() : this.props.children}
-        scroll={this.props.location.pathname===`/dash/`} />
-      )
-  }
 
   render () {
     let {user} = this.props.viewer
@@ -239,7 +226,16 @@ class Dashboard extends Component {
                 this.setState({showMentors: !this.state.showMentors})}
               />
           </DashLeft>
-          {this.panelContent({tab, selectedUser})}
+          <Panel
+            empty={!selectedUser}
+            tab={tab}
+            topBar={selectedUser && <DashProfile selectedUser={selectedUser} />}
+            tabChange={(newTab)=>this.setTab(newTab)}
+            labels={['projects', 'bounces', 'messages']}
+            locks={[false, false, false]}
+            values={selectedUser && [0,0,0]}
+            content={this.state.noTribe ? this.noTribePanel() : this.props.children}
+            scroll={this.props.location.pathname===`/dash/`} />
         </BotRow>
       </DashView>
     )
