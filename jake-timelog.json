@@ -351,5 +351,14 @@
     "isStreak": true,
     "totalHours": 2.7550905555555563,
     "numSessions": 4
+  },
+  {
+    "day": "Wednesday, Dec 6",
+    "time": "12:06 AM",
+    "timestamp": "2017-12-06T06:06:12.661Z",
+    "streakMinutes": 87.9032,
+    "isStreak": true,
+    "totalHours": 2.998385555555556,
+    "numSessions": 4
   }
 ]
