@@ -207,5 +207,149 @@
     "isStreak": true,
     "totalHours": 1.5333322222222225,
     "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "10:38 PM",
+    "timestamp": "2017-12-06T04:38:18.434Z",
+    "streakMinutes": 0,
+    "isStreak": false,
+    "totalHours": 1.5333322222222225,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "10:40 PM",
+    "timestamp": "2017-12-06T04:40:46.954Z",
+    "streakMinutes": 2.4753,
+    "isStreak": true,
+    "totalHours": 1.5745872222222226,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "10:40 PM",
+    "timestamp": "2017-12-06T04:40:51.387Z",
+    "streakMinutes": 2.54915,
+    "isStreak": true,
+    "totalHours": 1.5758180555555559,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "10:45 PM",
+    "timestamp": "2017-12-06T04:45:50.711Z",
+    "streakMinutes": 7.53785,
+    "isStreak": true,
+    "totalHours": 1.658963055555556,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "10:48 PM",
+    "timestamp": "2017-12-06T04:48:45.628Z",
+    "streakMinutes": 10.4531,
+    "isStreak": true,
+    "totalHours": 1.707550555555556,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "10:49 PM",
+    "timestamp": "2017-12-06T04:49:42.492Z",
+    "streakMinutes": 11.400799999999998,
+    "isStreak": true,
+    "totalHours": 1.723345555555556,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "10:54 PM",
+    "timestamp": "2017-12-06T04:54:30.670Z",
+    "streakMinutes": 16.203733333333332,
+    "isStreak": true,
+    "totalHours": 1.8033944444444447,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "10:59 PM",
+    "timestamp": "2017-12-06T04:59:09.709Z",
+    "streakMinutes": 20.85435,
+    "isStreak": true,
+    "totalHours": 1.8809047222222226,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "11:02 PM",
+    "timestamp": "2017-12-06T05:02:57.122Z",
+    "streakMinutes": 24.644533333333335,
+    "isStreak": true,
+    "totalHours": 1.9440744444444449,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "11:14 PM",
+    "timestamp": "2017-12-06T05:14:52.652Z",
+    "streakMinutes": 36.57,
+    "isStreak": true,
+    "totalHours": 2.1428322222222227,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "11:23 PM",
+    "timestamp": "2017-12-06T05:23:03.479Z",
+    "streakMinutes": 44.7504,
+    "isStreak": true,
+    "totalHours": 2.279172222222223,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "11:23 PM",
+    "timestamp": "2017-12-06T05:23:25.005Z",
+    "streakMinutes": 45.10913333333333,
+    "isStreak": true,
+    "totalHours": 2.285151111111112,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "11:25 PM",
+    "timestamp": "2017-12-06T05:25:15.016Z",
+    "streakMinutes": 46.942616666666666,
+    "isStreak": true,
+    "totalHours": 2.315709166666667,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "11:35 PM",
+    "timestamp": "2017-12-06T05:35:32.957Z",
+    "streakMinutes": 57.24158333333333,
+    "isStreak": true,
+    "totalHours": 2.4873586111111115,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "11:41 PM",
+    "timestamp": "2017-12-06T05:41:00.791Z",
+    "streakMinutes": 62.70545,
+    "isStreak": true,
+    "totalHours": 2.578423055555556,
+    "numSessions": 4
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "11:51 PM",
+    "timestamp": "2017-12-06T05:51:36.797Z",
+    "streakMinutes": 73.3055,
+    "isStreak": true,
+    "totalHours": 2.7550905555555563,
+    "numSessions": 4
   }
 ]

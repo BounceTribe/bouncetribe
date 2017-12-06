@@ -83,8 +83,10 @@ export default class EditMusicianInfo extends Component {
       userId: this.props.user.id,
       genresIds: this.state.genres.map(genre=>genre.value || genre),
       skillsIds: this.state.skills.map(skill=>skill.value || skill),
-      experience: this.state.experience.toUpperCase(),
       artistInfluencesIds: this.state.influences.map(option=>option.value.id)
+    }
+    if (this.state.experience) { //cannot send null experience to DB
+      updateObj.experience = this.state.experience.toUpperCase()
     }
     Relay.Store.commitUpdate(
       new UpdateUser(updateObj),{

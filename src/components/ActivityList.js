@@ -13,13 +13,13 @@ const generateLink = (project) => (
 
 
 const makeList = (props) => {
-  console.log('listprops', props);
+  // console.log('listprops', props);
   let {comments, bounces, projects, dash} = props
   let commentProjects = []
   let list = comments.map((comment, index) => {
     let project = comment.project || {}
     if (commentProjects.includes(project.id)) {
-      console.log('duplicate project ignored')
+      // console.log('duplicate project ignored')
       return <div key={index}/>
     } else {
       commentProjects.push(project.id)
@@ -47,12 +47,12 @@ const makeList = (props) => {
       text={`${dash ? project.creator.handle + ' a' : 'A'}dded a new Project - ${project.title}`}
       link={generateLink(project)}/>
   ))
-  console.log('list', list);
+  // console.log('list', list);
   list = list.filter(item=>!!(item && item.props && item.props.date)).sort( (a,b) => {
     // console.log('BAD DTE', !a.props.date && a.props);
     return b.props.date - a.props.date
   })
-  console.log('list', list);
+  // console.log('list', list);
   return list
 }
 

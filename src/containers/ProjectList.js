@@ -19,17 +19,9 @@ import Tribe from 'icons/Tribe'
 class ProjectList extends Component {
 
   setPrivacy = (currentProject, newPrivacy) => {
-    let project = {
-      ...currentProject,
-      privacy: newPrivacy
-    }
-    this.props.relay.commitUpdate(
-      new UpdateProject({
-        project
-      })
-    )
+    let project = { ...currentProject, privacy: newPrivacy }
+    this.props.relay.commitUpdate( new UpdateProject({ project }) )
   }
-
 
   uniqueCommenters = (comments) => {
     let uniqueAuthors = []

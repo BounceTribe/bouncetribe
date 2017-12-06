@@ -19,10 +19,10 @@ class Dashboard extends Component {
   constructor(props) {
     console.log('dash constructor props', props)
     super(props)
-    let selectedUser = this.getSelectedUser(props)
 
     this.state = {
-      selectedUser,
+      selectedUser: this.getSelectedUser(props),
+      noTribe: !this.props.viewer.user.friends.count,
       invite: false,
       inviteMentors: false,
       email: null,
@@ -33,7 +33,7 @@ class Dashboard extends Component {
       showTribe: true,
       showBand: true,
       tab: props.location.pathname.split('/')[3] ||'projects',
-      snackbarText: ''
+      snackbarText: '',
     }
   }
 
@@ -46,20 +46,26 @@ class Dashboard extends Component {
         return selectedUser
       } else {
         console.log('could not find user in friends');
-        props.router.push(`/dash/`)
+        props.location.pathname!==`/dash/` && props.router.push(`/dash/`)
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
     console.log('dash newprops', nextProps)
-    let selectedUser = this.getSelectedUser(nextProps)
-    selectedUser && this.setState({selectedUser})
+    let { newTheirHandle } = nextProps.params
+    let oldSelectedUser = this.state.selectedUser || {}
+    if (newTheirHandle && (oldSelectedUser.handle===newTheirHandle)) {
+      console.log('same user');
+    } else {
+      localStorage.removeItem('newMessages')
+      localStorage.removeItem('message')
+      this.setState({selectedUser: this.getSelectedUser(nextProps)})
+    }
   }
 
   componentWillUnmount() {
-    //direct messages
-    localStorage.removeItem('newMessages')
+    localStorage.removeItem('newMessages') //from DirectMessages.js
     localStorage.removeItem('message')
   }
 
@@ -79,11 +85,13 @@ class Dashboard extends Component {
   }
 
   selectUser = (selectedUser) => {
-    localStorage.removeItem('newMessages')
-    localStorage.removeItem('message')
     let oldPath = this.props.location.pathname
-    let newPath = oldPath.replace(this.state.selectedUser.handle, selectedUser.handle)
-    this.props.router.push(newPath)
+    if (oldPath==='/dash/') {
+      this.props.router.push(`/dash/${selectedUser.handle}/projects/`)
+    } else {
+      let newPath = oldPath.replace(this.state.selectedUser.handle, selectedUser.handle)
+      this.props.router.push(newPath)
+    }
     this.setState({selectedUser})
   }
 
@@ -142,33 +150,17 @@ class Dashboard extends Component {
           content={this.props.children}
           scroll={true} />
         )
-    } else if (!this.props.viewer.user.friends.count) {
-      return (
-        <Panel empty
-          content={
-            <EmptyPanel
-              icon={<Tribe height={93} fill={"#D3D3D3"} />}
-              headline={`It's a little quiet here...`}
-              note={`Invite your friends to begin building your tribe`}
-              btnLabel={`Invite Friends`}
-              btnClick={()=>this.inviteDialog()}
-            />}
-        />
-      )
     } else {
-      return (
-        <Panel
-          empty
-        // tab={tab}
-        // topBar={<DashProfile selectedUser={selectedUser} />}
-        // tabChange={(newTab)=>this.setTab(newTab)}
-        // labels={['projects', 'bounces', 'messages']}
-        // locks={[false, false, false]}
-        // values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
-        content={this.props.children}
-        scroll={true} />
-      )
+      let content = this.state.noTribe ?
+        <EmptyPanel
+          icon={<Tribe height={93} fill={"#D3D3D3"} />}
+          headline={`It's a little quiet here...`}
+          note={`Invite your friends to begin building your tribe`}
+          btnLabel={`Invite Friends`}
+          btnClick={()=>this.inviteDialog()}
+        /> : this.props.children
 
+      return (<Panel empty scroll content={content}/>)
     }
 
   }
