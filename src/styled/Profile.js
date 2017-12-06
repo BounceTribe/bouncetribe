@@ -1,13 +1,12 @@
 import styled from 'styled-components'
 import {View} from 'styled'
-import {grey200, grey400, grey800, white} from 'theme'
+import {white} from 'theme'
 
 export const ProfileView = styled(View)`
   background-color: transparent;
   border: none;
   box-shadow: none;
 `
-
 export const Divider = styled.hr`
   border: 1px solid #E3E3E3;
   background-color: #E3E3E3;
@@ -110,7 +109,7 @@ export const InputRow = styled.div`
 `
 
 export const ExperienceRow = styled(InputRow)`
-  margin-top: 5px;
+  margin: 5px 0 30px 0;
   align-items: center;
 `
 
@@ -134,7 +133,6 @@ export const Summary = styled.pre`
   color: #777777;
   white-space: pre-wrap;
 `
-
 export const EmailWebsite = styled.span`
   display: ${props => props.hide ? 'none' : 'inline-flex'};
   ${'' /* margin: 0 50px 10px 10px; */}
@@ -153,10 +151,9 @@ export const BotRow = styled.div`
   display: flex;
   width: 100%;
   margin-top: 20px;
-  height: 60vh;
+  ${'' /* height: 60vh; */}
   min-height: 420px;
 `
-
   export const BotLeft = styled.div`
     display: flex;
     flex-direction: column;
@@ -175,18 +172,17 @@ export const BotRow = styled.div`
     flex-direction: column;
     border-radius: 5px;
     background-color: ${white};
-    min-height: 50vh;
-    flex-grow: 1;
+    ${'' /* min-height: 50vh; */}
+    ${'' /* flex-grow: 1; */}
     width: 33%;
     border: solid #E3E3E3 1px;
     border-radius: 5px;
     padding: 20px 20px 20px 25px;
     margin-left: 15px;
     ${'' /* padding-bottom: 40px; */}
-    overflow: visible;
+    ${'' /* overflow: visible; */}
     box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
   `
-
 
 export const Label = styled.label`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
@@ -194,10 +190,9 @@ export const Label = styled.label`
   font-weight: 500;
   ${'' /* padding-top: 40px; */}
   color: #555555;
-  margin-top: 30px;
+  ${'' /* margin-top: 30px; */}
   margin-bottom: 5px;
 `
-
 export const InputError = styled.span`
   display: flex;
   color: red;

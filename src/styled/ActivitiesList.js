@@ -11,7 +11,6 @@ export const ScrollBox = styled.div`
   overflow-x: hidden;
   width: 100%;
 `
-
 const ActivityContainer = styled(BtLink)`
   display: flex;
   align-items: center;
@@ -21,7 +20,6 @@ const ActivityContainer = styled(BtLink)`
     color: ${purple}
   }
 `
-
 const ActivityDate = styled.div`
   font-size: 12px;
   color: ${grey500};
@@ -38,7 +36,6 @@ const ActivityText = styled.div`
 export const Activity = ({date, icon, text, link}) => {
   let formattedDate = date
     .toLocaleDateString('en-US', {month: 'short', 'day': 'numeric'})
-
   return (
       <ActivityContainer to={link ? link : null}>
         <ActivityDate>{formattedDate}</ActivityDate>

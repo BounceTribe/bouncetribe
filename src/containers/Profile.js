@@ -295,7 +295,7 @@ class Profile extends Component {
               Experience
             </Label>
             <ExperienceRow hide={(!ownProfile && !experience.length)} >
-              <ExperienceIcon style={{margin: '5px 5px 10px 0'}} />
+              <ExperienceIcon style={{paddingRight: '5px'}} />
               <Experience
                 value={formatEnum(experience)}
                 disabled

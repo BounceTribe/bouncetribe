@@ -19,7 +19,8 @@ class Dashboard extends Component {
   constructor(props) {
     console.log('dash constructor props', props)
     super(props)
-    let selectedUser = this.findUser()
+    let selectedUser = this.getSelectedUser(props)
+
     this.state = {
       selectedUser,
       invite: false,
@@ -36,37 +37,30 @@ class Dashboard extends Component {
     }
   }
 
-  findUser = () => {
-    let selectedUser = {}
-    let friends = this.props.viewer.user.friends.edges.map(edge=>edge.node)
-    if (friends.length) {
-      if (!this.props.params.theirHandle) {
-        return {}
-      }
-      let foundUser = friends.find(friend =>
-        friend.handle === this.props.params.theirHandle)
-      if (foundUser) {
-        selectedUser =  foundUser || {}
-        // this.setState( {selectedUser: foundUser || {}} )
+  getSelectedUser = (props) => {
+    let theirHandle = props.params.theirHandle
+    if (theirHandle && props.viewer.user.friends.count) {
+      let friends = props.viewer.user.friends.edges.map(edge=>edge.node)
+      let selectedUser = friends.find(friend => friend.handle===theirHandle)
+      if (selectedUser) {
+        return selectedUser
       } else {
-        this.selectUser(friends[0])
-        this.props.router.push(`/dash/${friends[0].handle}/projects`)
+        console.log('could not find user in friends');
+        props.router.push(`/dash/`)
       }
-    } else {
-      console.log('dash no tribe');
     }
-    return selectedUser
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log('dash newprops', nextProps)
+    let selectedUser = this.getSelectedUser(nextProps)
+    selectedUser && this.setState({selectedUser})
   }
 
   componentWillUnmount() {
     //direct messages
     localStorage.removeItem('newMessages')
     localStorage.removeItem('message')
-  }
-
-  inviteDialog = () => {
-    this.setState({invite: true})
-    this.suggestFriends()
   }
 
   suggestFriends = (max) => {
@@ -124,6 +118,11 @@ class Dashboard extends Component {
     )
   }
 
+  inviteDialog = () => {
+    this.setState({invite: true})
+    this.suggestFriends()
+  }
+
   setTab = (tab) => {
     this.props.router.push('/dash/' + this.state.selectedUser.handle + '/' + tab + '/' + this.props.viewer.user.handle)
     this.setState({ tab })
@@ -131,7 +130,7 @@ class Dashboard extends Component {
   }
 
   panelContent = ({tab, selectedUser}) => {
-    if (selectedUser.id) {
+    if (selectedUser && selectedUser.id) {
       return (
         <Panel
           tab={tab}
@@ -140,7 +139,7 @@ class Dashboard extends Component {
           labels={['projects', 'bounces', 'messages']}
           locks={[false, false, false]}
           values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
-          content={this.state.selectedUser && this.props.children}
+          content={this.props.children}
           scroll={true} />
         )
     } else if (!this.props.viewer.user.friends.count) {
@@ -225,7 +224,7 @@ class Dashboard extends Component {
 
         <DashHeader>
           <DashHeaderRow>
-            <IconTextContainer to={`/tribe/${user.handle}`} >
+            <IconTextContainer to={`/dash/`} >
               <BtAvatar size={40} hideStatus />
               <IconText>My Tribe</IconText>
             </IconTextContainer>
@@ -258,6 +257,7 @@ class Dashboard extends Component {
   }
  }
 
+
  export default Relay.createContainer( Dashboard, {
     initialVariables: { theirHandle: '', userHandle: ''},
     fragments: {
@@ -270,6 +270,7 @@ class Dashboard extends Component {
             email
             score
             portrait { url }
+            portraitSmall { url }
             friends (
               first: 999
               filter: {deactivated: false}

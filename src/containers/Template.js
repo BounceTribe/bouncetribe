@@ -33,7 +33,7 @@ class Template extends Component {
       settings: false,
       intervalId
     }
-    console.log('template constructo didmount', this.props)
+    console.log('template constructor', this.props)
 
   }
 

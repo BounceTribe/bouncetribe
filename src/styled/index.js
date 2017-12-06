@@ -44,7 +44,7 @@ const BtTag = (props) => {
 
 export const BtTagList = (props) => {
   return (
-    <div style={{padding: '5px 0'}}>
+    <div style={{padding: '5px 0 30px 0'}}>
       {props.items.map(item =>
         <BtTag
           key={item.value.spotifyId || item.value}
@@ -152,6 +152,7 @@ export const IconTextContainer = styled(BtLink)`
   justify-content: flex-start;
   align-items: center;
   font-size: 30px;
+  font-weight: 300;
 `
 export const IconText = styled.span`
   margin-left: 12px;
@@ -251,12 +252,11 @@ export const BotNav = styled.div`
     display: flex;
   `}
 `
-
 export const Bubble = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({secondary}) => (secondary) ? blue : purple}
+  background-color: ${({secondary}) => (secondary) ? blue : purple};
   height: 30px;
   width: 30px;
   border-radius: 30px;

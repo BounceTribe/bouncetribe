@@ -57,12 +57,155 @@
     "timestamp": "2017-12-05T18:39:20.436Z",
     "streakMinutes": 3.060416666666667,
     "isStreak": true,
+    "totalHours": 0.05704388888888889,
+    "numSessions": 1
+  },
+  {
+    "timestamp": "2017-12-06T00:24:30.235Z",
+    "streakMinutes": 0,
+    "isStreak": false,
     "totalHours": 0.05704388888888889
   },
   {
-    "timestamp": "2017-12-05T18:51:08.462Z",
-    "streakMinutes": 14.860850000000001,
+    "timestamp": "2017-12-06T00:25:20.376Z",
+    "streakMinutes": 0.8356833333333333,
     "isStreak": true,
-    "totalHours": 0.25371777777777776
+    "totalHours": 0.07097194444444445
+  },
+  {
+    "timestamp": "2017-12-06T00:25:53.800Z",
+    "streakMinutes": 1.39275,
+    "isStreak": true,
+    "totalHours": 0.08025638888888889
+  },
+  {
+    "timestamp": "2017-12-06T00:27:04.648Z",
+    "streakMinutes": 2.57355,
+    "isStreak": true,
+    "totalHours": 0.0999363888888889
+  },
+  {
+    "timestamp": "2017-12-06T00:31:41.965Z",
+    "streakMinutes": 7.1955,
+    "isStreak": true,
+    "totalHours": 0.1769688888888889,
+    "numSessions": 2
+  },
+  {
+    "day": "Dec 5",
+    "time": "18:50:29",
+    "timestamp": "2017-12-06T00:50:29.450Z",
+    "streakMinutes": 25.9864,
+    "isStreak": true,
+    "totalHours": 0.4901505555555556,
+    "numSessions": 2
+  },
+  {
+    "day": "Dec 5",
+    "time": "18:50:48",
+    "timestamp": "2017-12-06T00:50:48.570Z",
+    "streakMinutes": 26.305033333333334,
+    "isStreak": true,
+    "totalHours": 0.49546111111111113,
+    "numSessions": 2
+  },
+  {
+    "day": "Dec 5",
+    "time": "18:54:27",
+    "timestamp": "2017-12-06T00:54:27.790Z",
+    "streakMinutes": 29.958666666666666,
+    "isStreak": true,
+    "totalHours": 0.556355,
+    "numSessions": 2
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "7:15 PM",
+    "timestamp": "2017-12-06T01:15:57.719Z",
+    "streakMinutes": 0,
+    "isStreak": false,
+    "totalHours": 0.556355,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "7:20 PM",
+    "timestamp": "2017-12-06T01:20:23.097Z",
+    "streakMinutes": 4.4228,
+    "isStreak": true,
+    "totalHours": 0.6300683333333333,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "7:26 PM",
+    "timestamp": "2017-12-06T01:26:44.940Z",
+    "streakMinutes": 10.786816666666667,
+    "isStreak": true,
+    "totalHours": 0.7361352777777778,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "7:41 PM",
+    "timestamp": "2017-12-06T01:41:34.630Z",
+    "streakMinutes": 25.614933333333333,
+    "isStreak": true,
+    "totalHours": 0.9832705555555555,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "8:00 PM",
+    "timestamp": "2017-12-06T02:00:17.582Z",
+    "streakMinutes": 44.330749999999995,
+    "isStreak": true,
+    "totalHours": 1.2952008333333334,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "8:01 PM",
+    "timestamp": "2017-12-06T02:01:13.809Z",
+    "streakMinutes": 45.26783333333333,
+    "isStreak": true,
+    "totalHours": 1.310818888888889,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "8:03 PM",
+    "timestamp": "2017-12-06T02:03:58.270Z",
+    "streakMinutes": 48.00881666666666,
+    "isStreak": true,
+    "totalHours": 1.3565019444444446,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "8:10 PM",
+    "timestamp": "2017-12-06T02:10:56.045Z",
+    "streakMinutes": 54.97169999999999,
+    "isStreak": true,
+    "totalHours": 1.4725500000000002,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "8:12 PM",
+    "timestamp": "2017-12-06T02:12:49.710Z",
+    "streakMinutes": 56.86608333333332,
+    "isStreak": true,
+    "totalHours": 1.5041230555555558,
+    "numSessions": 3
+  },
+  {
+    "day": "Tuesday, Dec 5",
+    "time": "8:14 PM",
+    "timestamp": "2017-12-06T02:14:34.864Z",
+    "streakMinutes": 58.61863333333332,
+    "isStreak": true,
+    "totalHours": 1.5333322222222225,
+    "numSessions": 3
   }
 ]

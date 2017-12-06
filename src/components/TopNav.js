@@ -34,7 +34,7 @@ class TopNav extends Component {
     return (
       <Bar>
         {/* <div onClick={()=>this.props.redirect()}> */}
-          <Logo to={`/dash/}`} />
+          <Logo to={`/dash/`} />
         {/* </div> */}
         <NavList>
           {/* <NavLink to={`/tribe/${handle}/find`} >
