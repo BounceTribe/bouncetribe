@@ -32,7 +32,7 @@ class Dashboard extends Component {
       showMentors: true,
       showTribe: true,
       showBand: true,
-      tab: props.location.pathname.split('/')[3] ||'projects',
+      tab: null,
       snackbarText: '',
     }
   }
@@ -41,6 +41,8 @@ class Dashboard extends Component {
     let theirHandle = props.params.theirHandle
     if (!theirHandle) {
       return null
+    } else if (theirHandle === (this.state.selectedUser || {}).handle) {
+      return this.state.selectedUser
     } else if (props.viewer.user.friends.count) {
       let friends = props.viewer.user.friends.edges.map(edge=>edge.node)
       let selectedUser = friends.find(friend => friend.handle===theirHandle)
@@ -48,21 +50,24 @@ class Dashboard extends Component {
         return selectedUser
       } else {
         console.log('could not find user in friends');
-        props.location.pathname!==`/dash/` && props.router.push(`/dash/`)
+        props.location.pathname!==`/dash/` && props.router.replace(`/dash/`)
       }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    let newTheirHandle = nextProps.params.theirHandle
-    let oldSelectedUser = this.state.selectedUser || {}
-    if (newTheirHandle && (oldSelectedUser.handle===newTheirHandle)) {
-      return null
-    } else {
-      localStorage.removeItem('newMessages')
-      localStorage.removeItem('message')
-      this.setState({ selectedUser: this.getSelectedUser(nextProps) })
-    }
+    let oldPath = this.props.location.pathname
+    let newPath = nextProps.location.pathname
+    let newUser = (oldPath.split('/')[2]!==newPath.split('/')[2])
+    console.log('neprops', oldPath.split('/')[2], newPath.split('/')[2]);
+    oldPath!==newPath && this.setState({
+      tab: newPath.split('/')[3],
+      selectedUser: newUser ? this.getSelectedUser(nextProps) : this.state.selectedUser
+    })
+  }
+
+  setTab = (tab) => {
+    this.props.router.replace(`/dash/${this.state.selectedUser.handle}/${tab}/${this.userHandle}`)
   }
 
   componentWillUnmount() {
@@ -72,7 +77,7 @@ class Dashboard extends Component {
 
   suggestFriends = (max) => {
     max = max || this.state.maxSuggestedFriends
-    suggestedFriends(this.props.viewer.user.id).then( suggestions => {
+    suggestedFriends(this.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
         let list = suggestions.slice(0, max).map( friend =>
           <FbList
@@ -85,17 +90,17 @@ class Dashboard extends Component {
     })
   }
 
-  selectUser = (selectedUser) => {
+  selectUser = (newHandle) => {
     let oldPath = this.props.location.pathname
+    let currentHandle = this.props.params.theirHandle
     if (oldPath==='/dash/') {
-      this.props.router.push(`/dash/${selectedUser.handle}/projects/`)
-    } else if (selectedUser.handle===(this.state.selectedUser||{}).handle) {
-      this.props.router.push(`/dash/`)
+      this.props.router.replace(`/dash/${newHandle}/projects/`)
+    } else if (newHandle===currentHandle) {
+      this.props.router.replace(`/dash/`) //deselect
     } else {
-      let newPath = oldPath.replace(this.state.selectedUser.handle, selectedUser.handle)
-      this.props.router.push(newPath)
+      let newPath = oldPath.replace(`/${currentHandle}/`, `/${newHandle}/`)
+      this.props.router.replace(newPath)
     }
-    this.setState({selectedUser})
   }
 
   sendInvite = () => {
@@ -104,8 +109,7 @@ class Dashboard extends Component {
       if (!result) {
         this.setState({emailError: 'Already a member!'})
       } else {
-        let user = this.props.viewer.user
-        let {id: byId, handle: byHandle} = user
+        let {id: byId, handle: byHandle} = this.user
         let query = { byId, toEmail, byHandle }
         sendEmailInvite(query).then( result => {
           if (result.status===200) {
@@ -123,20 +127,14 @@ class Dashboard extends Component {
   }
 
   createFriendRequest = (recipientId) => {
-    let {id: actorId} = this.props.viewer.user
+    let {id: actorId} = this.user
     this.props.relay.commitUpdate(
       new CreateFriendRequest({actorId, recipientId})
     )
   }
-
   inviteDialog = () => {
     this.setState({invite: true})
     this.suggestFriends()
-  }
-
-  setTab = (tab) => {
-    this.props.router.push(`/dash/${this.state.selectedUser.handle}/${tab}/${this.userHandle}`)
-    this.setState({ tab })
   }
 
   noTribePanel = () => (
@@ -155,6 +153,47 @@ class Dashboard extends Component {
     if (user.deactivated) return null
     return (
       <DashView>
+        <DashHeader>
+          <DashHeaderRow>
+            <IconTextContainer to={`/dash/`} >
+              <BtAvatar size={40} hideStatus />
+              <IconText>My Tribe</IconText>
+            </IconTextContainer>
+            <InviteButton
+              onClick={()=>{this.inviteDialog()}}
+              text={'Invite Member'} />
+          </DashHeaderRow>
+        </DashHeader>
+        <Divider/>
+        <BotRow>
+          <DashLeft>
+            <FriendList
+              select={this.selectUser}
+              selected={selectedUser}
+              friends={user.friends}
+              inviteTribe={() => this.inviteDialog() }
+              showTribe={this.state.showTribe}
+              flipTribe={() => this.setState({showTribe:  !this.state.showTribe})}
+              mentors={user.mentors} //TODO
+              inviteMentors={() => this.setState({inviteMentors: true}) }
+              showMentors={this.state.showMentors}
+              flipMentors={() =>
+                this.setState({showMentors: !this.state.showMentors})}
+              />
+          </DashLeft>
+          <Panel
+            empty={!selectedUser}
+            tab={tab}
+            topBar={<DashProfile selectedUser={selectedUser || user} />}
+            tabChange={(newTab)=>this.setTab(newTab)}
+            labels={['projects', 'bounces', 'messages']}
+            locks={[false, false, false]}
+            values={[0,0,0]}
+            content={this.state.noTribe ? this.noTribePanel() : this.props.children}
+            scroll={this.props.location.pathname===`/dash/`} />
+        </BotRow>
+
+
         <Snackbar
           open={!!this.state.snackbarText}
           message={this.state.snackbarText}
@@ -197,51 +236,10 @@ class Dashboard extends Component {
           {!!this.state.suggestions.length &&
              <DialogRow>{this.state.suggestions}</DialogRow>}
         </Dialog>
-
-        <DashHeader>
-          <DashHeaderRow>
-            <IconTextContainer to={`/dash/`} >
-              <BtAvatar size={40} hideStatus />
-              <IconText>My Tribe</IconText>
-            </IconTextContainer>
-            <InviteButton
-              onClick={()=>{this.inviteDialog()}}
-              text={'Invite Member'} />
-          </DashHeaderRow>
-        </DashHeader>
-        <Divider/>
-        <BotRow>
-          <DashLeft>
-            <FriendList
-              select={this.selectUser}
-              selected={selectedUser}
-              friends={user.friends}
-              inviteTribe={() => this.inviteDialog() }
-              showTribe={this.state.showTribe}
-              flipTribe={() => this.setState({showTribe:  !this.state.showTribe})}
-              mentors={user.mentors} //TODO
-              inviteMentors={() => this.setState({inviteMentors: true}) }
-              showMentors={this.state.showMentors}
-              flipMentors={() =>
-                this.setState({showMentors: !this.state.showMentors})}
-              />
-          </DashLeft>
-          <Panel
-            empty={!selectedUser}
-            tab={tab}
-            topBar={selectedUser && <DashProfile selectedUser={selectedUser} />}
-            tabChange={(newTab)=>this.setTab(newTab)}
-            labels={['projects', 'bounces', 'messages']}
-            locks={[false, false, false]}
-            values={selectedUser && [0,0,0]}
-            content={this.state.noTribe ? this.noTribePanel() : this.props.children}
-            scroll={this.props.location.pathname===`/dash/`} />
-        </BotRow>
       </DashView>
     )
   }
  }
-
 
  export default Relay.createContainer( Dashboard, {
     initialVariables: { theirHandle: '', userHandle: ''},

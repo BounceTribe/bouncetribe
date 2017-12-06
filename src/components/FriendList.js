@@ -34,7 +34,7 @@ const Header = styled.span`
 
 const makeRows = (users, select, selected) => (
   users.map( user =>
-    <FriendRow key={user.id} onClick={()=>select(user)}>
+    <FriendRow key={user.id} onClick={()=>select(user.handle)}>
       <BtAvatar size={40} user={user} />
       <Handle selected={selected && user.id===selected.id}>{user.handle}</Handle>
       <BtTextMarker size={20} fontHeight={14} value={0}/>

@@ -5,6 +5,15 @@ import {mapNodes} from 'utils/mapNodes'
 
 let setCategories = (items, category) => {
   let nodes = mapNodes(items)
+  let avatar
+  if (category==='comment') {
+    //item.author 
+  } else if (category==='bounce') {
+      //item.bouncer
+  } else if (category==='project') {
+    //item.creator
+  }
+
   return nodes.map(node => Object.assign({...node}, {category}))
 }
 

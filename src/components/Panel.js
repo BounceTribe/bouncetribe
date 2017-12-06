@@ -32,7 +32,7 @@ export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, e
   return (
     <Container hideBorder={hideBorder}>
       {topBar}
-      {!empty && <Tabs
+      {!empty && !(tab===undefined) && <Tabs
         // style={{ margin: '0 0 10px 0', borderRadius: '5px' }}
         tabItemContainerStyle={{
           borderBottom: `2px solid ${grey200}`,

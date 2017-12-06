@@ -64,7 +64,7 @@ function setupCompiler(host, port, protocol) {
       //clearConsole();
     }
     console.log('Compiling...');
-    let logPath = 'jake-hourlog'
+    let logPath = 'jake-hourlog.json'
     fs.stat(logPath, (err, stats) => {
       if (!err) {
         var timeLogger = require('../timeLogger.js')
