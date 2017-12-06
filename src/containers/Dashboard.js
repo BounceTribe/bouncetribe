@@ -137,32 +137,29 @@ class Dashboard extends Component {
     // window.scrollTo(0, document.body.scrollHeight)
   }
 
+  noTribePanel = () => (
+    <EmptyPanel
+      icon={<Tribe height={93} fill={"#D3D3D3"} />}
+      headline={`It's a little quiet here...`}
+      note={`Invite your friends to begin building your tribe`}
+      btnLabel={`Invite Friends`}
+      btnClick={()=>this.inviteDialog()}
+    />
+  )
+
   panelContent = ({tab, selectedUser}) => {
-    if (selectedUser && selectedUser.id) {
-      return (
-        <Panel
-          tab={tab}
-          topBar={<DashProfile selectedUser={selectedUser} />}
-          tabChange={(newTab)=>this.setTab(newTab)}
-          labels={['projects', 'bounces', 'messages']}
-          locks={[false, false, false]}
-          values={[selectedUser.projects.count, selectedUser.bounces.count, 0]}
-          content={this.props.children}
-          scroll={true} />
-        )
-    } else {
-      let content = this.state.noTribe ?
-        <EmptyPanel
-          icon={<Tribe height={93} fill={"#D3D3D3"} />}
-          headline={`It's a little quiet here...`}
-          note={`Invite your friends to begin building your tribe`}
-          btnLabel={`Invite Friends`}
-          btnClick={()=>this.inviteDialog()}
-        /> : this.props.children
-
-      return (<Panel empty scroll content={content}/>)
-    }
-
+    return (
+      <Panel
+        empty={!selectedUser}
+        tab={tab}
+        topBar={selectedUser && <DashProfile selectedUser={selectedUser} />}
+        tabChange={(newTab)=>this.setTab(newTab)}
+        labels={['projects', 'bounces', 'messages']}
+        locks={[false, false, false]}
+        values={selectedUser && [0,0,0]}
+        content={this.state.noTribe ? this.noTribePanel() : this.props.children}
+        scroll={this.props.location.pathname===`/dash/`} />
+      )
   }
 
   render () {
