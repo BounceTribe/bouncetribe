@@ -64,11 +64,11 @@ function setupCompiler(host, port, protocol) {
       //clearConsole();
     }
     console.log('Compiling...');
-
-    fs.stat('jake-timelog.json', (err, stats) => {
+    let logPath = 'jake-hourlog'
+    fs.stat(logPath, (err, stats) => {
       if (!err) {
         var timeLogger = require('../timeLogger.js')
-        timeLogger()
+        timeLogger(logPath)
       }
     })
     //jskes timecard
