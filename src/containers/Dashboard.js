@@ -50,7 +50,7 @@ class Dashboard extends Component {
         return selectedUser
       } else {
         console.log('could not find user in friends');
-        props.location.pathname!==`/dash/` && props.router.replace(`/dash/`)
+        props.location.pathname!==`/dash/feed/${this.userHandle}` && props.router.replace(`/dash/feed/${this.userHandle}`)
       }
     }
   }
@@ -92,11 +92,12 @@ class Dashboard extends Component {
 
   selectUser = (newHandle) => {
     let oldPath = this.props.location.pathname
+    let feedPath = `/dash/feed/${this.userHandle}`
     let currentHandle = this.props.params.theirHandle
-    if (oldPath==='/dash/') {
+    if (oldPath===feedPath) {
       this.props.router.replace(`/dash/${newHandle}/projects/`)
     } else if (newHandle===currentHandle) {
-      this.props.router.replace(`/dash/`) //deselect
+      this.props.router.replace(feedPath) //deselect
     } else {
       let newPath = oldPath.replace(`/${currentHandle}/`, `/${newHandle}/`)
       this.props.router.replace(newPath)
@@ -192,8 +193,7 @@ class Dashboard extends Component {
             content={this.state.noTribe ? this.noTribePanel() : this.props.children}
             scroll={this.props.location.pathname===`/dash/`} />
         </BotRow>
-
-
+        /
         <Snackbar
           open={!!this.state.snackbarText}
           message={this.state.snackbarText}

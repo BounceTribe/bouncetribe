@@ -19,7 +19,7 @@ export const ScrollBox = styled.div`
     display: flex;
     align-items: center;
     border-bottom: 1px solid ${grey300};
-    padding: 20px 20px;
+    padding: 10px 20px;
     &:hover > div {
       color: ${purple}
     }
@@ -38,15 +38,17 @@ export const ScrollBox = styled.div`
       color: #4A4A4A;
     `
 
-export const Activity = ({date, icon, text, link}) => {
+export const Activity = ({date, icon, text, link, dash}) => {
   let formattedDate = date
     .toLocaleDateString('en-US', {month: 'short', 'day': 'numeric'})
   return (
+    <div >
     <ActivityContainer to={link ? link : null}>
       <ActivityDate>{formattedDate}</ActivityDate>
       <ActivityIcon>{icon}</ActivityIcon>
       <ActivityText>{text}</ActivityText>
     </ActivityContainer>
+  </div>
   )
 }
 
@@ -56,9 +58,24 @@ const generateLink = (project) => (
   `/${project.creator.handle}/${project.title}`
  )
 
+ // const makeFeed = (props) => {
+ //   let {comments, bounces, projects} = {...props}
+ //   console.log('...props', comments, bounces, projects);
+ //   let byUser = {}
+ //
+ //
+ // }
+
 const makeList = (props) => {
   // console.log('listprops', props);
   let {comments, bounces, projects, dash} = props
+  // if (dash) {
+  //   let bounceAvatar = bounces.count && <BtAvatar user={bounces[0].bouncer} />
+  //   let commentAvatar = comments.count && <BtAvatar user={comments[0].author.bouncer} />
+  //   let bounceAvatar = bounces.count && <BtAvatar user={bounces[0].bouncer} />
+  //
+  // }
+
   let commentProjects = []
   let list = comments.map((comment, index) => {
     let project = comment.project || {}
@@ -68,20 +85,23 @@ const makeList = (props) => {
     } else {
       commentProjects.push(project.id)
       return project.id &&
-      <Activity
+      <Activity dash={dash}
         key={comment.id}
         date={new Date(comment.createdAt)}
-        icon={<Tribe height={13}/>}
+        icon={dash ? <BtAvatar hideOnline size={40} user={comment.author} /> : <Tribe height={13}/>}
         text={`${dash ? comment.author.handle + ' g' : 'G'}ave feedback to ${project.title}`}
         link={generateLink(project)}/>}
   })
   list = list.concat(bounces.map(bounce => {
-    let avatar = dash && <BtAvatar user={bounce.bouncer} />
+    // if (dash && !avatarList.) {
+    //
+    // }
+    // let avatar = dash
     return (
-    <Activity
+    <Activity dash={dash}
       key={bounce.id}
       date={new Date(bounce.createdAt)}
-      icon={<Bounce width={19} fill={purple}/>}
+      icon={dash ? <BtAvatar hideOnline size={40} user={bounce.bouncer} /> : <Bounce width={19} fill={purple}/>}
       text={`${dash ? bounce.bouncer.handle + ' b' : 'B'}ounced ${bounce.project.title}`}
       link={generateLink(bounce.project)}/>
     )}
@@ -89,10 +109,10 @@ const makeList = (props) => {
 
   list = list.concat(projects.map(project => {
     return (
-    <Activity
+    <Activity dash={dash}
       key={project.id}
       date={new Date(project.createdAt)}
-      icon={<Music height={13}/>}
+      icon={dash ? <BtAvatar hideOnline size={40} user={project.creator} /> : <Music height={13}/>}
       text={`${dash ? project.creator.handle + ' a' : 'A'}dded a new Project - ${project.title}`}
       link={generateLink(project)}/>
     )}
@@ -103,7 +123,7 @@ const makeList = (props) => {
     return b.props.date - a.props.date
   })
   // console.log('list', list);
-  return list
+  return dash ? list.slice(0,10) : list
 }
 
 export const ActivityList = (props) => (

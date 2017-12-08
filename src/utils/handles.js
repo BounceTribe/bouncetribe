@@ -2,7 +2,7 @@ import {graphCool} from 'config'
 import {randomString} from 'utils/random'
 const nonAlphanumeric = /[^a-zA-Z\w_:]/gi
 
-const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /login/i, /signup/i, /messages/i, /dash/i, /session/i, /projects/i, /bounces/i, /unsubscribe/i, /notribe/i, /acceptinvite/i, /acceptrequest/i]
+const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /login/i, /signup/i, /messages/i, /dash/, /feed/i, /session/i, /projects/i, /bounces/i, /unsubscribe/i, /notribe/i, /acceptinvite/i, /acceptrequest/i]
 
 
 export const isUniqueField = (value, type) => {

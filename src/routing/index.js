@@ -99,7 +99,7 @@ const createRoutes = () => (
       component={Dashboard}
       queries={ViewerQuery}
       render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
-      <IndexRoute
+      <Route path='/dash/feed/:userHandle'
         component={Feed}
         queries={ViewerQuery}
         render={({props}) => props ? <Feed {...props} /> : <Loading nested />} />

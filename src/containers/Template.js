@@ -53,6 +53,9 @@ class Template extends Component {
       case newPath==='/':
         this.redirect()
         break
+      case newPath==='/dash/':
+        this.redirect()
+        break
       case newPath==='/unsubscribe':
         this.setState({settings: true})
         this.redirect()
@@ -96,7 +99,7 @@ class Template extends Component {
                 console.log('friend added res', res);
                 this.setState({snackbarText: 'FRIEND ADDED'})
                 //using location fo force query update
-                location.assign(`${url}/dash/`)
+                location.assign(`${url}/dash/feed/${this.props.viewer.user.handle}`)
               },
               onFailure: res => {
                 console.log('ADD FRIEND FAILURE', res)
@@ -116,7 +119,7 @@ class Template extends Component {
   redirect = () => {
     console.log('template redirect', this.props)
     let user = this.props.viewer.user
-    this.props.router.push(`${ user ? '/dash/' : '/login/' }`)
+    this.props.router.push(`${ user ? `/dash/feed/${user.handle}` : '/login/' }`)
   }
 
   ping = () => {
