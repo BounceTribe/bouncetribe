@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import {View} from 'styled'
-import {white} from 'theme'
+import {white, purple} from 'theme'
 
 export const ProfileView = styled(View)`
   background-color: transparent;
@@ -59,6 +59,14 @@ export const Right = styled.div`
   justify-content: center;
   width: 30%;
   padding-left: 20px;
+`
+
+export const SiteLink = styled.a`
+  ${'' /* color: ${grey500}; */}
+  color: #777777;
+  font-weight: 400;
+  text-decoration: none;
+  &:hover {color: ${purple}}
 `
 
 // export const Portrait = styled.img`

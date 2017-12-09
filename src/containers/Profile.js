@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, TopCol, Handle, Location, ScoreRow, Score, Divider, Summary, BotRow, BotRight, Label,  SubRow, Experience, ExperienceRow, EmailWebsite, MissingUserData} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, TopCol, Handle, Location, ScoreRow, Score, Divider, Summary, BotRow, BotRight, Label,  SubRow, Experience, ExperienceRow, EmailWebsite, MissingUserData, SiteLink} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
 // import Email from 'icons/Email'
-import Link from 'icons/Link'
+import LinkIcon from 'icons/Link'
 import Online from 'icons/Online'
 import ExperienceIcon from 'icons/Experience'
 import ImageEditor from 'components/ImageEditor'
@@ -222,8 +222,8 @@ class Profile extends Component {
         <Left>
           <EmailWebsite>
             {(User.website || ownProfile) &&
-              <Link style={{marginRight: '10px'}}/>}
-            {User.website}
+              <LinkIcon style={{marginRight: '10px'}}/>}
+            <SiteLink href={(User.website.substr(0,4)==='http') ? User.website : 'http://' + User.website} target="_blank">{User.website}</SiteLink>
             <MissingUserData hide={User.website || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
               Add your website
