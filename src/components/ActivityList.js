@@ -2,55 +2,90 @@ import React from 'react'
 import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
 import Bounce from 'icons/Bounce'
-import {Activity, ScrollBox} from 'styled/ActivityList'
+import {Activity, ScrollBox, NameLink} from 'styled/ActivityList'
 import {BtAvatar} from 'styled'
 import {purple} from 'theme'
 
-const generateLink = (project) => (
+const getLink = (project) => (
   project.privacy==='PUBLIC' &&
   !project.creator.deactivated &&
   `/${project.creator.handle}/${project.title}`
 )
+const getAvatar = (router,user) => (
+  <BtAvatar hideOnline pointer size={40}
+    onClick={()=>router.push(user.handle)}
+    user={user} />
+)
 
 const makeList = (props) => {
   // console.log('listprops', props);
-  let {comments, bounces, projects, dash} = props
-
+  let {comments, bounces, projects, dash, router} = props
+  let text, icon
   let commentProjects = []
   let list = comments.map((comment, index) => {
-    let project = comment.project || {}
-    if (commentProjects.includes(project.id)) {
-      // console.log('duplicate project ignored')
-      return <div key={index}/>
+    // let project = comment.project || {}
+    let {author, project, createdAt, id} = comment
+    if (dash) {
+      text = (
+        <span>
+          <NameLink to={`/${author.handle}`}>{author.handle} </NameLink>
+          gave feedback to
+          <NameLink to={`/${project.creator.handle}/${project.title}`}> {project.title} </NameLink>
+        </span>)
+      icon = getAvatar(router, author)
     } else {
+      text = `Gave feedback to ${project.title}`
+      icon = <Tribe height={13}/>
+      if (commentProjects.includes(project.id)) {
+        // console.log('duplicate project ignored')
+        return <div key={index}/>
+      }
       commentProjects.push(project.id)
-      return project.id &&
-      <Activity dash={dash}
-        key={comment.id}
-        date={new Date(comment.createdAt)}
-        icon={dash ? <BtAvatar hideOnline size={40} user={comment.author} /> : <Tribe height={13}/>}
-        text={`${dash ? comment.author.handle + ' g' : 'G'}ave feedback to ${project.title}`}
-        link={generateLink(project)}/>}
+    }
+
+    return project.id &&
+    <Activity dash={dash}
+      key={id}
+      date={new Date(createdAt)}
+      icon={icon}
+      text={text}
+      link={getLink(project)}/>
   })
   list = list.concat(bounces.map(bounce => {
+    let {bouncer, project, id, createdAt} = bounce
+
+    if (dash) {
+      text = (
+        <span>
+          <NameLink to={`/${bouncer.handle}`}>{bouncer.handle} </NameLink>
+          bounced
+          <NameLink to={`/${project.creator.handle}/${project.title}`}> {project.title}</NameLink>
+        </span>)
+      icon = getAvatar(router, bouncer)
+    } else {
+      text = `Bounced ${project.title}`
+      icon = <Tribe height={13}/>
+    }
     return (
-    <Activity dash={dash}
-      key={bounce.id}
-      date={new Date(bounce.createdAt)}
-      icon={dash ? <BtAvatar hideOnline size={40} user={bounce.bouncer} /> : <Bounce width={19} fill={purple}/>}
-      text={`${dash ? bounce.bouncer.handle + ' b' : 'B'}ounced ${bounce.project.title}`}
-      link={generateLink(bounce.project)}/>
+    <Activity dash={dash} key={id} icon={icon} text={text}
+      date={new Date(createdAt)}
+      link={getLink(project)}/>
     )}
   ))
 
   list = list.concat(projects.map(project => {
-    let link = generateLink(project)
+    let {createdAt, creator, title, id} = project
+    let link = getLink(project)
+    if (dash) {
+      text = (<NameLink to={`/${creator.handle}`}>{creator.handle}</NameLink>)
+      icon = getAvatar(router, creator)
+    } else {
+      text = `Bounced ${title}`
+      icon = <Tribe height={13}/>
+    }
     return (
-    <Activity dash={dash}
-      key={project.id}
-      date={new Date(project.createdAt)}
-      icon={dash ? <BtAvatar hideOnline size={40} user={project.creator} /> : <Music height={13}/>}
-      text={dash ? project.creator.handle : `Added a new Project - ${project.title}`}
+    <Activity Activity dash={dash} key={id} icon={icon} text={text}
+      date={new Date(createdAt)}
       link={link}
       project={project}
       urlPush={()=>{props.router.push(link)}}/>
@@ -62,7 +97,7 @@ const makeList = (props) => {
     return b.props.date - a.props.date
   })
   // console.log('list', list);
-  return dash ? list.slice(0,10) : list
+  return dash ? list : list
 }
 
 export const ActivityList = (props) => (

@@ -1,8 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
+import {Link} from 'react-router'
 import {url} from 'config'
 import {BtLink, BtFlatButton} from 'styled'
 import {grey300, grey500, purple, white} from 'theme'
+
+export const NameLink = styled(Link)`
+  font-weight: 500;
+  text-decoration: none;
+  color: #4A4A4A;
+  &:hover{color: ${purple};}
+`
 
 export const ScrollBox = styled.div`
   padding: 0 0 5px 0;
@@ -13,15 +21,15 @@ export const ScrollBox = styled.div`
   const ActivityContainer = styled.div`
     display: flex;
     flex-direction: column;
-    border-top: 1px solid ${grey300};
+    border-bottom: 1px solid ${grey300};
     padding: 10px 20px;
-    &:hover > div {color: ${purple}}
   `
-  const ActivityRow1 = styled(BtLink)`
+  const ActivityPanelRow = styled(BtLink)`
     display: flex;
     align-items: center;
+    &:hover > div {color: ${purple}}
   `
-  const ActivityRow2 = styled.div`
+  const ActivityDashRow= styled.div`
     display: flex;
     align-items: center;
   `
@@ -48,6 +56,7 @@ export const ScrollBox = styled.div`
         width: 180px;
         height: 180px;
         padding: 10px;
+        cursor: pointer;
       `
       const ProjectDetail = styled.div`
         display: flex;
@@ -57,8 +66,8 @@ export const ScrollBox = styled.div`
         const DetailHeading = styled.div`
           color: #777777;
           font-size: 13px;
-          font-weight: 300;
-          letter-spacing: 1.3px;
+          font-weight: 400;
+          letter-spacing: 2px;
         `
         const DetailTitle = styled.div`
           color: #333333;
@@ -72,7 +81,10 @@ export const ScrollBox = styled.div`
       let {artwork, title} = project
       return (
         <ProjectContainer>
-          <ProjectArt src={(artwork) ? artwork.url : `${url}/artwork.png`} />
+          <ProjectArt
+            src={artwork ? artwork.url : `${url}/artwork.png`}
+            onClick={urlPush}
+          />
           <ProjectDetail>
             <DetailHeading>NEW PROJECT ADDED</DetailHeading>
             <DetailTitle>{title}</DetailTitle>
@@ -92,16 +104,29 @@ export const Activity = ({date, icon, text, link, dash, project, urlPush}) => {
   let formattedDate = date
     .toLocaleDateString('en-US', {month: 'short', 'day': 'numeric'})
     //this ias where the Link nesting issue is
-  return (
-    <ActivityContainer>
-      <ActivityRow1 to={(link && !project) ? link : null}>
-        <ActivityDate>{formattedDate}</ActivityDate>
-        <ActivityIcon>{icon}</ActivityIcon>
-        <ActivityText>{text}</ActivityText>
-      </ActivityRow1>
-      <ActivityRow2>
-        {dash && project && <DashProject project={project} urlPush={urlPush}/>}
-      </ActivityRow2>
-    </ActivityContainer>
-  )
+    if (dash) {
+      return (
+        <ActivityContainer>
+          <ActivityDashRow>
+            <ActivityDate>{formattedDate}</ActivityDate>
+            <ActivityIcon>{icon}</ActivityIcon>
+            <ActivityText>{text}</ActivityText>
+          </ActivityDashRow>
+          <ActivityDashRow>
+            {project && <DashProject project={project} urlPush={urlPush}/>}
+          </ActivityDashRow>
+        </ActivityContainer>
+      )
+    } else {
+      return (
+        <ActivityContainer>
+          <ActivityPanelRow to={link ? link : null}>
+            <ActivityDate>{formattedDate}</ActivityDate>
+            <ActivityIcon>{icon}</ActivityIcon>
+            <ActivityText>{text}</ActivityText>
+          </ActivityPanelRow>
+        </ActivityContainer>
+      )
+    }
+
 }

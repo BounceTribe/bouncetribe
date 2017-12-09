@@ -185,7 +185,10 @@ class Dashboard extends Component {
           <Panel
             empty={!selectedUser}
             tab={tab}
-            topBar={<DashProfile selectedUser={selectedUser || user} />}
+            topBar={
+              <DashProfile
+                selectedUser={selectedUser || user}
+                feed={!selectedUser} />}
             tabChange={(newTab)=>this.setTab(newTab)}
             labels={['projects', 'bounces', 'messages']}
             locks={[false, false, false]}
@@ -193,7 +196,7 @@ class Dashboard extends Component {
             content={this.state.noTribe ? this.noTribePanel() : this.props.children}
             scroll={this.props.location.pathname===`/dash/`} />
         </BotRow>
-        /
+        
         <Snackbar
           open={!!this.state.snackbarText}
           message={this.state.snackbarText}

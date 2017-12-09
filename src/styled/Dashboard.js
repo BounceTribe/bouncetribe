@@ -4,7 +4,7 @@ import {View, BtAvatar, BtFlatButton} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import Bolt from 'icons/Bolt'
-import {grey500, grey400, grey222, purple, white} from 'theme'
+import {grey500, grey400, grey300, grey222, purple, white} from 'theme'
 import {Name} from 'styled/Tribe'
 import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
@@ -16,8 +16,13 @@ export const DashView = styled(View)`
   box-shadow: none;
 `
 
-export const DashProfile = ({selectedUser}) => (
-  <div style={{display: 'flex', padding: '21px 31px 15px 31px', minHeight: '60px'}}>
+export const DashProfile = ({selectedUser, feed}) => (
+  <div style={{
+    display: 'flex',
+    padding: '21px 31px 15px 31px',
+    minHeight: '60px',
+    borderBottom: feed && `1px solid ${grey300}`
+  }}>
     <BtAvatar user={selectedUser} size={60} />
     <ProfCol>
       <ProfHandle to={`/${selectedUser.handle}`} >

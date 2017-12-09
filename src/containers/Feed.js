@@ -83,6 +83,7 @@ export default Relay.createContainer( Feed, {
               createdAt
               text
               project {
+                id
                 title
                 privacy
                 artwork {url}
@@ -130,6 +131,7 @@ export default Relay.createContainer( Feed, {
               createdAt
               project {
                 title
+                id
                 privacy
                 artwork {url}
                 creator {
