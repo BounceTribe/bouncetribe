@@ -30,8 +30,12 @@ export default class EditProfile extends Component {
     let error = ''
     this.setState({ email: val,  emailError: error })
     if (val!==this.props.user.email) {
+
       isUniqueField(val, 'email').then( result =>
-        !result && this.setState({emailError: 'email already in use!'})
+        {
+          console.log('in use', {val});
+          !result && this.setState({emailError: 'email already in use!'})
+        }
       )
     }
   }
@@ -49,7 +53,8 @@ export default class EditProfile extends Component {
     let {userId} = this.props
     Relay.Store.commitUpdate(
       new UpdateUser({ userId, handle, placename, summary, email, website }), {
-        onSuccess: (success) => this.props.onSave()
+        onSuccess: (success) => this.props.onSave(),
+        onFailure: (failure) => console.log('updateuser fail', failure)
       }
     )
   }

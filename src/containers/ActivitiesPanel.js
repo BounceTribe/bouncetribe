@@ -15,7 +15,7 @@ class ActiviesPanel extends Component {
 
     console.log({User});
     let isSelf = user.id===User.id
-    let hasActivities = comments.filter(comment=>comment.project).count + bounces.count + projects.count
+    let hasActivities = mapNodes(comments).filter(comment=>comment.project).length + bounces.count + projects.count
     return (
       hasActivities ?
       <ActivityList
