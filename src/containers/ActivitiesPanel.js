@@ -15,7 +15,7 @@ class ActiviesPanel extends Component {
 
     console.log({User});
     let isSelf = user.id===User.id
-    let hasActivities = comments.count + bounces.count + projects.count
+    let hasActivities = comments.filter(comment=>comment.project).count + bounces.count + projects.count
     return (
       hasActivities ?
       <ActivityList
@@ -56,6 +56,17 @@ export default Relay.createContainer( ActiviesPanel, {
       projectsFilter: {
         privacy_not: 'PRIVATE',
       }
+      // use similiar filters for comments, bounces (if project changes privacy)
+      // projectsFilter: { OR:
+      //   [ {
+      //     privacy_not: 'PRIVATE',
+      //   }, {
+      //     privacy: 'TRIBE ONLY',
+      //     creator: {
+      //       friends_some: { handle: urlParams.userHandle }
+      //     },
+      //   }
+      // ] }
     }
   },
   fragments: {
@@ -70,7 +81,7 @@ export default Relay.createContainer( ActiviesPanel, {
           handle
           deactivated
           comments (
-            first: 999
+            first: 20
             orderBy: createdAt_ASC
           ){
             count
@@ -92,7 +103,7 @@ export default Relay.createContainer( ActiviesPanel, {
             }
           }
           bounces (
-            first:999
+            first: 20
             orderBy: createdAt_ASC
            ) {
               count
@@ -113,7 +124,7 @@ export default Relay.createContainer( ActiviesPanel, {
               }
           }
           projects (
-            first: 999
+            first: 20
             orderBy: createdAt_ASC
             filter: $projectsFilter
           ){

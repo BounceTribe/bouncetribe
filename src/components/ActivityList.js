@@ -14,7 +14,7 @@ const getLink = (project) => (
 const getAvatar = (router,user) => (
   <BtAvatar hideStatus pointer size={40}
     onClick={()=>router.push(user.handle)}
-    user={user} />
+      user={user} />
 )
 
 const makeList = (props) => {
