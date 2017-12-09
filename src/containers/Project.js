@@ -108,7 +108,7 @@ class Project extends Component {
     let bounces = project.bounces.edges
     let bouncedByIds = bounces.map(edge => edge.node.bouncer.id)
     this.setState({
-      disableComments: !this.isFriends,
+      disableComments: (!this.isFriends && this.project.privacy!=='PUBLIC'),
       bounced: bouncedByIds.includes(user.id)
     })
     getAllGenres().then(results=>{
@@ -198,7 +198,7 @@ class Project extends Component {
         project: this.project,
         artworkId: file.id,
       }), {
-        onSuccess: success => console.log('artwork success'),
+        onSuccess: success => console.log('artwork success', success),
         failure: failure => console.log('fail', failure)
       }
     )

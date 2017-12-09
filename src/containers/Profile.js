@@ -36,6 +36,7 @@ class Profile extends Component {
   constructor(props) {
     super(props)
     let {User} = this.props.viewer
+    console.log('profile user', User);
     let mappedInfo = mapUserInfo(props.viewer.User)
 
     this.state = {
@@ -119,13 +120,15 @@ class Profile extends Component {
 
   portraitSuccess = (file) => {
     this.setState({imageEditorOpen: false})
+    let updateObj = {
+      userId: this.props.viewer.user.id,
+      portraitId: file.id,
+    }
+    console.log('portrait updating', updateObj);
     this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.User.id,
-        portraitId: file.id,
-      }), {
-        onSuccess: success => console.log(success),
-        failure: failure => console.log('fail', failure)
+      new UpdateUser(updateObj), {
+        onSuccess: success => console.log('portrait success', success),
+        failure: failure => console.log('portrait fail', failure)
       }
     )
   }

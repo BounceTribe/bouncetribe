@@ -23,7 +23,7 @@ export const DashProfile = ({selectedUser, feed}) => (
     minHeight: '60px',
     borderBottom: feed && `1px solid ${grey300}`
   }}>
-    <BtAvatar user={selectedUser} size={60} />
+    <BtAvatar user={selectedUser} hideStatus={feed} size={60} />
     <ProfCol>
       <ProfHandle to={`/${selectedUser.handle}`} >
         {selectedUser.handle}

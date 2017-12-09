@@ -37,7 +37,27 @@ class ActiviesPanel extends Component {
 
 
 export default Relay.createContainer( ActiviesPanel, {
-  initialVariables: { theirHandle: '' },
+  initialVariables: {
+    theirHandle: '',
+    userHandle: '',
+    bouncesFilter: {},
+    commentsFilter: {},
+    projectsFilter: {}
+  },
+  prepareVariables: (urlParams) => {
+    return {
+      ...urlParams,
+      // commentsFilter: {
+      //   project: {privacy_not: 'PRIVATE'},
+      // },
+      // bouncesFilter: {
+      //   project: {privacy_not: 'PRIVATE'},
+      // },
+      projectsFilter: {
+        privacy_not: 'PRIVATE',
+      }
+    }
+  },
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
@@ -95,6 +115,7 @@ export default Relay.createContainer( ActiviesPanel, {
           projects (
             first: 999
             orderBy: createdAt_ASC
+            filter: $projectsFilter
           ){
             count
             edges {

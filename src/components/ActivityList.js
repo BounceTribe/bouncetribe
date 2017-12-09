@@ -12,7 +12,7 @@ const getLink = (project) => (
   `/${project.creator.handle}/${project.title}`
 )
 const getAvatar = (router,user) => (
-  <BtAvatar hideOnline pointer size={40}
+  <BtAvatar hideStatus pointer size={40}
     onClick={()=>router.push(user.handle)}
     user={user} />
 )

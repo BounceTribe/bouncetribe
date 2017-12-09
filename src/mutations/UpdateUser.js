@@ -1,6 +1,6 @@
-import Relay from 'react-relay'
+import Relay, {Mutation} from 'react-relay'
 
-export default class UpdateUser extends Relay.Mutation {
+export default class UpdateUser extends Mutation {
 
   getMutation () {
     return Relay.QL`mutation{updateUser}`
@@ -11,21 +11,13 @@ export default class UpdateUser extends Relay.Mutation {
       fragment on UpdateUserPayload {
         user
         portrait
+        # viewer
       }
     `
   }
-  getConfigs () {
-    return [{
-      type: 'FIELDS_CHANGE',
-      fieldIDs: {
-        user: this.props.userId,
-        portrait: this.props.portraitId
-      },
-    }]
-  }
 
   getVariables () {
-    console.log('props', this.props);
+    console.log('user update props', this.props);
     return {
       id: this.props.userId,
       name: this.props.name,
@@ -48,6 +40,24 @@ export default class UpdateUser extends Relay.Mutation {
       doNotEmailPB: this.props.doNotEmailPB,
     }
   }
+
+  getConfigs () {
+    return [{
+      type: 'FIELDS_CHANGE',
+      fieldIDs: {
+        viewer: 'viewer-fixed'
+      }
+    }]
+    // return [{
+    //   type: 'FIELDS_CHANGE',
+    //   fieldIDs: {
+    //     user: this.props.userId,
+    //     portrait: this.props.portraitId
+    //   },
+    // }]
+  }
+
+
   getOptimisticResponse () {
     return {
       user: {

@@ -42,8 +42,10 @@ export default class ImageUploader extends Component {
       window.createImageBitmap(htmlImage, 0, 0, width, height).then(result=>{
         let canvas = document.createElement('canvas')
         canvas.width = width
-        canvas.height = height
+        canvas.height = width
+
         let c = canvas.getContext('2d')
+        //thse last 2 values are where to make the thumbnail size
         c.drawImage(htmlImage, x, y, width, height, 0, 0, width, height)
         canvas.toBlob(blob=>{
           uploadFile(blob, imageName).then(fileId => {
@@ -53,6 +55,8 @@ export default class ImageUploader extends Component {
                   let file = transaction.updateFile.file
                   this.setState({ croppedImage: file.url })
                   this.props.fileSuccess(file)
+                  console.log('file uploaded', this.state.croppedImage)
+
                 },
                 onFailure: res =>console.log('updateFile fail', res)
               }

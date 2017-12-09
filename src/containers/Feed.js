@@ -32,7 +32,10 @@ class Feed extends Component {
    }
 
   render () {
-    return <ActivityList {...this.activities} dash router={this.props.router}/>
+    return <ActivityList dash
+      {...this.activities}
+      router={this.props.router}
+    />
   }
 }
 
@@ -48,11 +51,13 @@ export default Relay.createContainer( Feed, {
     return {
       ...urlParams,
       commentsFilter: {
+        project: {privacy_not: 'PRIVATE'},
         author: {
           friends_some: { handle: urlParams.userHandle, deactivated: false }
         }
       },
       bouncesFilter: {
+        project: {privacy_not: 'PRIVATE'},
         bouncer: {
           friends_some: { handle: urlParams.userHandle, deactivated: false }
         }
