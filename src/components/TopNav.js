@@ -185,7 +185,6 @@ class TopNav extends Component {
             backgroundColor={purple}
             to={`projects/${handle}/new`}
             icon={<Plus/>}
-            style={{borderRadius: '8px'}}
           />
         </NavList>
       </Bar>

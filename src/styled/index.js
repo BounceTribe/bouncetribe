@@ -193,10 +193,7 @@ export const CroppedImage = styled.img`
 export const Button = (props) => {
   return (
     <ButtonLink to={props.to} >
-      <RaisedButton
-        {...props}
-        labelStyle={{ textTransform: 'none', }}
-      >
+      <RaisedButton {...props} labelStyle={{ textTransform: 'none' }} >
         {props.children}
       </RaisedButton>
     </ButtonLink>
@@ -208,7 +205,8 @@ export const BtFlatButton = (props) => {
     <ButtonLink to={props.to} >
       <FlatButton
         {...props}
-        labelStyle={{ textTransform: 'none', ...props.labelStyle }} >
+        style={{borderRadius: '5px', ...props.style}}
+        labelStyle={{textTransform: 'none', ...props.labelStyle}} >
         {props.children}
       </FlatButton>
     </ButtonLink>

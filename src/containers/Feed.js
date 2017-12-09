@@ -20,7 +20,7 @@ import {mapNodes} from 'utils/mapNodes'
 
 class Feed extends Component {
   componentWillMount() {
-    // console.log('Feed', this.props.viewer);
+    console.log('Feed', this.props)
   }
 
   get activities() {
@@ -29,12 +29,10 @@ class Feed extends Component {
     let projects = mapNodes(this.props.viewer.allProjects)
     console.log({comments, bounces, projects});
     return {comments, bounces, projects}
-
-
-  }
+   }
 
   render () {
-    return <ActivityList {...this.activities} dash />
+    return <ActivityList {...this.activities} dash router={this.props.router}/>
   }
 }
 
@@ -60,6 +58,7 @@ export default Relay.createContainer( Feed, {
         }
       },
       projectsFilter: {
+        privacy_not: 'PRIVATE',
         creator: {
           friends_some: { handle: urlParams.userHandle, deactivated: false }
         }
@@ -69,78 +68,82 @@ export default Relay.createContainer( Feed, {
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-  allComments(
-    filter: $commentsFilter
-    first:20
-    orderBy: createdAt_DESC
-  ){
-    edges {
-      node {
-        id
-        createdAt
-        text
-        project {
-          title
-          artwork {url}
-          creator {
-            id
-            handle
-          }
-        }
-        author {
-          id
-          handle
-          portrait {url}
-        }
-      }
-    }
-  }
-   allProjects(
-    filter: $projectsFilter
-    first:20
-    orderBy: createdAt_DESC
-  ){
-    edges {
-      node {
-        id
-        createdAt
-        title
-        creator {
-          id
-          handle
-          portrait {url}
-        }
-      }
-    }
-  }
-  allBounces(
-    filter: $bouncesFilter
-    first:20
-    orderBy: createdAt_DESC
-  ){
-    edges {
-      node {
-        id
-        createdAt
-        project {
-          title
-          artwork {url}
-          creator {
-            id
-            handle
-          }
-        }
-        bouncer {
-          id
-          handle
-          portrait {url}
-        }
-      }
-    }
-  }
         user {
           id
           handle
+        }
+        allComments(
+          filter: $commentsFilter
+          first: 10
+          orderBy: createdAt_DESC
+        ){
+          edges {
+            node {
+              id
+              createdAt
+              text
+              project {
+                title
+                privacy
+                artwork {url}
+                creator {
+                  id
+                  handle
+                }
+              }
+              author {
+                id
+                handle
+                portrait {url}
+              }
+            }
+          }
+        }
+         allProjects(
+          filter: $projectsFilter
+          first: 10
+          orderBy: createdAt_DESC
+        ){
+          edges {
+            node {
+              id
+              createdAt
+              title
+              privacy
+              artwork {url}
+              creator {
+                id
+                handle
+                portrait {url}
+              }
+            }
+          }
+        }
+        allBounces(
+          filter: $bouncesFilter
+          first: 10
+          orderBy: createdAt_DESC
+        ){
+          edges {
+            node {
+              id
+              createdAt
+              project {
+                title
+                privacy
+                artwork {url}
+                creator {
+                  id
+                  handle
+                }
+              }
+              bouncer {
+                id
+                handle
+                portrait {url}
+              }
+            }
+          }
         }
       }
     `,
