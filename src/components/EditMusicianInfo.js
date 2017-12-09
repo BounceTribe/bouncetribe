@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import Dialog from 'material-ui/Dialog'
 import {Label, ExperienceRow} from 'styled/Profile'
-import {getAllGenres, getAllSkills} from 'utils/graphql'
+import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
 import searchArtists from 'utils/searchArtists'
 import {Async} from 'react-select'
 import 'react-select/dist/react-select.css'
@@ -50,16 +50,21 @@ export default class EditMusicianInfo extends Component {
 
 
   influenceOptions = (query) => {
-    return new Promise( (resolve, reject) =>
-      query ? searchArtists(query).then(options => resolve(options)) : resolve({options: []})
-    )
+    return new Promise( (resolve, reject) => {
+      if (!query) {
+        resolve({options: []})
+      } else {
+        searchArtists(query).then(options => resolve(options))
+      }
+    })
   }
 
   // influenceChange = (options) => {
   //   if (options.length < this.state.influences.length) {
   //     let artistInfluencesIds = options.map((option) => option.value.id)
-  //     let userId = this.props.viewer.user.id
-  //     this.props.relay.commitUpdate(
+  //     let userId = this.props.user.id
+  //     console.log({userId,artistInfluencesIds});
+  //     Relay.Store.commitUpdate(
   //       new UpdateUser({userId,artistInfluencesIds}), {
   //         onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
   //       }
@@ -67,16 +72,38 @@ export default class EditMusicianInfo extends Component {
   //   } else {
   //     let newInfluence = options.find((option) => !option.value.id)
   //     ensureBtArtistExists(newInfluence).then(artistId => {
-  //       let artistInfluencesIds = options.map(option=>option.value.id || artistId)
-  //       let userId = this.props.viewer.user.id
-  //       this.props.relay.commitUpdate(
+  //       let artistInfluencesIds = options.map(option=>{
+  //         console.log('optvalid', option.value.id);
+  //         console.log({artistId});
+  //         return option.value.id || artistId
+  //       })
+  //       let userId = this.props.user.id
+  //       console.log({userId,artistInfluencesIds});
+  //       Relay.Store.commitUpdate(
   //         new UpdateUser({userId,artistInfluencesIds}),{
-  //           onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
+  //           onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`}),
+  //           onFailure: res => {console.log('influartist fail', res)}//handle failure
+  //
   //         }
   //       )
   //     })
   //   }
   // }
+
+  setInfluence = (options) => {
+    if (options.length < this.state.influences.length) {
+      this.setState({influences: options})
+    } else {
+      let newInfluence = options.find((option) => !option.value.id)
+      ensureBtArtistExists(newInfluence).then(artistId => {
+        let newOptions = options.map(option=>{
+          option.value.id = option.value.id || artistId
+          return option
+        })
+        this.setState({influences: newOptions})
+      })
+    }
+  }
 
   sendUpdate = () => {
     let updateObj = {
@@ -115,15 +142,8 @@ export default class EditMusicianInfo extends Component {
         contentStyle={{ height: '800px', width: '800px', }}
         autoScrollBodyContent
         actions={[
-          <FlatButton
-            label={"Cancel"}
-            onClick={this.props.onClose}
-          />,
-          <FlatButton
-            label={"Save"}
-            primary
-            onClick={this.sendUpdate}
-          />
+          <FlatButton label={"Cancel"} onClick={this.props.onClose} />,
+          <FlatButton label={"Save"} primary onClick={this.sendUpdate} />
         ]}
       >
         <Label>Experience</Label>
@@ -169,7 +189,9 @@ export default class EditMusicianInfo extends Component {
           multi
           onChange={(val)=>{
             console.log('VAL', val)
-            this.setState({ influences: val})
+            // this.influenceChange(val)
+            this.setInfluence(val)
+            // this.setState({ influences: val})
           }}
           className={'async influences'}
           placeholder={'add your influences'}

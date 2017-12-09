@@ -62,7 +62,6 @@ export const Right = styled.div`
 `
 
 export const SiteLink = styled.a`
-  ${'' /* color: ${grey500}; */}
   color: #777777;
   font-weight: 400;
   text-decoration: none;
@@ -139,6 +138,7 @@ export const Summary = styled.pre`
   font-size: 14px;
   line-height: 20px;
   color: #777777;
+  word-break: break-all;
   white-space: pre-wrap;
 `
 export const EmailWebsite = styled.span`
