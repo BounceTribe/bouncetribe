@@ -7,15 +7,19 @@ import {mapNodes} from 'utils/mapNodes'
 
 class ActiviesPanel extends Component {
 
+
+
   render () {
     let {user, User} = this.props.viewer
     let {comments, bounces, projects} = User
+
+    console.log({User});
     let isSelf = user.id===User.id
     let hasActivities = comments.count + bounces.count + projects.count
     return (
       hasActivities ?
       <ActivityList
-        comments={mapNodes(comments)}
+        comments={mapNodes(comments).filter(comment=>comment.project)}
         bounces={mapNodes(bounces)}
         projects={mapNodes(projects)}
       />

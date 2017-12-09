@@ -27,7 +27,7 @@ class Feed extends Component {
     let comments = mapNodes(this.props.viewer.allComments)
     let bounces  = mapNodes(this.props.viewer.allBounces)
     let projects = mapNodes(this.props.viewer.allProjects)
-    console.log({comments, bounces, projects});
+    // console.log({comments, bounces, projects});
     return {comments, bounces, projects}
    }
 

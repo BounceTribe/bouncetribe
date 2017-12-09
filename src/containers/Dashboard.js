@@ -59,7 +59,6 @@ class Dashboard extends Component {
     let oldPath = this.props.location.pathname
     let newPath = nextProps.location.pathname
     let newUser = (oldPath.split('/')[2]!==newPath.split('/')[2])
-    console.log('neprops', oldPath.split('/')[2], newPath.split('/')[2]);
     oldPath!==newPath && this.setState({
       tab: newPath.split('/')[3],
       selectedUser: newUser ? this.getSelectedUser(nextProps) : this.state.selectedUser
@@ -196,7 +195,7 @@ class Dashboard extends Component {
             content={this.state.noTribe ? this.noTribePanel() : this.props.children}
             scroll={this.props.location.pathname===`/dash/`} />
         </BotRow>
-        
+
         <Snackbar
           open={!!this.state.snackbarText}
           message={this.state.snackbarText}

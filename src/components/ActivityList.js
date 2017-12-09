@@ -18,48 +18,46 @@ const getAvatar = (router,user) => (
 )
 
 const makeList = (props) => {
-  // console.log('listprops', props);
   let {comments, bounces, projects, dash, router} = props
   let text, icon
   let commentProjects = []
+
   let list = comments.map((comment, index) => {
-    // let project = comment.project || {}
     let {author, project, createdAt, id} = comment
+    if (commentProjects.includes(author.id+project.id)) {
+      return <div key={index}/>
+    }
+    commentProjects.push(author.id+project.id)
+    let link = getLink(project)
     if (dash) {
       text = (
         <span>
           <NameLink to={`/${author.handle}`}>{author.handle} </NameLink>
           gave feedback to
-          <NameLink to={`/${project.creator.handle}/${project.title}`}> {project.title} </NameLink>
+          <NameLink to={link}> {project.title} </NameLink>
         </span>)
       icon = getAvatar(router, author)
     } else {
+      icon = <Bounce width={19} fill={purple}/>
       text = `Gave feedback to ${project.title}`
-      icon = <Tribe height={13}/>
-      if (commentProjects.includes(project.id)) {
-        // console.log('duplicate project ignored')
-        return <div key={index}/>
-      }
-      commentProjects.push(project.id)
     }
 
-    return project.id &&
-    <Activity dash={dash}
-      key={id}
-      date={new Date(createdAt)}
-      icon={icon}
-      text={text}
-      link={getLink(project)}/>
+    return (
+      <Activity dash={dash} key={id} icon={icon} text={text}
+        link={link}
+        date={new Date(createdAt)}
+      />
+      )
   })
   list = list.concat(bounces.map(bounce => {
     let {bouncer, project, id, createdAt} = bounce
-
+    let link = getLink(project)
     if (dash) {
       text = (
         <span>
           <NameLink to={`/${bouncer.handle}`}>{bouncer.handle} </NameLink>
           bounced
-          <NameLink to={`/${project.creator.handle}/${project.title}`}> {project.title}</NameLink>
+          <NameLink to={link}> {project.title}</NameLink>
         </span>)
       icon = getAvatar(router, bouncer)
     } else {
@@ -69,7 +67,7 @@ const makeList = (props) => {
     return (
     <Activity dash={dash} key={id} icon={icon} text={text}
       date={new Date(createdAt)}
-      link={getLink(project)}/>
+      link={link}/>
     )}
   ))
 
@@ -81,7 +79,7 @@ const makeList = (props) => {
       icon = getAvatar(router, creator)
     } else {
       text = `Bounced ${title}`
-      icon = <Tribe height={13}/>
+      icon = <Music height={13}/>
     }
     return (
     <Activity Activity dash={dash} key={id} icon={icon} text={text}
@@ -97,7 +95,7 @@ const makeList = (props) => {
     return b.props.date - a.props.date
   })
   // console.log('list', list);
-  return dash ? list : list
+  return dash ? list.slice(0,10) : list
 }
 
 export const ActivityList = (props) => (
