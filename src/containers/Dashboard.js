@@ -254,8 +254,7 @@ class Dashboard extends Component {
             handle
             email
             score
-            portrait { url }
-            portraitSmall { url }
+            portraitMini { url }
             friends (
               first: 999
               filter: {deactivated: false}
@@ -269,7 +268,7 @@ class Dashboard extends Component {
                   lastPing
                   bounces { count }
                   projects { count }
-                  portrait { url }
+                  portraitMini { url }
                 }
               }
             }

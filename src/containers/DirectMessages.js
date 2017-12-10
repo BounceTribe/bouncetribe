@@ -231,7 +231,7 @@ export default Relay.createContainer( DirectMessages, {
         id
         handle
         score
-        portrait { url }
+        portraitMini { url }
       }
       User (handle: $theirHandle) {id, handle}
     }

@@ -77,6 +77,16 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) =
   // console.log('url', user.portrait.url);
   size = size || 50
   user = user || {}
+  let imageUrl
+  if (size > 149) {
+    imageUrl = (user.portraitSmall || {}).url
+  } else {
+    imageUrl = (user.portraitMini || user.portraitSmall || {}).url
+  }
+  if (user.disabled || !imageUrl) {
+    imageUrl = `${url}/logo.png`
+  }
+  // console.log({imageUrl});
   //set the ratio of size between the avatar and the online icon
   const iconSize = size * 18/60
   return  (
@@ -87,7 +97,7 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) =
       }}
       onClick={onClick} >
       <Avatar
-        src={(user.portraitSmall && !user.disabled) ? user.portraitSmall.url : `${url}/logo.png`}
+        src={imageUrl}
         style={{border: 0, objectFit: 'cover'}}
         to={`/${user.handle}`}
         size={size}

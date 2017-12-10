@@ -105,7 +105,7 @@ export default Relay.createContainer( Feed, {
               author {
                 id
                 handle
-                portrait {url}
+                portraitMini {url}
               }
             }
           }
@@ -125,7 +125,7 @@ export default Relay.createContainer( Feed, {
               creator {
                 id
                 handle
-                portrait {url}
+                portraitMini {url}
               }
             }
           }
@@ -152,7 +152,7 @@ export default Relay.createContainer( Feed, {
               bouncer {
                 id
                 handle
-                portrait {url}
+                portraitMini {url}
               }
             }
           }

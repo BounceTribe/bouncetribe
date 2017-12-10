@@ -119,17 +119,13 @@ class Profile extends Component {
     )
   }
 
-  portraitSuccess = (file) => {
-    console.log('file', file);
-    let updateObj
-    let userId = this.props.viewer.user.id
-    if (file.pxSize===300) {
-      updateObj = { userId, portraitSmallId: file.id }
-      this.setState({imageEditorOpen: false})
-    } else if (file.pxSize===120) {
-      updateObj = { userId, portraitThumbId: file.id }
-    } else {
-      updateObj = { userId, portraitId: file.id }
+  portraitSuccess = (file, files) => {
+    console.log('file', file, files);
+    let updateObj = {
+      userId: this.props.viewer.user.id,
+      portraitId: files[0].id,
+      portraitSmallId: files[1].id,
+      portraitMiniId: files[2].id
     }
     console.log('portrait updating', updateObj);
     this.props.relay.commitUpdate(
@@ -189,6 +185,7 @@ class Profile extends Component {
             onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
           />
           <ImageEditor
+            altSizes={[300, 120]}
             open={imageEditorOpen}
             onRequestClose={()=>this.setState({imageEditorOpen:false})}
             user={user}

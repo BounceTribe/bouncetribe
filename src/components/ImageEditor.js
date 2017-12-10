@@ -19,6 +19,7 @@ export default class ImageEditor extends Component {
         autoScrollBodyContent
       >
         <ImageUploader
+          altSizes={this.props.altSizes || []}
           self={this.props.user}
           fileSuccess={this.props.portraitSuccess}
         />

@@ -11,34 +11,34 @@ import Camera from 'icons/Camera'
 // import FileUploadThumbnail from 'file-upload-thumbnail'
 
 export default class ImageUploader extends Component {
-
-  state = {
-    image: false,
-    croppedImage: false,
-    correctAspect: false,
-    imageName: '',
-    pixel: null,
-    crop: {
-      aspect: 1/1,
-      x: 0,
-      y: 0,
-      width: 100
+  constructor(props){
+    super()
+    this.state = {
+      image: false,
+      croppedImage: false,
+      correctAspect: false,
+      imageName: '',
+      pixel: null,
+      files: [],
+      sizesRemaining: props.altSizes,
+      crop: {
+        aspect: 1/1,
+        x: 0,
+        y: 0,
+        width: 100
+      }
     }
   }
 
+
+  componentDidMount(){
+    console.log('altSizes', this.props.altSizes);
+    console.log('location', window);
+  }
+
   onImageDrop = (files, rejectedFile) => {
+    console.log('relay', Relay);
     let file = files[0]
-    console.log('imagedrop', {file});
-    // let file2 = new FileUploadThumbnail({
-    //   maxWidth: 500,
-    //   maxHeight: 40,
-    //   file: file,
-    //   onSuccess: function(src){
-    //     console.log({src});
-    //     // document.getElementById('preview_image').src = src || '';
-    //   }
-    // }).createThumbnail();
-    // console.log('newfile', {file2});
     this.setState({ image: file.preview, imageName: file.name })
   }
 
@@ -66,8 +66,19 @@ export default class ImageUploader extends Component {
                 onSuccess: transaction => {
                   let file = transaction.updateFile.file
                   file.pxSize = pxSize
-                  this.setState({ croppedImage: file.url })
-                  this.props.fileSuccess(file)
+                  this.setState({
+                    croppedImage: file.url,
+                    files: this.state.files.concat(file),
+                    sizesRemaining: this.state.sizesRemaining.filter(s=>s!==pxSize)
+                  })
+                  console.log('new file, state', this.state);
+                  if (this.state.sizesRemaining.length) {
+                    this.uploadImage(this.state.sizesRemaining[0])
+                  } else {
+                    let sortedFiles = this.state.files.sort((a,b)=>b.pxSize-a.pxSize)
+                    console.log({sortedFiles});
+                    this.props.fileSuccess(file, sortedFiles)
+                  }
                 },
                 onFailure: res =>console.log('updateFile fail', res)
               }
@@ -91,7 +102,7 @@ export default class ImageUploader extends Component {
             src={this.state.image}
             crop={this.state.crop}
             onImageLoaded={(image)=>{
-              (image.height===image.width) && this.setState({correctAspect:true})
+              (image.height===image.width) && this.setState({correctAspect:image.width, })
             }}
             keepSelection={true}
             onComplete={(crop, pixel)=>{
@@ -101,11 +112,7 @@ export default class ImageUploader extends Component {
           />
           <Button
             label="Save"
-            onClick={()=>{
-              this.uploadImage(this.state.pixel.width)
-              this.uploadImage(300)
-              // this.uploadImage(120)
-            }}
+            onClick={()=>{this.uploadImage(this.state.correctAspect || this.state.pixel.width)}}
             primary
             style={{alignSelf: 'center', margin: '10px'}}
             disabled={!(this.state.pixel || this.state.correctAspect)}

@@ -17,6 +17,8 @@ import AddToFriends from 'mutations/AddToFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {acceptFriendRequest} from 'utils/updateCommits'
 import {doNotPing} from 'utils/isOnline'
+// import {mapNodes} from 'utils/mapNodes'
+
 
 
 injectTapEventPlugin()
@@ -35,8 +37,16 @@ class Template extends Component {
       intervalId
     }
     console.log('template constructor', this.props)
-
+    // this.fileUtil()
   }
+
+  // fileUtil = () => {
+  //   let files = mapNodes(this.props.viewer.allFiles)
+  //   let filtered = files.filter(f=>{
+  //     return f.portraitOwner && !f.portraitSmallOwner
+  //   })
+  //   console.log({filtered});
+  // }
 
   componentWillReceiveProps(newProps) {
     let oldPath = this.props.location.pathname
@@ -208,6 +218,7 @@ export default Relay.createContainer( Template, {
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
+
           user {
             id
             auth0UserId
@@ -256,6 +267,31 @@ export default Relay.createContainer( Template, {
               }
             }
           }
+          # allFiles (
+          #   orderBy:createdAt_ASC
+          #   first:300
+          # ) {
+          #   edges {
+          #     node {
+          #       artworkProject {id}
+          #       artworkProjectSmall {id}
+          #       contentType
+          #       createdAt
+          #       id
+          #       name
+          #       pictureOwner {id}
+          #       portraitMiniOwner {id}
+          #       portraitOwner {id}
+          #       portraitSmallOwner {id}
+          #       secret
+          #       size
+          #       trackProject {id}
+          #       updatedAt
+          #       uploader {id}
+          #       url
+          #     }
+          #   }
+          # }
         }
       `,
     },

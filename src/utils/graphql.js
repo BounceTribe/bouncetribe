@@ -50,6 +50,7 @@ export const findMatches = async ({user, project}) => {
                 handle
                 score
                 portrait { url }
+                portraitMini { url }
                 placename
               }
               artwork { url }
@@ -121,6 +122,7 @@ export const suggestedFriends = (userId) => {
               id
               handle
               portrait { url }
+              portraitMini { url }
               score
             }
             User (id: "${userId}") {
@@ -297,6 +299,7 @@ export const fetchFeed = (handle) => {
               creator {
                 handle
                 portrait { url }
+                portraitMini { url }
               }
               comments (first: 999) { type }
             }

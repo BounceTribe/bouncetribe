@@ -192,12 +192,17 @@ class Project extends Component {
   }
 
   artworkSuccess = (file) => {
-    this.setState({artworkEditorOpen: false})
+    console.log({file});
+    let updateObj
+    let project = this.project
+    if (file.pxSize===500) {
+      updateObj = { project, artworkSmallId: file.id }
+      this.setState({artworkEditorOpen: false})
+    } else {
+      updateObj = { project, artworkId: file.id }
+    }
     this.props.relay.commitUpdate(
-      new UpdateProject({
-        project: this.project,
-        artworkId: file.id,
-      }), {
+      new UpdateProject({updateObj}), {
         onSuccess: success => console.log('artwork success', success),
         failure: failure => console.log('fail', failure)
       }
@@ -300,6 +305,7 @@ class Project extends Component {
             onClick={this.openArtworkEditor}
             isOwner={isOwner} />
           <ImageEditor
+            altSizes={[500]}
             open={this.state.artworkEditorOpen}
             onRequestClose={()=>this.setState({artworkEditorOpen:false})}
             user={user}
@@ -568,7 +574,7 @@ export default Relay.createContainer(
             id
             handle
             lastPing
-            portrait {url}
+            portraitMini {url}
             friends (
               first: 999
               filter: {deactivated: false}
@@ -601,7 +607,8 @@ export default Relay.createContainer(
             lastPing
             placename
             experience
-            portrait {url}
+            portraitMini {url}
+            portraitSmall {url}
             score
             artistInfluences (first: 999) {
               edges {
@@ -620,7 +627,6 @@ export default Relay.createContainer(
                   id
                   handle
                   deactivated
-                  portrait { url }
                 }
               }
             }
@@ -686,7 +692,7 @@ export default Relay.createContainer(
                         handle
                         lastPing
                         deactivated
-                        portrait { url }
+                        portraitMini { url }
                       }
                       project { id }
                       timestamp
@@ -700,7 +706,7 @@ export default Relay.createContainer(
                               handle
                               lastPing
                               deactivated
-                              portrait { url }
+                              portraitMini { url }
                             }
                           }
                         }

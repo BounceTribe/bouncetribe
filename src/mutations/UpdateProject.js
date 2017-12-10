@@ -22,7 +22,8 @@ export default class UpdateProject extends Mutation {
       title: this.props.project.title,
       description: this.props.project.description,
       genresIds: this.props.genresIds,
-      artworkId: this.props.artworkId
+      artworkId: this.props.artworkId,
+      artworkSmallId: this.props.artworkSmallId
     }
   }
 

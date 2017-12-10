@@ -30,7 +30,8 @@ class ProjectNew extends Component {
     genre: '',
     genres: [],
     privacy: 'PUBLIC',
-    artworkUrl: `${url}/uploadartwork.png`
+    artworkUrl: `${url}/uploadartwork.png`,
+    artworkSmallUrl: `${url}/uploadartwork.png`
   }
 
   constructor(props) {
@@ -43,9 +44,7 @@ class ProjectNew extends Component {
           key={genre.id}
         />
       ))
-      this.setState({
-        genres
-      })
+      this.setState({genres})
     })
   }
 
@@ -143,12 +142,18 @@ class ProjectNew extends Component {
   }
 
   artworkSuccess = (file) => {
-    console.log(file)
-    this.setState({
-      imageEditorOpen: false,
-      artworkUrl: file.url,
-      artworkId: file.id
-    })
+    if (file.pxSize===500) {
+      this.setState({
+        artworkSmallId: file.id,
+        artworkSmallUrl: file.Url,
+        imageEditorOpen: false
+      })
+    } else {
+      this.setState({
+        artworkUrl: file.url,
+        artworkId: file.id
+      })
+    }
   }
 
   titleChange = (title) => {
@@ -216,6 +221,7 @@ class ProjectNew extends Component {
 
 
             <ImageEditor
+              altSizes={[500]}
               open={this.state.imageEditorOpen}
               onRequestClose={()=>this.setState({imageEditorOpen:false})}
               user={this.props.viewer.user}
