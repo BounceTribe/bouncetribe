@@ -44,6 +44,7 @@ class Profile extends Component {
       placename: User.placename || '',
       summary: User.summary || '',
       portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
+      portraitSmallUrl: (User.portraitSmall || {}).url || `${url}/logo.png`,
       website: User.website || '',
       email: User.email || '',
       experience: User.experience || '',
@@ -119,10 +120,16 @@ class Profile extends Component {
   }
 
   portraitSuccess = (file) => {
-    this.setState({imageEditorOpen: false})
-    let updateObj = {
-      userId: this.props.viewer.user.id,
-      portraitId: file.id,
+    console.log('file', file);
+    let updateObj
+    let userId = this.props.viewer.user.id
+    if (file.pxSize===300) {
+      updateObj = { userId, portraitSmallId: file.id }
+      this.setState({imageEditorOpen: false})
+    } else if (file.pxSize===120) {
+      updateObj = { userId, portraitThumbId: file.id }
+    } else {
+      updateObj = { userId, portraitId: file.id }
     }
     console.log('portrait updating', updateObj);
     this.props.relay.commitUpdate(
@@ -382,6 +389,10 @@ export default Relay.createContainer(
             handle
             summary
             portrait {
+              id
+              url
+            }
+            portraitSmall {
               id
               url
             }

@@ -1,7 +1,5 @@
 import {graphCool} from 'config'
 
-
-
 const uploadFile = (file, name) => {
   return new Promise ((resolve, reject) => {
 
@@ -24,9 +22,7 @@ const uploadFile = (file, name) => {
       body: formData
     })
     .then(resp=>resp.json())
-    .then(data=>{
-      resolve(data.id)
-    })
+    .then(data=>resolve(data.id))
 
   })
 }

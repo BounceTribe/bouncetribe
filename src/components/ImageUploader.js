@@ -8,6 +8,7 @@ import ReactCrop from 'react-image-crop'
 import {Button} from 'styled'
 import 'react-image-crop/dist/ReactCrop.css'
 import Camera from 'icons/Camera'
+// import FileUploadThumbnail from 'file-upload-thumbnail'
 
 export default class ImageUploader extends Component {
 
@@ -27,10 +28,21 @@ export default class ImageUploader extends Component {
 
   onImageDrop = (files, rejectedFile) => {
     let file = files[0]
+    console.log('imagedrop', {file});
+    // let file2 = new FileUploadThumbnail({
+    //   maxWidth: 500,
+    //   maxHeight: 40,
+    //   file: file,
+    //   onSuccess: function(src){
+    //     console.log({src});
+    //     // document.getElementById('preview_image').src = src || '';
+    //   }
+    // }).createThumbnail();
+    // console.log('newfile', {file2});
     this.setState({ image: file.preview, imageName: file.name })
   }
 
-  uploadImage = () => {
+  uploadImage = (pxSize) => {
     let imageName = this.state.imageName
     let {image, pixel} = this.state
     let htmlImage = new Image()
@@ -41,22 +53,21 @@ export default class ImageUploader extends Component {
       let y = pixel ? pixel.y : 0
       window.createImageBitmap(htmlImage, 0, 0, width, height).then(result=>{
         let canvas = document.createElement('canvas')
-        canvas.width = width
-        canvas.height = width
-
+        canvas.width = pxSize
+        canvas.height = pxSize
         let c = canvas.getContext('2d')
-        //thse last 2 values are where to make the thumbnail size
-        c.drawImage(htmlImage, x, y, width, height, 0, 0, width, height)
+        c.drawImage(htmlImage, x, y, width, height, 0, 0, pxSize, pxSize)
+        console.log({canvas});
         canvas.toBlob(blob=>{
+          console.log({blob});
           uploadFile(blob, imageName).then(fileId => {
             Relay.Store.commitUpdate(
               new UpdateFile({self: this.props.self, fileId: fileId}), {
                 onSuccess: transaction => {
                   let file = transaction.updateFile.file
+                  file.pxSize = pxSize
                   this.setState({ croppedImage: file.url })
                   this.props.fileSuccess(file)
-                  console.log('file uploaded', this.state.croppedImage)
-
                 },
                 onFailure: res =>console.log('updateFile fail', res)
               }
@@ -83,11 +94,18 @@ export default class ImageUploader extends Component {
               (image.height===image.width) && this.setState({correctAspect:true})
             }}
             keepSelection={true}
-            onComplete={(crop, pixel)=>this.setState({ crop, pixel })}
+            onComplete={(crop, pixel)=>{
+              this.setState({ crop, pixel })
+              console.log('complete state', this.state);
+            }}
           />
           <Button
             label="Save"
-            onClick={this.uploadImage}
+            onClick={()=>{
+              this.uploadImage(this.state.pixel.width)
+              this.uploadImage(300)
+              // this.uploadImage(120)
+            }}
             primary
             style={{alignSelf: 'center', margin: '10px'}}
             disabled={!(this.state.pixel || this.state.correctAspect)}

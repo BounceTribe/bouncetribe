@@ -2376,6 +2376,10 @@ file-loader@0.9.0:
   dependencies:
     loader-utils "~0.2.5"
 
+file-upload-thumbnail@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/file-upload-thumbnail/-/file-upload-thumbnail-0.1.0.tgz#7f9d99efdfb2cbb5ea2830fdd0c1da3daa44bfe5"
+
 filename-regex@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"

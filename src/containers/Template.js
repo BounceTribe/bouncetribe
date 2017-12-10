@@ -16,7 +16,7 @@ import {purple} from 'theme'
 import AddToFriends from 'mutations/AddToFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {acceptFriendRequest} from 'utils/updateCommits'
-import {isOnline} from 'utils/isOnline'
+import {doNotPing} from 'utils/isOnline'
 
 
 injectTapEventPlugin()
@@ -125,9 +125,9 @@ class Template extends Component {
 
   ping = () => {
     let {user} = this.props.viewer
-    if (user && !isOnline(user)) {
+    if (user && !doNotPing(user)) {
       this.props.relay.commitUpdate( new SendPing({ user }), {
-        onSuccess: success => console.log('ping res', success )
+        // onSuccess: success => console.log('ping res', success )
       } )
     }
   }

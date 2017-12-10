@@ -87,7 +87,7 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) =
       }}
       onClick={onClick} >
       <Avatar
-        src={(user.portrait && !user.disabled) ? user.portrait.url : `${url}/logo.png`}
+        src={(user.portraitSmall && !user.disabled) ? user.portraitSmall.url : `${url}/logo.png`}
         style={{border: 0, objectFit: 'cover'}}
         to={`/${user.handle}`}
         size={size}
