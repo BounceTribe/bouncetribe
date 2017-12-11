@@ -172,7 +172,7 @@ class SingleComment extends Component {
                     onClick={()=>{
                       if (this.props.activeIds.includes(id)) {
                         this.setState({text})
-                        this.editComment(child)
+                        this.editComment(child, this.state.childrenText[id])
                       } else {
                         this.props.activate(id)
                       }
@@ -276,7 +276,7 @@ class SingleComment extends Component {
           <Bottom>
             {!hideEditDelete && <BotLink
               onClick={()=>{this.props.activeIds.includes(id) ?
-                this.editComment(this.comment) : this.props.activate(id)}}
+                this.editComment(this.comment, this.state.text) : this.props.activate(id)}}
             >Edit</BotLink>}
             {!hideEditDelete && '|'}
             {!hideEditDelete &&
