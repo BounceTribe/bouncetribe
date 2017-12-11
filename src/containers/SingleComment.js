@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {white, purple, blue, grey700} from 'theme'
-import {Single, MainRow, Bottom, Time, Text, InfoOptions, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, InfoRow, SCCol, SCText} from 'styled/Comments'
+import {Single, MainRow, Bottom, Time, Text, InfoOptions, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, SCBottom, SCCol, SCText} from 'styled/Comments'
 import {RoundButton, BtAvatar} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
@@ -138,21 +138,21 @@ class SingleComment extends Component {
           console.log('usre child', child);
           return (
             <SubComment key={child.id} hide={this.state.deleted.includes(child.id)}>
-              <BtAvatar user={child.author} size={30} />
+              <BtAvatar user={child.author} size={30} style={{paddingTop: '5px'}} />
               <SCCol>
                 <SCHandle>{child.author.handle}</SCHandle>
-                {this.props.user.id===child.author.id && <Bottom>
-                  <BotLink
-                    onClick={()=>{this.props.active ?
-                      this.editComment() : this.props.activate(this.props.index)}}
-                  >Edit</BotLink>
-                  {'|'}
-                  <BotLink
-                    onClick={()=>this.deleteComment(child.id)}
-                  >Delete</BotLink>
-                </Bottom>}
-              </SCCol>
               <SCText>{child.text}</SCText>
+              {this.props.user.id===child.author.id && <SCBottom>
+                <BotLink
+                  onClick={()=>{this.props.active ?
+                    this.editComment() : this.props.activate(this.props.index)}}
+                >Edit</BotLink>
+                {'|'}
+                <BotLink
+                  onClick={()=>this.deleteComment(child.id)}
+                >Delete</BotLink>
+              </SCBottom>}
+            </SCCol>
             </SubComment>
           )
         })}
@@ -212,55 +212,54 @@ class SingleComment extends Component {
     return (
       <Single id={id} hide={this.hider() || this.state.deleted.includes(id)} >
         <MainRow>
+          <Handle to={author.deactivated ? null : `/${author.handle}`} >
+            {author.handle}
+          </Handle>
           <InfoOptions>
-            <InfoRow>
-              <RoundButton
-                onClick={()=>{
-                  console.log('button click', this.props, timestamp)
-                  this.props.jumpToTime(timestamp)
-                }}
-                icon={(type === 'COMMENT') ?
-                  <Comment height={25} width={25} fill={white} />
-                  : <Heart height={25} width={25} fill={white} />
-                }
-                mini
-                secondary={(type === 'COMMENT')}
-              />
-              <Handle to={author.deactivated ? null : `/${author.handle}`} >
-                {author.handle}
-              </Handle>
-            </InfoRow>
-            <Bottom>
-              {!hideEditDelete && <BotLink
-                onClick={()=>{this.props.active ?
-                  this.editComment() : this.props.activate(this.props.index)}}
-              >Edit</BotLink>}
-              {!hideEditDelete && '|'}
-              {!hideEditDelete &&
-                <BotLink onClick={()=>this.deleteComment(id)}>Delete</BotLink>}
-              <UpVote
-                secondary={(type==='COMMENT')}
-                hideLink={this.listenTab}
-                hasUpvoted={this.state.hasUpvoted}
-                onClick={!this.isOwnComment && !this.state.hasUpvoted && this.addUpvote}
-              >Upvote{this.state.hasUpvoted && 'd'} | {totalUpvotes}</UpVote>
-              <BotLink
-                hideLink={this.listenTab}
-                onClick={()=>{
-                  this.setState({subcomments: !this.state.subcomments})
-                }}
-              >
-                {this.state.children.length ?
-                  `View Comments | ${this.state.children.length}`
-                  : 'Add Comment'}
-              </BotLink>
-            </Bottom>
+            <RoundButton
+              style={{marginBottom: '25px'}}
+              onClick={()=>{
+                console.log('button click', this.props, timestamp)
+                this.props.jumpToTime(timestamp)
+              }}
+              icon={(type === 'COMMENT') ?
+                <Comment height={25} width={25} fill={white} />
+                : <Heart height={25} width={25} fill={white} />
+              }
+              mini
+              secondary={(type === 'COMMENT')}
+            />
           </InfoOptions>
           <Text>{this.text()}</Text>
           <Time onClick={()=>{
             console.log('time click', this.props, timestamp)
             this.props.jumpToTime(timestamp)
           }}>{formatTime(timestamp)}</Time>
+          <Bottom>
+            {!hideEditDelete && <BotLink
+              onClick={()=>{this.props.active ?
+                this.editComment() : this.props.activate(this.props.index)}}
+            >Edit</BotLink>}
+            {!hideEditDelete && '|'}
+            {!hideEditDelete &&
+              <BotLink onClick={()=>this.deleteComment(id)}>Delete</BotLink>}
+            <UpVote
+              secondary={(type==='COMMENT')}
+              hideLink={this.listenTab}
+              hasUpvoted={this.state.hasUpvoted}
+              onClick={!this.isOwnComment && !this.state.hasUpvoted && this.addUpvote}
+            >Upvote{this.state.hasUpvoted && 'd'} | {totalUpvotes}</UpVote>
+            <BotLink
+              hideLink={this.listenTab}
+              onClick={()=>{
+                this.setState({subcomments: !this.state.subcomments})
+              }}
+            >
+              {this.state.children.length ?
+                `View Comments | ${this.state.children.length}`
+                : 'Add Comment'}
+            </BotLink>
+          </Bottom>
         </MainRow>
         {this.state.subcomments && this.subcomments()}
       </Single>

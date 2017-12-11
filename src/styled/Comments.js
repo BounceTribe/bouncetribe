@@ -46,7 +46,14 @@ export const Single = styled.div`
 `
   export const MainRow = styled.div`
     display: flex;
-    padding: 20px 30px 10px 20px;
+    padding: 12px 30px 10px 20px;
+  `
+  export const Bottom = styled.div`
+    display: flex;
+    font-size: 13px;
+    ${'' /* padding-top: 5px; */}
+    position: absolute;
+    align-self: flex-end;
   `
     export const InfoOptions = styled.div`
       display: flex;
@@ -60,16 +67,13 @@ export const Single = styled.div`
       `
         export const Handle = styled(BtLink)`
           color: ${({comment}) => (comment) ? blue : purple};
-          padding-left: 13px;
+          position: absolute;
+          ${'' /* align-self: flex-end; */}
+          margin-left: 75px;
           font-weight: 400;
         `
-      export const Bottom = styled.div`
-        display: flex;
-        margin-top: auto;
-        font-size: 13px;
-        padding-top: 5px;
-        ${'' /* justify-content: flex-end; */}
-      `
+
+
         export const BotLink = styled.span`
           cursor: pointer;
           color: ${grey700};
@@ -90,8 +94,8 @@ export const Single = styled.div`
       flex-direction: column;
       color: ${grey900};
       font-size: 16px;
-      align-self: center;
-      margin: 0 0 17px 0;
+      ${'' /* align-self: center; */}
+      margin: 25px 0 0 0;
       word-break: break-all;
       padding: 0 20px;
       white-space: pre-wrap;
@@ -130,8 +134,8 @@ export const SubComment = styled.div`
 export const SCCol = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 10px;
-  justify-content: center;
+  padding: 0 15px;
+  justify-content: flex-start;
 `
 
 export const SCHandleText = styled.pre`
@@ -139,6 +143,7 @@ export const SCHandleText = styled.pre`
   font-weight: 400;
   color: ${grey700};
   font-size: 14px;
+  margin: 0;
 `
 
 export const SCHandle = (props) => (
@@ -147,9 +152,17 @@ export const SCHandle = (props) => (
   </BtLink>
 )
 
-
+export const SCBottom = styled.div`
+  display: flex;
+  margin-top: auto;
+  font-size: 13px;
+  padding-top: 5px;
+  ${'' /* justify-content: flex-end; */}
+`
 export const SCText = styled.div`
   display: flex;
   color: ${grey700};
   font-size: 13px;
+  padding: 7px;
+
 `
