@@ -7,9 +7,9 @@ import {BtAvatar} from 'styled'
 import {purple} from 'theme'
 
 const getLink = (project) => (
-  project.privacy==='PUBLIC' &&
+  (project.privacy==='PUBLIC' &&
   !project.creator.deactivated &&
-  `/${project.creator.handle}/${project.title}`
+  `/${project.creator.handle}/${project.title}`) || null
 )
 const getAvatar = (router,user) => (
   <BtAvatar hideStatus pointer size={40}

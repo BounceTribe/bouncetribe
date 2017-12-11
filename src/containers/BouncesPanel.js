@@ -47,6 +47,7 @@ export default Relay.createContainer(
                     title
                     createdAt
                     artwork {url}
+                    artworkSmall {url}
                     privacy
                     creator {handle}
                     bounces (first: 999) {

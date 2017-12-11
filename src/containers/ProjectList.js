@@ -47,11 +47,12 @@ class ProjectList extends Component {
         let likes = project.comments.edges.filter( (edge) => {
           return edge.node.type === 'LIKE'
         })
+        let artwork = (project.artworkSmall || {}).url || (project.artwork || {}).url
         return (
           <ProjectItem key={project.id} >
             <Left>
               <Artwork
-                src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+                src={artwork ||  `${url}/artwork.png`}
                 alt={'Project Artwork'}
                 to={`/${owner.handle}/${project.title}`}
               />
@@ -188,6 +189,7 @@ export default Relay.createContainer(
                   id
                   title
                   artwork {url}
+                  artworkSmall {url}
                   privacy
                   comments (first: 999){
                     edges {

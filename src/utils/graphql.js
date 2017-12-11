@@ -54,6 +54,7 @@ export const findMatches = async ({user, project}) => {
                 placename
               }
               artwork { url }
+              artworkSmall { url }
             }
           }`
         }),
@@ -296,6 +297,7 @@ export const fetchFeed = (handle) => {
               title
               genres ( first: 999 ) { name }
               artwork { url }
+              artworkSmall { url }
               creator {
                 handle
                 portrait { url }

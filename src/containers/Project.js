@@ -68,6 +68,8 @@ class Project extends Component {
       selection: false,
       delete: false,
       bounced: false,
+      artworkUrl: (this.project.artwork || {}).url,
+      artworkSmallUrl: (this.project.artworkSmall || {}).url,
       comments: this.project.comments.edges.map(edge=>edge.node),
       newText: ''
     }
@@ -191,18 +193,21 @@ class Project extends Component {
     },1000)
   }
 
-  artworkSuccess = (file) => {
-    console.log({file});
-    let updateObj
-    let project = this.project
-    if (file.pxSize===500) {
-      updateObj = { project, artworkSmallId: file.id }
-      this.setState({artworkEditorOpen: false})
-    } else {
-      updateObj = { project, artworkId: file.id }
+  artworkSuccess = (files) => {
+    this.setState({
+      artworkEditorOpen: false,
+      artworkUrl: (files[0] || {}).url || this.state.artworkUrl,
+      artworkSmallUrl: (files[1] || {}).url || this.state.artworkSmallUrl
+    })
+    let updateObj = {
+      project: this.project,
+      artworkId: files[0].id,
+      artworkSmallId: files[1].id
     }
+    console.log('updating project', {files}, updateObj);
+
     this.props.relay.commitUpdate(
-      new UpdateProject({updateObj}), {
+      new UpdateProject(updateObj), {
         onSuccess: success => console.log('artwork success', success),
         failure: failure => console.log('fail', failure)
       }
@@ -249,6 +254,8 @@ class Project extends Component {
   render () {
     let {User, user, project, isOwner} = this
     let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)
+    let artwork = this.state.artworkSmallUrl || this.state.artworkUrl ||  (isOwner && `${url}/uploadartwork.png`)
+
     return (
       <View contentWidth={80}>
         <ProfContainer hide={(isOwner)} >
@@ -300,7 +307,7 @@ class Project extends Component {
         </ProfContainer>
         <Top isOwner={isOwner}>
           <Art
-            src={ (project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+            src={ artwork || `${url}/artwork.png`}
             alt={'Project Art'}
             onClick={this.openArtworkEditor}
             isOwner={isOwner} />
@@ -311,6 +318,15 @@ class Project extends Component {
             user={user}
             portraitSuccess={this.artworkSuccess} />
           <Info>
+            <Edit fill={purple}
+              style={{
+                display: (isOwner) ? '' : 'none',
+                cursor: 'pointer',
+                padding: '0 10px 0 0',
+                position: 'absolute',
+                alignSelf: 'flex-end',
+              }}
+              onClick={()=>{this.setState({edit:true})}} />
             <TitleGenre>
               <Title>{project.title}</Title>
               <Genre>
@@ -318,13 +334,6 @@ class Project extends Component {
                   style={{ marginRight: '5px', height: '18px' }} />
                 {project.genres.edges[0].node.name}
               </Genre>
-              <Edit fill={purple}
-                style={{
-                  display: (isOwner) ? '' : 'none',
-                  cursor: 'pointer',
-                  marginLeft: '15px'
-                }}
-                onClick={()=>{this.setState({edit:true})}} />
             </TitleGenre>
             {!this.isOwner &&
               <BtFlatButton
@@ -667,6 +676,7 @@ export default Relay.createContainer(
                   }
                 }
                 artwork {url}
+                artworkSmall {url}
                 tracks (first: 1) {
                   edges {
                     node {

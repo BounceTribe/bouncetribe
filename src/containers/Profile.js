@@ -119,15 +119,17 @@ class Profile extends Component {
     )
   }
 
-  portraitSuccess = (file, files) => {
-    console.log('file', file, files);
+  portraitSuccess = (files) => {
+    this.setState({imageEditorOpen: false})
+
+    console.log('files', files);
     let updateObj = {
       userId: this.props.viewer.user.id,
       portraitId: files[0].id,
       portraitSmallId: files[1].id,
       portraitMiniId: files[2].id
     }
-    console.log('portrait updating', updateObj);
+    console.log('portrait updating', this.state);
     this.props.relay.commitUpdate(
       new UpdateUser(updateObj), {
         onSuccess: success => console.log('portrait success', success),
@@ -184,13 +186,13 @@ class Profile extends Component {
           <BtAvatar size={150} hideStatus user={User} pointer={ownProfile}
             onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
           />
-          <ImageEditor
+          {imageEditorOpen && <ImageEditor
             altSizes={[300, 120]}
-            open={imageEditorOpen}
+            open
             onRequestClose={()=>this.setState({imageEditorOpen:false})}
             user={user}
             portraitSuccess={this.portraitSuccess}
-          />
+          />}
           <TopCol>
             <Handle>
               {User.handle}

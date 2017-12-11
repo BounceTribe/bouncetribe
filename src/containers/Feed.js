@@ -97,6 +97,7 @@ export default Relay.createContainer( Feed, {
                 title
                 privacy
                 artwork {url}
+                artworkSmall {url}
                 creator {
                   id
                   handle
@@ -122,6 +123,7 @@ export default Relay.createContainer( Feed, {
               title
               privacy
               artwork {url}
+              artworkSmall {url}
               creator {
                 id
                 handle
@@ -144,6 +146,7 @@ export default Relay.createContainer( Feed, {
                 id
                 privacy
                 artwork {url}
+                artworkSmall {url}
                 creator {
                   id
                   handle

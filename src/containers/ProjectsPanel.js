@@ -52,6 +52,7 @@ export default Relay.createContainer(
                     }
                   }
                   artwork { url }
+                  artworkSmall { url }
                   privacy
                   creator {handle}
                   comments ( first: 999 ) {

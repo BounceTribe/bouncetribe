@@ -11,7 +11,7 @@ import Music from 'icons/Music'
 import AudioPlayer from 'components/AudioPlayer'
 import {Spinner} from 'styled/Spinner'
 import LinearProgress from 'material-ui/LinearProgress'
-import ImageEditor from 'components/ImageEditor'
+import ImageEditor from 'components/I\mageEditor'
 import {getAllGenres} from 'utils/graphql'
 import MenuItem from 'material-ui/MenuItem'
 import {url} from 'config'
@@ -141,19 +141,14 @@ class ProjectNew extends Component {
     }
   }
 
-  artworkSuccess = (file) => {
-    if (file.pxSize===500) {
-      this.setState({
-        artworkSmallId: file.id,
-        artworkSmallUrl: file.Url,
-        imageEditorOpen: false
-      })
-    } else {
-      this.setState({
-        artworkUrl: file.url,
-        artworkId: file.id
-      })
-    }
+  artworkSuccess = (files) => {
+    this.setState({
+      artworkSmallId: files[1].id,
+      artworkSmallUrl: files[1].Url,
+      artworkUrl: files[0].url,
+      artworkId: files[0].id,
+      imageEditorOpen: false
+    })
   }
 
   titleChange = (title) => {
@@ -216,7 +211,7 @@ class ProjectNew extends Component {
           <Right>
             <ArtworkDrop
               onClick={()=>this.setState({imageEditorOpen: true})}
-              src={(this.state.artworkUrl) ? this.state.artworkUrl : `${url}/artwork.png` }
+              src={this.state.artworkSmallUrl || this.state.artworkUrl || `${url}/artwork.png` }
             />
 
 

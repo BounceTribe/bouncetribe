@@ -33,7 +33,6 @@ export default class ImageUploader extends Component {
 
   componentDidMount(){
     console.log('altSizes', this.props.altSizes);
-    console.log('location', window);
   }
 
   onImageDrop = (files, rejectedFile) => {
@@ -47,6 +46,7 @@ export default class ImageUploader extends Component {
     let {image, pixel} = this.state
     let htmlImage = new Image()
     htmlImage.onload = () => {
+      console.log({pixel}, {htmlImage});
       let width = pixel ? pixel.width : htmlImage.width
       let height = pixel ? pixel.height : htmlImage.height
       let x = pixel ? pixel.x : 0
@@ -57,9 +57,8 @@ export default class ImageUploader extends Component {
         canvas.height = pxSize
         let c = canvas.getContext('2d')
         c.drawImage(htmlImage, x, y, width, height, 0, 0, pxSize, pxSize)
-        console.log({canvas});
+        // console.log({canvas});
         canvas.toBlob(blob=>{
-          console.log({blob});
           uploadFile(blob, imageName).then(fileId => {
             Relay.Store.commitUpdate(
               new UpdateFile({self: this.props.self, fileId: fileId}), {
@@ -71,16 +70,15 @@ export default class ImageUploader extends Component {
                     files: this.state.files.concat(file),
                     sizesRemaining: this.state.sizesRemaining.filter(s=>s!==pxSize)
                   })
-                  console.log('new file, state', this.state);
                   if (this.state.sizesRemaining.length) {
                     this.uploadImage(this.state.sizesRemaining[0])
                   } else {
                     let sortedFiles = this.state.files.sort((a,b)=>b.pxSize-a.pxSize)
-                    console.log({sortedFiles});
-                    this.props.fileSuccess(file, sortedFiles)
+                    // console.log({sortedFiles});
+                    this.props.fileSuccess(sortedFiles)
                   }
                 },
-                onFailure: res =>console.log('updateFile fail', res)
+                onFailure: res => console.log('updateFile fail', res)
               }
             )
           })
@@ -112,7 +110,9 @@ export default class ImageUploader extends Component {
           />
           <Button
             label="Save"
-            onClick={()=>{this.uploadImage(this.state.correctAspect || this.state.pixel.width)}}
+            onClick={()=>{
+              this.props.hide()
+              this.uploadImage(this.state.correctAspect || this.state.pixel.width)}}
             primary
             style={{alignSelf: 'center', margin: '10px'}}
             disabled={!(this.state.pixel || this.state.correctAspect)}

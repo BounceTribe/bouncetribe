@@ -31,7 +31,7 @@ class Login extends Component {
       localStorage.removeItem('redirect')
       this.props.router.push(redirect)
       this.setState({routeSet: true})
-    } else {
+    } else if (user) {
       this.props.router.push(`/dash/feed/${this.props.viewer.user.handle}`)
       this.setState({routeSet: true})
     }
