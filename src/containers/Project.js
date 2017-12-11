@@ -137,6 +137,7 @@ class Project extends Component {
 
   dropMarker = (type) => {
     this.setState({
+      active: this.state.active.concat('new'),
       new: {
         id: 'new',
         type: type,
@@ -162,11 +163,11 @@ class Project extends Component {
         comment={comment}
         key={comment.id}
         focus={this.state.focus}
-        active={(this.state.active.includes(index+1))}
-        deactivate={()=>
-          this.setState({active: this.state.active.filter(id=>id!==(index+1))})}
-        activate={()=>
-          this.setState({active: this.state.active.concat(index+1)})}
+        activeIds={this.state.active}
+        deactivate={(cmtId)=>
+          this.setState({active: this.state.active.filter(id=>id!==cmtId)})}
+        activate={(cmtId)=>
+          this.setState({active: this.state.active.concat(cmtId)})}
         user={this.user}
         tabs={this.state.tabs} />
     })
@@ -526,17 +527,17 @@ class Project extends Component {
               </ButtonColumn>
             </ButtonRow>
             <CommentScroller>
-              {(this.state.new) &&
+              {this.state.new &&
                 <SingleComment
                   jumpToTime={(time)=>this.jumpToTime(time)}
                   key={0}
                   index={0}
                   comment={this.state.new}
                   focus={this.state.focus}
-                  active={(this.state.active.includes('new'))}
-                  activate={()=>
+                  activeIds={(this.state.active)}
+                  activate={(id)=>
                     this.setState({active: this.state.active.concat('new')})}
-                  deactivate={()=>
+                  deactivate={(id)=>
                     this.setState({active: this.state.active.filter(id=>id!=='new')})}
                   user={user}
                   tabs={this.state.tabs}
@@ -544,7 +545,11 @@ class Project extends Component {
                     console.log('new state', this.state.new, newComment);
                     let newSorted = this.state.comments.concat(newComment)
                       .sort((a,b)=>(a.timestamp-b.timestamp))
-                    this.setState({ new: false, comments: newSorted })
+                    this.setState({ 
+                      new: false,
+                      comments: newSorted,
+                      focus: newComment.id
+                     })
                     console.log('added comment', this.state.comments)
                   }} />
               }

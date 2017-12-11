@@ -17,10 +17,18 @@ class SingleComment extends Component {
 
   constructor(props) {
     super()
+
+    let children = ((props.comment.children || {}).edges || []).map(edge => edge.node)
+    let childrenText = children.reduce((map, obj) => {
+        map[obj.id] = obj.text;
+        return map;
+    }, {});
+
     this.listenTab = props.tabs==='listen'
     this.comment = props.comment
     this.user = props.user
-    this.isFirst = (props.index === 0)
+    this.isNew = props.comment.id==='new'
+    // this.isNew = false
     this.isOwnComment = (props.user.id === props.comment.author.id)
     let commentUpvotes = ((props.comment.upvotes || {}).edges || []).map(edge=>edge.node.id)
     // let userUpvotes = ((props.user.upvotes || {}).edges || []).map(edge=>edge.node.id)
@@ -32,8 +40,9 @@ class SingleComment extends Component {
       newSubcomment: "",
       deleted: [],
       children: ((props.comment.children || {}).edges || []).map(edge => edge.node),
+      childrenText
     }
-
+    console.log('cmt,', this );
   }
 
   componentDidMount() {
@@ -42,48 +51,61 @@ class SingleComment extends Component {
     }
   }
 
-  editComment = () => {
-    if (this.isFirst) {
+  editComment = (comment, text) => {
+    if (this.isNew) {
       let commentData = {
-        authorId: this.comment.author.id,
-        projectId: this.comment.project.id,
-        type: this.comment.type,
-        timestamp: this.comment.timestamp,
-        text: this.state.text,
-        sessionId: this.props.sessionId
+        authorId: comment.author.id,
+        projectId: comment.project ? comment.project.id : undefined,
+        type: comment.type,
+        timestamp: comment.timestamp,
+        text,
+        // parentId: comment.parent ? comment.parent : this.comment.id
+        // sessionId: this.props.sessionId
       }
+      console.log('commentdate', commentData);
       Relay.Store.commitUpdate(new CreateComment(commentData), {
         onSuccess: success => {
           commentData.author = this.user
           commentData.id = success.createComment.comment.id
           commentData.key = success.createComment.comment.id
           this.props.commentCreated(commentData)
-          this.setState({text: ""})
+          // this.setState({text: ""})
         }
       }
     )
     } else {
-      Relay.Store.commitUpdate(
-        new UpdateComment({id: this.comment.id, text: this.state.text})
-      )
-      this.props.deactivate(this.props.index)
+      Relay.Store.commitUpdate(new UpdateComment({id: comment.id, text}))
+      this.props.deactivate(comment.id)
     }
   }
 
-  text = () => {
-    if (this.props.active || this.isFirst) {
+  text = (comment, childId) => {
+    // console.log('activeids, cmt', this.props.activeIds, comment);
+    let textVal = childId ? this.state.childrenText[childId] : this.state.text
+
+    if (this.props.activeIds.includes(comment.id)) {
       return (
         <TextField
-          id={this.comment.id}
-          value={this.state.text}
-          onChange={(e,newVal)=>this.setState({text:newVal})}
+          id={comment.id}
+          value={textVal}
+          onChange={(e,newVal)=>{
+            if (childId) {
+              let childrenText = {...this.state.childrenText}
+              childrenText[childId] = newVal
+              this.setState({childrenText})
+            } else {
+              this.setState({text:newVal})
+            }
+          }}
           fullWidth
           multiLine
-          autoFocus={(this.props.focus === this.comment.id || this.isFirst)}
+          autoFocus={(this.props.focus === comment.id || this.isNew)}
           onKeyPress={(e)=>{
             if (e.charCode === 13 && !e.shiftKey) {
               e.preventDefault()
-              this.editComment()
+              // let text = childId ? this.state.childrenText[childId] : this.state.text
+              // console.log({textVal}, {text});
+              this.editComment(comment, textVal)
             }
           }}
           textareaStyle={{
@@ -93,12 +115,12 @@ class SingleComment extends Component {
             lineHeight: '18px'
           }}
           underlineFocusStyle={{
-            borderColor: (this.comment.type === 'COMMENT' ) ? blue : purple
+            borderColor: (comment.type === 'COMMENT' ) ? blue : purple
           }}
         />
       )
     } else {
-      return (this.state.text)
+      return (textVal)
     }
   }
 
@@ -144,11 +166,17 @@ class SingleComment extends Component {
                 <SCHandle to={author.deactivated ? null : `/${author.handle}`}>
                   {author.handle}
                 </SCHandle>
-                <SCText>{text}</SCText>
+                <SCText>{this.text(child, id)}</SCText>
                 {this.user.id===author.id && <SCBottom>
                   <BotLink
-                    onClick={()=>{this.props.active ?
-                      this.editComment() : this.props.activate(id)}}
+                    onClick={()=>{
+                      if (this.props.activeIds.includes(id)) {
+                        this.setState({text})
+                        this.editComment(child)
+                      } else {
+                        this.props.activate(id)
+                      }
+                    }}
                   >Edit</BotLink>
                   {'|'}
                   <BotLink onClick={()=>this.deleteComment(id)}>
@@ -191,10 +219,14 @@ class SingleComment extends Component {
                   new CreateComment(newSubcommentData), {
                     onSuccess: success => {
                       this.refs.scTextField.blur();
+                      let childrenText = {...this.state.childrenText}
                       newSubcommentData.id = success.createComment.comment.id
+                      childrenText[newSubcommentData.id] = newSubcommentData.text
+
                       this.setState({
                         children: this.state.children.concat(newSubcommentData),
-                        newSubcomment: ''
+                        newSubcomment: '',
+                        childrenText
                       })
                     },
                     onFailure: failure => console.log('fail subcomment', failure)
@@ -211,7 +243,7 @@ class SingleComment extends Component {
     let {author, timestamp, type, id, upvotes} = this.comment
     let {newUpvote} = this.state
     let totalUpvotes = (upvotes||newUpvote) && (upvotes.edges.length + newUpvote)
-    let hideEditDelete = this.isFirst ||  !this.isOwnComment
+    let hideEditDelete = this.isNew || !this.isOwnComment
     return (
       <Single id={id} hide={this.hider() || this.state.deleted.includes(id)} >
         <MainRow>
@@ -234,7 +266,7 @@ class SingleComment extends Component {
               <Handle to={author.deactivated ? null : `/${author.handle}`} >
                 {author.handle}
               </Handle>
-              <Text>{this.text()}</Text>
+              <Text>{this.text(this.comment)}</Text>
             </Content>
             <Time onClick={()=>{
               console.log('time click', this.props, timestamp)
@@ -243,8 +275,8 @@ class SingleComment extends Component {
           </Top>
           <Bottom>
             {!hideEditDelete && <BotLink
-              onClick={()=>{this.props.active ?
-                this.editComment() : this.props.activate(this.props.index)}}
+              onClick={()=>{this.props.activeIds.includes(id) ?
+                this.editComment(this.comment) : this.props.activate(id)}}
             >Edit</BotLink>}
             {!hideEditDelete && '|'}
             {!hideEditDelete &&
@@ -255,7 +287,7 @@ class SingleComment extends Component {
               hasUpvoted={this.state.hasUpvoted}
               onClick={!this.isOwnComment && !this.state.hasUpvoted && this.addUpvote}
             >Upvote{this.state.hasUpvoted && 'd'} | {totalUpvotes}</UpVote>
-            <BotLink
+            <BotLink hideLink={this.comment.id==='new'}
               onClick={()=>{
                 this.setState({subcomments: !this.state.subcomments})
               }}
@@ -276,8 +308,8 @@ class SingleComment extends Component {
 //   return (
 //     <div>
 //       <BotLink
-//         onClick={()=>{this.props.active ?
-//           this.editComment() : this.props.activate(this.props.index)}}
+//         onClick={()=>{this.props.activeIds.includes() ?
+//           this.editComment() : this.props.activate(comment.id)}}
 //       >Edit</BotLink>
 //       {this.listenTab && '|'}
 //       <BotLink
