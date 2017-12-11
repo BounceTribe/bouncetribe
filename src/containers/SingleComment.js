@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {white, purple, blue, grey700} from 'theme'
-import {Single, MainRow, Bottom, Time, Text, InfoOptions, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, SCBottom, SCCol, SCText} from 'styled/Comments'
+import {Single, MainRow, Bottom, Content, Time, Text, Top, ButtonCol, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, SCBottom, SCCol, SCText} from 'styled/Comments'
 import {RoundButton, BtAvatar} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
@@ -19,6 +19,7 @@ class SingleComment extends Component {
     super()
     this.listenTab = props.tabs==='listen'
     this.comment = props.comment
+    this.user = props.user
     this.isFirst = (props.index === 0)
     this.isOwnComment = (props.user.id === props.comment.author.id)
     let commentUpvotes = ((props.comment.upvotes || {}).edges || []).map(edge=>edge.node.id)
@@ -53,7 +54,7 @@ class SingleComment extends Component {
       }
       Relay.Store.commitUpdate(new CreateComment(commentData), {
         onSuccess: success => {
-          commentData.author = this.props.user
+          commentData.author = this.user
           commentData.id = success.createComment.comment.id
           commentData.key = success.createComment.comment.id
           this.props.commentCreated(commentData)
@@ -104,7 +105,7 @@ class SingleComment extends Component {
   addUpvote = () => {
     Relay.Store.commitUpdate(
       new AddToCommentUpvotes({
-        upvotesUserId: this.props.user.id,
+        upvotesUserId: this.user.id,
         upvotesCommentId: this.comment.id
       }), { onSuccess: (res) => {
         console.log('upvote res', res);
@@ -135,30 +136,32 @@ class SingleComment extends Component {
     return (
       <SCContainer>
         {this.state.children.map(child=>{
-          console.log('usre child', child);
+          let {id, author, text} = child
           return (
-            <SubComment key={child.id} hide={this.state.deleted.includes(child.id)}>
-              <BtAvatar user={child.author} size={30} style={{paddingTop: '5px'}} />
+            <SubComment key={id} hide={this.state.deleted.includes(id)}>
+              <BtAvatar user={author} size={30} style={{paddingTop: '5px'}} />
               <SCCol>
-                <SCHandle>{child.author.handle}</SCHandle>
-              <SCText>{child.text}</SCText>
-              {this.props.user.id===child.author.id && <SCBottom>
-                <BotLink
-                  onClick={()=>{this.props.active ?
-                    this.editComment() : this.props.activate(this.props.index)}}
-                >Edit</BotLink>
-                {'|'}
-                <BotLink
-                  onClick={()=>this.deleteComment(child.id)}
-                >Delete</BotLink>
-              </SCBottom>}
+                <SCHandle to={author.deactivated ? null : `/${author.handle}`}>
+                  {author.handle}
+                </SCHandle>
+                <SCText>{text}</SCText>
+                {this.user.id===author.id && <SCBottom>
+                  <BotLink
+                    onClick={()=>{this.props.active ?
+                      this.editComment() : this.props.activate(id)}}
+                  >Edit</BotLink>
+                  {'|'}
+                  <BotLink onClick={()=>this.deleteComment(id)}>
+                    Delete
+                  </BotLink>
+                </SCBottom>}
             </SCCol>
             </SubComment>
           )
         })}
         <SubComment key={'input'} >
-          <BtAvatar user={this.props.user} size={30} />
-          <SCCol><SCHandle>{this.props.user.handle}</SCHandle></SCCol>
+          <BtAvatar user={this.user} size={30} />
+          <SCCol><SCHandle>{this.user.handle}</SCHandle></SCCol>
           <TextField
             ref='scTextField'
             value={this.state.newSubcomment}
@@ -178,8 +181,8 @@ class SingleComment extends Component {
               if (e.charCode === 13 && !e.shiftKey) {
                 e.preventDefault()
                 let newSubcommentData = {
-                  authorId: this.props.user.id,
-                  author: this.props.user, //for real time
+                  authorId: this.user.id,
+                  author: this.user, //for real time
                   type: 'COMMENT',
                   text: this.state.newSubcomment,
                   parentId: this.comment.id
@@ -187,8 +190,8 @@ class SingleComment extends Component {
                 Relay.Store.commitUpdate(
                   new CreateComment(newSubcommentData), {
                     onSuccess: success => {
-                      console.log('newSubcomment', this.state.children)
                       this.refs.scTextField.blur();
+                      newSubcommentData.id = success.createComment.comment.id
                       this.setState({
                         children: this.state.children.concat(newSubcommentData),
                         newSubcomment: ''
@@ -212,29 +215,32 @@ class SingleComment extends Component {
     return (
       <Single id={id} hide={this.hider() || this.state.deleted.includes(id)} >
         <MainRow>
-          <Handle to={author.deactivated ? null : `/${author.handle}`} >
-            {author.handle}
-          </Handle>
-          <InfoOptions>
-            <RoundButton
-              style={{marginBottom: '25px'}}
-              onClick={()=>{
-                console.log('button click', this.props, timestamp)
-                this.props.jumpToTime(timestamp)
-              }}
-              icon={(type === 'COMMENT') ?
-                <Comment height={25} width={25} fill={white} />
-                : <Heart height={25} width={25} fill={white} />
-              }
-              mini
-              secondary={(type === 'COMMENT')}
-            />
-          </InfoOptions>
-          <Text>{this.text()}</Text>
-          <Time onClick={()=>{
-            console.log('time click', this.props, timestamp)
-            this.props.jumpToTime(timestamp)
-          }}>{formatTime(timestamp)}</Time>
+          <Top>
+            <ButtonCol>
+              <RoundButton
+                onClick={()=>{
+                  console.log('button click', this.props, timestamp)
+                  this.props.jumpToTime(timestamp)
+                }}
+                icon={(type === 'COMMENT') ?
+                  <Comment height={25} width={25} fill={white} />
+                  : <Heart height={25} width={25} fill={white} />
+                }
+                mini
+                secondary={(type === 'COMMENT')}
+              />
+            </ButtonCol>
+            <Content>
+              <Handle to={author.deactivated ? null : `/${author.handle}`} >
+                {author.handle}
+              </Handle>
+              <Text>{this.text()}</Text>
+            </Content>
+            <Time onClick={()=>{
+              console.log('time click', this.props, timestamp)
+              this.props.jumpToTime(timestamp)
+            }}>{formatTime(timestamp)}</Time>
+          </Top>
           <Bottom>
             {!hideEditDelete && <BotLink
               onClick={()=>{this.props.active ?
@@ -250,7 +256,6 @@ class SingleComment extends Component {
               onClick={!this.isOwnComment && !this.state.hasUpvoted && this.addUpvote}
             >Upvote{this.state.hasUpvoted && 'd'} | {totalUpvotes}</UpVote>
             <BotLink
-              hideLink={this.listenTab}
               onClick={()=>{
                 this.setState({subcomments: !this.state.subcomments})
               }}

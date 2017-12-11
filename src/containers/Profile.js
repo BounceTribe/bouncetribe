@@ -68,7 +68,7 @@ class Profile extends Component {
       `/${theirHandle}/activity` ||
       `/${theirHandle}/projects` ||
       `/${theirHandle}/bounces` )) {
-      this.props.router.push(`/${theirHandle}/activity`)
+      this.props.router.replace(`/${theirHandle}/activity`)
     }
     console.log('profile mount props', this.props);
   }
@@ -139,7 +139,7 @@ class Profile extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.push(`/${this.props.router.params.theirHandle}/${tab}`)
+    this.props.router.replace(`/${this.props.router.params.theirHandle}/${tab}`)
     this.setState({ tab })
   }
 
@@ -229,7 +229,7 @@ class Profile extends Component {
           <EmailWebsite>
             {(User.website || ownProfile) &&
               <LinkIcon style={{marginRight: '10px'}}/>}
-            <SiteLink href={(User.website.substr(0,4)==='http') ? User.website : 'http://' + User.website} target="_blank">{User.website}</SiteLink>
+            <SiteLink href={((User.website || '').substr(0,4)==='http') ? User.website : 'http://' + User.website} target="_blank">{User.website}</SiteLink>
             <MissingUserData hide={User.website || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
               Add your website

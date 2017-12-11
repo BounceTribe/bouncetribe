@@ -41,7 +41,7 @@ class Dashboard extends Component {
     let theirHandle = props.params.theirHandle
     if (!theirHandle) {
       return null
-    } else if (theirHandle === (this.state.selectedUser || {}).handle) {
+    } else if (theirHandle === ((this.state || {}).selectedUser || {}).handle) {
       return this.state.selectedUser
     } else if (props.viewer.user.friends.count) {
       let friends = props.viewer.user.friends.edges.map(edge=>edge.node)

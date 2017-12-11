@@ -46,16 +46,24 @@ export const Single = styled.div`
 `
   export const MainRow = styled.div`
     display: flex;
+    flex-direction: column;
     padding: 12px 30px 10px 20px;
   `
+  export const Top = styled.div`
+    display: flex;
+  `
+  export const Content = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+  `
+
   export const Bottom = styled.div`
     display: flex;
     font-size: 13px;
-    ${'' /* padding-top: 5px; */}
-    position: absolute;
-    align-self: flex-end;
+    padding-top: 10px;
   `
-    export const InfoOptions = styled.div`
+    export const ButtonCol = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -67,13 +75,8 @@ export const Single = styled.div`
       `
         export const Handle = styled(BtLink)`
           color: ${({comment}) => (comment) ? blue : purple};
-          position: absolute;
-          ${'' /* align-self: flex-end; */}
-          margin-left: 75px;
           font-weight: 400;
         `
-
-
         export const BotLink = styled.span`
           cursor: pointer;
           color: ${grey700};
@@ -91,13 +94,10 @@ export const Single = styled.div`
         `
     export const Text = styled.pre`
       display: flex;
-      flex-direction: column;
       color: ${grey900};
       font-size: 16px;
-      ${'' /* align-self: center; */}
-      margin: 25px 0 0 0;
+      margin: 10px 0 0 0;
       word-break: break-all;
-      padding: 0 20px;
       white-space: pre-wrap;
       flex-grow: 1;
     `
@@ -138,19 +138,12 @@ export const SCCol = styled.div`
   justify-content: flex-start;
 `
 
-export const SCHandleText = styled.pre`
-  display: flex;
+export const SCHandle = styled(BtLink)`
   font-weight: 400;
   color: ${grey700};
   font-size: 14px;
-  margin: 0;
+  &:hover {color: ${purple}}
 `
-
-export const SCHandle = (props) => (
-  <BtLink to={props.to}>
-    <SCHandleText>{props.children}</SCHandleText>
-  </BtLink>
-)
 
 export const SCBottom = styled.div`
   display: flex;
