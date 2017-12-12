@@ -7,23 +7,27 @@ export const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  margin-top: 60px;
   padding-bottom: 80px;
   width: ${({listenTab}) => (listenTab) ? '85%' : '100%'};
 `
   export const ButtonRow = styled.div`
     display: ${({hide}) => (hide) ? 'none' : 'flex'};
     justify-content: center;
+    margin-bottom: 20px;
   `
     export const ButtonColumn = styled.div`
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 15px 10px;
+      padding: 15px 20px;
     `
     export const ButtonLabel = styled.span`
       display: flex;
       margin-top: 15px;
       font-size: 14px;
+      color: #777777;
+      font-weight: 300;
     `
 
 export const CommentBox = styled.div`
@@ -47,7 +51,7 @@ export const Single = styled.div`
   export const MainRow = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 12px 30px 10px 20px;
+    padding: 30px 30px 30px 30px;
   `
   export const Top = styled.div`
     display: flex;
@@ -74,8 +78,9 @@ export const Single = styled.div`
         align-items: center;
       `
         export const Handle = styled(BtLink)`
-          color: ${({comment}) => (comment) ? blue : purple};
+          color: #777777;
           font-weight: 400;
+          font-size: 14px;
         `
         export const BotLink = styled.span`
           cursor: pointer;
@@ -102,11 +107,13 @@ export const Single = styled.div`
       flex-grow: 1;
     `
     export const Time = styled.div`
-      font-size: 14px;
+      font-size: 17px;
+      font-weight: 300;
       display: flex;
       flex-direction: column;
-      margin-bottom: 17px;
-      color: ${grey700};
+      margin-bottom: 0px;
+      margin-right: 10px;
+      color: #999999;
       margin-left: auto;
       align-self: center;
       cursor: pointer;
@@ -142,7 +149,7 @@ export const SCCol = styled.div`
 
 export const SCHandle = styled(BtLink)`
   font-weight: 400;
-  color: ${grey700};
+  color: #777777;
   font-size: 14px;
   &:hover {color: ${purple}}
 `
@@ -157,7 +164,7 @@ export const SCBottom = styled.div`
 export const SCText = styled.div`
   display: flex;
   color: ${grey700};
-  font-size: 13px;
+  font-size: 14px;
   padding: 7px;
 
 `

@@ -33,7 +33,8 @@ export const TitleGenre = styled.div`
 
 export const Title = styled.div`
   display: flex;
-  font-size: 25px;
+  font-size: 30px;
+  font-weight: 300;
   white-space: nowrap;
   color: ${grey800};
 `
@@ -54,12 +55,13 @@ export const Genre = styled.span`
 
 export const Summary = styled.pre`
   display: flex;
-  font-size: 15px;
+  font-size: 14px;
   margin-top: 30px;
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-all;
+  color: #555555;
 `
 export const TrackContainer = styled.div`
   display: flex;
@@ -127,6 +129,7 @@ export const ProfTop = styled.div`
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
+  margin-top: 10px;
 `
 
 const PortImg = styled.img`
@@ -174,6 +177,8 @@ export const MoreInfo = styled.div`
   align-items: flex-end;
   justify-content: flex-end;
   color: ${grey500};
+  font-weight: 300;
+  margin-bottom: 5px;
 `
 
 export const Divider = styled.hr`
@@ -191,12 +196,12 @@ export const CommonInfluences = styled.div`
 
 export const InfluenceChip = styled.div`
   display: flex;
-  color: black;
+  color: ${grey800};
   background-color: ${grey300};
   border-radius: 30px;
   justify-content: center;
   align-items: center;
-  padding: 5px 10px;
-  font-size: 12px;
+  padding: 7px 12px;
+  font-size: 14px;
   margin-left: 5px;
 `
