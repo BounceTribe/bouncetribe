@@ -144,6 +144,7 @@ export const SCCol = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 15px;
+  width: 100%;
   justify-content: flex-start;
 `
 
@@ -161,10 +162,20 @@ export const SCBottom = styled.div`
   padding-top: 5px;
   ${'' /* justify-content: flex-end; */}
 `
-export const SCText = styled.div`
+export const SCText = styled.pre`
   display: flex;
   color: ${grey700};
   font-size: 14px;
   padding: 7px;
+  margin: 4px 0 0 0;
 
+  word-break: break-all;
+  white-space: pre-wrap;
 `
+// export const Text = styled.pre`
+//   display: flex;
+//   color: ${grey900};
+//   font-size: 16px;
+
+//   flex-grow: 1;
+// `
