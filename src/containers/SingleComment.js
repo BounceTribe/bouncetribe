@@ -183,8 +183,11 @@ class SingleComment extends Component {
           )
         })}
         <SubComment key={'input'} >
-          <BtAvatar user={this.user} size={30} />
-          <SCCol><SCHandle>{this.user.handle}</SCHandle></SCCol>
+          <BtAvatar user={this.user} size={30} style={{paddingTop: '5px'}} />
+          <SCCol>
+            <SCHandle to={this.user.deactivated ? null : `/${this.user.handle}`}>
+              {this.user.handle}
+            </SCHandle>
           <TextField
             ref='scTextField'
             value={this.state.newSubcomment}
@@ -230,6 +233,7 @@ class SingleComment extends Component {
               }
             }}
           />
+        </SCCol>
         </SubComment>
       </SCContainer>)
   }
