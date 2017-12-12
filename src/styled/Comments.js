@@ -110,6 +110,8 @@ export const Single = styled.div`
       margin-left: auto;
       align-self: center;
       cursor: pointer;
+      display: ${({hide}) => hide ? 'none': ''};
+      &:hover {color: ${purple}}
     `
 
 export const CommentScroller = styled.div`

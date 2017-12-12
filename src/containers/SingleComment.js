@@ -236,6 +236,7 @@ class SingleComment extends Component {
 
   render() {
     let {author, timestamp, type, id, upvotes} = this.comment
+    console.log({timestamp});
     let {newUpvote} = this.state
     let totalUpvotes = (upvotes||newUpvote) && (upvotes.edges.length + newUpvote)
     let hideEditDelete = this.isNew || !this.isOwnComment
@@ -247,7 +248,7 @@ class SingleComment extends Component {
               <RoundButton
                 onClick={()=>{
                   console.log('button click', this.props, timestamp)
-                  this.props.jumpToTime(timestamp)
+                  timestamp && this.props.jumpToTime(timestamp)
                 }}
                 icon={(type === 'COMMENT') ?
                   <Comment height={25} width={25} fill={white} />
@@ -263,7 +264,7 @@ class SingleComment extends Component {
               </Handle>
               <Text>{this.text(this.comment)}</Text>
             </Content>
-            <Time onClick={()=>{
+            <Time hide={!timestamp} onClick={()=>{
               console.log('time click', this.props, timestamp)
               this.props.jumpToTime(timestamp)
             }}>{formatTime(timestamp)}</Time>
