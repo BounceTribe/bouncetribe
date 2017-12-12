@@ -132,6 +132,7 @@ export const suggestedFriends = (userId) => {
           }`
         }),
       }).then(result=>result.json()).then(json => {
+        console.log('friends json', {json, userId});
         let fbFriends = (json.data.allUsers || []).map(user=>user)
         let btFriends = json.data.User.friends.map(user => user.id)
         let suggestedFriends = fbFriends.filter((fbFriend)=>{

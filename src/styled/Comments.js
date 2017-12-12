@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React from 'react'
+// import React from 'react'
 import {grey300, grey700, grey900, blue, purple} from 'theme'
 import {BtLink} from 'styled'
 

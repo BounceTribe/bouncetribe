@@ -511,16 +511,13 @@ class Project extends Component {
             <ButtonRow
               hide={(isOwner || this.state.tabs === 'view' || this.state.disableComments)} >
               <ButtonColumn>
-                <RoundButton
-                  big
-                  secondary
+                <RoundButton big secondary
                   icon={<Comment height={50} width={50} />}
                   onTouchTap={()=>{this.dropMarker('COMMENT')}} />
                 <ButtonLabel>Idea</ButtonLabel>
               </ButtonColumn>
               <ButtonColumn>
-                <RoundButton
-                  big
+                <RoundButton big
                   icon={ <Heart height={50} width={50} /> }
                   onTouchTap={()=>{this.dropMarker('LIKE')}} />
                 <ButtonLabel>Like</ButtonLabel>
@@ -545,7 +542,7 @@ class Project extends Component {
                     console.log('new state', this.state.new, newComment);
                     let newSorted = this.state.comments.concat(newComment)
                       .sort((a,b)=>(a.timestamp-b.timestamp))
-                    this.setState({ 
+                    this.setState({
                       new: false,
                       comments: newSorted,
                       focus: newComment.id
@@ -589,6 +586,7 @@ export default Relay.createContainer(
             handle
             lastPing
             portraitMini {url}
+            portrait {url}
             friends (
               first: 999
               filter: {deactivated: false}

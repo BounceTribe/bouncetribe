@@ -19,6 +19,7 @@ class Dashboard extends Component {
   constructor(props) {
     console.log('dash constructor props', props)
     super(props)
+    this.user = props.viewer.user
     this.userHandle = props.viewer.user.handle
     this.state = {
       selectedUser: this.getSelectedUser(props),

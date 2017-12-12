@@ -28,7 +28,6 @@ class SingleComment extends Component {
     this.comment = props.comment
     this.user = props.user
     this.isNew = props.comment.id==='new'
-    // this.isNew = false
     this.isOwnComment = (props.user.id === props.comment.author.id)
     let commentUpvotes = ((props.comment.upvotes || {}).edges || []).map(edge=>edge.node.id)
     // let userUpvotes = ((props.user.upvotes || {}).edges || []).map(edge=>edge.node.id)
@@ -42,7 +41,7 @@ class SingleComment extends Component {
       children: ((props.comment.children || {}).edges || []).map(edge => edge.node),
       childrenText
     }
-    console.log('cmt,', this );
+    // console.log('cmt,', this );
   }
 
   componentDidMount() {
@@ -80,9 +79,7 @@ class SingleComment extends Component {
   }
 
   text = (comment, childId) => {
-    // console.log('activeids, cmt', this.props.activeIds, comment);
     let textVal = childId ? this.state.childrenText[childId] : this.state.text
-
     if (this.props.activeIds.includes(comment.id)) {
       return (
         <TextField
@@ -103,8 +100,6 @@ class SingleComment extends Component {
           onKeyPress={(e)=>{
             if (e.charCode === 13 && !e.shiftKey) {
               e.preventDefault()
-              // let text = childId ? this.state.childrenText[childId] : this.state.text
-              // console.log({textVal}, {text});
               this.editComment(comment, textVal)
             }
           }}
