@@ -477,7 +477,7 @@ class Project extends Component {
           inkBarStyle={{ backgroundColor: purple }}
           value={this.state.tabs} >
           <Tab
-            label={'Listen & Give'}
+            label={'Give Your Feedback'}
             value={'listen'}
             onActive={()=>{ this.setState({tabs: 'listen'}) }}
             style={{ borderBottom: `2px solid ${grey200}` }} />

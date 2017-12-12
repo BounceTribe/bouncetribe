@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
-import {grey200, purple, grey700} from 'theme'
+import {grey200, grey300, purple, grey700} from 'theme'
 import Avatar from 'material-ui/Avatar'
 import {url} from 'config'
 
@@ -71,9 +71,10 @@ class ProjectTribeList extends Component {
       <List
         style={{
           width: '100%',
-          border: `1px solid ${grey200}`,
+          border: `1px solid ${grey300}`,
           borderRadius: `6px`,
           marginBottom: '20px',
+          marginTop: '68px',
           display: (this.props.recentCommenters.length > 0) ? '' : 'none'
         }}
       >
