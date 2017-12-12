@@ -236,7 +236,8 @@ class SingleComment extends Component {
 
   render() {
     let {author, timestamp, type, id, upvotes} = this.comment
-    console.log({timestamp});
+    // console.log({timestamp});
+    // it looks like everything is rendere every secind a song is playing
     let {newUpvote} = this.state
     let totalUpvotes = (upvotes||newUpvote) && (upvotes.edges.length + newUpvote)
     let hideEditDelete = this.isNew || !this.isOwnComment

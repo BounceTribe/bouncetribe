@@ -118,7 +118,14 @@ export const suggestedFriends = (userId) => {
           query: /* GraphQL */`{
             allUsers (
               first: 10
-              filter: { facebookId_in: [${facebookIds.toString()}] }
+              filter: {
+                facebookId_in: [${facebookIds.toString()}]
+                invitations_none: {
+                  accepted: false,
+                  ignored: false,
+                  actor: {id: "${userId}"}
+                }
+             }
             ) {
               id
               handle

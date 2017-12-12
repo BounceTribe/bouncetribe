@@ -77,6 +77,8 @@ class Dashboard extends Component {
 
   suggestFriends = (max) => {
     max = max || this.state.maxSuggestedFriends
+
+    // user.invitations.edges.find((edge)=>edge.node.actor.id
     suggestedFriends(this.user.id).then( suggestions => {
       this.setState( (prevState, props) => {
         let list = suggestions.slice(0, max).map( friend =>
@@ -130,7 +132,9 @@ class Dashboard extends Component {
   createFriendRequest = (recipientId) => {
     let {id: actorId} = this.user
     this.props.relay.commitUpdate(
-      new CreateFriendRequest({actorId, recipientId})
+      new CreateFriendRequest({actorId, recipientId}), {
+        onSuccess: success=>this.suggestFriends()
+      }
     )
   }
   inviteDialog = () => {
