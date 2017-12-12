@@ -152,7 +152,11 @@ class Project extends Component {
   jumpToTime = (time) => {
     document.getElementsByTagName('canvas')[0]
       .scrollIntoView({behavior:'smooth'})
-    this.setState({jumpToTime: time})
+      if (this.state.jumpToTime===time) {
+        this.setState({jumpToTime: time + 0.0001})
+      } else {
+        this.setState({jumpToTime: time})
+      }
   }
 
   get comments () {
