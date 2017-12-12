@@ -151,7 +151,7 @@ class Template extends Component {
           user={user}
           openSettings={()=>this.setState({settings: true})}
           redirect={this.redirect}
-          portraitUrl={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
+          portraitUrl={(user.portraitMini || {}).url || `${url}/logo.png`}
         />
       )
     }
@@ -225,6 +225,8 @@ export default Relay.createContainer( Template, {
             handle
             deactivated
             portrait { url }
+            portraitSmall { url }
+            portraitMini { url }
             doNotEmail
             doNotEmailTR
             doNotEmailTA

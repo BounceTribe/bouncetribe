@@ -143,7 +143,7 @@ export const SCCol = styled.div`
 
 export const SCHandle = styled(BtLink)`
   font-weight: 400;
-  color: ${grey700};
+  color: ${grey900};
   font-size: 14px;
   &:hover {color: ${purple}}
 `
@@ -157,7 +157,7 @@ export const SCBottom = styled.div`
 `
 export const SCText = styled.pre`
   display: flex;
-  color: ${grey700};
+  color: ${grey900};
   font-size: 13px;
   padding: 7px;
   margin: 4px 0 0 0;

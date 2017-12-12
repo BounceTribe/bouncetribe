@@ -78,16 +78,15 @@ export const ScrollBox = styled.div`
         `
 
     const DashProject = ({project, urlPush}) => {
-      let {artwork, title} = project
+      // let {artwork, artworkSmall, title} = project
+      let artwork = (project.artworkSmall || {}).url || (project.artwork || {}).url
+      console.log({project});
       return (
         <ProjectContainer>
-          <ProjectArt
-            src={artwork ? artwork.url : `${url}/artwork.png`}
-            onClick={urlPush}
-          />
+          <ProjectArt src={artwork || `${url}/artwork.png`} onClick={urlPush}/>
           <ProjectDetail>
             <DetailHeading>NEW PROJECT ADDED</DetailHeading>
-            <DetailTitle>{title}</DetailTitle>
+            <DetailTitle>{project.title}</DetailTitle>
             <BtFlatButton
               label={'Listen Now'}
               backgroundColor={purple}
