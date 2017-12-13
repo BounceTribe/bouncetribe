@@ -82,7 +82,6 @@ export default class EditProfile extends Component {
           title,
           titleError,
           descriptionError } = this.state
-    console.log('state', this.state);
 
     if (!this.state.genres) return null
     return (

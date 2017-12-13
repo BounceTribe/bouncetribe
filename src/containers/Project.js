@@ -174,6 +174,7 @@ class Project extends Component {
     return comments
   }
 
+
   artworkSuccess = (files) => {
     this.setState({
       artworkEditorOpen: false,
