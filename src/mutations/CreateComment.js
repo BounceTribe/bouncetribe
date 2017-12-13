@@ -13,7 +13,6 @@
 //       sessionId: this.props.sessionId
 //     }
 //   }
-//
 //   getMutation () {
 //     return Relay.QL`mutation{createComment}`
 //   }

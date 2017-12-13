@@ -6,7 +6,7 @@ import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, 
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
-import {white, purple, grey300, grey200, grey400} from 'theme'
+import {white, purple, grey200, grey400} from 'theme'
 import {url} from 'config'
 import ProjectTribeList from 'components/ProjectTribeList'
 import {Tabs, Tab} from 'material-ui/Tabs'
@@ -18,23 +18,18 @@ import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Bounce from 'icons/Bounce'
 import Location from 'icons/Location'
-import Lock from 'icons/Lock'
-import Logo from 'icons/Logo'
 import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Edit from 'icons/Edit'
 import Dialog from 'material-ui/Dialog'
-import TextField from 'material-ui/TextField'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
-import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
-import {SharingModal, Choice, ChoiceText} from 'styled/ProjectNew'
 import UpdateProject from 'mutations/UpdateProject'
 import DeleteProject from 'mutations/DeleteProject'
 import CreateBounce from 'mutations/CreateBounce'
 import DeleteBounce from 'mutations/DeleteBounce'
 import ImageEditor from 'components/ImageEditor'
 import FlatButton from 'material-ui/FlatButton'
+import EditProject from 'components/EditProject'
+
 
 class Project extends Component {
 
@@ -63,7 +58,7 @@ class Project extends Component {
       newIndex: 0,
       markers: [],
       active: [],
-      edit: false,
+      edit: true,
       artworkEditorOpen: false,
       selection: false,
       delete: false,
@@ -112,15 +107,6 @@ class Project extends Component {
     this.setState({
       disableComments: (!this.isFriends && this.project.privacy!=='PUBLIC'),
       bounced: bouncedByIds.includes(user.id)
-    })
-    getAllGenres().then(results=>{
-      let genres = results.map(genre=>(
-        <MenuItem
-          primaryText={genre.name}
-          value={genre.id}
-          key={genre.id} />
-      ))
-      this.setState({ genres })
     })
   }
 
@@ -188,16 +174,6 @@ class Project extends Component {
     return comments
   }
 
-  titleChange = (title) => {
-    this.setState({ title, titleUnique: true })
-    this.debounce && clearTimeout(this.debounce)
-    this.debounce = setTimeout(()=>{
-      ensureUsersProjectTitleUnique(this.user.id, title).then(unique=>{
-        this.setState({titleUnique: unique})
-      })
-    },1000)
-  }
-
   artworkSuccess = (files) => {
     this.setState({
       artworkEditorOpen: false,
@@ -219,12 +195,8 @@ class Project extends Component {
     )
   }
 
-  openArtworkEditor = () => {
-    this.isOwner && this.setState({artworkEditorOpen: true})
-  }
-
   setBounce = () => {
-    let project = this.project
+    let project = this.props.viewer.allProjects.edges[0].node
     let {id: selfId} = this.user
     let {id: projectId} = project
     if (this.state.bounced) {
@@ -257,7 +229,8 @@ class Project extends Component {
   }
 
   render () {
-    let {User, user, project, isOwner} = this
+    let {User, user, isOwner} = this
+    let project = this.props.viewer.allProjects.edges[0].node
     let myInfluences = user.artistInfluences.edges.map(edge=>edge.node.name)
     let artwork = this.state.artworkSmallUrl || this.state.artworkUrl ||  (isOwner && `${url}/uploadartwork.png`)
 
@@ -314,7 +287,7 @@ class Project extends Component {
           <Art
             src={ artwork || `${url}/artwork.png`}
             alt={'Project Art'}
-            onClick={this.openArtworkEditor}
+            onClick={()=>this.setState({artworkEditorOpen: true})}
             isOwner={isOwner} />
           <ImageEditor
             altSizes={[500]}
@@ -383,90 +356,13 @@ class Project extends Component {
             ]} >
             Are you sure you want to permanently delete this project?
           </Dialog>
-          <Dialog
-            open={this.state.edit}
-            onRequestClose={()=>{this.setState({edit:false})}}
-            autoScrollBodyContent
-            title={'Details'}
-            actionsContainerStyle={{
-              display: 'flex',
-              justifyContent: 'space-between'
-            }}
-            actions={[
-              <FlatButton
-                label={"Delete Project"}
-                labelStyle={{ color: '#DF5151' }}
-                onClick={()=>{ this.setState({edit: false, delete: true}) }} />,
-              <BtFlatButton
-                label={'Save'}
-                onClick={()=>{
-                  let updatedProject = {
-                    id: project.id,
-                    privacy: this.state.privacy,
-                    title: this.state.title,
-                    description: this.state.description,
-                  }
-                  this.props.relay.commitUpdate(
-                    new UpdateProject({
-                      project: updatedProject,
-                      genresIds: this.state.genre })
-                  )
-                  this.setState({edit: false})
-                }} />
-            ]}>
-            <TextField
-              floatingLabelText={'Title'}
-              name={'title'}
-              type={'text'}
-              value={this.state.title}
-              disabled
-              fullWidth />
-            <SelectField
-              floatingLabelText={'Genre'}
-              value={this.state.genre}
-              fullWidth
-              onChange={(e, index, value)=>{ this.setState({genre:value}) }}
-              selectedMenuItemStyle={{ color: purple }} >
-              {this.state.genres}
-            </SelectField>
-            <TextField
-              name={'description'}
-              floatingLabelText={'Details'}
-              multiLine
-              rows={3}
-              value={this.state.description}
-              onChange={(e)=>{this.setState({description:e.target.value})}}
-              fullWidth />
-            <SharingModal>
-              <Choice>
-                <RoundButton
-                  onClick={()=>this.setState({privacy: 'PRIVATE'})}
-                  backgroundColor={(this.state.privacy === 'PRIVATE') ? purple : grey300}
-                  icon={ <Lock height={23} width={22} fill={white} /> } />
-                <ChoiceText>
-                  Private
-                </ChoiceText>
-              </Choice>
-              <Choice>
-                <RoundButton
-                  onClick={()=>this.setState({privacy: 'TRIBE'})}
-                  backgroundColor={(this.state.privacy === 'TRIBE') ? purple : grey300}
-                  icon={ <Tribe fill={white} /> } />
-                <ChoiceText>
-                  Tribe Only
-                </ChoiceText>
-              </Choice>
-              <Choice>
-                <RoundButton
-                  onClick={()=>this.setState({privacy: 'PUBLIC'})}
-                  backgroundColor={(this.state.privacy === 'PUBLIC') ? purple : grey300}
-                  icon={ <Logo fill={white} /> } />
-                <ChoiceText>
-                  Public
-                </ChoiceText>
-              </Choice>
-            </SharingModal>
-          </Dialog>
+          {this.state.edit && <EditProject
+            open={true}
+            project={project}
+            projectId={project.id}
+            onSave={()=>this.setState({edit: false})}
+            onClose={()=>this.setState({edit: false})}
+          />}
         </Top>
         <Tabs
           style={{
