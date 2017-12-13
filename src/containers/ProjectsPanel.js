@@ -25,7 +25,14 @@ class ProjectsPanel extends Component {
 
 export default Relay.createContainer(
   ProjectsPanel, {
-    initialVariables: { theirHandle: '' },
+    initialVariables: { theirHandle: '', projectsFilter: {} },
+    prepareVariables: (urlParams) => {
+      return {
+        ...urlParams,
+        //ensures non-deleted projects as well
+        projectsFilter: {privacy_not: 'PRIVATE'},
+      }
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -39,6 +46,7 @@ export default Relay.createContainer(
             projects (
               first: 999
               orderBy: createdAt_ASC
+              filter: $projectsFilter
             ){
               count
               edges {

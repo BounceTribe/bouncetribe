@@ -14,9 +14,6 @@ import {RoundButton, BtFlatButton} from 'styled'
 import {ensureUsersProjectTitleUnique, getAllGenres } from 'utils/graphql'
 import Tribe from 'icons/Tribe'
 
-
-
-
 export default class EditProfile extends Component {
 
   constructor(props) {
@@ -99,7 +96,7 @@ export default class EditProfile extends Component {
           <FlatButton
             label={"Delete Project"}
             labelStyle={{ color: '#DF5151' }}
-            onClick={this.props.onClose}
+            onClick={this.props.delete}
           />,
           <BtFlatButton
             label={'Save'}
@@ -126,7 +123,7 @@ export default class EditProfile extends Component {
           errorText={descriptionError}
           multiLine
           rowsMax={5}
-          value={description}
+          value={description || ''} //no null value allowed
           onChange={(e)=>this.descriptionSet(e.target.value)}
           fullWidth />
         <SharingModal>

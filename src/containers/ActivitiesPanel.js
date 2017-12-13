@@ -47,12 +47,13 @@ export default Relay.createContainer( ActiviesPanel, {
   prepareVariables: (urlParams) => {
     return {
       ...urlParams,
-      // commentsFilter: {
-      //   project: {privacy_not: 'PRIVATE'},
-      // },
-      // bouncesFilter: {
-      //   project: {privacy_not: 'PRIVATE'},
-      // },
+      //ensures non-deleted projects as well
+      commentsFilter: {
+        project: {privacy_not: 'PRIVATE'},
+      },
+      bouncesFilter: {
+        project: {privacy_not: 'PRIVATE'},
+      },
       projectsFilter: {
         privacy_not: 'PRIVATE',
       }
@@ -83,6 +84,7 @@ export default Relay.createContainer( ActiviesPanel, {
           comments (
             first: 20
             orderBy: createdAt_ASC
+            filter: $commentsFilter
           ){
             count
             edges {
@@ -105,6 +107,7 @@ export default Relay.createContainer( ActiviesPanel, {
           bounces (
             first: 20
             orderBy: createdAt_ASC
+            filter: $bouncesFilter
            ) {
               count
               edges {

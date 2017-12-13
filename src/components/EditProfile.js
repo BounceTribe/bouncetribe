@@ -30,10 +30,7 @@ export default class EditProfile extends Component {
     let error = ''
     this.setState({ email: val,  emailError: error })
     if (val!==this.props.user.email) {
-
-      isUniqueField(val, 'email').then( result =>
-        {
-          console.log('in use', {val});
+      isUniqueField(val, 'email').then( result => {
           !result && this.setState({emailError: 'email already in use!'})
         }
       )
@@ -76,10 +73,7 @@ export default class EditProfile extends Component {
         open
         titleStyle={{ fontSize: '28px' }}
         actions={[
-          <FlatButton
-            label="Cancel"
-            onClick={this.props.onClose}
-          />,
+          <FlatButton label="Cancel" onClick={this.props.onClose} />,
           <FlatButton
             label="Submit"
             primary

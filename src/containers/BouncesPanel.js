@@ -26,7 +26,16 @@ class BouncesPanel extends Component {
 
 export default Relay.createContainer(
   BouncesPanel, {
-    initialVariables: { theirHandle: '' },
+    initialVariables: { theirHandle: '' , bouncesFilter: {}},
+    prepareVariables: (urlParams) => {
+      return {
+        ...urlParams,
+        //ensures non-deleted projects as well
+        bouncesFilter: {
+          project: {privacy_not: 'PRIVATE'},
+        }
+      }
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -37,7 +46,10 @@ export default Relay.createContainer(
           User (handle: $theirHandle) {
             id
             handle
-            bounces ( first:999 ) {
+            bounces (
+              first:999
+              filter: $bouncesFilter
+             ) {
               count
               edges {
                 node {
@@ -51,9 +63,7 @@ export default Relay.createContainer(
                     privacy
                     creator {handle}
                     bounces (first: 999) {
-                      edges {
-                        node {id}
-                      }
+                      edges { node {id} }
                     }
                     comments (first: 999){
                       edges {

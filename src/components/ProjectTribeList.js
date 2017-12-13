@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
-import {grey200, grey300, purple, grey700} from 'theme'
+import {grey300, purple, grey700} from 'theme'
 import Avatar from 'material-ui/Avatar'
 import {url} from 'config'
 

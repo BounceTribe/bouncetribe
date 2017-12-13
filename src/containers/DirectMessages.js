@@ -17,13 +17,16 @@ class DirectMessages extends Component {
     // this.messages = this.props.viewer.allMessages.edges.map(edge=>edge.node)
     let savedText = JSON.parse(localStorage.getItem('message')) || {}
     let useSaved =  this.props.params.theirHandle===savedText.forHandle
+    // let newLocal = JSON.parse(localStorage.getItem('newMessages')) || []
+    // let newMessages = newLocal.map(msg=> typeof(msg)==='string' ? JSON.parse(msg) : msg )
       this.state = {
         newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
         message: useSaved ? savedText.text : '',
         new: []
       }
     console.log('dm mount', this)
-
+    // console.log('unparsed new', localStorage.getItem('newMessages'));
+    console.log('parsed new', this.state.newMessages);
     this.feedSub.subscribe( {
         query: /* GraphQL */`subscription createMessage {
           Message (
@@ -71,8 +74,7 @@ class DirectMessages extends Component {
   componentWillUnmount() {
     // console.log('unmounting', this.props)
 
-    let otherNew = localStorage.getItem('newMessages') || []
-    this.state.newMessages.length && localStorage.setItem('newMessages', JSON.stringify(this.state.newMessages.concat(otherNew)))
+    this.state.newMessages.length && localStorage.setItem('newMessages', JSON.stringify(this.state.newMessages))
     //TODO make array of message saves
     this.state.message && localStorage.setItem('message', JSON.stringify({
       text: this.state.message,
@@ -102,8 +104,9 @@ class DirectMessages extends Component {
     let theirId = this.props.viewer.User.id
     console.log({msgList});
     return msgList.filter(msg =>
-      (msg.sender.id===userId && msg.recipient.id===theirId) ||
-      (msg.sender.id===theirId && msg.recipient.id===userId)
+      typeof(msg)!=='string' &&
+      ((msg.sender.id===userId && msg.recipient.id===theirId) ||
+      (msg.sender.id===theirId && msg.recipient.id===userId))
     )
   }
 

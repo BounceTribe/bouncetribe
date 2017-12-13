@@ -21,7 +21,6 @@ const makeList = (props) => {
   let {comments, bounces, projects, dash, router} = props
   let text, icon
   let commentProjects = []
-
   let list = comments.map((comment, index) => {
     let {author, project, createdAt, id} = comment
     if (commentProjects.includes(author.id+project.id)) {

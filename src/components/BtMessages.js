@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import {white, grey300 ,grey400, grey500, grey600, purple} from 'theme'
+import {white, grey300 ,grey400, grey600, purple} from 'theme'
 
 export const MsgsContainer = styled.div`
   display: flex;

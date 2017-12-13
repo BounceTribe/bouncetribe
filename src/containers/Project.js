@@ -351,9 +351,9 @@ class Project extends Component {
             Are you sure you want to permanently delete this project?
           </Dialog>
           {this.state.edit && <EditProject
-            open={true}
             project={project}
             projectId={project.id}
+            delete={()=>this.setState({edit: false, delete: true})}
             onSave={()=>this.setState({edit: false})}
             onClose={()=>this.setState({edit: false})}
           />}

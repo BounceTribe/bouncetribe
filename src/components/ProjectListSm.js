@@ -26,31 +26,27 @@ const makeList = (props) => {
   let edges = bounceTab ? User.bounces.edges : User.projects.edges
   return edges.map((edge, index) => {
     let project = edge.node.project || edge.node
-    if (project.privacy === 'PRIVATE') {
-      return null
-    } else {
-      let comments = edgeFilter(project, 'COMMENT')
-      let likes = edgeFilter(project, 'LIKE')
-      let bounces = project.bounces.edges.map(edge => edge.node)
-      return (
-        <ProjectItemSm
-          key={project.id + index}
-          User={User}
-          project={project}
-          comments={comments}
-          likes={likes}
-          bounces={bounces}
-          bounceTab={bounceTab}
-         />
-      )
-    }
+    let comments = edgeFilter(project, 'COMMENT')
+    let likes = edgeFilter(project, 'LIKE')
+    let bounces = project.bounces.edges.map(edge => edge.node)
+    return (
+      <ProjectItemSm
+        key={project.id + index}
+        User={User}
+        project={project}
+        comments={comments}
+        likes={likes}
+        bounces={bounces}
+        bounceTab={bounceTab}
+       />
+    )
   } )
 }
 
 export const ProjectListSm = (props) => {
   return (
     <PanelScrollContainer>
-      <ProjectsContainerSm >
+      <ProjectsContainerSm>
         {makeList(props)}
       </ProjectsContainerSm>
     </PanelScrollContainer>
