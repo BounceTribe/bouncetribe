@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import PropTypes from 'prop-types'
-import {View, RoundButton, BtFlatButton} from 'styled'
+import {View, RoundButton, BtFlatButton, ContentPad} from 'styled'
 import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, LeftList, ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
@@ -229,226 +229,227 @@ class Project extends Component {
     let artwork = this.state.artworkSmallUrl || this.state.artworkUrl ||  (isOwner && `${url}/uploadartwork.png`)
 
     return (
-      <View contentWidth={80}>
-        <ProfContainer hide={(isOwner)} >
-          <ProfTop>
-            <ProfLeft>
-              <Portrait
-                src={(User.portrait || {}).url || `${url}/logo.png`}
-                to={`/${User.handle}`} />
-              <ProfCol>
-                <ProfHandle to={`/${User.handle}`} >
-                  {User.handle}
-                </ProfHandle>
-                <Score>
-                  <Bolt style={{ marginRight: '5px' }} />
-                  {User.score}
-                </Score>
-              </ProfCol>
-            </ProfLeft>
-            <MoreInfo>
-              <Location fill={purple} height={20} width={20}
-                style={{
-                  margin: '0 5px 0 15px',
-                  display: (User.placename) ? '': 'none'
-                }} />
-              {User.placename}
-              <Experience height={18} width={18}
-                style={{
-                  margin: '0 5px 0 15px',
-                  display: (User.experience) ? '': 'none'
-                }} />
-              {formatEnum(User.experience)}
-              <Tribe height={15} width={15}
-                style={{ margin: '0 5px 0 15px', }} />
-              {User.friends.edges.length}
-            </MoreInfo>
-          </ProfTop>
-          <Divider/>
-          <CommonInfluences>
-            {User.artistInfluences.edges.map(edge=>{
-              if (myInfluences.includes(edge.node.name)) {
-                return (
-                  <InfluenceChip key={edge.node.id} >
-                    {edge.node.name}
-                  </InfluenceChip>
-                )
-              } else { return <div key={edge.node.id} /> }
-            } )}
-          </CommonInfluences>
-        </ProfContainer>
-        <Top isOwner={isOwner}>
-          <Art
-            src={ artwork || `${url}/artwork.png`}
-            alt={'Project Art'}
-            onClick={()=>this.setState({artworkEditorOpen: true})}
-            isOwner={isOwner} />
-          <ImageEditor
-            altSizes={[500]}
-            open={this.state.artworkEditorOpen}
-            onRequestClose={()=>this.setState({artworkEditorOpen:false})}
-            user={user}
-            portraitSuccess={this.artworkSuccess} />
-          <Info>
-            <Edit fill={purple}
-              style={{
-                display: (isOwner) ? '' : 'none',
-                cursor: 'pointer',
-                padding: '0 10px 0 0',
-                position: 'absolute',
-                alignSelf: 'flex-end',
-              }}
-              onClick={()=>{this.setState({edit:true})}} />
-            <TitleGenre>
-              <Title>{project.title}</Title>
-              <Genre>
-                <Music fill={white}
-                  style={{ marginRight: '5px', height: '18px' }} />
-                {project.genres.edges[0].node.name}
-              </Genre>
-            </TitleGenre>
-            {!this.isOwner &&
-              <BtFlatButton
-                label={this.state.bounced ? 'Bounced' : 'Bounce to Tribe'}
-                backgroundColor={this.state.bounced ? purple : white}
-                labelStyle={{ color: this.state.bounced ? white : purple}}
-                icon={
-                  <Bounce
-                    fill={(this.state.bounced) ? white : purple}
-                    width={21} />
-                }
-                onClick={()=>{this.setBounce()}}
-                style={{
-                  border: `1px solid ${grey400}`,
-                  width: '170px',
-                  marginTop: '20px'
-                }} />
-            }
-            <Summary>{project.description}</Summary>
-          </Info>
-          <Dialog
-            modal={false}
-            open={this.state.delete}
-            onRequestClose={()=>{this.setState({delete: false})}}
-            actions={[
-              <FlatButton
-                label={"Cancel"}
-                onClick={()=>{this.setState({delete: false})}} />,
-              <FlatButton
-                label={"Delete"}
-                labelStyle={{color: '#DF5151'}}
-                onClick={()=>{
-                  this.props.relay.commitUpdate(
-                    new DeleteProject({id: project.id}),{
-                      onSuccess: ()=>{
-                        this.props.router.push(`/projects/${user.handle}`)
-                      }
-                    }
-                  )
-                }}
-              />
-            ]} >
-            Are you sure you want to permanently delete this project?
-          </Dialog>
-          {this.state.edit && <EditProject
-            project={project}
-            projectId={project.id}
-            delete={()=>this.setState({edit: false, delete: true})}
-            onSave={()=>this.setState({edit: false})}
-            onClose={()=>this.setState({edit: false})}
-          />}
-        </Top>
-        <Tabs
+      <View>
+        <Edit fill={purple}
           style={{
-            width: '100%',
-            display: (isOwner) ? 'none' : '',
-            margin: '6px 0 25px 0',
+            display: (isOwner) ? '' : 'none',
+            cursor: 'pointer',
+            padding: '20px 20px 0 0',
+            position: 'absolute',
+            alignSelf: 'flex-end',
           }}
-          inkBarStyle={{ backgroundColor: purple }}
-          value={this.state.tabs} >
-          <Tab
-            label={'Give Your Feedback'}
-            value={'listen'}
-            onActive={()=>{ this.setState({tabs: 'listen'}) }}
-            style={{ borderBottom: `2px solid ${grey200}` }} />
-          <Tab
-            label={'View Feedback'}
-            value={'view'}
-            onActive={()=>{ this.setState({tabs: 'view'}) }}
-            style={{ borderBottom: `2px solid ${grey200}` }} />
-        </Tabs>
-        <TrackContainer>
-          <AudioPlayer
-            track={project.tracks.edges[0].node}
-            setCurrentTime={this.setCurrentTime}
-            jumpToTime={this.state.jumpToTime}
-            project={project}
-            getDuration={this.getDuration} />
-        </TrackContainer>
-
-        <Bot>
-          <LeftList
-            hide={( (this.state.tabs === 'listen') && !isOwner ) || (this.state.disableComments)} >
-            <ProjectTribeList
-              self={user}
-              project={project}
-              tribe={User.friends.edges}
-              recentCommenters={project.comments.edges}
-              router={this.props.router}
-              handleSelection={this.handleSelection}
-              selection={this.state.selection} />
-          </LeftList>
-          <CommentContainer listenTab={this.state.tabs==='listen'}>
-            <CommentMarkers
-              comments={this.filteredComments()}
-              duration={this.state.duration} />
-            <ButtonRow
-              hide={(isOwner || this.state.tabs === 'view' || this.state.disableComments)} >
-              <ButtonColumn>
-                <RoundButton big secondary
-                  icon={<Comment height={50} width={50} />}
-                  onTouchTap={()=>{this.dropMarker('COMMENT')}} />
-                <ButtonLabel>Idea</ButtonLabel>
-              </ButtonColumn>
-              <ButtonColumn>
-                <RoundButton big
-                  icon={ <Heart height={50} width={50} /> }
-                  onTouchTap={()=>{this.dropMarker('LIKE')}} />
-                <ButtonLabel>Like</ButtonLabel>
-              </ButtonColumn>
-            </ButtonRow>
-            <CommentScroller>
-              {this.state.new &&
-                <SingleComment
-                  jumpToTime={(time)=>this.jumpToTime(time)}
-                  key={0}
-                  index={0}
-                  comment={this.state.new}
-                  focus={this.state.focus}
-                  activeIds={(this.state.active)}
-                  activate={(id)=>
-                    this.setState({active: this.state.active.concat('new')})}
-                  deactivate={(id)=>
-                    this.setState({active: this.state.active.filter(id=>id!=='new')})}
-                  user={user}
-                  tabs={this.state.tabs}
-                  commentCreated={(newComment)=>{
-                    console.log('new state', this.state.new, newComment);
-                    let newSorted = this.state.comments.concat(newComment)
-                      .sort((a,b)=>(a.timestamp-b.timestamp))
-                    this.setState({
-                      new: false,
-                      comments: newSorted,
-                      focus: newComment.id
-                     })
-                    console.log('added comment', this.state.comments)
+          onClick={()=>{this.setState({edit:true})}} />
+        <ContentPad width={80}>
+          <ProfContainer hide={(isOwner)} >
+            <ProfTop>
+              <ProfLeft>
+                <Portrait
+                  src={(User.portrait || {}).url || `${url}/logo.png`}
+                  to={`/${User.handle}`} />
+                <ProfCol>
+                  <ProfHandle to={`/${User.handle}`} >
+                    {User.handle}
+                  </ProfHandle>
+                  <Score>
+                    <Bolt style={{ marginRight: '5px' }} />
+                    {User.score}
+                  </Score>
+                </ProfCol>
+              </ProfLeft>
+              <MoreInfo>
+                <Location fill={purple} height={20} width={20}
+                  style={{
+                    margin: '0 5px 0 15px',
+                    display: (User.placename) ? '': 'none'
+                  }} />
+                {User.placename}
+                <Experience height={18} width={18}
+                  style={{
+                    margin: '0 5px 0 15px',
+                    display: (User.experience) ? '': 'none'
+                  }} />
+                {formatEnum(User.experience)}
+                <Tribe height={15} width={15}
+                  style={{ margin: '0 5px 0 15px', }} />
+                {User.friends.edges.length}
+              </MoreInfo>
+            </ProfTop>
+            <Divider/>
+            <CommonInfluences>
+              {User.artistInfluences.edges.map(edge=>{
+                if (myInfluences.includes(edge.node.name)) {
+                  return (
+                    <InfluenceChip key={edge.node.id} >
+                      {edge.node.name}
+                    </InfluenceChip>
+                  )
+                } else { return <div key={edge.node.id} /> }
+              } )}
+            </CommonInfluences>
+          </ProfContainer>
+          <Top isOwner={isOwner}>
+            <Art
+              src={ artwork || `${url}/artwork.png`}
+              alt={'Project Art'}
+              onClick={()=>this.setState({artworkEditorOpen: true})}
+              isOwner={isOwner} />
+            <ImageEditor
+              altSizes={[500]}
+              open={this.state.artworkEditorOpen}
+              onRequestClose={()=>this.setState({artworkEditorOpen:false})}
+              user={user}
+              portraitSuccess={this.artworkSuccess} />
+            <Info>
+              <TitleGenre>
+                <Title>{project.title}</Title>
+                <Genre>
+                  <Music fill={white}
+                    style={{ marginRight: '5px', height: '18px' }} />
+                  {project.genres.edges[0].node.name}
+                </Genre>
+              </TitleGenre>
+              {!this.isOwner &&
+                <BtFlatButton
+                  label={this.state.bounced ? 'Bounced' : 'Bounce to Tribe'}
+                  backgroundColor={this.state.bounced ? purple : white}
+                  labelStyle={{ color: this.state.bounced ? white : purple}}
+                  icon={
+                    <Bounce
+                      fill={(this.state.bounced) ? white : purple}
+                      width={21} />
+                  }
+                  onClick={()=>{this.setBounce()}}
+                  style={{
+                    border: `1px solid ${grey400}`,
+                    width: '170px',
+                    marginTop: '20px'
                   }} />
               }
-              {this.comments}
-            </CommentScroller>
-          </CommentContainer>
-        </Bot>
+              <Summary>{project.description}</Summary>
+            </Info>
+            <Dialog
+              modal={false}
+              open={this.state.delete}
+              onRequestClose={()=>{this.setState({delete: false})}}
+              actions={[
+                <FlatButton
+                  label={"Cancel"}
+                  onClick={()=>{this.setState({delete: false})}} />,
+                <FlatButton
+                  label={"Delete"}
+                  labelStyle={{color: '#DF5151'}}
+                  onClick={()=>{
+                    this.props.relay.commitUpdate(
+                      new DeleteProject({id: project.id}),{
+                        onSuccess: ()=>{
+                          this.props.router.push(`/projects/${user.handle}`)
+                        }
+                      }
+                    )
+                  }}
+                />
+              ]} >
+              Are you sure you want to permanently delete this project?
+            </Dialog>
+            {this.state.edit && <EditProject
+              project={project}
+              projectId={project.id}
+              delete={()=>this.setState({edit: false, delete: true})}
+              onSave={()=>this.setState({edit: false})}
+              onClose={()=>this.setState({edit: false})}
+            />}
+          </Top>
+          <Tabs
+            style={{
+              width: '100%',
+              display: (isOwner) ? 'none' : '',
+              margin: '6px 0 25px 0',
+            }}
+            inkBarStyle={{ backgroundColor: purple }}
+            value={this.state.tabs} >
+            <Tab
+              label={'Give Your Feedback'}
+              value={'listen'}
+              onActive={()=>{ this.setState({tabs: 'listen'}) }}
+              style={{ borderBottom: `2px solid ${grey200}` }} />
+            <Tab
+              label={'View Feedback'}
+              value={'view'}
+              onActive={()=>{ this.setState({tabs: 'view'}) }}
+              style={{ borderBottom: `2px solid ${grey200}` }} />
+          </Tabs>
+          <TrackContainer>
+            <AudioPlayer
+              track={project.tracks.edges[0].node}
+              setCurrentTime={this.setCurrentTime}
+              jumpToTime={this.state.jumpToTime}
+              project={project}
+              getDuration={this.getDuration} />
+          </TrackContainer>
 
+          <Bot>
+            <LeftList
+              hide={( (this.state.tabs === 'listen') && !isOwner ) || (this.state.disableComments)} >
+              <ProjectTribeList
+                self={user}
+                project={project}
+                tribe={User.friends.edges}
+                recentCommenters={project.comments.edges}
+                router={this.props.router}
+                handleSelection={this.handleSelection}
+                selection={this.state.selection} />
+            </LeftList>
+            <CommentContainer listenTab={this.state.tabs==='listen'}>
+              <CommentMarkers
+                comments={this.filteredComments()}
+                duration={this.state.duration} />
+              <ButtonRow
+                hide={(isOwner || this.state.tabs === 'view' || this.state.disableComments)} >
+                <ButtonColumn>
+                  <RoundButton big secondary
+                    icon={<Comment height={50} width={50} />}
+                    onTouchTap={()=>{this.dropMarker('COMMENT')}} />
+                  <ButtonLabel>Idea</ButtonLabel>
+                </ButtonColumn>
+                <ButtonColumn>
+                  <RoundButton big
+                    icon={ <Heart height={50} width={50} /> }
+                    onTouchTap={()=>{this.dropMarker('LIKE')}} />
+                  <ButtonLabel>Like</ButtonLabel>
+                </ButtonColumn>
+              </ButtonRow>
+              <CommentScroller>
+                {this.state.new &&
+                  <SingleComment
+                    jumpToTime={(time)=>this.jumpToTime(time)}
+                    key={0}
+                    index={0}
+                    comment={this.state.new}
+                    focus={this.state.focus}
+                    activeIds={(this.state.active)}
+                    activate={(id)=>
+                      this.setState({active: this.state.active.concat('new')})}
+                    deactivate={(id)=>
+                      this.setState({active: this.state.active.filter(id=>id!=='new')})}
+                    user={user}
+                    tabs={this.state.tabs}
+                    commentCreated={(newComment)=>{
+                      console.log('new state', this.state.new, newComment);
+                      let newSorted = this.state.comments.concat(newComment)
+                        .sort((a,b)=>(a.timestamp-b.timestamp))
+                      this.setState({
+                        new: false,
+                        comments: newSorted,
+                        focus: newComment.id
+                       })
+                      console.log('added comment', this.state.comments)
+                    }} />
+                }
+                {this.comments}
+              </CommentScroller>
+            </CommentContainer>
+          </Bot>
+        </ContentPad>
       </View>
     )
   }

@@ -131,13 +131,16 @@ export const Main = styled.main`
   `}
 `
 
+export const ContentPad = styled.div`
+  padding: ${({width}) => (width) ? `0 ${(100-width)/2}%` : '0'};
+`
+
 export const View = styled.section`
   background-color: ${white};
   display: flex;
   flex-direction: column;
   align-items: center;
   width: calc(100% - 40px);
-  padding: ${({contentWidth}) => (contentWidth) ? `0 ${(100-contentWidth)/2}%` : '0'};
   border: solid ${grey230} 1px;
   border-radius: 5px;
   min-height: 80vh;
