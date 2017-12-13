@@ -87,7 +87,7 @@ export default class EditProfile extends Component {
         open
         onRequestClose={()=>this.props.onClose()}
         autoScrollBodyContent
-        title={'Details'}
+        title={'Edit Project'}
         actionsContainerStyle={{
           display: 'flex',
           justifyContent: 'space-between'
@@ -119,7 +119,7 @@ export default class EditProfile extends Component {
           {genres}
         </SelectField>
         <TextField
-          floatingLabelText={'Details'}
+          floatingLabelText={'Description'}
           errorText={descriptionError}
           multiLine
           rowsMax={5}
