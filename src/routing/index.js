@@ -42,14 +42,10 @@ const tribeSearch = (params, {location})=>{
       id_not: query.ownId,
       deactivated: false,
       invitations_none: {
-        actor: {
-          id: query.ownId
-        },
+        actor: {id: query.ownId},
       },
       sentRequests_none: {
-        recipient: {
-          id: query.ownId
-        },
+        recipient: {id: query.ownId},
       },
       handle_contains: query.handle
     }
@@ -63,9 +59,8 @@ const userOnly = (nextState, replace) => {
   if (!auth.getToken()) {
     console.log('no token (routes)');
     let path = nextState.location.pathname
-    if ((path !== ('/login/' || '/login'))) {
+    if ((path !== ('/login/' || '/login')))
       localStorage.setItem('redirect', path)
-    }
     replace({ pathname: '/login/'})
   }
 }

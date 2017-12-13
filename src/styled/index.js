@@ -133,6 +133,8 @@ export const Main = styled.main`
 
 export const ContentPad = styled.div`
   padding: ${({width}) => (width) ? `0 ${(100-width)/2}%` : '0'};
+  ${'' /* flex-grow: 1; */}
+  width: ${({width}) => (width) ? `${width}%` : '100%'};
 `
 
 export const View = styled.section`

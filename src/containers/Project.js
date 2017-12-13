@@ -238,9 +238,9 @@ class Project extends Component {
             position: 'absolute',
             alignSelf: 'flex-end',
           }}
-          onClick={()=>{this.setState({edit:true})}} />
+          onClick={()=>this.setState({edit:true})} />
         <ContentPad width={80}>
-          <ProfContainer hide={(isOwner)} >
+          {!isOwner && <ProfContainer>
             <ProfTop>
               <ProfLeft>
                 <Portrait
@@ -286,7 +286,7 @@ class Project extends Component {
                 } else { return <div key={edge.node.id} /> }
               } )}
             </CommonInfluences>
-          </ProfContainer>
+          </ProfContainer>}
           <Top isOwner={isOwner}>
             <Art
               src={ artwork || `${url}/artwork.png`}

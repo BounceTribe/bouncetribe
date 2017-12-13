@@ -6,15 +6,20 @@ import {Activity, ScrollBox, NameLink} from 'styled/ActivityList'
 import {BtAvatar} from 'styled'
 import {purple} from 'theme'
 
-const getLink = (project) => (
-  (project.privacy==='PUBLIC' &&
-  !project.creator.deactivated &&
-  `/${project.creator.handle}/${project.title}`) || null
-)
+const getLink = (project, friendIds) => {
+  //TODO fix this mess with userhandle params in filters
+  //friendIds includes self id
+  let isTribe = friendIds.includes(project.creator.id)
+  let tribeOk = isTribe && (project.privacy==='TRIBE')
+  
+  if (tribeOk || project.privacy==='PUBLIC')
+    return `/${project.creator.handle}/${project.title}`
+  else
+    return null
+}
 const getAvatar = (router,user) => (
-  <BtAvatar hideStatus pointer size={40}
-    onClick={()=>router.push(user.handle)}
-      user={user} />
+  <BtAvatar user={user} hideStatus pointer size={40}
+    onClick={()=>router.push(user.handle)} />
 )
 
 const makeList = (props) => {
@@ -27,7 +32,7 @@ const makeList = (props) => {
       return <div key={index}/>
     }
     commentProjects.push(author.id+project.id)
-    let link = getLink(project)
+    let link = getLink(project, props.friendIds)
     if (dash) {
       text = (
         <span>
@@ -50,7 +55,7 @@ const makeList = (props) => {
   })
   list = list.concat(bounces.map(bounce => {
     let {bouncer, project, id, createdAt} = bounce
-    let link = getLink(project)
+    let link = getLink(project, props.friendIds)
     if (dash) {
       text = (
         <span>
@@ -72,7 +77,7 @@ const makeList = (props) => {
 
   list = list.concat(projects.map(project => {
     let {createdAt, creator, title, id} = project
-    let link = getLink(project)
+    let link = getLink(project, props.friendIds)
     if (dash) {
       text = (<NameLink to={`/${creator.handle}`}>{creator.handle}</NameLink>)
       icon = getAvatar(router, creator)

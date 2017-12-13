@@ -22,6 +22,7 @@ class ActiviesPanel extends Component {
         comments={mapNodes(comments).filter(comment=>comment.project)}
         bounces={mapNodes(bounces)}
         projects={mapNodes(projects)}
+        friendIds={user.friends.edges.map(edge=>edge.node.id).concat(user.id)}
       />
       :
       <EmptyPanel
@@ -49,20 +50,27 @@ export default Relay.createContainer( ActiviesPanel, {
       ...urlParams,
       //ensures non-deleted projects as well
       commentsFilter: {
-        project: {privacy_not: 'PRIVATE'},
+        project: {
+          privacy_not: 'PRIVATE',
+          creator: { deactivated: false }
+        },
       },
       bouncesFilter: {
-        project: {privacy_not: 'PRIVATE'},
+        project: {
+          privacy_not: 'PRIVATE',
+          creator: { deactivated: false }
+        },
       },
       projectsFilter: {
         privacy_not: 'PRIVATE',
+        creator: { deactivated: false }
       }
       // use similiar filters for comments, bounces (if project changes privacy)
       // projectsFilter: { OR:
       //   [ {
       //     privacy_not: 'PRIVATE',
       //   }, {
-      //     privacy: 'TRIBE ONLY',
+      //     privacy: 'TRIBE',
       //     creator: {
       //       friends_some: { handle: urlParams.userHandle }
       //     },
@@ -76,6 +84,7 @@ export default Relay.createContainer( ActiviesPanel, {
         user {
           id
           handle
+          friends(first: 999) { edges { node { id } } }
         }
         User (handle: $theirHandle) {
           id

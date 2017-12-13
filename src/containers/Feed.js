@@ -7,27 +7,24 @@ import Tribe from 'icons/Tribe'
 
 
 class Feed extends Component {
-  componentWillMount() {
-    console.log('Feed', this.props)
-  }
+  // componentWillMount() {
+  //   console.log('Feed', this.props)
+  // }
 
   get activities() {
-    let comments = mapNodes(this.props.viewer.allComments)
-    let bounces  = mapNodes(this.props.viewer.allBounces)
-    let projects = mapNodes(this.props.viewer.allProjects)
+    let {user, allComments, allBounces, allProjects} = this.props.viewer
+    let comments = mapNodes(allComments)
+    let bounces  = mapNodes(allBounces)
+    let projects = mapNodes(allProjects)
+    let friendIds = user.friends.edges.map(edge=>edge.node.id).concat(user.id)
     let hasActivities = comments.length + bounces.length + projects.length
-
-    // console.log({comments, bounces, projects});
-    return hasActivities ? {comments, bounces, projects} : null
+    return hasActivities ? {friendIds, comments, bounces, projects} : null
    }
 
   render () {
     let activities = this.activities
       return activities ?
-      <ActivityList dash
-        {...activities}
-        router={this.props.router}
-      />
+      <ActivityList dash {...activities} router={this.props.router} />
       :
       <EmptyPanel
         icon={<Tribe height={93} fill={"#D3D3D3"} />}
@@ -53,14 +50,20 @@ export default Relay.createContainer( Feed, {
     return {
       ...urlParams,
       commentsFilter: {
-        project: {privacy_not: 'PRIVATE'},
+        project: {
+          privacy_not: 'PRIVATE',
+          creator: { deactivated: false }
+        },
         author: {
           friends_some: { handle: urlParams.userHandle },
           deactivated: false
         }
       },
       bouncesFilter: {
-        project: {privacy_not: 'PRIVATE'},
+        project: {
+          privacy_not: 'PRIVATE',
+          creator: { deactivated: false }
+        },
         bouncer: {
           friends_some: { handle: urlParams.userHandle },
           deactivated: false
@@ -81,6 +84,7 @@ export default Relay.createContainer( Feed, {
         user {
           id
           handle
+          friends(first: 999)  { edges { node { id } } }
         }
         allComments(
           filter: $commentsFilter
