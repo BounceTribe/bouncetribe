@@ -55,7 +55,7 @@ export default class EditProfile extends Component {
       ensureUsersProjectTitleUnique(this.user.id, title).then(unique=>{
         this.setState({titleUnique: unique})
       })
-    },1000)
+    }, 1000)
   }
 
   updateProject = () => {

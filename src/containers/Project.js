@@ -58,7 +58,7 @@ class Project extends Component {
       newIndex: 0,
       markers: [],
       active: [],
-      edit: true,
+      edit: false,
       artworkEditorOpen: false,
       selection: false,
       delete: false,
