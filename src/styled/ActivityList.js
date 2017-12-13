@@ -80,7 +80,6 @@ export const ScrollBox = styled.div`
     const DashProject = ({project, urlPush}) => {
       // let {artwork, artworkSmall, title} = project
       let artwork = (project.artworkSmall || {}).url || (project.artwork || {}).url
-      console.log({project});
       return (
         <ProjectContainer>
           <ProjectArt src={artwork || `${url}/artwork.png`} onClick={urlPush}/>

@@ -48,15 +48,9 @@ class Project extends Component {
     this.isFriends = friendIds.includes(this.User.id)
 
     this.state = {
-      title: this.project.title,
-      description: this.project.description,
-      genre: this.project.genres.edges[0].node.id,
-      privacy: this.project.privacy,
       tabs: this.isOwner ?  'view' : 'listen',
       time: 0,
       jumpToTime: 0,
-      newIndex: 0,
-      markers: [],
       active: [],
       edit: false,
       artworkEditorOpen: false,

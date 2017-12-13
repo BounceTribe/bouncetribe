@@ -18,9 +18,6 @@ class DirectMessages extends Component {
     let savedText = JSON.parse(localStorage.getItem('message')) || {}
     let useSaved =  this.props.params.theirHandle===savedText.forHandle
       this.state = {
-        active: [],
-        received: [],
-        sent: [],
         newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
         message: useSaved ? savedText.text : '',
         new: []
@@ -103,6 +100,7 @@ class DirectMessages extends Component {
   storedMsgsFilter = (msgList) => {
     let userId = this.props.viewer.user.id
     let theirId = this.props.viewer.User.id
+    console.log({msgList});
     return msgList.filter(msg =>
       (msg.sender.id===userId && msg.recipient.id===theirId) ||
       (msg.sender.id===theirId && msg.recipient.id===userId)

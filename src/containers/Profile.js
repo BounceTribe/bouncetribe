@@ -144,17 +144,11 @@ class Profile extends Component {
   }
 
   musicianInfoSave = () => {
-    this.setState( {
-      notification: 'INFO UPDATED',
-      editMusicianInfo: false
-    } )
+    this.setState({ notification: 'INFO UPDATED', editMusicianInfo: false })
   }
 
   profileSave = () => {
-    this.setState( {
-      notification: 'PROFILE UPDATED',
-      editProfile: false
-    } )
+    this.setState({ notification: 'PROFILE UPDATED', editProfile: false })
   }
 
   topRow = () => {
@@ -171,7 +165,7 @@ class Profile extends Component {
         onClose={()=>this.setState({editProfile: false})}
       />}
       <Edit
-        onClick={()=>{this.setState({editProfile: true})}}
+        onClick={()=>this.setState({editProfile: true})}
         fill={purple}
         style={{
           alignSelf: 'flex-end',
@@ -214,7 +208,6 @@ class Profile extends Component {
             </ScoreRow>
           </TopCol>
         </SubRow>
-
         <TribeButton
           viewer={this.props.viewer}
           accept={(id)=>this.accept(id)}
