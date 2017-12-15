@@ -50,7 +50,6 @@ export default class ImageUploader extends Component {
               this.picaResize(canvas, this.state.sizesRemaining[0])
             } else {
               let sortedFiles = this.state.files.sort((a,b)=>b.pxSize-a.pxSize)
-              // console.log({sortedFiles});
               this.props.fileSuccess(sortedFiles)
             }
           },
@@ -100,26 +99,31 @@ export default class ImageUploader extends Component {
     if (this.state.image) {
       return (
         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-          <div style={style}><ReactCrop
-            ref={rCrop => this.internal = rCrop }
-            src={this.state.image}
-            crop={this.state.crop}
-            keepSelection={true}
-            onImageLoaded={(image)=>{
-              let pixel = this.internal.getPixelCrop(this.state.crop)
-              pixel.height = pixel.width
-              this.setState({pixel})
-            }}
-            onComplete={(crop, pixel)=>{
-              this.setState({ crop, pixel })
-              console.log('complete state', this.state);
-            }}
-          /></div>
-          {this.state.waiting && <Loading />}
+          <div style={style}>
+            <ReactCrop
+              ref={rCrop => this.internal = rCrop }
+              src={this.state.image}
+              crop={this.state.crop}
+              keepSelection={true}
+              onImageLoaded={(image)=>{
+                //incorrect img size sometimes
+                // let pixel = this.internal.getPixelCrop(this.state.crop)
+                // console.log({pixel});
+                // pixel.height = pixel.width
+                // this.setState({pixel})
+              }}
+              onComplete={(crop, pixel)=>{
+                this.setState({ crop, pixel })
+                console.log('complete state', this.state);
+              }}
+            />
+          </div>
+          {this.state.waiting && <Loading hideBg/>}
           <Button
             label="Save"
             onClick={this.uploadFull}
             primary
+            disabled={!this.state.pixel || this.state.waiting}
             style={{alignSelf: 'center', margin: '10px'}}
           />
         </div>
@@ -150,7 +154,6 @@ export default class ImageUploader extends Component {
     return (
       <ImageDropContainer image={this.state.image} >
         {this.dropzoneOrCropper}
-        {/* <div style={{height: '600px'}}><Loading /></div> */}
       </ImageDropContainer>
     )
   }
