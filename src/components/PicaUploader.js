@@ -8,9 +8,8 @@ import ReactCrop from 'react-image-crop'
 import {Button} from 'styled'
 import 'react-image-crop/dist/ReactCrop.css'
 import Camera from 'icons/Camera'
-// import pica from 'pica/dist/pica'
+import pica from 'pica/dist/pica'
 // import FileUploadThumbnail from 'file-upload-thumbnail'
-const pica = require('pica')({ features: [ 'js', 'wasm', 'ww', 'cib' ] })
 
 export default class ImageUploader extends Component {
   constructor(props){
@@ -33,43 +32,21 @@ export default class ImageUploader extends Component {
   onImageDrop = (files, rejectedFile) =>
     this.setState({ image: files[0].preview, imageName: files[0].name })
 
-  sendUpload = (canvas, blob, pxSize) => {
-    uploadFile(blob, this.state.imageName).then(fileId => {
-      Relay.Store.commitUpdate(
-        new UpdateFile({self: this.props.self, fileId}), {
-          onSuccess: transaction => {
-            let file = transaction.updateFile.file
-            file.pxSize = pxSize
-            this.setState({
-              croppedImage: file.url,
-              files: this.state.files.concat(file),
-              sizesRemaining: this.state.sizesRemaining.filter(s=>s!==pxSize)
-            })
-            if (this.state.sizesRemaining.length) {
-              debugger
-              this.picaResize(canvas, this.state.sizesRemaining[0])
-            } else {
-              let sortedFiles = this.state.files.sort((a,b)=>b.pxSize-a.pxSize)
-              // console.log({sortedFiles});
-              this.props.fileSuccess(sortedFiles)
-            }
-          },
-          onFailure: res => console.log('updateFile fail', res)
-        }
-      )
+    // Resize from Canvas/Image to another Canvas
+    pica.resize(from, to, {
+      unsharpAmount: 80,
+      unsharpRadius: 0.6,
+      unsharpThreshold: 2
     })
-  }
+    .then(result => console.log('resize done!'));
 
-  picaResize = (canvas, pxSize) => {
-    let picaCanvas = document.createElement('canvas')
-    picaCanvas.width = pxSize
-    picaCanvas.height = pxSize
-    pica.resize(canvas, picaCanvas)
-      .then(result => pica.toBlob(result, 'image/jpeg'))
-      .then(blob => this.sendUpload(canvas, blob, pxSize))
-  }
+    // Resize & convert to blob
+    pica.resize(from, to)
+      .then(result => pica.toBlob(result, 'image/jpeg', 90))
+      .then(blob => console.log('resized to canvas & created blob!'));
 
   uploadImage = (pxSize) => {
+    let imageName = this.state.imageName
     let {image, pixel} = this.state
     let htmlImage = new Image()
     htmlImage.onload = () => {
@@ -78,14 +55,38 @@ export default class ImageUploader extends Component {
       let height = pixel ? pixel.height : htmlImage.height
       let x = pixel ? pixel.x : 0
       let y = pixel ? pixel.y : 0
-
       window.createImageBitmap(htmlImage, 0, 0, width, height).then(result=>{
         let canvas = document.createElement('canvas')
-        canvas.width = width
-        canvas.height = height
+        canvas.width = pxSize
+        canvas.height = pxSize
         let c = canvas.getContext('2d')
-        c.drawImage(htmlImage, x, y, width, height, 0, 0, width, height)
-        canvas.toBlob(blob=>this.sendUpload(canvas, blob, width))
+        c.drawImage(htmlImage, x, y, width, height, 0, 0, pxSize, pxSize)
+        // console.log({canvas});
+        canvas.toBlob(blob=>{
+          uploadFile(blob, imageName).then(fileId => {
+            Relay.Store.commitUpdate(
+              new UpdateFile({self: this.props.self, fileId: fileId}), {
+                onSuccess: transaction => {
+                  let file = transaction.updateFile.file
+                  file.pxSize = pxSize
+                  this.setState({
+                    croppedImage: file.url,
+                    files: this.state.files.concat(file),
+                    sizesRemaining: this.state.sizesRemaining.filter(s=>s!==pxSize)
+                  })
+                  if (this.state.sizesRemaining.length) {
+                    this.uploadImage(this.state.sizesRemaining[0])
+                  } else {
+                    let sortedFiles = this.state.files.sort((a,b)=>b.pxSize-a.pxSize)
+                    // console.log({sortedFiles});
+                    this.props.fileSuccess(sortedFiles)
+                  }
+                },
+                onFailure: res => console.log('updateFile fail', res)
+              }
+            )
+          })
+        })
       })
     }
     htmlImage.src = image
@@ -112,7 +113,7 @@ export default class ImageUploader extends Component {
           <Button
             label="Save"
             onClick={()=>{
-              // this.props.hide()
+              this.props.hide()
               this.uploadImage(this.state.correctAspect || this.state.pixel.width)}}
             primary
             style={{alignSelf: 'center', margin: '10px'}}

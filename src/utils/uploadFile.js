@@ -3,9 +3,7 @@ import {graphCool} from 'config'
 const uploadFile = (file, name) => {
   return new Promise ((resolve, reject) => {
 
-    console.log(file)
-    console.log(file.type)
-
+    console.log({file})
 
     let formData = new FormData()
 
