@@ -6,6 +6,7 @@ export default class ImageEditor extends Component {
 
   // state={waiting: false}
 
+
   render() {
     return (
       <Dialog
