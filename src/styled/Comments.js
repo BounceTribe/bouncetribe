@@ -60,6 +60,7 @@ export const Single = styled.div`
     display: flex;
     flex-direction: column;
     padding: 0 20px;
+    flex-grow: 1;
   `
 
   export const Bottom = styled.div`
@@ -103,9 +104,10 @@ export const Single = styled.div`
       color: ${grey900};
       font-size: 16px;
       margin: 10px 0 0 0;
-      word-break: break-all;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
       white-space: pre-wrap;
-      flex-grow: 1;
     `
     export const Time = styled.div`
       font-size: 17px;
@@ -168,6 +170,7 @@ export const SCText = styled.pre`
   font-size: 14px;
   padding: 7px;
   margin: 4px 0 0 0;
-  word-break: break-all;
-  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 `

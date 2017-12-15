@@ -15,17 +15,17 @@ class DirectMessages extends Component {
       { reconnect: true, }
     )
     // this.messages = this.props.viewer.allMessages.edges.map(edge=>edge.node)
-    let savedText = JSON.parse(localStorage.getItem('message')) || {}
+    let savedText = JSON.parse(sessionStorage.getItem('message')) || {}
     let useSaved =  this.props.params.theirHandle===savedText.forHandle
-    // let newLocal = JSON.parse(localStorage.getItem('newMessages')) || []
+    // let newLocal = JSON.parse(sessionStorage.getItem('newMessages')) || []
     // let newMessages = newLocal.map(msg=> typeof(msg)==='string' ? JSON.parse(msg) : msg )
       this.state = {
-        newMessages: JSON.parse(localStorage.getItem('newMessages')) || [],
+        newMessages: JSON.parse(sessionStorage.getItem('newMessages')) || [],
         message: useSaved ? savedText.text : '',
         new: []
       }
     console.log('dm mount', this)
-    // console.log('unparsed new', localStorage.getItem('newMessages'));
+    // console.log('unparsed new', sessionStorage.getItem('newMessages'));
     console.log('parsed new', this.state.newMessages);
     this.feedSub.subscribe( {
         query: /* GraphQL */`subscription createMessage {
@@ -74,9 +74,9 @@ class DirectMessages extends Component {
   componentWillUnmount() {
     // console.log('unmounting', this.props)
 
-    this.state.newMessages.length && localStorage.setItem('newMessages', JSON.stringify(this.state.newMessages))
+    this.state.newMessages.length && sessionStorage.setItem('newMessages', JSON.stringify(this.state.newMessages))
     //TODO make array of message saves
-    this.state.message && localStorage.setItem('message', JSON.stringify({
+    this.state.message && sessionStorage.setItem('message', JSON.stringify({
       text: this.state.message,
       forHandle: this.props.viewer.User.handle
     }))

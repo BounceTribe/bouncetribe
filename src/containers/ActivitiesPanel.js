@@ -7,7 +7,6 @@ import {mapNodes} from 'utils/mapNodes'
 
 class ActiviesPanel extends Component {
 
-
 // console.log('filteredcomments', mapNodes(comments).filter(comment=>comment.project).map(c=>Object.assign(c, {user: User.id})));
   render () {
     let {user, User} = this.props.viewer

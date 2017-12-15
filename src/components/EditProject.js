@@ -30,9 +30,9 @@ export default class EditProfile extends Component {
     console.log('edit init', this);
 
     getAllGenres().then(results=>{
-      let genres = results.map(genre=>(
+      let genres = results.map(genre=>
         <MenuItem primaryText={genre.name} value={genre.id} key={genre.id} />
-      ))
+      )
       this.setState({ genres })
     })
   }

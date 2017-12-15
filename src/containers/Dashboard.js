@@ -36,8 +36,6 @@ class Dashboard extends Component {
       tab: null,
       snackbarText: '',
     }
-    localStorage.removeItem('newMessages') //from DirectMessages.js
-    localStorage.removeItem('message')
   }
 
   getSelectedUser = (props) => {
@@ -71,12 +69,6 @@ class Dashboard extends Component {
   setTab = (tab) => {
     this.props.router.replace(`/dash/${this.state.selectedUser.handle}/${tab}/${this.userHandle}`)
   }
-
-  // componentWillUnmount() {
-  //   console.log('DASH UNMOUNTING');
-  //   localStorage.removeItem('newMessages') //from DirectMessages.js
-  //   localStorage.removeItem('message')
-  // }.
 
   suggestFriends = (max) => {
     max = max || this.state.maxSuggestedFriends

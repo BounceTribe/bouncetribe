@@ -57,10 +57,10 @@ export const Summary = styled.pre`
   display: flex;
   font-size: 14px;
   margin-top: 30px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
   overflow-wrap: break-word;
-  word-break: break-all;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
   color: #555555;
 `
 export const TrackContainer = styled.div`
@@ -108,7 +108,6 @@ export const LeftList = styled.div`
   width: 30%;
   margin-right: 20px;
 `
-
 export const CommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
