@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
 import Dialog from 'material-ui/Dialog'
 import ImageUploader from 'components/ImageUploader'
+import {Loading} from 'styled/Spinner'
 
 export default class ImageEditor extends Component {
-  state={hide: false}
+  state={waiting: false}
+
+
 
   render() {
     return (
@@ -16,17 +19,15 @@ export default class ImageEditor extends Component {
           width: '800px',
           minHeight: '600px'
         }}
-        style={{
-          minHeight: '600px',
-          // display: this.state.hide ? 'none' : ''
-        }}
+        style={{minHeight: '600px',}}
         autoScrollBodyContent
       >
+        {/* {this.state.waiting && <Loading />} */}
         <ImageUploader
           altSizes={this.props.altSizes || []}
           self={this.props.user}
-          hide={()=>this.setState({hide: true})}
           fileSuccess={this.props.portraitSuccess}
+          waiting={(val)=>this.setState({waiting: val})}
         />
       </Dialog>
     )

@@ -32,7 +32,46 @@ export default class ImageUploader extends Component {
   onImageDrop = (files, rejectedFile) =>
     this.setState({ image: files[0].preview, imageName: files[0].name })
 
-    // Resize from Canvas/Image to another Canvas
+    // Resize fro
+
+
+    ref={(input) => { this.textInput = input }}
+    src={this.state.image}
+    crop={this.state.crop}
+    onImageLoaded={(image)=>{
+      let el = this.textInput
+        console.log({el});
+        if (el.fireEvent) {
+          el.fireEvent('onclick');
+          console.log('hasclick');
+        } else {
+          var evObj = document.createEvent('Events');
+          evObj.initEvent('click', true, false);
+          el.dispatchEvent(evObj);
+        }
+
+    }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    m Canvas/Image to another Canvas
     pica.resize(from, to, {
       unsharpAmount: 80,
       unsharpRadius: 0.6,
