@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import PropTypes from 'prop-types'
 import {View, RoundButton} from 'styled'
-import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot,  ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'
+import {Top, Art, Info, GenreBounce, Summary, TrackContainer, Title, Genre, Bot,  ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'
 import {formatEnum} from 'utils/strings'
 import Experience from 'icons/Experience'
 import Location from 'icons/Location'
@@ -428,7 +428,7 @@ class Session extends Component {
               ownProject={ownProject}
             />
             <Info>
-              <TitleGenre>
+              <GenreBounce>
                 <Title>
                   {project.title}
                 </Title>
@@ -442,7 +442,7 @@ class Session extends Component {
                   />
                   {project.genres.edges[0].node.name}
                 </Genre>
-              </TitleGenre>
+              </GenreBounce>
               <Summary>
                 {project.description}
               </Summary>

@@ -25,44 +25,34 @@ export const Info = styled.div`
   margin-left: 40px;
   width: 400px;
 `
+  export const Privacy = styled.div`
+    font-size: 12px;
+    color: #777777;
+    letter-spacing: 1.3px;
+    margin: 20px 0 5px 0;
+  `
+  export const Title = styled.div`
+    display: flex;
+    font-size: 30px;
+    font-weight: 300;
+    white-space: nowrap;
+    color: #333333;
+  `
+  export const GenreBounce = styled.div`
+    display: flex;
+    margin-top: 20px;
+  `
+  export const Summary = styled.pre`
+    display: flex;
+    font-size: 14px;
+    margin-top: 30px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+    color: #555555;
+  `
 
-export const TitleGenre = styled.div`
-  display: flex;
-  margin-top: 30px;
-`
-
-export const Title = styled.div`
-  display: flex;
-  font-size: 30px;
-  font-weight: 300;
-  white-space: nowrap;
-  color: ${grey800};
-`
-
-export const Genre = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  line-height: 12px;
-  color: ${white};
-  background-color: ${purple};
-  padding: 4px 10px;
-  border-radius: 4px;
-  vertical-align: middle;
-  margin-left: 15px;
-  flex-wrap: nowrap;
-`
-
-export const Summary = styled.pre`
-  display: flex;
-  font-size: 14px;
-  margin-top: 30px;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
-  white-space: pre-wrap;
-  color: #555555;
-`
 export const TrackContainer = styled.div`
   display: flex;
   flex-direction: column;

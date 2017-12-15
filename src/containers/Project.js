@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import PropTypes from 'prop-types'
 import {View, RoundButton, BtFlatButton, ContentPad} from 'styled'
-import {Top, Art, Info, TitleGenre, Summary, TrackContainer, Title, Genre, Bot, LeftList, ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'
+import {Top, Art, Info, GenreBounce, Summary, TrackContainer, Title, Privacy, Bot, LeftList, ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'
 import {CommentContainer, ButtonRow, ButtonColumn, ButtonLabel, CommentScroller} from 'styled/Comments'
 import AudioPlayer from 'components/AudioPlayer'
 import Music from 'icons/Music'
@@ -300,31 +300,29 @@ class Project extends Component {
               user={user}
               portraitSuccess={this.artworkSuccess} />
             <Info>
-              <TitleGenre>
-                <Title>{project.title}</Title>
-                <Genre>
-                  <Music fill={white}
-                    style={{ marginRight: '5px', height: '18px' }} />
-                  {project.genres.edges[0].node.name}
-                </Genre>
-              </TitleGenre>
-              {!this.isOwner &&
+              <Privacy>{project.privacy}</Privacy>
+              <Title>{project.title}</Title>
+              <GenreBounce>
                 <BtFlatButton
-                  label={this.state.bounced ? 'Bounced' : 'Bounce to Tribe'}
-                  backgroundColor={this.state.bounced ? purple : white}
-                  labelStyle={{ color: this.state.bounced ? white : purple}}
-                  icon={
-                    <Bounce
-                      fill={(this.state.bounced) ? white : purple}
-                      width={21} />
-                  }
-                  onClick={()=>{this.setBounce()}}
-                  style={{
-                    border: `1px solid ${grey400}`,
-                    width: '170px',
-                    marginTop: '20px'
-                  }} />
-              }
+                  disabled
+                  label={project.genres.edges[0].node.name}
+                  backgroundColor={purple}
+                  labelStyle={{color: white}}
+                  icon={<Music fill={white} style={{height: '18px'}} />}
+                  style={{marginRight: '10px'}} />
+                {!isOwner &&
+                  <BtFlatButton
+                    label={this.state.bounced ? 'Bounced' : 'Bounce to Tribe'}
+                    backgroundColor={this.state.bounced ? purple : white}
+                    labelStyle={{ color: this.state.bounced ? white : purple}}
+                    icon={
+                      <Bounce fill={this.state.bounced ? white : purple}
+                        width={21} />
+                    }
+                    onClick={()=>{this.setBounce()}}
+                    style={{border: `1px solid ${grey400}`, width: '170px',}} />
+                }
+              </GenreBounce>
               <Summary>{project.description}</Summary>
             </Info>
             <Dialog
