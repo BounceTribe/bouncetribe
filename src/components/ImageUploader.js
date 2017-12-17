@@ -11,8 +11,8 @@ import 'react-image-crop/dist/ReactCrop.css'
 import Camera from 'icons/Camera'
 import {Loading} from 'styled/Spinner'
 
-import Pica from 'pica'
-// const pica = require('pica')({ features: [ 'js', 'wasm', 'ww', 'cib' ] })
+import Pica from 'pica/dist/pica.min.js'
+// const Pica = require('pica')({ features: [ 'js', 'wasm', 'ww', 'cib' ] })
 
 export default class ImageUploader extends Component {
   constructor(props){
