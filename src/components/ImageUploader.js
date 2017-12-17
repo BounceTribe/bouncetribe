@@ -11,8 +11,7 @@ import 'react-image-crop/dist/ReactCrop.css'
 import Camera from 'icons/Camera'
 import {Loading} from 'styled/Spinner'
 
-import pica from 'pica/dist/pica'
-// import FileUploadThumbnail from 'file-upload-thumbnail'
+import Pica from 'pica'
 // const pica = require('pica')({ features: [ 'js', 'wasm', 'ww', 'cib' ] })
 
 export default class ImageUploader extends Component {
@@ -28,7 +27,8 @@ export default class ImageUploader extends Component {
       sizesRemaining: props.altSizes,
       crop: { aspect: 1/1, x: 10, y: 10, width: 80 }
     }
-    console.log('pica,', pica);
+    // this.pica = pica(pica({ features: [ 'js', 'wasm', 'ww', 'cib' ] }))
+    console.log('pica,', Pica);
   }
 
   onImageDrop = (files, rejectedFile) =>
@@ -60,6 +60,7 @@ export default class ImageUploader extends Component {
   }
 
   picaResize = (canvas, pxSize) => {
+    let pica = new Pica()
     let picaCanvas = document.createElement('canvas')
     picaCanvas.width = Math.min(pxSize, canvas.height)
     picaCanvas.height = Math.min(pxSize, canvas.height)
