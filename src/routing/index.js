@@ -18,7 +18,7 @@ import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
 import ProjectsPanel from 'containers/ProjectsPanel'
 import DirectMessages from 'containers/DirectMessages'
-import Feed from 'containers/Feed'
+import PagedFeed from 'containers/PagedFeed'
 import BouncesPanel from 'containers/BouncesPanel'
 import ActivitiesPanel from 'containers/ActivitiesPanel'
 import {Loading} from 'styled/Spinner'
@@ -94,10 +94,15 @@ const createRoutes = () => (
       component={Dashboard}
       queries={ViewerQuery}
       render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
-      <Route path='/dash/feed/:userHandle'
-        component={Feed}
+      <Route path='/dash/feed/:userHandle(/:page)'
+        // prepareParams={({page}) => {
+        //   console.log('prep', page);
+        //   return {page: parseInt(page, 10)}
+        // }}
+        component={PagedFeed}
         queries={ViewerQuery}
-        render={({props}) => props ? <Feed {...props} /> : <Loading nested />} />
+        // render={({props}) => props ? <PagedFeed {...props} /> : <Loading nested />} />
+      />
       <Route path='/dash/:theirHandle/projects(/:userHandle)'
         component={ProjectsPanel}
         queries={ViewerQuery}

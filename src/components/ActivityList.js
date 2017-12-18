@@ -5,13 +5,15 @@ import Bounce from 'icons/Bounce'
 import {Activity, ScrollBox, NameLink} from 'styled/ActivityList'
 import {BtAvatar} from 'styled'
 import {purple} from 'theme'
+import {BtFlatButton} from 'styled'
+
 
 const getLink = (project, friendIds) => {
   //TODO fix this mess with userhandle params in filters
   //friendIds includes self id
   let isTribe = friendIds.includes(project.creator.id)
   let tribeOk = isTribe && (project.privacy==='TRIBE')
-  
+
   if (tribeOk || project.privacy==='PUBLIC')
     return `/${project.creator.handle}/${project.title}`
   else
@@ -103,5 +105,11 @@ const makeList = (props) => {
 }
 
 export const ActivityList = (props) => (
-  <ScrollBox borderTop={props.dash}> {makeList(props)} </ScrollBox>
+  <ScrollBox borderTop={props.dash}>
+    {makeList(props)}
+    <BtFlatButton
+      label={'Load More'}
+      onClick={props.nextPage}
+      />
+  </ScrollBox>
 )
