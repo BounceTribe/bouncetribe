@@ -36,9 +36,7 @@ const Ball1 = styled(Ball2)`
 
 export const Spinner = (props) => {
   return (
-    <SpinBox
-      {...props}
-    >
+    <SpinBox {...props} >
       <Ball0/>
       <Ball1/>
       <Ball2/>

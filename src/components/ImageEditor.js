@@ -13,12 +13,12 @@ export default class ImageEditor extends Component {
         title={'Upload Your Image'}
         open={this.props.open}
         onRequestClose={this.props.onRequestClose}
-        contentStyle={{
-          height: '800px',
-          width: '800px',
-          minHeight: '600px'
-        }}
-        style={{minHeight: '600px',}}
+        // contentStyle={{
+        //   height: '800px',
+        //   width: '800px',
+        //   minHeight: '600px'
+        // }}
+        bodyStyle={{minHeight: '600px',}}
         autoScrollBodyContent
       >
         <ImageUploader

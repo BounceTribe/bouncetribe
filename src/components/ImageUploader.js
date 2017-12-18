@@ -135,7 +135,7 @@ export default class ImageUploader extends Component {
           style={{
             display: 'flex',
             width: '100%',
-            height: '200px',
+            height: '400px',
             justifyContent: 'center',
             alignItems: 'center'
           }}
