@@ -32,7 +32,7 @@ class Tribe extends Component {
     let tab = this.state.tab
     let top = (
       <Header>
-        <IconTextContainer to={`/tribe/${handle}`} >
+        <IconTextContainer to={`/tribe/${handle}/`} >
           <TribeIcon fill={purple} />
           <IconText>
             {(user.id === User.id) ? 'My Tribe' : `${User.name}'s Tribe'`}

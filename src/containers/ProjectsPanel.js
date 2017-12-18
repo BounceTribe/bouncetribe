@@ -17,7 +17,7 @@ class ProjectsPanel extends Component {
         headline={isSelf ? `Everyone wants to hear it...` : `${User.handle} has no projects`}
         note={isSelf ? `Upload your first project!` : ``}
         btnLabel={isSelf ? `New Project` : ``}
-        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new`)}
+        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new/`)}
       />
     )
   }

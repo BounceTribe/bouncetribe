@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import React from 'react'
-import {purple, white, blue, grey200, grey300, grey500, grey800} from 'theme'
+import {purple, blue, grey200, grey300, grey500, grey800} from 'theme'
 import {BtLink} from 'styled'
 
 export const Top = styled.div`

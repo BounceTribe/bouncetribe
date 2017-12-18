@@ -18,7 +18,7 @@ class NotificationList extends Component {
     return (
       <View>
         <Header>
-          <IconTextContainer to={`/notifications`} >
+          <IconTextContainer to={`/notifications/`} >
             <Alerts fill={purple} />
             <IconText>Notifications</IconText>
           </IconTextContainer>

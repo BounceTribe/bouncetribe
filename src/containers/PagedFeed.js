@@ -4,46 +4,91 @@ import {ActivityList} from 'components/ActivityList'
 import {mapNodes} from 'utils/mapNodes'
 import {EmptyPanel} from 'components/EmptyPanel'
 import Tribe from 'icons/Tribe'
+import {SeeMore} from 'styled'
 
 
 class Feed extends Component {
-  // componentWillMount() {
-  //   console.log('Feed', this.props)
-  // }
 
-  get activities() {
-    let {user, allComments, allBounces, allProjects} = this.props.viewer
+  constructor(props) {
+    super(props)
+    let {user} = this.props.viewer
+    this.state = Object.assign(
+      this.mapActivity(this.props), {
+        loading: false,
+        friendIds: user.friends.edges.map(edge=>edge.node.id).concat(user.id),
+        listLength: 0
+      }
+    )
+    console.log('state', this.state);
+  }
+
+  componentWillMount() {
+    console.log('Feed', this.props)
+    if (this.props.params.page > 1) {
+      this.setPage(this.props, 1)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(
+      Object.assign( this.mapActivity(nextProps), {loading: false} )
+    )
+    console.log('feed state', this.state);
+    // debugger
+  }
+
+  mapActivity = (props) => {
+    let {allComments, allBounces, allProjects} = props.viewer
     let comments = mapNodes(allComments)
     let bounces  = mapNodes(allBounces)
     let projects = mapNodes(allProjects)
-    let friendIds = user.friends.edges.map(edge=>edge.node.id).concat(user.id)
-    let hasActivities = comments.length + bounces.length + projects.length
-    return hasActivities ? {friendIds, comments, bounces, projects} : null
+    let numActivities = comments.length + bounces.length + projects.length
+    let totalActivities = allComments.count + allBounces.count + allProjects.count
+    return {
+      comments,
+      bounces,
+      projects,
+      numActivities,
+      totalActivities,
+      hasMore: totalActivities > numActivities
+    }
+  }
+
+  setPage = (props, newPage) => {
+    let {userHandle, page} = props.params
+    if (!newPage) newPage = parseInt((page || 1), 10) + 1
+    let newPath = `/dash/feed/${userHandle}/${newPage}/`
+    this.props.router.replace(newPath)
+  }
+
+   seeMore = () => {
+     !this.state.loading && this.setState({loading: true})
+     this.setPage(this.props)
    }
 
-   nextPage = () => {
-     let page = Number((this.props.params.page || 1)) + 1
-     console.log('page', this.props.viewer.allComments.edges);
-     this.props.router.replace(`/dash/feed/${this.props.viewer.user.handle}/${page}`)
-   }
+  // compareListLength = (newLength) => {
+  //   if (newLength===this.state.listLength) {
+  //     this.seeMore()
+  //   } else {
+  //     this.setState({listLength: newLength})
+  //   }
+  // }
 
   render () {
-    let activities = this.activities
-      return activities ?
-        <ActivityList dash {...activities}
-          router={this.props.router}
-          nextPage={this.nextPage}
-         />
-      :
-      <EmptyPanel
-        icon={<Tribe height={93} fill={"#D3D3D3"} />}
-        headline={`It's a little quiet here...`}
-        note={`Invite your friends to begin building your tribe`}
-        // btnLabel={`Invite Friends`}
-        // btnClick={()=>this.inviteDialog()}
+    return this.state.numActivities ?
+      <ActivityList dash
+        {...this.state}
+        router={this.props.router}
+        // listLength={(newLength)=>this.state.hasMore && this.compareListLength(newLength)}
+        nextPage={this.state.hasMore &&
+          <SeeMore onClick={this.seeMore} loading={this.state.loading}/>}
       />
-
-
+    :
+    <EmptyPanel
+      icon={<Tribe height={93} fill={"#D3D3D3"} />}
+      headline={`It's a little quiet here...`}
+      note={`Invite your friends to begin building your tribe`}
+    />
   }
 }
 
@@ -52,6 +97,7 @@ export default Relay.createContainer( Feed, {
     theirHandle: '',
     userHandle: '',
     page: 1,
+    num: 3,
     bouncesFilter: {},
     commentsFilter: {},
     projectsFilter: {},
@@ -60,6 +106,7 @@ export default Relay.createContainer( Feed, {
     return {
       ...urlParams,
       page: parseInt((urlParams.page || 1), 10),
+      num: 3 * parseInt((urlParams.page || 1), 10),
       commentsFilter: {
         project: {
           privacy_not: 'PRIVATE',
@@ -99,9 +146,10 @@ export default Relay.createContainer( Feed, {
         }
         allComments(
           filter: $commentsFilter
-          first: $page
+          first: $num
           orderBy: createdAt_DESC
         ){
+          count
           edges {
             node {
               id
@@ -128,9 +176,10 @@ export default Relay.createContainer( Feed, {
         }
          allProjects(
           filter: $projectsFilter
-          first: $page
+          first: $num
           orderBy: createdAt_DESC
         ){
+          count
           edges {
             node {
               id
@@ -149,9 +198,10 @@ export default Relay.createContainer( Feed, {
         }
         allBounces(
           filter: $bouncesFilter
-          first: $page
+          first: $num
           orderBy: createdAt_DESC
         ){
+          count
           edges {
             node {
               id

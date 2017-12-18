@@ -54,10 +54,10 @@ class ProjectList extends Component {
               <Artwork
                 src={artwork ||  `${url}/artwork.png`}
                 alt={'Project Artwork'}
-                to={`/${owner.handle}/${project.title}`}
+                to={`/${owner.handle}/${project.title}/`}
               />
               <Info>
-                <ProjectTitle to={`/${owner.handle}/${project.title}`} >
+                <ProjectTitle to={`/${owner.handle}/${project.title}/`} >
                   {project.title}
                 </ProjectTitle>
                 <Trio>
@@ -145,7 +145,7 @@ class ProjectList extends Component {
     return (
       <View>
         <Header>
-          <IconTextContainer to={`/projects/${this.props.viewer.User.handle}`}>
+          <IconTextContainer to={`/projects/${this.props.viewer.User.handle}/`}>
             <Music
               style={{ display: 'flex', marginBottom: '5px' }}
               fill={purple}
@@ -154,7 +154,7 @@ class ProjectList extends Component {
           </IconTextContainer>
           <HeaderOptions>
             <Button
-              to={`/projects/${this.props.viewer.user.handle}/new`}
+              to={`/projects/${this.props.viewer.user.handle}/new/`}
               icon={<Upload fill={white} />}
               label={'New Project'}
               primary

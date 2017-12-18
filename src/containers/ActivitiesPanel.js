@@ -29,7 +29,7 @@ class ActiviesPanel extends Component {
         headline={isSelf ? `Everyone wants to hear it` : `No Activity Yet`}
         note={isSelf ? `Upload your first project!` : ``}
         btnLabel={isSelf ? `New Project` : ``}
-        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new`)}
+        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new/`)}
       />
     )
   }

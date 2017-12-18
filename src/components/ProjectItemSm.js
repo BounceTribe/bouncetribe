@@ -12,7 +12,7 @@ import * as moment from 'moment'
 
 export const ProjectItemSm = ({User, project, comments, likes, bounces, bounceTab}) => {
   let created = moment.default(project.createdAt).format('MMMM Do')
-  let projectLink = `/${project.creator.handle}/${project.title}`
+  let projectLink = `/${project.creator.handle}/${project.title}/`
   let artwork = (project.artworkSmall || {}).url || (project.artwork || {}).url
   return (
     <ProfileProjectItem key={project.id} >

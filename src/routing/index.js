@@ -70,7 +70,7 @@ const createRoutes = () => (
   <Route path={'/'}
     component={Template}
     queries={ViewerQuery} >
-    <Route path={'/login/'} component={Login} queries={ViewerQuery} auth={auth} />
+    <Route path={'/login'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
     <Route path={'/acceptrequest/:inviteId/:newFriendId'} onEnter={userOnly} auth={auth}/>
     <Route path={'/acceptinvite/:newFriendId'} onEnter={userOnly} auth={auth}/>
@@ -90,7 +90,7 @@ const createRoutes = () => (
       onEnter={userOnly}
       render={({props}) => props ? <ProjectNew {...props} /> : <Loading />} />
 
-    <Route path='/dash/'
+    <Route path='/dash'
       component={Dashboard}
       queries={ViewerQuery}
       render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
@@ -103,15 +103,16 @@ const createRoutes = () => (
         queries={ViewerQuery}
         // render={({props}) => props ? <PagedFeed {...props} /> : <Loading nested />} />
       />
-      <Route path='/dash/:theirHandle/projects(/:userHandle)'
+      <Route path='/dash/:theirHandle/projects/:userHandle(/:page)'
         component={ProjectsPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
-      <Route path={'/dash/:theirHandle/messages/:userHandle'}
+      <Route path={'/dash/:theirHandle/messages/:userHandle(/:page)'}
         component={DirectMessages}
         queries={ViewerQuery}
-        render={({props}) => props ? <DirectMessages {...props} /> : <Loading nested />} />
-      <Route path={'/dash/:theirHandle/bounces(/:userHandle)'}
+        // render={({props}) => props ? <DirectMessages {...props} /> : <Loading nested />} />
+      />
+      <Route path={'/dash/:theirHandle/bounces/:userHandle(/:page)'}
         component={BouncesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
@@ -137,7 +138,7 @@ const createRoutes = () => (
         queries={ViewerQuery}
         render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>} />
     </Route>
-    <Route path={'/tribe/:theirHandle(/members)'}
+    <Route path={'/tribe/:theirHandle/(members)'}
       component={Tribe}
       queries={ViewerQuery}
       render={({props}) => props ? <Tribe {...props} /> : <Loading />} >
@@ -150,7 +151,7 @@ const createRoutes = () => (
         queries={ViewerQuery}
         render={({props}) => props ? <TribeRequests {...props} /> : <Loading nested/>} />
     </Route>
-    <Route path={'/tribe/:theirHandle/find/*'}
+    <Route path={'/tribe/:theirHandle/find/*(/)'}
       component={TribeFind}
       queries={ViewerQuery}
       render={({props}) => props ? <TribeFind {...props} /> : <Loading />}

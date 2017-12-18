@@ -51,7 +51,7 @@ class Dashboard extends Component {
         return selectedUser
       } else {
         console.log('could not find user in friends');
-        props.location.pathname!==`/dash/feed/${this.userHandle}` && props.router.replace(`/dash/feed/${this.userHandle}`)
+        props.location.pathname!==`/dash/feed/${this.userHandle}/` && props.router.replace(`/dash/feed/${this.userHandle}/`)
       }
     }
   }
@@ -67,7 +67,7 @@ class Dashboard extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.replace(`/dash/${this.state.selectedUser.handle}/${tab}/${this.userHandle}`)
+    this.props.router.replace(`/dash/${this.state.selectedUser.handle}/${tab}/${this.userHandle}/1`)
   }
 
   suggestFriends = (max) => {
@@ -89,12 +89,11 @@ class Dashboard extends Component {
 
   selectUser = (newHandle) => {
     let oldPath = this.props.location.pathname
-    let feedPath = `/dash/feed/${this.userHandle}`
     let currentHandle = this.props.params.theirHandle
-    if (oldPath===feedPath) {
-      this.props.router.replace(`/dash/${newHandle}/projects/`)
+    if (oldPath.includes(`/dash/feed/${this.userHandle}`)) {
+      this.props.router.replace(`/dash/${newHandle}/projects/1`)
     } else if (newHandle===currentHandle) {
-      this.props.router.replace(feedPath) //deselect
+      this.props.router.replace(`/dash/feed/${this.userHandle}/1/`) //deselect
     } else {
       let newPath = oldPath.replace(`/${currentHandle}/`, `/${newHandle}/`)
       this.props.router.replace(newPath)

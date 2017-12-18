@@ -88,7 +88,7 @@ class Template extends Component {
     props: this.props,
     successCB: (res)=>{
       this.setState({snackbarText: 'FRIEND ADDED'})
-      this.props.router.push(`/tribe/${this.props.viewer.user.handle}`)
+      this.props.router.push(`/tribe/${this.props.viewer.user.handle}/`)
     },
     failureCB: (res)=>{
       console.log('add friend failure', res)
@@ -110,7 +110,7 @@ class Template extends Component {
                 console.log('friend added res', res);
                 this.setState({snackbarText: 'FRIEND ADDED'})
                 //using location fo force query update
-                location.assign(`${url}/dash/feed/${this.props.viewer.user.handle}`)
+                location.assign(`${url}/dash/feed/${this.props.viewer.user.handle}/1`)
               },
               onFailure: res => {
                 console.log('ADD FRIEND FAILURE', res)
@@ -130,7 +130,7 @@ class Template extends Component {
   redirect = () => {
     console.log('template redirect', this.props)
     let user = this.props.viewer.user
-    this.props.router.push(`${ user ? `/dash/feed/${user.handle}` : '/login/' }`)
+    this.props.router.push(`${ user ? `/dash/feed/${user.handle}/` : '/login/' }`)
   }
 
   ping = () => {

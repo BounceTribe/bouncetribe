@@ -12,6 +12,7 @@ import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
 import {isOnline} from 'utils/isOnline'
+import {Spinner} from 'styled/Spinner'
 
 export const PanelScrollContainer = styled.div`
   padding: 15px 0;
@@ -99,7 +100,7 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) =
       <Avatar
         src={imageUrl}
         style={{border: 0, objectFit: 'cover'}}
-        to={`/${user.handle}`}
+        to={`/${user.handle}/`}
         size={size}
       />
       {fbCircle ? <FacebookCircle style={{ marginLeft: `-20px` }} />
@@ -226,6 +227,24 @@ export const BtFlatButton = (props) => {
     </ButtonLink>
   )
 }
+
+export const SeeMore = (props) =>
+  <div style={{display:'flex', justifyContent:'center', padding: '5px'}}>
+    {props.loading ?
+      <Spinner style={{padding:'15px'}}/>
+      :
+      <BtFlatButton
+        onClick={props.onClick}
+        label={'See More'}
+        style={{
+          backgroundColor: `${white}`,
+          border: `1px solid #4A4A4A`,
+          color: `#4A4A4A`,
+          width: `150px`,
+        }}
+      />}
+  </div>
+
 
 export const RoundButton = (props) => {
   return (

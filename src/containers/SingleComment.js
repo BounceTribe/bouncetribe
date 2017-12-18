@@ -158,7 +158,7 @@ class SingleComment extends Component {
             <SubComment key={id} hide={this.state.deleted.includes(id)}>
               <BtAvatar user={author} size={30} style={{paddingTop: '5px'}} />
               <SCCol>
-                <SCHandle to={author.deactivated ? null : `/${author.handle}`}>
+                <SCHandle to={author.deactivated ? null : `/${author.handle}/`}>
                   {author.handle}
                 </SCHandle>
                 <SCText>{this.text(child, id)}</SCText>
@@ -185,7 +185,7 @@ class SingleComment extends Component {
         <SubComment key={'input'} >
           <BtAvatar user={this.user} size={30} style={{paddingTop: '5px'}} />
           <SCCol>
-            <SCHandle to={this.user.deactivated ? null : `/${this.user.handle}`}>
+            <SCHandle to={this.user.deactivated ? null : `/${this.user.handle}/`}>
               {this.user.handle}
             </SCHandle>
           <TextField
@@ -264,7 +264,7 @@ class SingleComment extends Component {
               />
             </ButtonCol>
             <Content>
-              <Handle to={author.deactivated ? null : `/${author.handle}`} >
+              <Handle to={author.deactivated ? null : `/${author.handle}/`} >
                 {author.handle}
               </Handle>
               <Text>{this.text(this.comment)}</Text>

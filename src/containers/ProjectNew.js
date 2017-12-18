@@ -56,7 +56,7 @@ class ProjectNew extends Component {
       new CreateProject({project, user}), {
         onSuccess: success => {
           console.log('success', success)
-            this.props.router.push(`/${user.handle}/${project.title}`)
+            this.props.router.push(`/${user.handle}/${project.title}/`)
         },
         onFailure: failure => console.log('fail', failure)
       }

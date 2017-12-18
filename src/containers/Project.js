@@ -245,9 +245,9 @@ class Project extends Component {
               <ProfLeft>
                 <Portrait
                   src={(User.portrait || {}).url || `${url}/logo.png`}
-                  to={`/${User.handle}`} />
+                  to={`/${User.handle}/`} />
                 <ProfCol>
-                  <ProfHandle to={`/${User.handle}`} >
+                  <ProfHandle to={`/${User.handle}/`} >
                     {User.handle}
                   </ProfHandle>
                   <Score>
@@ -340,7 +340,7 @@ class Project extends Component {
                     this.props.relay.commitUpdate(
                       new DeleteProject({id: project.id}),{
                         onSuccess: ()=>{
-                          this.props.router.push(`/projects/${user.handle}`)
+                          this.props.router.push(`/projects/${user.handle}/`)
                         }
                       }
                     )

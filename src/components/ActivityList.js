@@ -5,7 +5,6 @@ import Bounce from 'icons/Bounce'
 import {Activity, ScrollBox, NameLink} from 'styled/ActivityList'
 import {BtAvatar} from 'styled'
 import {purple} from 'theme'
-import {BtFlatButton} from 'styled'
 
 
 const getLink = (project, friendIds) => {
@@ -15,13 +14,13 @@ const getLink = (project, friendIds) => {
   let tribeOk = isTribe && (project.privacy==='TRIBE')
 
   if (tribeOk || project.privacy==='PUBLIC')
-    return `/${project.creator.handle}/${project.title}`
+    return `/${project.creator.handle}/${project.title}/`
   else
     return null
 }
 const getAvatar = (router,user) => (
   <BtAvatar user={user} hideStatus pointer size={40}
-    onClick={()=>router.push(user.handle)} />
+    onClick={()=>router.push(`/${user.handle}/`)} />
 )
 
 const makeList = (props) => {
@@ -38,7 +37,7 @@ const makeList = (props) => {
     if (dash) {
       text = (
         <span>
-          <NameLink to={`/${author.handle}`}>{author.handle} </NameLink>
+          <NameLink to={`/${author.handle}/`}>{author.handle} </NameLink>
           gave feedback to
           <NameLink to={link}> {project.title} </NameLink>
         </span>)
@@ -61,7 +60,7 @@ const makeList = (props) => {
     if (dash) {
       text = (
         <span>
-          <NameLink to={`/${bouncer.handle}`}>{bouncer.handle} </NameLink>
+          <NameLink to={`/${bouncer.handle}/`}>{bouncer.handle} </NameLink>
           bounced
           <NameLink to={link}> {project.title}</NameLink>
         </span>)
@@ -81,7 +80,7 @@ const makeList = (props) => {
     let {createdAt, creator, title, id} = project
     let link = getLink(project, props.friendIds)
     if (dash) {
-      text = (<NameLink to={`/${creator.handle}`}>{creator.handle}</NameLink>)
+      text = (<NameLink to={`/${creator.handle}/`}>{creator.handle}</NameLink>)
       icon = getAvatar(router, creator)
     } else {
       text = `Bounced ${title}`
@@ -100,16 +99,14 @@ const makeList = (props) => {
     // console.log('BAD DTE', !a.props.date && a.props);
     return b.props.date - a.props.date
   })
+  // props.listLength(list.length)
   // console.log('list', list);
-  return dash ? list.slice(0,10) : list
+  return list
 }
 
 export const ActivityList = (props) => (
   <ScrollBox borderTop={props.dash}>
     {makeList(props)}
-    <BtFlatButton
-      label={'Load More'}
-      onClick={props.nextPage}
-      />
+    {props.nextPage}
   </ScrollBox>
 )

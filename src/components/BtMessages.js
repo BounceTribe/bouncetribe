@@ -5,7 +5,7 @@ import {white, grey300 ,grey400, grey600, purple} from 'theme'
 export const MsgsContainer = styled.div`
   display: flex;
   flex-direction: column-reverse;
-  max-height: 50vh;
+  ${'' /* max-height: 50vh; */}
   overflow-x: scroll;
   padding: 20px 30px 1px 30px;
   border-bottom: 1px solid ${grey300};
@@ -53,10 +53,12 @@ const mapMessages = (messages) => (
   )
 )
 
-export const BtMessages = ({msgList, lastEl}) => {
+export const BtMessages = ({msgList, lastEl, nextPage, top}) => {
   return (
     <MsgsContainer>
       {lastEl}
       {mapMessages(msgList)}
+      {nextPage}
+      {top}
     </MsgsContainer>)
 }

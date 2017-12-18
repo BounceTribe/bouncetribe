@@ -27,7 +27,7 @@ class TribeAll extends Component {
                 <BtAvatar user={friend} size={50} />
               </TableRowColumn>
               <TableRowColumn>
-                <Name to={`/${friend.handle}`} >
+                <Name to={`/${friend.handle}/`} >
                   {friend.handle}
                 </Name>
               {/* </div> */}

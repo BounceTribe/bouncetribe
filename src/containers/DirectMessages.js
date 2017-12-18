@@ -5,6 +5,8 @@ import CreateMessage from 'mutations/CreateMessage'
 import {SubscriptionClient} from 'subscriptions-transport-ws'
 import {BtMessages} from 'components/BtMessages'
 import * as moment from 'moment'
+// import {isScrolledIntoView} from 'utils/isScrolledIntoView'
+import {SeeMore} from 'styled'
 
 class DirectMessages extends Component {
 
@@ -22,7 +24,8 @@ class DirectMessages extends Component {
       this.state = {
         newMessages: JSON.parse(sessionStorage.getItem('newMessages')) || [],
         message: useSaved ? savedText.text : '',
-        new: []
+        new: [],
+        loading: false
       }
     console.log('dm mount', this)
     // console.log('unparsed new', sessionStorage.getItem('newMessages'));
@@ -72,23 +75,38 @@ class DirectMessages extends Component {
   }
 
   componentWillUnmount() {
-    // console.log('unmounting', this.props)
-
+    if (this.props.params.page>1) {
+      this.setPage(this.props, 1)
+    }
     this.state.newMessages.length && sessionStorage.setItem('newMessages', JSON.stringify(this.state.newMessages))
-    //TODO make array of message saves
     this.state.message && sessionStorage.setItem('message', JSON.stringify({
       text: this.state.message,
       forHandle: this.props.viewer.User.handle
     }))
   }
 
-  componentDidUpdate(prevProps) {
-    if (prevProps.params.theirHandle!==this.props.params.theirHandle) {
-      this.setState({message: ''})
+  componentWillReceiveProps(nextProps) {
+    let prevNum = this.props.viewer.allMessages.edges.length
+    let nextNum = nextProps.viewer.allMessages.edges.length
+    if (nextProps.params.theirHandle!==this.props.params.theirHandle) {
+      this.setPage(nextProps, 1)
+      this.setState({loading: false, message:''})
     }
-    if (this.state.message==='') {
+    if (this.state.loading && nextNum!==prevNum)
+      this.setState({loading: false})
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.message==='' && (prevState.newMessages.length!==this.state.newMessages.length)) {
       this.msgsEnd.scrollIntoView({ behaviour: 'smooth', block: 'nearest' })
     }
+  }
+
+  setPage = (props, newPage) => {
+    let {theirHandle, userHandle, page} = props.params
+    if (!newPage) newPage = (parseInt((page || 1), 10) + 1)
+    let newPath = `/dash/${theirHandle}/messages/${userHandle}/${newPage}/`
+    this.props.router.replace(newPath)
   }
 
   sortMessages = (list) => {
@@ -102,7 +120,6 @@ class DirectMessages extends Component {
   storedMsgsFilter = (msgList) => {
     let userId = this.props.viewer.user.id
     let theirId = this.props.viewer.User.id
-    console.log({msgList});
     return msgList.filter(msg =>
       typeof(msg)!=='string' &&
       ((msg.sender.id===userId && msg.recipient.id===theirId) ||
@@ -120,9 +137,6 @@ class DirectMessages extends Component {
         time = created.subtract(1, 'days').format('h:mm a')
       } else {
         time = created.subtract(1, 'days').format('MMMM Do h:mm a')
-      }
-      if (!msg) {
-        debugger
       }
       msg.time = time;
       msg.receiving = (msg.sender.id!==this.props.viewer.user.id)
@@ -159,13 +173,22 @@ class DirectMessages extends Component {
     }
   }
 
+  seeMore = () => {
+    this.setState({loading: true})
+    this.setPage(this.props)
+  }
+
   render() {
-    let messages = this.props.viewer.allMessages.edges.map(edge=>edge.node)
-    .concat(this.storedMsgsFilter(this.state.newMessages))
+    let {allMessages} = this.props.viewer
+    let messages = allMessages.edges.map(edge=>edge.node)
+      .concat(this.storedMsgsFilter(this.state.newMessages))
     messages = [...new Set(messages)]
     let scrollPlaceholder =
-      <div style={{ float:"left", clear: "both" }}
-        ref={(el) => this.msgsEnd = el} />
+      <div style={{ float:"left", clear: "both" }} ref={el=>this.msgsEnd = el}/>
+    let top =
+      <div style={{ float:"left", clear: "both", padding: '15px 0 0 0' }} ref={el=>this.top = el}/>
+    let hasMore = allMessages.edges.length!==allMessages.count
+
     return (
       <div style={{
         display: 'flex',
@@ -176,6 +199,8 @@ class DirectMessages extends Component {
         <BtMessages
           msgList={this.formatMessages(messages)}
           lastEl={scrollPlaceholder}
+          nextPage={hasMore && <SeeMore onClick={this.seeMore} loading={this.state.loading} />}
+          top={top}
         />
         <div style={{padding: '0 15px'}}>
           <TextField
@@ -197,10 +222,11 @@ class DirectMessages extends Component {
 }
 //look into forceFetch/setVariables instead of localstorage
 export default Relay.createContainer( DirectMessages, {
-  initialVariables: { theirHandle: '', userHandle: '', messageFilter: {}, },
+  initialVariables: { theirHandle: '', userHandle: '', messageFilter: {}, page: 1, num: 10},
   prepareVariables: (urlParams) => {
     return {
       ...urlParams,
+      num: parseInt((urlParams.page || 1), 10) * 10,
       messageFilter: { OR:
         [ {
           sender: { handle: urlParams.theirHandle },
@@ -215,9 +241,11 @@ export default Relay.createContainer( DirectMessages, {
   fragments: { viewer: () => Relay.QL`
     fragment on Viewer {
       allMessages(
-        first: 999
+        first: $num
         filter: $messageFilter
+        orderBy: createdAt_DESC
       ) {
+        count
         edges {
           node {
             id

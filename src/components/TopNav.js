@@ -34,10 +34,10 @@ class TopNav extends Component {
     return (
       <Bar>
         {/* <div onClick={()=>this.props.redirect()}> */}
-          <Logo to={`/dash/feed/${user.handle}`} />
+          <Logo to={`/dash/feed/${user.handle}/1`} />
         {/* </div> */}
         <NavList>
-          {/* <NavLink to={`/tribe/${handle}/find`} >
+          {/* <NavLink to={`/tribe/${handle}/find/`} >
             <Headphones height={18} />
             <NavText>Find Your Mentor</NavText>
           </NavLink> */}
@@ -47,7 +47,7 @@ class TopNav extends Component {
             <Headphones />
             <NavText>Sessions</NavText>
           </NavLink> */}
-          <NavLink to={`/projects/${handle}`}>
+          <NavLink to={`/projects/${handle}/`}>
             <Music height={18} />
             <NavText>Projects</NavText>
           </NavLink>
@@ -90,7 +90,7 @@ class TopNav extends Component {
                   <NotifyMessage>No new notifications</NotifyMessage>
                 </NotifyContainer>
               }
-              <ViewAll onClick={this.closeMenu} to={`/notifications`}>View All</ViewAll>
+              <ViewAll onClick={this.closeMenu} to={`/notifications/`}>View All</ViewAll>
             </IconMenu>
           </NavLink>
           <IconMenu
@@ -108,8 +108,8 @@ class TopNav extends Component {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
             <DropdownMenuItem onClick={this.closeMenu} text="Dashboard"  to={`/`} />
-            <DropdownMenuItem onClick={this.closeMenu} text="View Profile" to={`/${handle}`} />
-            <DropdownMenuItem onClick={this.closeMenu} text="Tribe Members" to={`/tribe/${handle}`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="View Profile" to={`/${handle}/`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="Tribe Members" to={`/tribe/${handle}/`} />
             <DropHr/>
             <DropdownMenuItem onClick={() => {
               this.props.openSettings()
@@ -155,11 +155,11 @@ class TopNav extends Component {
           >
             <DropdownMenuItem
               text="View Profile"
-              to={`/${handle}`}
+              to={`/${handle}/`}
             />
             <DropdownMenuItem
               text="My Tribe"
-              to={`/tribe/${handle}`}
+              to={`/tribe/${handle}/`}
             />
             <DropHr/>
             <DropdownMenuItem
@@ -183,7 +183,7 @@ class TopNav extends Component {
               fontWeight: '400'
             }}
             backgroundColor={purple}
-            to={`projects/${handle}/new`}
+            to={`projects/${handle}/new/`}
             icon={<Plus/>}
           />
         </NavList>

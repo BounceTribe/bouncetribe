@@ -30,10 +30,7 @@ class TribeFind extends Component {
     )
   }
 
-  connect = () => {
-    let {router} = this.props
-    router.push('/connect')
-  }
+  connect = () => this.props.router.push('/connect/')
 
   createFriendRequest = (recipientId) => {
     console.log('TF createfriend request')
@@ -74,7 +71,7 @@ class TribeFind extends Component {
     return (
       <View>
           <Header>
-            <IconTextContainer to={`/tribe/${user.handle}`} >
+            <IconTextContainer to={`/tribe/${user.handle}/`} >
               <Tribe fill={purple} />
               <IconText>
                 Add to Tribe
@@ -93,9 +90,7 @@ class TribeFind extends Component {
 
           {
             (this.state.suggestions.length > 0) ? (
-              <FindH3>
-                Facebook Friends
-              </FindH3>
+              <FindH3>Facebook Friends</FindH3>
             ) : null
           }
 

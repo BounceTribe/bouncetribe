@@ -12,7 +12,7 @@ import Notifications from 'material-ui/svg-icons/social/notifications'
 import Help from 'material-ui/svg-icons/action/help'
 import auth from 'utils/auth'
 import Tribe from 'icons/Tribe'
-import Headphones from 'icons/Headphones'
+// import Headphones from 'icons/Headphones'
 import Music from 'icons/Music'
 import Settings from 'icons/Settings'
 import styled from 'styled-components'
@@ -67,7 +67,7 @@ class MobileNav extends Component {
         >
           <Row>
             <Portrait src={((user || {}).portrait || {}).url} />
-            <Handle to={`/${user.handle}`} >
+            <Handle to={`/${user.handle}/`} >
               {user.handle}
             </Handle>
           </Row>
@@ -76,7 +76,7 @@ class MobileNav extends Component {
             primaryText={"My Tribe"}
             leftIcon={( <Tribe fill={purple} />
             )}
-            onTouchTap={()=>{ router.push(`/tribe/${user.handle}`) }}
+            onTouchTap={()=>{ router.push(`/tribe/${user.handle}/`) }}
           />
           <Divider/>
           <MenuItem
@@ -85,23 +85,14 @@ class MobileNav extends Component {
             onTouchTap={()=>{ router.push(`/`) }}
           />
           <MenuItem
-            primaryText={"Sessions"}
-            leftIcon={(
-              <Headphones fill={purple} />
-            )}
-            onTouchTap={()=>{
-              router.push((user.projects.edges.length > 0) ? `/sessions/${user.handle}/${user.projects.edges[0].node.title}` : `/sessions/${user.handle}`)
-            }}
-          />
-          <MenuItem
             primaryText={"Projects"}
             leftIcon={( <Music fill={purple} /> )}
-            onTouchTap={()=>{ router.push(`/tribe/${user.handle}`) }}
+            onTouchTap={()=>{ router.push(`/tribe/${user.handle}/`) }}
           />
           <MenuItem
             primaryText={"Notifications"}
             leftIcon={( <Notifications color={purple} /> )}
-            onTouchTap={()=>{ router.push(`/notifications`) }}
+            onTouchTap={()=>{ router.push(`/notifications/`) }}
           />
           <Divider/>
 
