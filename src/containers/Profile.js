@@ -64,10 +64,10 @@ class Profile extends Component {
   componentWillMount = () => {
     let {theirHandle} = this.props.router.params
     if (location.pathname!==(
-      `/${theirHandle}/activity/` ||
-      `/${theirHandle}/projects/` ||
-      `/${theirHandle}/bounces/` )) {
-      this.props.router.replace(`/${theirHandle}/activity/`)
+      `/${theirHandle}/activity/1/` ||
+      `/${theirHandle}/projects/1/` ||
+      `/${theirHandle}/bounces/1/` )) {
+      this.props.router.replace(`/${theirHandle}/activity/1/`)
     }
     console.log('profile mount props', this.props);
   }
@@ -138,7 +138,7 @@ class Profile extends Component {
   }
 
   setTab = (tab) => {
-    this.props.router.replace(`/${this.props.router.params.theirHandle}/${tab}/`)
+    this.props.router.replace(`/${this.props.router.params.theirHandle}/${tab}/1/`)
     this.setState({ tab })
   }
 

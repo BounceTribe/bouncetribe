@@ -34,27 +34,30 @@ export class ActivityList extends Component {
       commentList,
       bounceList,
       projectList,
-      fullList: this.dateSort(commentList.concat(bounceList, projectList))
+      fullList: this.dateSort(commentList.concat(bounceList, projectList)),
+      lastNew:10
     }
   }
 
   componentWillReceiveProps(nextProps){
     if (nextProps.numActivities > this.props.numActivities) {
-      console.log('pre updated', this.state);
-
       let newComments = this.createCommentList(nextProps)
       let newBounces = this.createBounceList(nextProps)
       let newProjects = this.createProjectList(nextProps)
       let newSort = this.dateSort(newComments.concat(newBounces, newProjects))
-      console.log('new items', newSort.length);
-      this.setState({
-        commentList: this.state.commentList.concat(newComments),
-        bounceList: this.state.bounceList.concat(newBounces),
-        projectList: this.state.projectList.concat(newProjects),
-        fullList: this.state.fullList.concat(newSort)
-      })
-      console.log('post updated', this.state);
 
+      //next page if less than 3 new items
+      if ((newSort.length<3) && nextProps.hasMore && !nextProps.loading) {
+        nextProps.getMore()
+      } else {
+        this.setState({
+          commentList: this.state.commentList.concat(newComments),
+          bounceList: this.state.bounceList.concat(newBounces),
+          projectList: this.state.projectList.concat(newProjects),
+          fullList: this.state.fullList.concat(newSort),
+        })
+        console.log('post updated', this.state);
+      }
     }
   }
 
@@ -78,9 +81,7 @@ export class ActivityList extends Component {
       }
     })
     let newLen = dupeFiltered.length
-    console.log({oldLen, newLen});
 
-    console.log('new comments', dupeFiltered.slice(oldLen, newLen));
 
     let commentList = dupeFiltered.slice(oldLen, newLen).map(comment => {
       let {author, project, createdAt, id} = comment
@@ -113,8 +114,6 @@ export class ActivityList extends Component {
     let oldList = (this.state || {}).bounceList || []
     let oldLen = oldList.length
     let newLen = bounces.length
-    console.log({oldLen, newLen});
-    console.log('new bounces', bounces.slice(oldLen, newLen));
 
     let bounceList = bounces.slice(oldLen, newLen).map(bounce => {
       let {bouncer, project, id, createdAt} = bounce
@@ -146,9 +145,6 @@ export class ActivityList extends Component {
     let oldList = (this.state || {}).projectList || []
     let oldLen = oldList.length
     let newLen = projects.length
-    console.log({oldLen, newLen});
-
-    console.log('new projects', projects.slice(oldLen, newLen));
     let projectList = projects.slice(oldLen, newLen).map(project => {
       let {createdAt, creator, title, id} = project
       let link = getLink(project, props.friendIds)

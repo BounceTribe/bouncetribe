@@ -25,7 +25,7 @@ export const DashProfile = ({selectedUser, feed}) => (
   }}>
     <BtAvatar user={selectedUser} hideStatus={feed} size={60} />
     <ProfCol>
-      <ProfHandle to={`/${selectedUser.handle}`} >
+      <ProfHandle to={`/${selectedUser.handle}/activity/1/`} >
         {selectedUser.handle}
       </ProfHandle>
       <Score>
@@ -198,8 +198,10 @@ export class FbList extends Component {
       <FbDialogRow user={friend} >
         <SubRow>
           <BtAvatar user={friend} size={50} fbCircle />
-          <Name style={{lineHeight:'48px', paddingLeft: '7px'}} to={`/${friend.handle}`}>
-            {friend.handle}
+          <Name
+            style={{lineHeight:'48px', paddingLeft: '7px'}}
+            to={`/${friend.handle}/1//activity/1`}>
+            {friend.handle}/1/
           </Name>
         </SubRow>
         <BtFlatButton
@@ -254,7 +256,7 @@ export class FbList extends Component {
 //<ImgColumn>
 //<BtAvatar user={user} size={80} hideStatus />
 //</ImgColumn>
-//<UserName to={`/${user.handle}`}>{user.handle}</UserName>
+//<UserName to={`/${user.handle}/1/`}>{user.handle}/1/</UserName>
 //</TopColumn>
 //<FeedbackRating>
 //<Bolt style={{ marginRight: '15px' }} />

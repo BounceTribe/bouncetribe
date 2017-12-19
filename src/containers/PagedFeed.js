@@ -12,26 +12,21 @@ class Feed extends Component {
   constructor(props) {
     super(props)
     let {userHandle, page} = this.props.params
-    if (page > 1) {
-      location.assign(`/dash/feed/${userHandle}/1`)
-    }
+    page > 1 && location.assign(`/dash/feed/${userHandle}/1`)
+
     let {user} = this.props.viewer
     this.state = Object.assign(
       this.mapActivity(this.props), {
         loading: false,
         friendIds: user.friends.edges.map(edge=>edge.node.id).concat(user.id),
-        listLength: 0
       }
     )
-    console.log('state', this.state);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState(
       Object.assign( this.mapActivity(nextProps), {loading: false} )
     )
-    console.log('feed state', this.state);
-    // debugger
   }
 
   mapActivity = (props) => {
@@ -69,7 +64,6 @@ class Feed extends Component {
         {...this.state}
         router={this.props.router}
         getMore={this.seeMore}
-        // listLength={(newLength)=>this.state.hasMore && this.compareListLength(newLength)}
         nextPage={this.state.hasMore &&
           <SeeMore onClick={this.seeMore} loading={this.state.loading}/>}
       />

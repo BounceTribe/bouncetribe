@@ -123,12 +123,12 @@ const createRoutes = () => (
       component={Profile}
       queries={ViewerQuery}
       render={({props}) => props ? <Profile {...props} /> : <Loading/>} >
-      <Route path={'/:theirHandle/projects'}
+      <Route path={'/:theirHandle/projects(/:page)'}
         component={ProjectsPanel}
         onEnter={userOnly}
         queries={ViewerQuery}
         render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />
-       <Route path={'/:theirHandle/bounces'}
+       <Route path={'/:theirHandle/bounces(/:page)'}
         onEnter={userOnly}
         component={BouncesPanel}
         queries={ViewerQuery}
@@ -136,7 +136,8 @@ const createRoutes = () => (
       <Route path={'/:theirHandle/activity(/:page)'}
         component={ActivitiesPanel}
         queries={ViewerQuery}
-        render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>} />
+        // render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>}
+      />
     </Route>
     <Route path={'/tribe/:theirHandle/(members)'}
       component={Tribe}
