@@ -19,9 +19,7 @@ const edgeFilter = (project, type) => (
 )
 
 const makeList = (props) => {
-  let urlFragment = `/bounces/${props.viewer.user.handle}/`
-  let regex = new RegExp(urlFragment, 'g')
-  let bounceTab = props.location.pathname.match(regex)
+  let bounceTab = props.location.pathname.includes('/bounces/')
   let User = props.viewer.User
   let edges = bounceTab ? User.bounces.edges : User.projects.edges
   return edges.map((edge, index) => {

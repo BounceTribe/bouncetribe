@@ -48,8 +48,8 @@ const Overlay = styled.div`
   position: ${props => props.nested ? 'absolute' : 'fixed'};
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
+  ${'' /* top: 0; */}
+  ${'' /* left: 0; */}
   background-color: ${props => props.hideBg ? '' :  'rgba(220,220,220,.2)'};
   display: flex;
   justify-content: center;

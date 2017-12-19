@@ -228,21 +228,26 @@ export const BtFlatButton = (props) => {
   )
 }
 
+const Label = styled.span`
+  color: #4A4A4A;
+  &:hover {color: ${purple}};
+`
+
 export const SeeMore = (props) =>
   <div style={{display:'flex', justifyContent:'center', padding: '5px'}}>
     {props.loading ?
       <Spinner style={{padding:'15px'}}/>
       :
-      <BtFlatButton
+      <FlatButton
         onClick={props.onClick}
-        label={'See More'}
         style={{
           backgroundColor: `${white}`,
           border: `1px solid #4A4A4A`,
-          color: `#4A4A4A`,
+          borderRadius: '5px',
           width: `150px`,
         }}
-      />}
+      ><Label>See More</Label>
+      </FlatButton>}
   </div>
 
 
