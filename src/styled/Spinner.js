@@ -24,11 +24,9 @@ const Ball2 = styled.div`
   display: inline-block;
   animation: ${Bounce} 1.4s infinite ease-in-out both;
 `
-
 const Ball0 = styled(Ball2)`
   animation-delay: -0.32s;
 `
-
 const Ball1 = styled(Ball2)`
   animation-delay: -0.16s;
 `

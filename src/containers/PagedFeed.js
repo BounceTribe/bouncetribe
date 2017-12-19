@@ -16,7 +16,8 @@ class Feed extends Component {
       this.mapActivity(this.props), {
         loading: false,
         friendIds: user.friends.edges.map(edge=>edge.node.id).concat(user.id),
-        listLength: 0
+        listLength: 0,
+        oldNum:0,
       }
     )
     console.log('state', this.state);
@@ -39,15 +40,28 @@ class Feed extends Component {
 
   mapActivity = (props) => {
     let {allComments, allBounces, allProjects} = props.viewer
+    
+    let numOldComments = (this.state.allComments || []).length
+    let numOldBounces = (this.state.allBounces || []).length
+    let numOldProjects = (this.state.allProjects || []).length
+    // let newComments = allComments.filter()
+    // let newComments = allComments(numOldComments-allComments.length,allComments.length-1)
     let comments = mapNodes(allComments)
     let bounces  = mapNodes(allBounces)
     let projects = mapNodes(allProjects)
+
+    let newComments = comments(numOldComments-1, comments.length-1)
+    let newBounces = comments(numOldBounces-1, bounces.length-1)
+    let newProjects = comments(numOldProjects-1, projects.length-1)
     let numActivities = comments.length + bounces.length + projects.length
     let totalActivities = allComments.count + allBounces.count + allProjects.count
     return {
       comments,
       bounces,
       projects,
+      newComments,
+      newBounces,
+      newProjects,
       numActivities,
       totalActivities,
       hasMore: totalActivities > numActivities
@@ -73,13 +87,17 @@ class Feed extends Component {
   //     this.setState({listLength: newLength})
   //   }
   // }
-
   render () {
+    console.log('state', this.state)
+
     return this.state.numActivities ?
       <ActivityList dash
-        {...this.state}
+        newComments={this.state.newComments}
+        newBounces={this.state.newBounces}
+        newProjects={this.state.newProjects}
         router={this.props.router}
-        // listLength={(newLength)=>this.state.hasMore && this.compareListLength(newLength)}
+        canGetMore={!this.state.loading && this.state.hasMore}
+        getMore={()=>this.seeMore}
         nextPage={this.state.hasMore &&
           <SeeMore onClick={this.seeMore} loading={this.state.loading}/>}
       />
@@ -103,10 +121,11 @@ export default Relay.createContainer( Feed, {
     projectsFilter: {},
   },
   prepareVariables: (urlParams) => {
+    let page = parseInt((urlParams.page || 1), 10)
     return {
       ...urlParams,
-      page: parseInt((urlParams.page || 1), 10),
-      num: 3 * parseInt((urlParams.page || 1), 10),
+      page,
+      num: 3 * page,
       commentsFilter: {
         project: {
           privacy_not: 'PRIVATE',
