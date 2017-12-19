@@ -4,25 +4,81 @@ import Music from 'icons/Music'
 import {EmptyPanel} from 'components/EmptyPanel'
 import {ActivityList} from 'components/ActivityList'
 import {mapNodes} from 'utils/mapNodes'
+import {SeeMore} from 'styled'
+
 
 class ActiviesPanel extends Component {
 
-// console.log('filteredcomments', mapNodes(comments).filter(comment=>comment.project).map(c=>Object.assign(c, {user: User.id})));
+  constructor(props) {
+    super(props)
+    console.log('const props actpan', props);
+    let {user} = this.props.viewer
+    this.state = Object.assign(
+      this.mapActivity(this.props), {
+        loading: false,
+        friendIds: user.friends.edges.map(edge=>edge.node.id).concat(user.id),
+        listLength: 0
+      }
+    )
+  }
+
+  componentWillMount() {
+    console.log('ACTPanel', this.props)
+    if (this.props.params.page > 1) {
+      this.setPage(this.props, 1)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(
+      Object.assign( this.mapActivity(nextProps), {loading: false} )
+    )
+    console.log('feed state', this.state);
+    // debugger
+  }
+
+  mapActivity = (props) => {
+    let {User} = props.viewer
+    let comments = mapNodes(User.comments)
+    let bounces  = mapNodes(User.bounces)
+    let projects = mapNodes(User.projects)
+    let numActivities = comments.length + bounces.length + projects.length
+    let totalActivities = User.comments.count + User.bounces.count + User.projects.count
+    return {
+      comments,
+      bounces,
+      projects,
+      numActivities,
+      totalActivities,
+      hasMore: totalActivities > numActivities
+    }
+  }
+
+  setPage = (props, newPage) => {
+    let {page, theirHandle} = props.params
+    if (!newPage) newPage = parseInt((page || 1), 10) + 1
+    let newPath = `/${theirHandle}/activity/${newPage}/`
+    this.props.router.replace(newPath)
+  }
+
+   seeMore = () => {
+     !this.state.loading && this.setState({loading: true})
+     this.setPage(this.props)
+   }
   render () {
     let {user, User} = this.props.viewer
-    let {comments, bounces, projects} = User
-
-    console.log({User});
     let isSelf = user.id===User.id
-    let totalActivities = mapNodes(comments).filter(comment=>comment.project).length + bounces.count + projects.count
+    // let totalActivities = mapNodes(comments).filter(comment=>comment.project).length + bounces.count + projects.count
     return (
-      totalActivities ?
-      <ActivityList
-        comments={mapNodes(comments).filter(comment=>comment.project)}
-        bounces={mapNodes(bounces)}
-        projects={mapNodes(projects)}
-        friendIds={user.friends.edges.map(edge=>edge.node.id).concat(user.id)}
-      />
+      this.state.numActivities ?
+        <ActivityList
+          {...this.state}
+          router={this.props.router}
+          getMore={this.seeMore}
+          // listLength={(newLength)=>this.state.hasMore && this.compareListLength(newLength)}
+          nextPage={this.state.hasMore &&
+            <SeeMore onClick={this.seeMore} loading={this.state.loading}/>}
+        />
       :
       <EmptyPanel
         icon={<Music height={113} fill={"#D3D3D3"} />}

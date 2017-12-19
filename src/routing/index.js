@@ -133,7 +133,7 @@ const createRoutes = () => (
         component={BouncesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
-      <Route path={'/:theirHandle/activity'}
+      <Route path={'/:theirHandle/activity(/:page)'}
         component={ActivitiesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>} />

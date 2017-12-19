@@ -101,6 +101,7 @@ export const ScrollBox = styled.div`
 export const Activity = ({date, icon, text, link, dash, project, urlPush}) => {
   let formattedDate = date
     .toLocaleDateString('en-US', {month: 'short', 'day': 'numeric'})
+    // console.log('processed activity');
     //this ias where the Link nesting issue is
     if (dash) {
       return (

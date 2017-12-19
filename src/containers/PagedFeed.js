@@ -11,6 +11,10 @@ class Feed extends Component {
 
   constructor(props) {
     super(props)
+    let {userHandle, page} = this.props.params
+    if (page > 1) {
+      location.assign(`/dash/feed/${userHandle}/1`)
+    }
     let {user} = this.props.viewer
     this.state = Object.assign(
       this.mapActivity(this.props), {
@@ -20,13 +24,6 @@ class Feed extends Component {
       }
     )
     console.log('state', this.state);
-  }
-
-  componentWillMount() {
-    console.log('Feed', this.props)
-    if (this.props.params.page > 1) {
-      this.setPage(this.props, 1)
-    }
   }
 
   componentWillReceiveProps(nextProps) {

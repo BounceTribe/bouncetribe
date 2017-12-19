@@ -27,33 +27,64 @@ export class ActivityList extends Component {
 
   constructor(props) {
     super(props)
+    let commentList = this.createCommentList(props)
+    let bounceList = this.createBounceList(props)
+    let projectList = this.createProjectList(props)
     this.state = {
-      commentProjects: [],
-      list: this.createList(props)
+      commentList,
+      bounceList,
+      projectList,
+      fullList: this.dateSort(commentList.concat(bounceList, projectList))
     }
   }
 
   componentWillReceiveProps(nextProps){
     if (nextProps.numActivities > this.props.numActivities) {
-      let oldLength = this.state.list.length
-      console.log('pre updated', oldLength);
-      this.setState({list: this.createList(nextProps, oldLength)})
-      console.log('updated', this.state.list.length);
+      console.log('pre updated', this.state);
+
+      let newComments = this.createCommentList(nextProps)
+      let newBounces = this.createBounceList(nextProps)
+      let newProjects = this.createProjectList(nextProps)
+      let newSort = this.dateSort(newComments.concat(newBounces, newProjects))
+      console.log('new items', newSort.length);
+      this.setState({
+        commentList: this.state.commentList.concat(newComments),
+        bounceList: this.state.bounceList.concat(newBounces),
+        projectList: this.state.projectList.concat(newProjects),
+        fullList: this.state.fullList.concat(newSort)
+      })
+      console.log('post updated', this.state);
+
     }
   }
 
-  createList = (props, oldLength) => {
-    let {comments, bounces, projects, dash, router} = props
-    let text, icon
-    let commentProjects = []
+  dateSort = elmsWithDateProps =>
+    elmsWithDateProps.sort( (a,b) =>  b.props.date - a.props.date)
 
-    let list = comments.map((comment, index) => {
-      let {author, project, createdAt, id} = comment
-      if (commentProjects.includes(author.id+project.id)) {
-        return <div key={index}/>
+  createCommentList = (props) => {
+    let oldList = (this.state || {}).commentList || []
+    let oldLen = oldList.length
+    let {comments, dash, router} = props
+    let text, icon
+    //prevents two identical items from occuring consecutively
+    let lastOne = oldLen && oldList[oldLen-1].dupeKey
+    let dupeFiltered = comments.filter(comment => {
+      let {author, project} = comment
+      if (lastOne===author.id+project.id) {
+        return false
       } else {
-        commentProjects.push(author.id+project.id)
+        lastOne = author.id+project.id
+        return true
       }
+    })
+    let newLen = dupeFiltered.length
+    console.log({oldLen, newLen});
+
+    console.log('new comments', dupeFiltered.slice(oldLen, newLen));
+
+    let commentList = dupeFiltered.slice(oldLen, newLen).map(comment => {
+      let {author, project, createdAt, id} = comment
+      let dupeKey = author.id + project.id
       let link = getLink(project, props.friendIds)
       if (dash) {
         text = (
@@ -69,13 +100,23 @@ export class ActivityList extends Component {
       }
 
       return (
-        <Activity dash={dash} key={id} icon={icon} text={text}
+        <Activity dash={dash} key={id} icon={icon} text={text} dupeKey={dupeKey}
           link={link}
-          date={new Date(createdAt)}
-        />
-        )
+          date={new Date(createdAt)} />)
     })
-    list = list.concat(bounces.map(bounce => {
+    return commentList
+  }
+
+  createBounceList = (props) => {
+    let { bounces, dash, router} = props
+    let text, icon
+    let oldList = (this.state || {}).bounceList || []
+    let oldLen = oldList.length
+    let newLen = bounces.length
+    console.log({oldLen, newLen});
+    console.log('new bounces', bounces.slice(oldLen, newLen));
+
+    let bounceList = bounces.slice(oldLen, newLen).map(bounce => {
       let {bouncer, project, id, createdAt} = bounce
       let link = getLink(project, props.friendIds)
       if (dash) {
@@ -95,9 +136,20 @@ export class ActivityList extends Component {
         date={new Date(createdAt)}
         link={link}/>
       )}
-    ))
+    )
+    return bounceList
+  }
 
-    list = list.concat(projects.map(project => {
+  createProjectList = (props) => {
+    let { projects, dash, router} = props
+    let text, icon
+    let oldList = (this.state || {}).projectList || []
+    let oldLen = oldList.length
+    let newLen = projects.length
+    console.log({oldLen, newLen});
+
+    console.log('new projects', projects.slice(oldLen, newLen));
+    let projectList = projects.slice(oldLen, newLen).map(project => {
       let {createdAt, creator, title, id} = project
       let link = getLink(project, props.friendIds)
       if (dash) {
@@ -108,34 +160,44 @@ export class ActivityList extends Component {
         icon = <Music height={13}/>
       }
       return (
-      <Activity Activity dash={dash} key={id} icon={icon} text={text}
-        date={new Date(createdAt)}
-        link={link}
-        project={project}
-        urlPush={()=>{props.router.push(link)}}/>
-      )}
-    ))
-    // console.log('list', list);
-    list = list.filter(item=>!!(item && item.props && item.props.date)).sort( (a,b) => {
-      return b.props.date - a.props.date
+        <Activity Activity dash={dash} key={id} icon={icon} text={text}
+          date={new Date(createdAt)}
+          link={link}
+          project={project}
+          urlPush={()=>{props.router.push(link)}}/>
+      )
     })
-    list = [...new Set(list)]
-    // props.canGetMore && props.getMore()
-    if (((oldLength + 3) > list.length) && !props.loading && props.hasMore) {
-      console.log('requesting more');
-      props.getMore()
-    }
-    console.log('list', list);
-    console.log('props', this.props);
-    return list
+    return projectList
   }
 
   render() {
     return (
       <ScrollBox borderTop={this.props.dash} >
-        {this.state.list}
+        {this.state.fullList}
         {this.props.nextPage}
       </ScrollBox>
     )
   }
 }
+
+//
+// createList = (props, oldLength) => {
+//   console.log('state', this.state);
+//   let {commentList, bounceList, projectList} = this.state
+//   let list = commentList.concat(bounceList, projectList)
+//   // console.log('list', list);
+//   // list = list.filter(item=>!!(item && item.props && item.props.date))
+//   //     .sort( (a,b) => {
+//   //       return b.props.date - a.props.date
+//   //   })
+//
+//   // if (((oldLength + 3) > list.length) && !props.loading && props.hasMore) {
+//   //   console.log('requesting more');
+//   //   props.getMore()
+//   // } else {
+//   //   this.setState({oldLength: list.length})
+//   // }
+//   console.log('list', list);
+//   console.log('props', this.props);
+//   return list
+// }
