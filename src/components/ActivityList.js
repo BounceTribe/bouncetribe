@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
 import Bounce from 'icons/Bounce'
@@ -23,90 +23,119 @@ const getAvatar = (router,user) => (
     onClick={()=>router.push(`/${user.handle}/`)} />
 )
 
-const makeList = (props) => {
-  let {comments, bounces, projects, dash, router} = props
-  let text, icon
-  let commentProjects = []
-  let list = comments.map((comment, index) => {
-    let {author, project, createdAt, id} = comment
-    if (commentProjects.includes(author.id+project.id)) {
-      return <div key={index}/>
-    }
-    commentProjects.push(author.id+project.id)
-    let link = getLink(project, props.friendIds)
-    if (dash) {
-      text = (
-        <span>
-          <NameLink to={`/${author.handle}/`}>{author.handle} </NameLink>
-          gave feedback to
-          <NameLink to={link}> {project.title} </NameLink>
-        </span>)
-      icon = getAvatar(router, author)
-    } else {
-      icon = <Bounce width={19} fill={purple}/>
-      text = `Gave feedback to ${project.title}`
-    }
+export class ActivityList extends Component {
 
-    return (
+  constructor(props) {
+    super(props)
+    this.state = {
+      commentProjects: [],
+      list: this.createList(props)
+    }
+  }
+
+  componentWillReceiveProps(nextProps){
+    if (nextProps.numActivities > this.props.numActivities) {
+      let oldLength = this.state.list.length
+      console.log('pre updated', oldLength);
+      this.setState({list: this.createList(nextProps, oldLength)})
+      console.log('updated', this.state.list.length);
+    }
+  }
+
+  createList = (props, oldLength) => {
+    let {comments, bounces, projects, dash, router} = props
+    let text, icon
+    let commentProjects = []
+
+    let list = comments.map((comment, index) => {
+      let {author, project, createdAt, id} = comment
+      if (commentProjects.includes(author.id+project.id)) {
+        return <div key={index}/>
+      } else {
+        commentProjects.push(author.id+project.id)
+      }
+      let link = getLink(project, props.friendIds)
+      if (dash) {
+        text = (
+          <span>
+            <NameLink to={`/${author.handle}/`}>{author.handle} </NameLink>
+            gave feedback to
+            <NameLink to={link}> {project.title} </NameLink>
+          </span>)
+        icon = getAvatar(router, author)
+      } else {
+        icon = <Bounce width={19} fill={purple}/>
+        text = `Gave feedback to ${project.title}`
+      }
+
+      return (
+        <Activity dash={dash} key={id} icon={icon} text={text}
+          link={link}
+          date={new Date(createdAt)}
+        />
+        )
+    })
+    list = list.concat(bounces.map(bounce => {
+      let {bouncer, project, id, createdAt} = bounce
+      let link = getLink(project, props.friendIds)
+      if (dash) {
+        text = (
+          <span>
+            <NameLink to={`/${bouncer.handle}/`}>{bouncer.handle} </NameLink>
+            bounced
+            <NameLink to={link}> {project.title}</NameLink>
+          </span>)
+        icon = getAvatar(router, bouncer)
+      } else {
+        text = `Bounced ${project.title}`
+        icon = <Tribe height={13}/>
+      }
+      return (
       <Activity dash={dash} key={id} icon={icon} text={text}
-        link={link}
         date={new Date(createdAt)}
-      />
-      )
-  })
-  list = list.concat(bounces.map(bounce => {
-    let {bouncer, project, id, createdAt} = bounce
-    let link = getLink(project, props.friendIds)
-    if (dash) {
-      text = (
-        <span>
-          <NameLink to={`/${bouncer.handle}/`}>{bouncer.handle} </NameLink>
-          bounced
-          <NameLink to={link}> {project.title}</NameLink>
-        </span>)
-      icon = getAvatar(router, bouncer)
-    } else {
-      text = `Bounced ${project.title}`
-      icon = <Tribe height={13}/>
-    }
-    return (
-    <Activity dash={dash} key={id} icon={icon} text={text}
-      date={new Date(createdAt)}
-      link={link}/>
-    )}
-  ))
+        link={link}/>
+      )}
+    ))
 
-  list = list.concat(projects.map(project => {
-    let {createdAt, creator, title, id} = project
-    let link = getLink(project, props.friendIds)
-    if (dash) {
-      text = (<NameLink to={`/${creator.handle}/`}>{creator.handle}</NameLink>)
-      icon = getAvatar(router, creator)
-    } else {
-      text = `Bounced ${title}`
-      icon = <Music height={13}/>
+    list = list.concat(projects.map(project => {
+      let {createdAt, creator, title, id} = project
+      let link = getLink(project, props.friendIds)
+      if (dash) {
+        text = (<NameLink to={`/${creator.handle}/`}>{creator.handle}</NameLink>)
+        icon = getAvatar(router, creator)
+      } else {
+        text = `Bounced ${title}`
+        icon = <Music height={13}/>
+      }
+      return (
+      <Activity Activity dash={dash} key={id} icon={icon} text={text}
+        date={new Date(createdAt)}
+        link={link}
+        project={project}
+        urlPush={()=>{props.router.push(link)}}/>
+      )}
+    ))
+    // console.log('list', list);
+    list = list.filter(item=>!!(item && item.props && item.props.date)).sort( (a,b) => {
+      return b.props.date - a.props.date
+    })
+    list = [...new Set(list)]
+    // props.canGetMore && props.getMore()
+    if (((oldLength + 3) > list.length) && !props.loading && props.hasMore) {
+      console.log('requesting more');
+      props.getMore()
     }
+    console.log('list', list);
+    console.log('props', this.props);
+    return list
+  }
+
+  render() {
     return (
-    <Activity Activity dash={dash} key={id} icon={icon} text={text}
-      date={new Date(createdAt)}
-      link={link}
-      project={project}
-      urlPush={()=>{props.router.push(link)}}/>
-    )}
-  ))
-  // console.log('list', list);
-  list = list.filter(item=>!!(item && item.props && item.props.date)).sort( (a,b) => {
-    // console.log('BAD DTE', !a.props.date && a.props);
-    return b.props.date - a.props.date
-  })
-  // props.listLength(list.length)
-  // console.log('list', list);
-  return list
+      <ScrollBox borderTop={this.props.dash} >
+        {this.state.list}
+        {this.props.nextPage}
+      </ScrollBox>
+    )
+  }
 }
-
-export const ActivityList = (props) => (
-  <ScrollBox borderTop={props.dash}>
-    {makeList(props)}
-    {props.nextPage}
-  </ScrollBox>
-)

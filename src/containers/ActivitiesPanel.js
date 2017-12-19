@@ -14,9 +14,9 @@ class ActiviesPanel extends Component {
 
     console.log({User});
     let isSelf = user.id===User.id
-    let hasActivities = mapNodes(comments).filter(comment=>comment.project).length + bounces.count + projects.count
+    let totalActivities = mapNodes(comments).filter(comment=>comment.project).length + bounces.count + projects.count
     return (
-      hasActivities ?
+      totalActivities ?
       <ActivityList
         comments={mapNodes(comments).filter(comment=>comment.project)}
         bounces={mapNodes(bounces)}
@@ -40,6 +40,8 @@ export default Relay.createContainer( ActiviesPanel, {
   initialVariables: {
     theirHandle: '',
     userHandle: '',
+    page: 1,
+    num: 3,
     bouncesFilter: {},
     commentsFilter: {},
     projectsFilter: {}
@@ -47,6 +49,8 @@ export default Relay.createContainer( ActiviesPanel, {
   prepareVariables: (urlParams) => {
     return {
       ...urlParams,
+      page: parseInt((urlParams.page || 1), 10),
+      num: 3 * parseInt((urlParams.page || 1), 10),
       //ensures non-deleted projects as well
       commentsFilter: {
         project: {
@@ -90,7 +94,7 @@ export default Relay.createContainer( ActiviesPanel, {
           handle
           deactivated
           comments (
-            first: 20
+            first: $num
             orderBy: createdAt_ASC
             filter: $commentsFilter
           ){
@@ -113,7 +117,7 @@ export default Relay.createContainer( ActiviesPanel, {
             }
           }
           bounces (
-            first: 20
+            first: $num
             orderBy: createdAt_ASC
             filter: $bouncesFilter
            ) {
@@ -135,7 +139,7 @@ export default Relay.createContainer( ActiviesPanel, {
               }
           }
           projects (
-            first: 20
+            first: $num
             orderBy: createdAt_ASC
             filter: $projectsFilter
           ){

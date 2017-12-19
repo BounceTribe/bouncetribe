@@ -79,6 +79,7 @@ class Feed extends Component {
       <ActivityList dash
         {...this.state}
         router={this.props.router}
+        getMore={this.seeMore}
         // listLength={(newLength)=>this.state.hasMore && this.compareListLength(newLength)}
         nextPage={this.state.hasMore &&
           <SeeMore onClick={this.seeMore} loading={this.state.loading}/>}
