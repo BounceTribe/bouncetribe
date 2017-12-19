@@ -66,14 +66,6 @@ class Feed extends Component {
      this.setPage(this.props)
    }
 
-  // compareListLength = (newLength) => {
-  //   if (newLength===this.state.listLength) {
-  //     this.seeMore()
-  //   } else {
-  //     this.setState({listLength: newLength})
-  //   }
-  // }
-
   render () {
     return this.state.numActivities ?
       <ActivityList dash
