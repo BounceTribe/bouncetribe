@@ -13,7 +13,6 @@ class Feed extends Component {
     super(props)
     let {userHandle, page} = this.props.params
     page > 1 && location.assign(`/dash/feed/${userHandle}/1`)
-
     let {user} = this.props.viewer
     this.state = Object.assign(
       this.mapActivity(this.props), {
