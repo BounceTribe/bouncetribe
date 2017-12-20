@@ -22,6 +22,7 @@ import PagedFeed from 'containers/PagedFeed'
 import BouncesPanel from 'containers/BouncesPanel'
 import ActivitiesPanel from 'containers/ActivitiesPanel'
 import {Loading} from 'styled/Spinner'
+import EditMentorProfile from 'containers/EditMentorProfile'
 //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
 const ViewerQuery = {
@@ -174,6 +175,12 @@ const createRoutes = () => (
       component={Project}
       queries={ViewerQuery}
       render={({props}) => props ? <Project {...props} /> : <Loading />} >
+    </Route>
+    <Route
+      path={'/mentor/editProfile/:userHandle(/:mentorHandle)'}
+      onEnter={userOnly}
+      component={EditMentorProfile}
+      queries={ViewerQuery}>
     </Route>
     {/* <Route
       path={'/:theirHandle/:projectTitle'}

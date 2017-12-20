@@ -38,6 +38,7 @@ export const ScrollBox = styled.div`
       color: ${grey500};
       width: 70px;
     `
+
     const ActivityIcon = styled.div`
       padding: 0 10px;
     `

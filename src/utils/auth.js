@@ -210,7 +210,6 @@ class AuthService {
         }), {
           onSuccess: (response) => {
             console.log('createUser response', response)
-            debugger;
             this.signinUser(authFields)
             let userId = response.createUser.user.id
             resolve(userId)

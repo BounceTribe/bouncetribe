@@ -163,6 +163,13 @@ class UserSettings extends Component {
           style={{fontSize: '18px', marginTop: '20px'}}
           onToggle={(e, val) => this.setState({deactivated: !val})}
         />
+        <FlatButton label="Become A Mentor"
+          onClick={()=>{
+            this.props.router.push(`/mentor/editProfile/${user.handle}/`)
+            this.props.onClose()
+            this.setState({show: false, pass1: '', pass2: ''})
+          }}
+        />
 
       </Dialog>
     )

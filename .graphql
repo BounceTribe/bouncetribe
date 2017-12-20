@@ -1,0 +1,240 @@
+# projectId: cj18b71wk6i4t0189791n9hn0
+# version: 184
+
+type Artist @model {
+  createdAt: DateTime
+  id: ID! @isUnique
+  imageUrl: String!
+  influencedUsers: [User!]! @relation(name: "UserArtistInfluence")
+  influencedMentors: [Mentor!]! @relation(name: "MentorArtistInfluence")
+  name: String!
+  spotifyId: String! @isUnique
+  updatedAt: DateTime
+}
+
+type Comment @model {
+  author: User @relation(name: "UserComments")
+  children: [Comment!]! @relation(name: "CommentParentChildren")
+  createdAt: DateTime
+  id: ID! @isUnique
+  new: Boolean @defaultValue(value: true)
+  parent: Comment @relation(name: "CommentParentChildren")
+  project: Project @relation(name: "ProjectComments")
+  session: Session @relation(name: "CommentOnSession")
+  text: String!
+  timestamp: Float! @defaultValue(value: 0.0)
+  type: COMMENT_TYPE! @defaultValue(value: COMMENT)
+  updatedAt: DateTime
+  upvotes: [User!]! @relation(name: "CommentUpvotes")
+  bounce: Bounce @relation(name: "BounceOnComment")
+}
+
+type File @model {
+  artworkProject: Project @relation(name: "ProjectArt")
+  artworkProjectSmall: Project @relation(name: "ProjectArtSmall")
+  contentType: String!
+  createdAt: DateTime
+  id: ID! @isUnique
+  name: String!
+  pictureOwner: User @relation(name: "UserPicture")
+  pictureMentor: Mentor @relation(name: "MentorPicture")
+  portraitOwner: User @relation(name: "UserPortrait")
+  portraitSmallOwner: User @relation(name: "UserPortraitSmall")
+  portraitMiniOwner: User @relation(name: "UserPortraitMini")
+  portraitMentor: Mentor @relation(name: "MentorPortrait")
+  portraitSmallMentor: Mentor @relation(name: "MentorPortraitSmall")
+  portraitMiniMentor: Mentor @relation(name: "MentorPortraitMini")
+  secret: String! @isUnique
+  size: Int!
+  trackProject: Project @relation(name: "ProjectTracks")
+  updatedAt: DateTime
+  uploader: User @relation(name: "UserFiles")
+  url: String! @isUnique
+  visualization: [Float!]
+}
+
+type FriendRequest @model {
+  accepted: Boolean! @defaultValue(value: false)
+  actor: User @relation(name: "UserRequests")
+  createdAt: DateTime
+  id: ID! @isUnique
+  ignored: Boolean! @defaultValue(value: false)
+  recipient: User @relation(name: "UserInvitations")
+  updatedAt: DateTime
+}
+
+type Genre @model {
+  createdAt: DateTime
+  id: ID! @isUnique
+  name: String!
+  parentGenre: [Genre!]! @relation(name: "GenreGenre")
+  projects: [Project!]! @relation(name: "ProjectsGenres")
+  subgenres: [Genre!]! @relation(name: "GenreGenre")
+  updatedAt: DateTime
+  users: [User!]! @relation(name: "UserGenres")
+  mentors: [Mentor!]! @relation(name: "MentorGenres")
+}
+
+type Message @model {
+  createdAt: DateTime!
+  directId: Int @isUnique
+  id: ID! @isUnique
+  recipient: User @relation(name: "MessageOnUser1")
+  sender: User @relation(name: "MessageOnUser")
+  sessionParent: Session @relation(name: "MessageOnSession")
+  text: String
+  updatedAt: DateTime!
+}
+
+type Notification @model {
+  checked: Boolean! @defaultValue(value: false)
+  createdAt: DateTime!
+  id: ID! @isUnique
+  notificationFor: User @relation(name: "NotificationOnUser1")
+  project: Project @relation(name: "NotificationOnProject")
+  session: Session @relation(name: "NotificationOnSession")
+  triggeredBy: User @relation(name: "NotificationOnUser")
+  type: NOTIFICATION_TYPE!
+  updatedAt: DateTime!
+}
+
+type Project @model {
+  artwork: File @relation(name: "ProjectArt")
+  artworkSmall: File @relation(name: "ProjectArtSmall")
+  comments: [Comment!]! @relation(name: "ProjectComments")
+  createdAt: DateTime
+  creator: User @relation(name: "UserProjects")
+  description: String
+  genres: [Genre!]! @relation(name: "ProjectsGenres")
+  id: ID! @isUnique
+  notifications: [Notification!]! @relation(name: "NotificationOnProject")
+  privacy: PROJECT_PRIVACY! @defaultValue(value: PUBLIC)
+  sessions: [Session!]! @relation(name: "SessionOnProject")
+  title: String!
+  tracks: [File!]! @relation(name: "ProjectTracks")
+  updatedAt: DateTime
+  bounces: [Bounce!]! @relation(name: "ProjectOnBounce")
+}
+
+type Session @model {
+  appreciatedFeedback: [User!]! @relation(name: "AppreciatedFeedback")
+  comments: [Comment!]! @relation(name: "CommentOnSession")
+  createdAt: DateTime!
+  feedback: Json! @defaultValue(value: "{}")
+  id: ID! @isUnique
+  messages: [Message!]! @relation(name: "MessageOnSession")
+  notifications: [Notification!]! @relation(name: "NotificationOnSession")
+  projects: [Project!]! @relation(name: "SessionOnProject")
+  updatedAt: DateTime!
+}
+
+type Skill @model {
+  createdAt: DateTime
+  id: ID! @isUnique
+  name: String
+  updatedAt: DateTime
+  users: [User!]! @relation(name: "UserSkills")
+}
+
+type Tag @model {
+  createdAt: DateTime
+  id: ID! @isUnique
+  updatedAt: DateTime
+}
+
+type User @model {
+  appreciatedFeedback: [Session!]! @relation(name: "AppreciatedFeedback")
+  artistInfluences: [Artist!]! @relation(name: "UserArtistInfluence")
+  auth0UserId: String @isUnique
+  comments: [Comment!]! @relation(name: "UserComments")
+  createdAt: DateTime
+  doNotEmail: Boolean @defaultValue(value: false)
+  email: String! @isUnique
+  experience: USER_EXPERIENCE
+  facebookId: String @defaultValue(value: "")
+  files: [File!]! @relation(name: "UserFiles")
+  friends: [User!]! @relation(name: "Friends")
+  genres: [Genre!]! @relation(name: "UserGenres")
+  handle: String! @isUnique
+  id: ID! @isUnique
+  invitations: [FriendRequest!]! @relation(name: "UserInvitations")
+  lastPing: DateTime
+  latitude: Float
+  longitude: Float
+  name: String
+  notifications: [Notification!]! @relation(name: "NotificationOnUser1")
+  pictures: [File!]! @relation(name: "UserPicture")
+  placename: String
+  portrait: File @relation(name: "UserPortrait")
+  portraitSmall: File @relation(name: "UserPortraitSmall")
+  portraitMini: File @relation(name: "UserPortraitMini")
+  projects: [Project!]! @relation(name: "UserProjects")
+  receivedMessages: [Message!]! @relation(name: "MessageOnUser1")
+  score: Int @defaultValue(value: 0)
+  sentMessages: [Message!]! @relation(name: "MessageOnUser")
+  sentRequests: [FriendRequest!]! @relation(name: "UserRequests")
+  skills: [Skill!]! @relation(name: "UserSkills")
+  summary: String
+  triggeredNotifications: [Notification!]! @relation(name: "NotificationOnUser")
+  updatedAt: DateTime
+  upvotes: [Comment!]! @relation(name: "CommentUpvotes")
+  website: String
+  bounces: [Bounce!]! @relation(name: "BounceOnUser")
+  deactivated: Boolean! @defaultValue(value: false)
+  doNotEmailPF: Boolean
+  doNotEmailPB: Boolean
+  doNotEmailTR: Boolean
+  doNotEmailTA: Boolean
+  mentors: [Mentor!]! @relation(name: "MentorOnUser1")
+  reviews: [Review!]! @relation(name: "ReviewOnUser")
+  mentor: Mentor @relation(name: "MentorOnUser")
+}
+
+type Bounce @model {
+  bouncer: User @relation(name: "BounceOnUser")
+  comments: [Comment!]! @relation(name: "BounceOnComment")
+  id: ID! @isUnique
+  createdAt: DateTime!
+  project: Project @relation(name: "ProjectOnBounce")
+}
+
+type Mentor @model {
+  id: ID! @isUnique
+  handle: String! @isUnique
+  createdAt: DateTime!
+  lastPing: DateTime
+  latitude: Float
+  longitude: Float
+  placename: String
+  summary: String
+  videoUrl: String
+  occupation: String
+  qualifications: [String!]
+  specialties: [SPECIALTY!]
+  genres: [Genre!]! @relation(name: "MentorGenres")
+  artistInfluences: [Artist!]! @relation(name: "MentorArtistInfluence")
+  portrait: File @relation(name: "MentorPortrait")
+  portraitSmall: File @relation(name: "MentorPortraitSmall")
+  portraitMini: File @relation(name: "MentorPortraitMini")
+  pictures: [File!]! @relation(name: "MentorPicture")
+  mentees: [User!]! @relation(name: "MentorOnUser1")
+  mediaLinks: [MediaLink!]! @relation(name: "MediaLinkOnMentor")
+  userAccount: User! @relation(name: "MentorOnUser")
+  reviews: [Review!]! @relation(name: "ReviewOnMentor")
+}
+
+type Review @model {
+  author: User @relation(name: "ReviewOnUser")
+  id: ID! @isUnique
+  createdAt: DateTime!
+  rating: Float!
+  text: String!
+  mentor: Mentor @relation(name: "ReviewOnMentor")
+}
+
+type MediaLink @model {
+  id: ID! @isUnique
+  url: String!
+  type: LINK_TYPE!
+  mentor: Mentor @relation(name: "MediaLinkOnMentor")
+}

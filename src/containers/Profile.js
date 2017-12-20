@@ -380,6 +380,9 @@ export default Relay.createContainer(
             email
             handle
             summary
+            website
+            placename
+            score
             portrait {
               id
               url
@@ -388,20 +391,12 @@ export default Relay.createContainer(
               id
               url
             }
-            website
-            placename
-            score
             projects { count }
             friends (
               filter: {deactivated: false}
             ) { count }
             genres ( first: 20 ) {
-              edges {
-                node {
-                  id
-                  name
-                }
-              }
+              edges { node { id, name } }
             }
             skills ( first: 20 ) {
               edges {

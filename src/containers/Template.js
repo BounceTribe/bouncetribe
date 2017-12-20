@@ -197,6 +197,7 @@ class Template extends Component {
             <UserSettings
               open //open conditions here ^^ to prevent unnecessary rendering
               user={user}
+              router={this.props.router}
               onSave={this.settingsSave}
               onClose={()=>this.settingsClose()}
             />
