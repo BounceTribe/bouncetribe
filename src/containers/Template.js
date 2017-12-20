@@ -19,8 +19,6 @@ import {acceptFriendRequest} from 'utils/updateCommits'
 import {doNotPing} from 'utils/isOnline'
 // import {mapNodes} from 'utils/mapNodes'
 
-
-
 injectTapEventPlugin()
 
 class Template extends Component {
@@ -218,7 +216,6 @@ export default Relay.createContainer( Template, {
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
-
           user {
             id
             auth0UserId

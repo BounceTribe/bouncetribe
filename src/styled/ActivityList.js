@@ -14,8 +14,8 @@ export const NameLink = styled(Link)`
 
 export const ScrollBox = styled.div`
   padding: 0 0 5px 0;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  ${'' /* overflow-y: scroll;
+  overflow-x: hidden; */}
   width: 100%;
 `
   const ActivityContainer = styled.div`

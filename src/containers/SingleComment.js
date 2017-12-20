@@ -6,48 +6,51 @@ import {RoundButton, BtAvatar, SeeMore} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 import formatTime from 'utils/formatTime'
+import truncateText from 'utils/truncateText'
+import {mapNodes} from 'utils/mapNodes'
 import TextField from 'material-ui/TextField'
 import UpdateComment from 'mutations/UpdateComment'
 import CreateComment from 'mutations/CreateComment'
 import DeleteComment from 'mutations/DeleteComment'
 import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
 
+//for 'See More'
+const maxChars = 300
+const maxLines = 6
+
 class SingleComment extends Component {
 
   constructor(props) {
     super()
 
-    let children = ((props.comment.children || {}).edges || []).map(edge => edge.node)
+    let children = mapNodes(props.comment.children)
+    let commentUpvotes = mapNodes(props.comment.upvotes)
+    
     let childrenText = children.reduce((map, obj) => {
-        map[obj.id] = obj.text;
-        return map;
-    }, {});
+        map[obj.id] = obj.text
+        return map
+    }, {})
 
-
-    this.listenTab = props.tabs==='listen'
-    this.comment = props.comment
     this.user = props.user
     this.isNew = props.comment.id==='new'
     this.isOwnComment = (props.user.id === props.comment.author.id)
-    let commentUpvotes = ((props.comment.upvotes || {}).edges || []).map(edge=>edge.node.id)
-    // let userUpvotes = ((props.user.upvotes || {}).edges || []).map(edge=>edge.node.id)
-    // console.log(commentUpvotes, userUpvotes)
+
     this.state = {
       text: props.comment.text,
-      seeMore: false,
+      seeMore: {},
       newUpvote: 0,
       hasUpvoted: commentUpvotes.some(id=>(id===props.user.id)),
       newSubcomment: "",
       deleted: [],
-      children: ((props.comment.children || {}).edges || []).map(edge => edge.node),
+      children,
       childrenText
     }
     // console.log('cmt,', this );
   }
 
   componentDidMount() {
-    if(this.props.focus === this.comment.id){
-      document.getElementById(this.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
+    if(this.props.focus === this.props.comment.id){
+      document.getElementById(this.props.comment.id).scrollIntoView({behavior:'instant', block: 'nearest'})
     }
   }
 
@@ -59,7 +62,7 @@ class SingleComment extends Component {
         type: comment.type,
         timestamp: comment.timestamp,
         text,
-        // parentId: comment.parent ? comment.parent : this.comment.id
+        // parentId: comment.parent ? comment.parent : this.props.comment.id
         // sessionId: this.props.sessionId
       }
       console.log('commentdate', commentData);
@@ -79,21 +82,10 @@ class SingleComment extends Component {
     }
   }
 
-  truncateText = ({text, maxLines, maxChars}) => {
-    console.log('nSMB input len: ', text.length)
-    //get OS-specifice line break character type
-    let newLine =
-      (text.includes('\r\n') && '\r\n') ||
-      (text.includes('\r') && '\r') ||
-      '\n' //default
-    let shortText = text.split(newLine, maxLines).join(newLine).slice(0, maxChars)
-    return (shortText.length < text.length) ? shortText : null
-  }
-
   text = (comment, childId) => {
     let text = childId ? this.state.childrenText[childId] : this.state.text
     let isActive = this.props.activeIds.includes(comment.id)
-    let shortText = !isActive && this.truncateText({text, maxChars:300, maxLines:6})
+    let shortText = !isActive && truncateText({text, maxChars, maxLines})
     if (isActive) {
       return (
         <TextField
@@ -132,9 +124,9 @@ class SingleComment extends Component {
       let id = childId || comment.id
       let showingMore = this.state.seeMore[id]
       return (
-          <SeeMore onClick={()=>this.seeMore(id)} seeLess={showingMore}>
-            {showingMore ? text : shortText}
-          </SeeMore>
+        <SeeMore onClick={()=>this.seeMore(id)} seeLess={showingMore}>
+          {showingMore ? text : shortText}
+        </SeeMore>
       )
     } else {
       return (text)
@@ -152,7 +144,7 @@ class SingleComment extends Component {
     Relay.Store.commitUpdate(
       new AddToCommentUpvotes({
         upvotesUserId: this.user.id,
-        upvotesCommentId: this.comment.id
+        upvotesCommentId: this.props.comment.id
       }), { onSuccess: (res) => {
         console.log('upvote res', res);
         this.setState({
@@ -166,7 +158,7 @@ class SingleComment extends Component {
   deleteComment = (id) => Relay.Store.commitUpdate(
     new DeleteComment({
       id,
-      projectId: this.comment.projectId || this.comment.project.id
+      projectId: this.props.comment.projectId || this.props.comment.project.id
     }), {
       onSuccess: (res)=>this.setState({deleted: this.state.deleted.concat([id])})
     }
@@ -240,7 +232,7 @@ class SingleComment extends Component {
                   author: this.user, //for real time
                   type: 'COMMENT',
                   text: this.state.newSubcomment,
-                  parentId: this.comment.id
+                  parentId: this.props.comment.id
                 }
                 Relay.Store.commitUpdate(
                   new CreateComment(newSubcommentData), {
@@ -268,7 +260,7 @@ class SingleComment extends Component {
   }
 
   render() {
-    let {author, timestamp, type, id, upvotes} = this.comment
+    let {author, timestamp, type, id, upvotes} = this.props.comment
     // console.log({timestamp});
     // it looks like everything is rendere every secind a song is playing
     let {newUpvote} = this.state
@@ -296,7 +288,7 @@ class SingleComment extends Component {
               <Handle to={author.deactivated ? null : `/${author.handle}/`} >
                 {author.handle}
               </Handle>
-              <Text>{this.text(this.comment)}</Text>
+              <Text>{this.text(this.props.comment)}</Text>
             </Content>
             <Time hide={!timestamp} onClick={()=>{
               console.log('time click', this.props, timestamp)
@@ -306,18 +298,18 @@ class SingleComment extends Component {
           <Bottom>
             {!hideEditDelete && <BotLink
               onClick={()=>{this.props.activeIds.includes(id) ?
-                this.editComment(this.comment, this.state.text) : this.props.activate(id)}}
+                this.editComment(this.props.comment, this.state.text) : this.props.activate(id)}}
             >Edit</BotLink>}
             {!hideEditDelete && '|'}
             {!hideEditDelete &&
               <BotLink onClick={()=>this.deleteComment(id)}>Delete</BotLink>}
             <UpVote
               secondary={(type==='COMMENT')}
-              hideLink={this.listenTab}
+              hideLink={this.props.tabs==='listen'}
               hasUpvoted={this.state.hasUpvoted}
               onClick={!this.isOwnComment && !this.state.hasUpvoted && this.addUpvote}
             >Upvote{this.state.hasUpvoted && 'd'} | {totalUpvotes}</UpVote>
-            <BotLink hideLink={this.comment.id==='new'}
+            <BotLink hideLink={this.props.comment.id==='new'}
               onClick={()=>{
                 this.setState({subcomments: !this.state.subcomments})
               }}
@@ -341,7 +333,7 @@ class SingleComment extends Component {
 //         onClick={()=>{this.props.activeIds.includes() ?
 //           this.editComment() : this.props.activate(comment.id)}}
 //       >Edit</BotLink>
-//       {this.listenTab && '|'}
+//       {this.props.tabs==='listen' && '|'}
 //       <BotLink
 //         onClick={this.deleteComment}
 //       >Delete</BotLink>

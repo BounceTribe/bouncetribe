@@ -202,8 +202,8 @@ class Profile extends Component {
             </Location>
             <ScoreRow>
               <Bolt/> <Score>{score}</Score>
-              <Music height={20} /> <Score>{projects}</Score>
-              <Tribe height={20} /> <Score>{friends}</Score>
+              <Music height={20}/> <Score>{projects}</Score>
+              <Tribe height={20}/> <Score>{friends}</Score>
             </ScoreRow>
           </TopCol>
         </SubRow>
@@ -353,7 +353,8 @@ export default Relay.createContainer(
               edges {
                 node {
                   id
-                  actor { id }
+                  createdAt
+                  actor { id, handle }
                 }
               }
             }

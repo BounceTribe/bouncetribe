@@ -83,8 +83,8 @@ export const BotRow = styled.div`
   justify-content: space-between;
   width: 100%;
   margin-top: 20px;
-  height: 80vh;
-  max-height: 80vh;
+  ${'' /* height: 80vh; */}
+  ${'' /* max-height: 80vh; */}
   min-height: 525px;
 `
 
@@ -93,6 +93,7 @@ export const DashLeft = styled.div`
   border-radius: 5px;
   background-color: ${white};
   min-height: 60vh;
+  max-height: 85vh;
   flex: 0 0 285px;
   border: solid ${grey222} 1px;
   border-radius: 5px;

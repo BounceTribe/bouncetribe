@@ -162,43 +162,28 @@ export const BotRow = styled.div`
   ${'' /* height: 60vh; */}
   min-height: 420px;
 `
-  export const BotLeft = styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: ${white};
-    ${'' /* min-height: 50vh; */}
-    width: 66%;
-    margin-right: 15px;
-    padding-bottom: 40px;
-    ${'' /* border: solid ${grey400} 1px; */}
-    border-radius: 5px;
-    box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-  `
-
   export const BotRight = styled.div`
     display: flex;
     flex-direction: column;
-    border-radius: 5px;
     background-color: ${white};
-    ${'' /* min-height: 50vh; */}
-    ${'' /* flex-grow: 1; */}
+    min-height: 40vh;
+    ${'' /* max-height: 60vh; */}
     width: 33%;
     border: solid #E3E3E3 1px;
     border-radius: 5px;
     padding: 20px 20px 20px 25px;
     margin-left: 15px;
-    ${'' /* padding-bottom: 40px; */}
-    ${'' /* overflow: visible; */}
+    padding-bottom: 40px;
+    margin-bottom: auto;
+    ${'' /* overflow: scroll; */}
     box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
   `
 
 export const Label = styled.label`
-  display: ${({hide}) => (hide) ? 'none' : 'flex'};
+  display: ${({hide}) => hide ? 'none' : 'flex'};
   font-size: 15px;
   font-weight: 500;
-  ${'' /* padding-top: 40px; */}
   color: #555555;
-  ${'' /* margin-top: 30px; */}
   margin-bottom: 5px;
 `
 export const InputError = styled.span`

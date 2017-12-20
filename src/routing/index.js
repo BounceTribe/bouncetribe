@@ -31,7 +31,7 @@ const ViewerQuery = {
         ${Component.getFragment('viewer', variables)}
       }
     }
-  `,
+  `
 }
 
 const tribeSearch = (params, {location})=>{
@@ -93,7 +93,10 @@ const createRoutes = () => (
     <Route path='/dash'
       component={Dashboard}
       queries={ViewerQuery}
-      render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
+      render={({props}) => props ? <Dashboard {...props} /> : <Loading />}
+      >
+
+
       <Route path='/dash/feed/:userHandle(/:page)'
         // prepareParams={({page}) => {
         //   console.log('prep', page);
@@ -329,3 +332,10 @@ export default Routing
 //     }
 //   }
 // }
+
+// function createElementFn(parentProps) {
+//   return function(Component, props) {
+//     return <Component {...parentProps} {...props} />
+//   }
+// }
+// createElement={createElementFn(this.props)}

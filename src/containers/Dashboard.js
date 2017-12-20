@@ -191,8 +191,7 @@ class Dashboard extends Component {
             labels={['projects', 'bounces', 'messages']}
             locks={[false, false, false]}
             values={[0,0,0]}
-            content={this.state.noTribe ? this.noTribePanel() : this.props.children}
-            scroll={this.props.location.pathname===`/dash/`} />
+            content={this.state.noTribe ? this.noTribePanel() : this.props.children}/>
         </BotRow>
 
         <Snackbar
