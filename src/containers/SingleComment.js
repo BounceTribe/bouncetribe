@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {white, purple, blue, grey700} from 'theme'
 import {Single, MainRow, Bottom, Content, Time, Text, Top, ButtonCol, Handle, BotLink, UpVote, SCContainer, SubComment, SCHandle, SCBottom, SCCol, SCText} from 'styled/Comments'
-import {RoundButton, BtAvatar} from 'styled'
+import {RoundButton, BtAvatar, SeeMore} from 'styled'
 import Heart from 'icons/Heart'
 import Comment from 'icons/Comment'
 import formatTime from 'utils/formatTime'
@@ -11,7 +11,6 @@ import UpdateComment from 'mutations/UpdateComment'
 import CreateComment from 'mutations/CreateComment'
 import DeleteComment from 'mutations/DeleteComment'
 import AddToCommentUpvotes from 'mutations/AddToCommentUpvotes'
-
 
 class SingleComment extends Component {
 
@@ -24,6 +23,7 @@ class SingleComment extends Component {
         return map;
     }, {});
 
+
     this.listenTab = props.tabs==='listen'
     this.comment = props.comment
     this.user = props.user
@@ -34,6 +34,7 @@ class SingleComment extends Component {
     // console.log(commentUpvotes, userUpvotes)
     this.state = {
       text: props.comment.text,
+      seeMore: false,
       newUpvote: 0,
       hasUpvoted: commentUpvotes.some(id=>(id===props.user.id)),
       newSubcomment: "",
@@ -78,13 +79,26 @@ class SingleComment extends Component {
     }
   }
 
+  truncateText = ({text, maxLines, maxChars}) => {
+    console.log('nSMB input len: ', text.length)
+    //get OS-specifice line break character type
+    let newLine =
+      (text.includes('\r\n') && '\r\n') ||
+      (text.includes('\r') && '\r') ||
+      '\n' //default
+    let shortText = text.split(newLine, maxLines).join(newLine).slice(0, maxChars)
+    return (shortText.length < text.length) ? shortText : null
+  }
+
   text = (comment, childId) => {
-    let textVal = childId ? this.state.childrenText[childId] : this.state.text
-    if (this.props.activeIds.includes(comment.id)) {
+    let text = childId ? this.state.childrenText[childId] : this.state.text
+    let isActive = this.props.activeIds.includes(comment.id)
+    let shortText = !isActive && this.truncateText({text, maxChars:300, maxLines:6})
+    if (isActive) {
       return (
         <TextField
           id={comment.id}
-          value={textVal}
+          value={text}
           onChange={(e,newVal)=>{
             if (childId) {
               let childrenText = {...this.state.childrenText}
@@ -100,7 +114,7 @@ class SingleComment extends Component {
           onKeyPress={(e)=>{
             if (e.charCode === 13 && !e.shiftKey) {
               e.preventDefault()
-              this.editComment(comment, textVal)
+              this.editComment(comment, text)
             }
           }}
           textareaStyle={{
@@ -114,9 +128,24 @@ class SingleComment extends Component {
           }}
         />
       )
+    } else if (shortText) {
+      let id = childId || comment.id
+      let showingMore = this.state.seeMore[id]
+      return (
+          <SeeMore onClick={()=>this.seeMore(id)} seeLess={showingMore}>
+            {showingMore ? text : shortText}
+          </SeeMore>
+      )
     } else {
-      return (textVal)
+      return (text)
     }
+  }
+
+  seeMore = (id) => {
+    let seeMore = {...this.state.seeMore}
+    seeMore[id] = seeMore[id] ? false : true
+    console.log('setting state', this.state.seeMore);
+    this.setState({seeMore})
   }
 
   addUpvote = () => {

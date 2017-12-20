@@ -232,23 +232,36 @@ const Label = styled.span`
   color: #4A4A4A;
   &:hover {color: ${purple}};
 `
-
+const SeeMoreContainer = styled.div`
+  display: flex;
+  flex-direction:column;
+  width: 100%;
+  justify-content: center;
+`
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
 export const SeeMore = (props) =>
-  <div style={{display:'flex', justifyContent:'center', padding: '5px'}}>
-    {props.loading ?
-      <Spinner style={{padding:'15px'}}/>
-      :
-      <FlatButton
-        onClick={props.onClick}
-        style={{
-          backgroundColor: `${white}`,
-          border: `1px solid #4A4A4A`,
-          borderRadius: '5px',
-          width: `150px`,
-        }}
-      ><Label>See More</Label>
-      </FlatButton>}
-  </div>
+  <SeeMoreContainer className='SEEMORECONTAINER'>
+    {props.children}
+    <ButtonContainer>
+      {props.loading ?
+        <Spinner style={{padding:'15px'}}/>
+        :
+        <FlatButton
+          onClick={props.onClick}
+          style={{
+            backgroundColor: `${white}`,
+            border: `1px solid #4A4A4A`,
+            borderRadius: '5px',
+            margin: '5px',
+            width: `150px`,
+          }}
+        ><Label>See {props.seeLess ? 'Less' : 'More'}</Label>
+        </FlatButton>}
+    </ButtonContainer>
+  </SeeMoreContainer>
 
 
 export const RoundButton = (props) => {

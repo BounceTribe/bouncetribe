@@ -1,0 +1,88 @@
+const {
+  createPaginationContainer,
+  graphql,
+} = require('react-relay');
+
+class Feed extends React.Component {
+  render() {
+    return (
+      <div>
+        {this.props.user.feed.edges.map(
+          edge => <Story story={edge.node} key={edge.node.id} />
+        )}
+        <button
+          onPress={() => this._loadMore()}
+          title="Load More"
+        />
+      </div>
+    );
+  }
+
+  _loadMore() {
+    if (!this.props.relay.hasMore() || this.props.relay.isLoading()) {
+      return;
+    }
+
+    this.props.relay.loadMore(
+      10, // Fetch the next 10 feed items
+      e => {
+        console.log(e);
+      },
+    );
+  }
+}
+
+module.exports = createPaginationContainer(
+  Feed,
+  {
+    user: graphql`
+      fragment Feed_user on User {
+        feed(
+          first: $count
+          after: $cursor
+          orderby: $orderBy # other variables
+        ) @connection(key: "Feed_feed") {
+          edges {
+            node {
+              id
+              ...Story_story
+            }
+          }
+        }
+      }
+    `,
+  },
+  {
+    direction: 'forward',
+    getConnectionFromProps(props) {
+      return props.user && props.user.feed;
+    },
+    getFragmentVariables(prevVars, totalCount) {
+      return {
+        ...prevVars,
+        count: totalCount,
+      };
+    },
+    getVariables(props, {count, cursor}, fragmentVariables) {
+      return {
+        count,
+        cursor,
+        // in most cases, for variables other than connection filters like
+        // `first`, `after`, etc. you may want to use the previous values.
+        orderBy: fragmentVariables.orderBy,
+      };
+    },
+    query: graphql`
+      query FeedPaginationQuery(
+        $count: Int!
+        $cursor: String
+        $orderby: String!
+      ) {
+        user {
+          # You could reference the fragment defined previously.
+          ...Feed_user
+        }
+      }
+    `
+  }
+);
