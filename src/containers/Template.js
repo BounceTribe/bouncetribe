@@ -219,6 +219,7 @@ export default Relay.createContainer( Template, {
         fragment on Viewer {
           user {
             id
+            mentorAccount {id}
             auth0UserId
             handle
             deactivated

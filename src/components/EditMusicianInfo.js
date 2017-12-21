@@ -11,6 +11,7 @@ import ExperienceIcon from 'icons/Experience'
 import SelectField from 'material-ui/SelectField'
 import FlatButton from 'material-ui/FlatButton'
 import UpdateUser from 'mutations/UpdateUser'
+import UpdateMentor from 'mutations/UpdateMentor'
 import {purple} from 'theme'
 import MenuItem from 'material-ui/MenuItem'
 // import {formatEnum} from 'utils/strings'
@@ -105,8 +106,9 @@ export default class EditMusicianInfo extends Component {
     }
   }
 
-  sendUpdate = () => {
+  sendUpdate = (mentorId) => {
     let updateObj = {
+      mentorId,
       userId: this.props.user.id,
       genresIds: this.state.genres.map(genre=>genre.value || genre),
       skillsIds: this.state.skills.map(skill=>skill.value || skill),
@@ -115,12 +117,21 @@ export default class EditMusicianInfo extends Component {
     if (this.state.experience) { //cannot send null experience to DB
       updateObj.experience = this.state.experience.toUpperCase()
     }
-    Relay.Store.commitUpdate(
-      new UpdateUser(updateObj),{
-        onSuccess: res => this.props.onSave(),
-        onFailure: res => {console.log('fail', updateObj, res)}//handle failure
-      }
-    )
+    if (mentorId) {
+      Relay.Store.commitUpdate(
+        new UpdateMentor(updateObj),{
+          onSuccess: res => this.props.onSave(),
+          onFailure: res => {console.log('fail', updateObj, res)}//handle failure
+        }
+      )
+    } else {
+      Relay.Store.commitUpdate(
+        new UpdateUser(updateObj),{
+          onSuccess: res => this.props.onSave(),
+          onFailure: res => {console.log('fail', updateObj, res)}//handle failure
+        }
+      )
+    }
   }
 
 
@@ -197,6 +208,8 @@ export default class EditMusicianInfo extends Component {
           placeholder={'add your influences'}
           style={{margin: '4px 0 8px 0'}}
         />
+        {this.props.user.mentorAccount.id && <FlatButton label="Migrate musician info from user account"
+          onClick={()=>this.sendUpdate(this.props.user.mentorAccount.is)} />}
       </Dialog>
     )
   }

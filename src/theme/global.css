@@ -3,6 +3,9 @@ body {
   background-color: rgb(247,247,247);
   font-weight: 400;
 }
+div.react-rater-star.will-be-active, .is-active, .is-active-half::before {
+    color: #9075F3 !important;
+  }
 
 body * {
   font-family: 'Helvetica Neue', 'Arial', sans-serif ;

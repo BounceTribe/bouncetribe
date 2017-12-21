@@ -5,6 +5,7 @@ import {BtFlatButton} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
 import Music from 'icons/Music'
+import Headphones from 'icons/Headphones'
 import Alerts from 'icons/Alerts'
 import {DropdownMenuItem, DropHr} from 'components/Dropdown'
 import auth from 'utils/auth'
@@ -37,10 +38,10 @@ class TopNav extends Component {
           <Logo to={`/dash/feed/${user.handle}/1`} />
         {/* </div> */}
         <NavList>
-          {/* <NavLink to={`/tribe/${handle}/find/`} >
+          {user.mentorAccount.id && <NavLink to={`/mentor/${handle}/`} >
             <Headphones height={18} />
-            <NavText>Find Your Mentor</NavText>
-          </NavLink> */}
+            <NavText>Mentor Marketplace</NavText>
+          </NavLink>}
           {/* <NavLink
             to={((((user || {}).project || {}).edges || []).length > 0) ? `/sessions/${handle}/${user.projects.edges[0].node.title}` : `/sessions/${handle}`}
           >

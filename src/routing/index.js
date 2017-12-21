@@ -23,6 +23,7 @@ import BouncesPanel from 'containers/BouncesPanel'
 import ActivitiesPanel from 'containers/ActivitiesPanel'
 import {Loading} from 'styled/Spinner'
 import EditMentorProfile from 'containers/EditMentorProfile'
+import MentorProfile from 'containers/MentorProfile'
 //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
 const ViewerQuery = {
@@ -170,17 +171,23 @@ const createRoutes = () => (
         ignoreScrollBehavior />
     </Route>
     <Route
+      path={'/mentor/editProfile/:userHandle'}
+      onEnter={userOnly}
+      component={EditMentorProfile}
+      queries={ViewerQuery}>
+    </Route>
+    <Route
+      path={'/mentor/:mentorHandle'}
+      onEnter={userOnly}
+      component={MentorProfile}
+      queries={ViewerQuery}>
+    </Route>
+    <Route
       path={'/:theirHandle/:projectTitle'}
       onEnter={userOnly}
       component={Project}
       queries={ViewerQuery}
       render={({props}) => props ? <Project {...props} /> : <Loading />} >
-    </Route>
-    <Route
-      path={'/mentor/editProfile/:userHandle(/:mentorHandle)'}
-      onEnter={userOnly}
-      component={EditMentorProfile}
-      queries={ViewerQuery}>
     </Route>
     {/* <Route
       path={'/:theirHandle/:projectTitle'}

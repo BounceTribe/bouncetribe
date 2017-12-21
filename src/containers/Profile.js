@@ -383,6 +383,7 @@ export default Relay.createContainer(
             website
             placename
             score
+            mentorAccount {id}
             portrait {
               id
               url

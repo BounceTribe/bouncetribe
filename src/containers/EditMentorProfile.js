@@ -14,6 +14,7 @@ class EditMentorProfile extends Component {
       handleError: '',
       emailError: '',
       summaryError: '',
+      qualificationInputs: [],
       id: (props.viewer.allMentors.edges[0].node || {}).id,
     })
   }
@@ -63,12 +64,15 @@ class EditMentorProfile extends Component {
     )
   }
 
-  setProfile = () => {
-    console.log('updating', this.state);
+  setProfile = (user) => {
     let mentorId = this.props.viewer.allMentors.edges[0].node.id
+    let updateObj = Object.assign({...this.state}, {...user}, {mentorId})
+    console.log('updating', updateObj);
+
     Relay.Store.commitUpdate(
-      new UpdateMentor(Object.assign({...this.state}, {mentorId})), {
-        onSuccess: (success) => this.props.onSave(),
+      new UpdateMentor(updateObj), {
+        onSuccess: (success) =>
+          this.props.router.push(`/mentor/${this.state.handle}`),
         onFailure: (failure) => console.log('updateuser fail', failure)
       }
     )
@@ -81,9 +85,9 @@ class EditMentorProfile extends Component {
           // longitude,
           placename,
           summary,
-          // videoUrl,
-          // occupation,
-          // qualifications,
+          videoUrl,
+          occupation,
+          qualifications,
           // specialties,
           website,
           // deactivated,
@@ -91,22 +95,22 @@ class EditMentorProfile extends Component {
           emailError,
           summaryError} = this.state
     return (
-      <div>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
         <TextField
           floatingLabelText={'Handle'}
           errorText={handleError}
-          value={handle}
+          value={handle || ''}
           onChange={(e)=>this.handleSet(e.target.value)}
         /><br />
         <TextField
           floatingLabelText={'Location'}
-          value={placename}
+          value={placename || ''}
           onChange={(e)=>this.setState({placename: e.target.value})}
         /><br />
         <TextField
           floatingLabelText={'Summary'}
           errorText={summaryError}
-          value={summary}
+          value={summary || ''}
           onChange={(e)=>this.summarySet(e.target.value)}
           multiLine
           rowsMax={5}
@@ -115,21 +119,78 @@ class EditMentorProfile extends Component {
         <TextField
           floatingLabelText={'Email'}
           errorText={emailError}
-          value={email}
+          value={email || ''}
           onChange={(e)=>this.emailSet(e.target.value)}
         /><br />
         <TextField
           floatingLabelText={'Website'}
-          value={website}
+          value={website || ''}
           onChange={(e)=>this.setState({website: e.target.value})}
         />
+        <TextField
+          floatingLabelText={'Current Occupation'}
+          value={occupation || ''}
+          onChange={(e)=>this.setState({occupation: e.target.value})}
+        />
+        <TextField
+          floatingLabelText={'Video URL'}
+          value={videoUrl || ''}
+          onChange={(e)=>this.setState({videoUrl: e.target.value})}
+        />
+        <TextField
+          floatingLabelText={'Qualification 1'}
+          value={qualifications[0] || ''}
+          onChange={(e)=>{
+            let quals = this.state.qualifications.slice()
+            quals[0] = e.target.value
+            this.setState({qualifications: quals})
+          }}
+        />
+        <TextField
+          floatingLabelText={'Qualification 2'}
+          value={qualifications[1] || ''}
+          onChange={(e)=>{
+            let quals = this.state.qualifications.slice()
+            quals[1] = e.target.value
+            this.setState({qualifications: quals})
+          }}
+        />
+        <TextField
+          floatingLabelText={'Qualification 3'}
+          value={qualifications[2] || ''}
+          onChange={(e)=>{
+            let quals = this.state.qualifications.slice()
+            quals[2] = e.target.value
+            this.setState({qualifications: quals})
+          }}
+        />
+        <TextField
+          floatingLabelText={'Qualification 4'}
+          value={qualifications[3] || ''}
+          onChange={(e)=>{
+            let quals = this.state.qualifications.slice()
+            quals[3] = e.target.value
+            this.setState({qualifications: quals})
+          }}
+        />
+        <TextField
+          floatingLabelText={'Qualification 5'}
+          value={qualifications[4] || ''}
+          onChange={(e)=>{
+            let quals = this.state.qualifications.slice()
+            quals[4] = e.target.value
+            this.setState({qualifications: quals})
+          }}
+        />
+        <FlatButton label="Migrate info from user account"
+          onClick={()=>this.setProfile(this.props.viewer.user)} />
       </div>
     )
   }
 
   render() {
     let {handleError, emailError, summaryError, id} = this.state
-
+    console.log({...this.state});
     return (
       <Dialog
         title={"Mentor Profile"}
@@ -139,7 +200,8 @@ class EditMentorProfile extends Component {
         bodyStyle={{minHeight: '60vh'}}
         titleStyle={{ fontSize: '28px' }}
         actions={[
-          <FlatButton label="Cancel" onClick={this.props.onClose} />,
+          <FlatButton label="Cancel" onClick={()=>          this.props.router.push(`/mentor/${this.state.handle}`)
+          } />,
           <FlatButton
             label="Save Mentor Info"
             primary
@@ -156,7 +218,7 @@ class EditMentorProfile extends Component {
 }
 
 export default Relay.createContainer( EditMentorProfile, {
-  initialVariables: { userHandle: '' },
+  initialVariables: { userHandle: '', mentorFilter: {} },
   prepareVariables: (urlParams) => ({
     ...urlParams,
     mentorFilter: {
@@ -170,7 +232,7 @@ export default Relay.createContainer( EditMentorProfile, {
         fragment on Viewer {
           user {
             id
-            experience
+            # experience
             lastPing
             email
             handle
@@ -178,9 +240,9 @@ export default Relay.createContainer( EditMentorProfile, {
             website
             placename
             score
-            portrait { url }
-            portraitSmall { url }
-            portraitMini { url }
+            portrait { id, url }
+            portraitSmall { id, url }
+            portraitMini { id, url }
             genres ( first: 40 ) {
               edges { node { id, name } }
             }
@@ -202,7 +264,7 @@ export default Relay.createContainer( EditMentorProfile, {
             edges {
               node {
                 id
-                createdAt
+                email
                 handle
                 lastPing
                 latitude
@@ -213,12 +275,12 @@ export default Relay.createContainer( EditMentorProfile, {
                 occupation
                 qualifications
                 specialties
-                # email
+                email
                 website
                 deactivated
-                portrait { url }
-                portraitSmall { url }
-                portraitMini { url }
+                portrait { id, url }
+                portraitSmall { id, url }
+                portraitMini { id, url }
                 genres ( first: 40 ) {
                   edges { node { id, name } }
                 }
@@ -235,7 +297,7 @@ export default Relay.createContainer( EditMentorProfile, {
                 mentees (first: 100) {
                   edges { node { id, handle } }
                 }
-                mediaLinks (first: 20) { edges { node { url, type } } }
+                mediaLinks (first: 20) { edges { node { id, url, type } } }
                 userAccount { id, handle }
                 reviews (first: 100) {
                   edges { node { id, text, rating } }

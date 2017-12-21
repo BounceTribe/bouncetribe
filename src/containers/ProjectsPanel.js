@@ -27,11 +27,10 @@ export default Relay.createContainer(
   ProjectsPanel, {
     initialVariables: { theirHandle: '', projectsFilter: {} },
     prepareVariables: (urlParams) => {
-      console.log({urlParams});
       return {
         ...urlParams,
         //ensures non-deleted projects as well
-        // projectsFilter: {privacy_not: 'PRIVATE'},
+        projectsFilter: {privacy_not: 'PRIVATE'},
       }
     },
     fragments: {
