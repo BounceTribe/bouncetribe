@@ -1,4 +1,4 @@
-import map from 'lodash.map'
+import map from 'lodash/map'
 
 export const mapNodes = (items, deepString) =>
   map(((items || {}).edges || []), 'node' + (deepString || ''))
