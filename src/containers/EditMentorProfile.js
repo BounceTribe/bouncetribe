@@ -9,20 +9,32 @@ import {Dialog, TextField, FlatButton} from 'material-ui/'
 class EditMentorProfile extends Component {
 
   constructor(props) {
-    super()
-    this.state = Object.assign({...props.viewer.user}, {...props.viewer.allMentors.edges[0].node}, {
-      handleError: '',
-      emailError: '',
-      summaryError: '',
-      qualificationInputs: [],
-      id: (props.viewer.allMentors.edges[0].node || {}).id,
-    })
+    super(props)
+    console.log('emf', props);
+    this.user = this.props.viewer.user
+    if (this.user.mentorAccount) {
+      console.log('has account');
+      this.state = Object.assign( {...this.user.mentorAccount}, {
+        handleError: '',
+        emailError: '',
+        summaryError: '',
+        id: this.user.mentorAccount.id,
+      })
+    } else {
+      console.log('no account');
+      this.state = Object.assign( {...this.user}, {
+        handleError: '',
+        emailError: '',
+        summaryError: '',
+        qualifications: ['','','','',''],
+      })
+    }
   }
 
   handleSet = (val) => {
     let {handle: newHandle, error} = handleValidator(val)
     this.setState({ handle: newHandle, handleError: error })
-    if (val!==this.props.viewer.allMentors.edges[0].node.handle) {
+    if (val!==(this.user.mentorAccount || {}).handle) {
       isUniqueField(val, 'handle', 'Mentor').then( result =>
         !result && this.setState({handleError: 'handle already in use!'})
       )
@@ -32,7 +44,7 @@ class EditMentorProfile extends Component {
   emailSet = (val) => {
     let error = ''
     this.setState({ email: val,  emailError: error })
-    if (val!==this.props.viewer.allMentors.edges[0].node.email) {
+    if (val!==(this.user.mentorAccount || {}).email) {
       isUniqueField(val, 'email', 'Mentor').then( result => {
           !result && this.setState({emailError: 'email already in use!'})
         }
@@ -65,7 +77,7 @@ class EditMentorProfile extends Component {
   }
 
   setProfile = (user) => {
-    let mentorId = this.props.viewer.allMentors.edges[0].node.id
+    let mentorId = (this.user.mentorAccount || {}).id
     let updateObj = Object.assign({...this.state}, {...user}, {mentorId})
     console.log('updating', updateObj);
 
@@ -94,6 +106,8 @@ class EditMentorProfile extends Component {
           handleError,
           emailError,
           summaryError} = this.state
+          console.log('state', this.state);
+          qualifications = qualifications || []
     return (
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <TextField
@@ -232,6 +246,47 @@ export default Relay.createContainer( EditMentorProfile, {
         fragment on Viewer {
           user {
             id
+            mentorAccount {
+              id
+              email
+              handle
+              lastPing
+              latitude
+              longitude
+              placename
+              summary
+              videoUrl
+              occupation
+              qualifications
+              specialties
+              email
+              website
+              deactivated
+              portrait { id, url }
+              portraitSmall { id, url }
+              portraitMini { id, url }
+              genres ( first: 40 ) {
+                edges { node { id, name } }
+              }
+              artistInfluences ( first: 40 ) {
+                edges {
+                  node {
+                    id
+                    name
+                    spotifyId
+                    imageUrl
+                  }
+                }
+              }
+              mentees (first: 100) {
+                edges { node { id, handle } }
+              }
+              mediaLinks (first: 20) { edges { node { id, url, type } } }
+              userAccount { id, handle }
+              reviews (first: 100) {
+                edges { node { id, text, rating } }
+              }
+            }
             # experience
             lastPing
             email
@@ -253,54 +308,6 @@ export default Relay.createContainer( EditMentorProfile, {
                   name
                   spotifyId
                   imageUrl
-                }
-              }
-            }
-          }
-          allMentors (
-            first: 1
-            filter: $mentorFilter
-          ) {
-            edges {
-              node {
-                id
-                email
-                handle
-                lastPing
-                latitude
-                longitude
-                placename
-                summary
-                videoUrl
-                occupation
-                qualifications
-                specialties
-                email
-                website
-                deactivated
-                portrait { id, url }
-                portraitSmall { id, url }
-                portraitMini { id, url }
-                genres ( first: 40 ) {
-                  edges { node { id, name } }
-                }
-                artistInfluences ( first: 40 ) {
-                  edges {
-                    node {
-                      id
-                      name
-                      spotifyId
-                      imageUrl
-                    }
-                  }
-                }
-                mentees (first: 100) {
-                  edges { node { id, handle } }
-                }
-                mediaLinks (first: 20) { edges { node { id, url, type } } }
-                userAccount { id, handle }
-                reviews (first: 100) {
-                  edges { node { id, text, rating } }
                 }
               }
             }

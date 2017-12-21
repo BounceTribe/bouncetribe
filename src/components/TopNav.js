@@ -38,7 +38,7 @@ class TopNav extends Component {
           <Logo to={`/dash/feed/${user.handle}/1`} />
         {/* </div> */}
         <NavList>
-          {user.mentorAccount.id && <NavLink to={`/mentor/${handle}/`} >
+          {user.mentorAccount && <NavLink to={`/mentor/${handle}/`} >
             <Headphones height={18} />
             <NavText>Mentor Marketplace</NavText>
           </NavLink>}

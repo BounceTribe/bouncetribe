@@ -164,7 +164,7 @@ class UserSettings extends Component {
           onToggle={(e, val) => this.setState({deactivated: !val})}
         />
 
-        {!user.mentorAccount.id && <FlatButton
+        {!user.mentorAccount && <FlatButton
           label="Become A Mentor"
           onClick={()=>{
             this.props.router.push(`/mentor/editProfile/${user.handle}/`)

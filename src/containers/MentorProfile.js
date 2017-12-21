@@ -125,7 +125,7 @@ class MentorProfile extends Component {
               INFLUENCES
             </Label>
             <BtTagList items={influences} grayTag />
-            <Label hide={(!ownProfile && !projects.count)} >
+            <Label hide={(!ownProfile)} >
               MY WORK
             </Label>
             <div style={{margin: '0 -50px'}}>
@@ -135,8 +135,8 @@ class MentorProfile extends Component {
 
             <MediaLinks>
               {/* {mediaLinks.map(edge => <MediaItem {...edge.node} />)} */}
-              <MediaItem type={'SOUND_CLOUD'} url={'soundcloud.com/holes-in-a-barrel'} />
-              <MediaItem type={'YOU_TUBE'} url={'soundcloud.com/holes-in-a-barrel'}/>
+              {/* <MediaItem type={'SOUND_CLOUD'} url={'soundcloud.com/holes-in-a-barrel'} />
+              <MediaItem type={'YOU_TUBE'} url={'soundcloud.com/holes-in-a-barrel'}/> */}
             </MediaLinks>
             <Reviews>
               <ReviewLabel>User Reviews ({reviews.count})</ReviewLabel>
