@@ -11,6 +11,11 @@ class ActiviesPanel extends Component {
 
   constructor(props) {
     super(props)
+    console.log('num visible', this.props.viewer.User.projects.edges.length);
+    // if (!props.relay.variables.aVARIABLE) {
+      // props.relay.setVariables({aVARIABLE: props.viewer.user.handle})
+    //   // props.relay.forceFetch()
+    // }
     console.log('const props actpan', props);
     let {user} = this.props.viewer
     this.state = Object.assign(
@@ -70,7 +75,9 @@ class ActiviesPanel extends Component {
     let isSelf = user.id===User.id
     // let totalActivities = mapNodes(comments).filter(comment=>comment.project).length + bounces.count + projects.count
     return (
-      this.state.numActivities ?
+      <div>
+      {this.props.children}
+      {this.state.numActivities ?
         <ActivityList
           {...this.state}
           router={this.props.router}
@@ -86,7 +93,7 @@ class ActiviesPanel extends Component {
         note={isSelf ? `Upload your first project!` : ``}
         btnLabel={isSelf ? `New Project` : ``}
         btnClick={()=>this.props.router.push(`/projects/${user.handle}/new/`)}
-      />
+      />}</div>
     )
   }
 }
@@ -98,11 +105,13 @@ export default Relay.createContainer( ActiviesPanel, {
     userHandle: '',
     page: 1,
     num: 3,
+    // aVARIABLE: '',
     bouncesFilter: {},
     commentsFilter: {},
     projectsFilter: {}
   },
-  prepareVariables: (urlParams) => {
+  prepareVariables: (urlParams, b) => {
+    console.log({urlParams, b});
     return {
       ...urlParams,
       page: parseInt((urlParams.page || 1), 10),
@@ -120,21 +129,26 @@ export default Relay.createContainer( ActiviesPanel, {
           creator: { deactivated: false }
         },
       },
-      projectsFilter: {
-        privacy_not: 'PRIVATE',
-        creator: { deactivated: false }
-      }
+      // projectsFilter: {
+      //   privacy: 'TRIBE',
+      //   creator: {
+      //     friends_some: { handle: urlParams.aVARIABLE },
+      //     deactivated: false
+      //   },
+      // }
       // use similiar filters for comments, bounces (if project changes privacy)
-      // projectsFilter: { OR:
-      //   [ {
-      //     privacy_not: 'PRIVATE',
-      //   }, {
-      //     privacy: 'TRIBE',
-      //     creator: {
-      //       friends_some: { handle: urlParams.userHandle }
-      //     },
-      //   }
-      // ] }
+      projectsFilter: { OR:
+        [ {
+          privacy_not: 'PRIVATE',
+          creator: { deactivated: false }
+        }, {
+          privacy: 'TRIBE',
+          creator: {
+            friends_some: { handle: urlParams.userHandle },
+            deactivated: false
+          },
+        }
+      ] }
     }
   },
   fragments: {
@@ -145,6 +159,7 @@ export default Relay.createContainer( ActiviesPanel, {
           handle
           friends(first: 999) { edges { node { id } } }
         }
+        # @include(if: $restaurantExists)
         User (handle: $theirHandle) {
           id
           handle

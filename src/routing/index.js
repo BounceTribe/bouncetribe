@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Route, IndexRoute} from 'react-router'
 import auth from 'utils/auth'
@@ -24,16 +24,59 @@ import ActivitiesPanel from 'containers/ActivitiesPanel'
 import {Loading} from 'styled/Spinner'
 import EditMentorProfile from 'containers/EditMentorProfile'
 import MentorProfile from 'containers/MentorProfile'
+// import UserGet from 'containers/UserGet'
 //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
-const ViewerQuery = {
-  viewer: (Component, variables) => Relay.QL`
-    query {
-      viewer {
-        ${Component.getFragment('viewer', variables)}
-      }
+class UserGetClass extends Component {
+
+  constructor(props) {
+    super(props)
+    console.log('vars', props.relay.variables);
+    if (!props.relay.variables.userHandle) {
+      props.relay.setVariables({userHandle: props.viewer.user.handle,
+      show: true})
+      props.relay.forceFetch()
     }
-  `
+  }
+
+  render() {
+    return <div></div>
+  }
+}
+
+const UserGet = Relay.createContainer( UserGetClass, {
+  initialVariables: { userHandle: '', show: false},
+  fragments: {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        user {
+          id
+          handle
+          friends(first: 999) { edges { node { id } } }
+        }
+
+        # User (handle: "subliminal_lime") @include(if: $show) {
+        #   id
+        #   handle
+        #   deactivated
+        # }
+      }
+      `,}
+  })
+
+let outVar = {}
+
+const ViewerQuery = {
+  viewer: (Component, variables) => {
+    outVar = Object.assign(outVar, variables)
+    console.log(Component.displayName, {variables, outVar})
+    return Relay.QL`
+      query {
+        viewer {
+          ${Component.getFragment('viewer', variables)}
+        }
+      }
+    `}
 }
 
 const tribeSearch = (params, {location})=>{
@@ -142,7 +185,12 @@ const createRoutes = () => (
         component={ActivitiesPanel}
         queries={ViewerQuery}
         // render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>}
-      />
+      >
+        <IndexRoute
+          component={UserGet}
+          queries={ViewerQuery}
+        />
+      </Route>
     </Route>
     <Route path={'/tribe/:theirHandle/(members)'}
       component={Tribe}
