@@ -276,7 +276,10 @@ class Profile extends Component {
           />
           <BotRight>
             {this.state.editMusicianInfo && <EditMusicianInfo
-              {...this.state}
+              experience={experience}
+              genres={genres}
+              skills={skills}
+              influences={influences}
               open={true}
               user={User}
               onSave={()=>this.musicianInfoSave()}

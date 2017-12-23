@@ -18,17 +18,16 @@ class MentorProfile extends Component {
   constructor(props) {
     super(props)
     let {Mentor} = this.props.viewer
+    let mappedInfo = mapUserInfo(Mentor.userAccount)
     console.log('profile user', Mentor);
-    let mappedInfo = mapUserInfo(Mentor)
     console.log('mentor props', props);
     this.state = {
       handle: Mentor.handle || '',
-      placename: Mentor.placename || '',
+      placename: Mentor.userAccount.placename || '',
       summary: Mentor.summary || '',
-      portraitUrl: (Mentor.portrait || {}).url || `${url}/logo.png`,
-      portraitSmallUrl: (Mentor.portraitSmall || {}).url || `${url}/logo.png`,
+      portraitUrl: (Mentor.userAccount.portrait || {}).url || `${url}/logo.png`,
+      portraitSmallUrl: (Mentor.userAccount.portraitSmall || {}).url || `${url}/logo.png`,
       website: Mentor.website || '',
-      email: Mentor.email || '',
       specialties: Mentor.specialties || [],
       qualifications: Mentor.qualifications || [],
       reviews: Mentor.reviews || [],
@@ -59,8 +58,6 @@ class MentorProfile extends Component {
           qualifications,
           genres,
           influences,
-          projects,
-          mediaLinks,
           summary,
           reviews,
           videoUrl,
@@ -80,7 +77,7 @@ class MentorProfile extends Component {
               }}
             />}
             <CenteredRow>
-              <BtAvatar size={150} hideStatus user={Mentor} pointer={ownProfile}
+              <BtAvatar size={150} hideStatus user={Mentor.userAccount} pointer={ownProfile}
                 // onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
               />
               <MentorHandle>{handle}</MentorHandle>
@@ -211,36 +208,14 @@ export default Relay.createContainer(MentorProfile, {
        }
        Mentor (handle: $mentorHandle) {
          id
-         email
          handle
-         lastPing
-         latitude
-         longitude
-         placename
          summary
          videoUrl
          occupation
          qualifications
          specialties
-         email
          website
          deactivated
-         portrait { url }
-         portraitSmall { url }
-         portraitMini { url }
-         genres ( first: 40 ) {
-           edges { node { id, name } }
-         }
-         artistInfluences ( first: 40 ) {
-           edges {
-             node {
-               id
-               name
-               spotifyId
-               imageUrl
-             }
-           }
-         }
          mentees (first: 100) {
            count
            edges { node { id, handle } }
@@ -249,6 +224,27 @@ export default Relay.createContainer(MentorProfile, {
          userAccount {
            id
            handle
+           lastPing
+           latitude
+           longitude
+           placename
+           email
+           portrait { url }
+           portraitSmall { url }
+           portraitMini { url }
+           genres ( first: 40 ) {
+             edges { node { id, name } }
+           }
+           artistInfluences ( first: 40 ) {
+             edges {
+               node {
+                 id
+                 name
+                 spotifyId
+                 imageUrl
+               }
+             }
+           }
            projects (
              first: 5
              orderBy: createdAt_ASC

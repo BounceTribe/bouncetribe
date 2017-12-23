@@ -7,47 +7,30 @@ import {Dialog, TextField, FlatButton} from 'material-ui/'
 
 
 class EditMentorProfile extends Component {
-
+// TODO: look up cascading qualificaitons BtTagList
+// TODO: embed preview
   constructor(props) {
     super(props)
-    console.log('emf', props);
     this.user = this.props.viewer.user
-    if (this.user.mentorAccount) {
-      console.log('has account');
-      this.state = Object.assign( {...this.user.mentorAccount}, {
-        handleError: '',
-        emailError: '',
-        summaryError: '',
-        id: this.user.mentorAccount.id,
-      })
-    } else {
-      console.log('no account');
-      this.state = Object.assign( {...this.user}, {
-        handleError: '',
-        emailError: '',
-        summaryError: '',
-        qualifications: ['','','','',''],
-      })
+    console.log('has account')
+    this.state = Object.assign( {...this.user.mentorAccount}, {
+      handleError: '',
+      summaryError: '',
+      qualifications: ['','','','',''],
+      id: (this.user.mentorAccount || {}).id
+    })
+    if (!this.user.mentorAccount) {
+      this.becomeMentor()
     }
   }
 
   handleSet = (val) => {
+    //TODO set up dalidation for 2 accounts
     let {handle: newHandle, error} = handleValidator(val)
     this.setState({ handle: newHandle, handleError: error })
     if (val!==(this.user.mentorAccount || {}).handle) {
       isUniqueField(val, 'handle', 'Mentor').then( result =>
         !result && this.setState({handleError: 'handle already in use!'})
-      )
-    }
-  }
-
-  emailSet = (val) => {
-    let error = ''
-    this.setState({ email: val,  emailError: error })
-    if (val!==(this.user.mentorAccount || {}).email) {
-      isUniqueField(val, 'email', 'Mentor').then( result => {
-          !result && this.setState({emailError: 'email already in use!'})
-        }
       )
     }
   }
@@ -76,26 +59,25 @@ class EditMentorProfile extends Component {
     )
   }
 
-  setProfile = (user) => {
+  sendUpdate = () => {
     let mentorId = (this.user.mentorAccount || {}).id
-    let updateObj = Object.assign({...this.state}, {...user}, {mentorId})
+    let updateObj = Object.assign({...this.state}, {mentorId})
     console.log('updating', updateObj);
-
     Relay.Store.commitUpdate(
       new UpdateMentor(updateObj), {
         onSuccess: (success) =>
           this.props.router.push(`/mentor/${this.state.handle}`),
-        onFailure: (failure) => console.log('updateuser fail', failure)
+        onFailure: (failure) => console.log('updatementor fail', failure)
       }
     )
   }
 
+
+
   textFields = () => {
     let {  handle,
-           email,
           // latitude,
           // longitude,
-          placename,
           summary,
           videoUrl,
           occupation,
@@ -104,7 +86,6 @@ class EditMentorProfile extends Component {
           website,
           // deactivated,
           handleError,
-          emailError,
           summaryError} = this.state
           console.log('state', this.state);
           qualifications = qualifications || []
@@ -117,11 +98,6 @@ class EditMentorProfile extends Component {
           onChange={(e)=>this.handleSet(e.target.value)}
         /><br />
         <TextField
-          floatingLabelText={'Location'}
-          value={placename || ''}
-          onChange={(e)=>this.setState({placename: e.target.value})}
-        /><br />
-        <TextField
           floatingLabelText={'Summary'}
           errorText={summaryError}
           value={summary || ''}
@@ -129,12 +105,6 @@ class EditMentorProfile extends Component {
           multiLine
           rowsMax={5}
           fullWidth
-        /><br />
-        <TextField
-          floatingLabelText={'Email'}
-          errorText={emailError}
-          value={email || ''}
-          onChange={(e)=>this.emailSet(e.target.value)}
         /><br />
         <TextField
           floatingLabelText={'Website'}
@@ -196,14 +166,12 @@ class EditMentorProfile extends Component {
             this.setState({qualifications: quals})
           }}
         />
-        <FlatButton label="Migrate info from user account"
-          onClick={()=>this.setProfile(this.props.viewer.user)} />
       </div>
     )
   }
 
   render() {
-    let {handleError, emailError, summaryError, id} = this.state
+    let {handleError, summaryError, id} = this.state
     console.log({...this.state});
     return (
       <Dialog
@@ -219,8 +187,8 @@ class EditMentorProfile extends Component {
           <FlatButton
             label="Save Mentor Info"
             primary
-            disabled={!!handleError || !!emailError || !!summaryError || !id}
-            onClick={this.setProfile}
+            disabled={!!handleError || !!summaryError || !id}
+            onClick={()=>this.sendUpdate()}
           />
         ]}>
         {id ? this.textFields() :
@@ -248,36 +216,14 @@ export default Relay.createContainer( EditMentorProfile, {
             id
             mentorAccount {
               id
-              email
               handle
-              lastPing
-              latitude
-              longitude
-              placename
               summary
               videoUrl
               occupation
               qualifications
               specialties
-              email
               website
               deactivated
-              portrait { id, url }
-              portraitSmall { id, url }
-              portraitMini { id, url }
-              genres ( first: 40 ) {
-                edges { node { id, name } }
-              }
-              artistInfluences ( first: 40 ) {
-                edges {
-                  node {
-                    id
-                    name
-                    spotifyId
-                    imageUrl
-                  }
-                }
-              }
               mentees (first: 100) {
                 edges { node { id, handle } }
               }
@@ -288,29 +234,7 @@ export default Relay.createContainer( EditMentorProfile, {
               }
             }
             # experience
-            lastPing
-            email
             handle
-            summary
-            website
-            placename
-            score
-            portrait { id, url }
-            portraitSmall { id, url }
-            portraitMini { id, url }
-            genres ( first: 40 ) {
-              edges { node { id, name } }
-            }
-            artistInfluences ( first: 40 ) {
-              edges {
-                node {
-                  id
-                  name
-                  spotifyId
-                  imageUrl
-                }
-              }
-            }
           }
         }
       `,

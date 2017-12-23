@@ -11,7 +11,6 @@ import ExperienceIcon from 'icons/Experience'
 import SelectField from 'material-ui/SelectField'
 import FlatButton from 'material-ui/FlatButton'
 import UpdateUser from 'mutations/UpdateUser'
-import UpdateMentor from 'mutations/UpdateMentor'
 import {purple} from 'theme'
 import MenuItem from 'material-ui/MenuItem'
 // import {formatEnum} from 'utils/strings'
@@ -20,7 +19,11 @@ export default class EditMusicianInfo extends Component {
 
   constructor(props) {
     super(props)
-    this.state = Object.assign({...this.props}, {
+    this.state = {
+      experience: props.experience,
+      genres: props.genres,
+      skills: props.skills,
+      influences: props.influences,
       experiences: [
         { value: 'NOVICE', text: 'Novice (Just Started)' },
         { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
@@ -28,7 +31,7 @@ export default class EditMusicianInfo extends Component {
         { value: 'ACCOMPLISHED', text: 'Accomplished (10-24 Years)' },
         { value: 'VETERAN', text: 'Veteran (25+ Years)' },
       ]
-    })
+    }
   }
 
   loadGenres = () => new Promise((resolve, reject) =>
@@ -48,7 +51,6 @@ export default class EditMusicianInfo extends Component {
       resolve({options})
     })
   )
-
 
   influenceOptions = (query) => {
     return new Promise( (resolve, reject) => {
@@ -106,32 +108,25 @@ export default class EditMusicianInfo extends Component {
     }
   }
 
-  sendUpdate = (mentorId) => {
+  sendUpdate = () => {
     let updateObj = {
-      mentorId,
       userId: this.props.user.id,
       genresIds: this.state.genres.map(genre=>genre.value || genre),
       skillsIds: this.state.skills.map(skill=>skill.value || skill),
       artistInfluencesIds: this.state.influences.map(option=>option.value.id)
     }
+
     if (this.state.experience) { //cannot send null experience to DB
       updateObj.experience = this.state.experience.toUpperCase()
     }
-    if (mentorId) {
-      Relay.Store.commitUpdate(
-        new UpdateMentor(updateObj),{
-          onSuccess: res => this.props.onSave(),
-          onFailure: res => {console.log('fail', updateObj, res)}//handle failure
-        }
-      )
-    } else {
-      Relay.Store.commitUpdate(
-        new UpdateUser(updateObj),{
-          onSuccess: res => this.props.onSave(),
-          onFailure: res => {console.log('fail', updateObj, res)}//handle failure
-        }
-      )
-    }
+    console.log('update music info', updateObj);
+
+    Relay.Store.commitUpdate(
+      new UpdateUser(updateObj),{
+        onSuccess: res => this.props.onSave(),
+        onFailure: res => {console.log('fail', updateObj, res)}//handle failure
+      }
+    )
   }
 
 
@@ -154,7 +149,7 @@ export default class EditMusicianInfo extends Component {
         autoScrollBodyContent
         actions={[
           <FlatButton label={"Cancel"} onClick={this.props.onClose} />,
-          <FlatButton label={"Save"} primary onClick={this.sendUpdate} />
+          <FlatButton label={"Save"} primary onClick={()=>this.sendUpdate()} />
         ]}
       >
         <Label>Experience</Label>
@@ -175,7 +170,7 @@ export default class EditMusicianInfo extends Component {
           loadOptions={this.loadGenres}
           value={genres}
           onChange={(val)=>{
-            console.log('e i val', val);
+            console.log('e i val', val)
             this.setState({ genres: val.map(x=>x.value) })
           }}
           multi
@@ -187,7 +182,7 @@ export default class EditMusicianInfo extends Component {
         <Async
           loadOptions={this.loadSkills}
           value={skills}
-          onChange={(val)=>this.setState({ skills: val.map(x=>x.value) })}
+          onChange={val=>this.setState({ skills: val.map(x=>x.value) })}
           multi
           className={'async'}
           placeholder={'add your skills'}
@@ -208,8 +203,7 @@ export default class EditMusicianInfo extends Component {
           placeholder={'add your influences'}
           style={{margin: '4px 0 8px 0'}}
         />
-        {this.props.user.mentorAccount.id && <FlatButton label="Migrate musician info from user account"
-          onClick={()=>this.sendUpdate(this.props.user.mentorAccount.is)} />}
+
       </Dialog>
     )
   }
