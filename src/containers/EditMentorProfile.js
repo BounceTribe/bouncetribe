@@ -4,7 +4,9 @@ import {handleValidator, isUniqueField} from 'utils/handles'
 import UpdateMentor from 'mutations/UpdateMentor'
 import CreateMentor from 'mutations/CreateMentor'
 import {Dialog, TextField, FlatButton} from 'material-ui/'
-
+import ReactPlayer from 'react-player'
+import {mapNodes} from 'utils/mapNodes'
+import {Col} from 'styled'
 
 class EditMentorProfile extends Component {
 // TODO: look up cascading qualificaitons BtTagList
@@ -12,26 +14,34 @@ class EditMentorProfile extends Component {
   constructor(props) {
     super(props)
     this.user = this.props.viewer.user
-    console.log('has account')
-    this.state = Object.assign( {...this.user.mentorAccount}, {
+    let mentorAccount = this.user.mentorAccount || {}
+    this.state = {
       handleError: '',
       summaryError: '',
-      qualifications: ['','','','',''],
-      id: (this.user.mentorAccount || {}).id
-    })
+      mediaUrls: mentorAccount.mediaUrls,
+      summary: mentorAccount.summary,
+      videoUrl: mentorAccount.videoUrl,
+      occupation: mentorAccount.occupation,
+      qualifications: mentorAccount.qualifications,
+      website: mentorAccount.website,
+      id: mentorAccount.id,
+      handle: mentorAccount.handle || this.user.handle,
+    }
     if (!this.user.mentorAccount) {
       this.becomeMentor()
     }
   }
 
   handleSet = (val) => {
-    //TODO set up dalidation for 2 accounts
-    let {handle: newHandle, error} = handleValidator(val)
+    let {handle: newHandle, error } = handleValidator(val)
     this.setState({ handle: newHandle, handleError: error })
     if (val!==(this.user.mentorAccount || {}).handle) {
-      isUniqueField(val, 'handle', 'Mentor').then( result =>
-        !result && this.setState({handleError: 'handle already in use!'})
-      )
+      isUniqueField(val, 'handle', 'Mentor').then( res =>
+        isUniqueField(val, 'handle', 'User').then( res2 => {
+          let notUnique = !res || !res2
+          notUnique && this.setState({handleError: 'handle already in use!'})
+        }
+      ))
     }
   }
 
@@ -48,8 +58,7 @@ class EditMentorProfile extends Component {
       new CreateMentor({user: this.props.viewer.user}), {
         onSuccess: (response) => {
           console.log('createMentor response', response)
-          let id = response.createMentor.mentor.id
-          id && this.setState({id})
+          this.setState({id: response.createMentor.mentor.id})
         },
         onFailure: (response) => {
           console.log('CreateMentor error', response)
@@ -70,14 +79,14 @@ class EditMentorProfile extends Component {
         onFailure: (failure) => console.log('updatementor fail', failure)
       }
     )
+    // for (var i = 0; i < this.state.mediaUrls.length; i++) {
+    //   if (this.state.mediaUrls[i].url!==this.oldmediaUrls[i].url)
+    //     this.updateMediaLink()
+    // }
   }
 
-
-
   textFields = () => {
-    let {  handle,
-          // latitude,
-          // longitude,
+    let { handle,
           summary,
           videoUrl,
           occupation,
@@ -85,12 +94,14 @@ class EditMentorProfile extends Component {
           // specialties,
           website,
           // deactivated,
+          mediaUrls,
           handleError,
-          summaryError} = this.state
+          summaryError } = this.state
+
           console.log('state', this.state);
           qualifications = qualifications || []
     return (
-      <div style={{display: 'flex', flexDirection: 'column'}}>
+      <Col>
         <TextField
           floatingLabelText={'Handle'}
           errorText={handleError}
@@ -117,11 +128,6 @@ class EditMentorProfile extends Component {
           onChange={(e)=>this.setState({occupation: e.target.value})}
         />
         <TextField
-          floatingLabelText={'Video URL'}
-          value={videoUrl || ''}
-          onChange={(e)=>this.setState({videoUrl: e.target.value})}
-        />
-        <TextField
           floatingLabelText={'Qualification 1'}
           value={qualifications[0] || ''}
           onChange={(e)=>{
@@ -130,7 +136,23 @@ class EditMentorProfile extends Component {
             this.setState({qualifications: quals})
           }}
         />
+        {/* <TextField
+          floatingLabelText={'You Tube URL'}
+          value={mediaUrls[0] || ''}
+          onChange={(e)=>{
+            let newLinks = [...mediaUrls]
+            newLinks[0].url = e.target.value
+            newLinks[0].type = 'YOU_TUBE'
+            this.setState({mediaUrls: e.target.value})
+          }}
+        /> */}
         <TextField
+          floatingLabelText={'Video URL'}
+          value={videoUrl || ''}
+          onChange={(e)=>this.setState({videoUrl: e.target.value})}
+        />
+        {videoUrl && <ReactPlayer url={videoUrl} />}
+        {/* <TextField
           floatingLabelText={'Qualification 2'}
           value={qualifications[1] || ''}
           onChange={(e)=>{
@@ -165,8 +187,8 @@ class EditMentorProfile extends Component {
             quals[4] = e.target.value
             this.setState({qualifications: quals})
           }}
-        />
-      </div>
+        /> */}
+      </Col>
     )
   }
 
@@ -227,7 +249,7 @@ export default Relay.createContainer( EditMentorProfile, {
               mentees (first: 100) {
                 edges { node { id, handle } }
               }
-              mediaLinks (first: 20) { edges { node { id, url, type } } }
+              mediaUrls
               userAccount { id, handle }
               reviews (first: 100) {
                 edges { node { id, text, rating } }

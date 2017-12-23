@@ -14,6 +14,14 @@ import {url} from 'config'
 import {isOnline} from 'utils/isOnline'
 import {Spinner} from 'styled/Spinner'
 
+export const Row = styled.div`
+  display: flex;
+`
+export const Col = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
 export const PanelScrollContainer = styled.div`
   padding: 15px 0;
   display: flex;

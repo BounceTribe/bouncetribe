@@ -15,9 +15,5 @@ export const mapUserInfo = (user) => {
       label: influence.name
     }
   })
-  let mediaLinks = ((user.mediaLinks || {}).edges || []).map(edge=>{
-    let {node: mediaLink} = edge
-    return { mediaLink }
-  })
-  return {genres, skills, influences, mediaLinks}
+  return {genres, skills, influences}
 }

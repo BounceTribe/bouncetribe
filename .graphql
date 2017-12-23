@@ -218,7 +218,7 @@ type Mentor @model {
   portraitMini: File @relation(name: "MentorPortraitMini")
   pictures: [File!]! @relation(name: "MentorPicture")
   mentees: [User!]! @relation(name: "MentorOnUser1")
-  mediaLinks: [MediaLink!]! @relation(name: "MediaLinkOnMentor")
+  mediaUrls: [MediaLink!]! @relation(name: "MediaLinkOnMentor")
   userAccount: User! @relation(name: "MentorOnUser")
   reviews: [Review!]! @relation(name: "ReviewOnMentor")
 }

@@ -20,7 +20,7 @@ export default class EditProfile extends Component {
     let {handle: newHandle, error} = handleValidator(val)
     this.setState({ handle: newHandle, handleError: error })
     if (val!==this.props.user.handle) {
-      isUniqueField(val, 'handle').then( result =>
+      isUniqueField(val, 'handle').then( result => 
         !result && this.setState({handleError: 'handle already in use!'})
       )
     }

@@ -8,15 +8,16 @@ const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /lo
 export const isUniqueField = (value, type, model) => {
   type = type || 'handle'
   model = model || 'User'
-  return fetch(graphCool.simple,{
+  return fetch(graphCool.simple, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       query: `{
-        ${model} (${type}: "${value}") { email }
+        ${model} (${type}: "${value}") { id }
       }`
     }),
   }).then(result=>result.json()).then(json=>{
+    console.log({json});
     return json.data[model] ? false : true
   })
 }

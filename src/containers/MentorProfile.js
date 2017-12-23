@@ -18,7 +18,7 @@ class MentorProfile extends Component {
   constructor(props) {
     super(props)
     let {Mentor} = this.props.viewer
-    let mappedInfo = mapUserInfo(Mentor.userAccount)
+    let mappedInfo = mapUserInfo(Mentor.userAccount, Mentor)
     console.log('profile user', Mentor);
     console.log('mentor props', props);
     this.state = {
@@ -33,10 +33,10 @@ class MentorProfile extends Component {
       reviews: Mentor.reviews || [],
       videoUrl: Mentor.videoUrl || '',
       occupation: Mentor.occupation || '',
-      genres: mappedInfo.genres,
       skills: mappedInfo.skills,
       influences: mappedInfo.influences,
-      mediaLinks: mappedInfo.mediaLinks,
+      genres: mappedInfo.genres,
+      mediaUrls: Mentor.mediaUrls,
       // projects: Mentor.projects.count,
       // friends: Mentor.friends.count,
       // notification: false,
@@ -60,6 +60,7 @@ class MentorProfile extends Component {
           influences,
           summary,
           reviews,
+          mediaUrls,
           videoUrl,
           placename } = this.state
     return (
@@ -100,7 +101,7 @@ class MentorProfile extends Component {
           </UpperMain>
           <InfoFeed>
 
-            <ReactPlayer url={videoUrl} />
+            {videoUrl && <ReactPlayer url={videoUrl} />}
             <Label hide={(!ownProfile && !specialties.length)} >
               SPECIALTIES
             </Label>
@@ -112,7 +113,7 @@ class MentorProfile extends Component {
             <Label hide={(!ownProfile && !qualifications.length)} >
               QUALIFICATIONS
             </Label>
-            <Text>{qualifications.join(', ')}</Text>
+            <Text>{qualifications[0]}</Text>
             <Label hide={(!ownProfile && !genres.length)} >
               GENRES
             </Label>
@@ -126,12 +127,11 @@ class MentorProfile extends Component {
               MY WORK
             </Label>
             <div style={{margin: '0 -50px'}}>
+              <ProjectListSm {...this.props} mentor/>
+            </div>
 
-            <ProjectListSm {...this.props} mentor/>
-          </div>
-
-            <MediaLinks>
-              {/* {mediaLinks.map(edge => <MediaItem {...edge.node} />)} */}
+            <MediaLinks urls={mediaUrls}>
+              {/* {mediaUrls.map(edge => <MediaItem {...edge.node} />)} */}
               {/* <MediaItem type={'SOUND_CLOUD'} url={'soundcloud.com/holes-in-a-barrel'} />
               <MediaItem type={'YOU_TUBE'} url={'soundcloud.com/holes-in-a-barrel'}/> */}
             </MediaLinks>
@@ -220,7 +220,7 @@ export default Relay.createContainer(MentorProfile, {
            count
            edges { node { id, handle } }
          }
-         mediaLinks (first: 20) { edges { node { url, type } } }
+         mediaUrls
          userAccount {
            id
            handle
