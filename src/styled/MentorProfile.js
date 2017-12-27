@@ -7,28 +7,49 @@ import YOU_TUBE from 'icons/YOU_TUBE.png'
 import SOUND_CLOUD from 'icons/SOUND_CLOUD.png'
 import BEAT_PORT from 'icons/BEAT_PORT.png'
 
-export const RightPanel = styled(Col)`
-  background-color: ${white};
-  min-height: 40vh;
-  border: solid #E3E3E3 1px;
-  border-radius: 10px;
-  margin-bottom: auto;
-  ${'' /* padding: 10px; */}
-  width: 325px;
-  object-fit: cover;
-  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-`
-
 export const MentorView = styled(View)`
   flex-direction: row;
   background-color: transparent;
   border: none;
   box-shadow: none;
   width: 80%;
+  min-width: 1000px;
   padding: 20px 0;
 `
+
+export const RightPanel = styled(Col)`
+  background-color: ${white};
+  justify-content:space-around;
+  align-items: center;
+  ${'' /* min-height: 40vh; */}
+  border: solid #E3E3E3 1px;
+  border-radius: 10px;
+  margin-bottom: auto;
+  padding: 35px 10px;
+  max-height: 215px;
+  min-height: 215px;
+  width: 325px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
+  display: ${props => props.hide ? 'none' : ''};
+`
+
+  export const ReserveUpper = styled.div`
+    font-size: 18px;
+    font-weight: 400;
+    color: #777777;
+    letter-spacing: 0;
+  `
+  export const ReserveLower = styled.div`
+    font-size: 13px;
+    color: #999999;
+    letter-spacing: 0;
+  `
+
 export const LeftWrapper = styled(Col)`
   margin-right: 20px;
+  width: calc(100% - 345px);
+  flex-shrink: 1;
 `
 export const UpperMain = styled(Col)`
   background-color: ${white};
@@ -105,13 +126,14 @@ export const InfoFeed = styled(Col)`
   export const MediaLinks = styled(Col)`
     font-size: 13px;
     color: #9075F3;
+    padding: 10px 0;
   `
   const MediaIcon = styled.img`
     height: 50px;
     width: 50px;
     object-fit: cover;
   `
-  const MediaText = styled(Link)`
+  const MediaText = styled.a`
     font-weight: 500;
     font-size: 13px;
     color: ${purple};
@@ -121,31 +143,32 @@ export const InfoFeed = styled(Col)`
   `
   const MediaRow = styled(Row)`
     align-items: center;
-    padding: 8px 0;
+    padding: 18px 0;
   `
   export const MediaItem = ({url}) =>{
     console.log('mediaitem', url)
     let icon, text
-    switch (url) {
-      case url.includes('youtube.com'):
+    switch (true) {
+      case url.toLowerCase().includes('youtube.com'):
         icon = <MediaIcon src={YOU_TUBE} />
         text = 'YouTube'
         break;
-      case url.includes('soundcloud.com'):
+      case url.toLowerCase().includes('soundcloud.com'):
         icon = <MediaIcon src={SOUND_CLOUD} />
         text = 'SoundCloud'
         break;
-      case url.includes('beatport.com'):
+      case url.toLowerCase().includes('beatport.com'):
         icon = <MediaIcon src={BEAT_PORT} />
         text = 'BeatPort'
         break;
       default:
     }
-
+    let hasHttp = url.includes('http://') || url.includes('https://')
+    let correctUrl = hasHttp ? url : ('http://' + url)
     return (
       <MediaRow>
         {icon}
-        <MediaText to={url}>{text}</MediaText>
+        <MediaText target='_blank' href={correctUrl}>{text}</MediaText>
       </MediaRow>
     )
   }
@@ -165,5 +188,4 @@ export const InfoFeed = styled(Col)`
   `
   export const ReviewLabel = styled(Label)`
     font-size: 18px;
-
   `

@@ -165,6 +165,7 @@ class UserSettings extends Component {
         />
 
         {!user.mentorAccount && <FlatButton
+          style={{margin: '10px'}}
           label="Become A Mentor"
           onClick={()=>{
             this.props.router.push(`/mentor/editProfile/${user.handle}/`)

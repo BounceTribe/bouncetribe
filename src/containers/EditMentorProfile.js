@@ -18,7 +18,7 @@ class EditMentorProfile extends Component {
     this.state = {
       handleError: '',
       summaryError: '',
-      mediaUrls: mentorAccount.mediaUrls,
+      mediaUrls: mentorAccount.mediaUrls || ['','',''],
       summary: mentorAccount.summary,
       videoUrl: mentorAccount.videoUrl,
       occupation: mentorAccount.occupation,
@@ -136,16 +136,34 @@ class EditMentorProfile extends Component {
             this.setState({qualifications: quals})
           }}
         />
-        {/* <TextField
-          floatingLabelText={'You Tube URL'}
+        <TextField
+          floatingLabelText={'YouTube URL'}
           value={mediaUrls[0] || ''}
           onChange={(e)=>{
             let newLinks = [...mediaUrls]
-            newLinks[0].url = e.target.value
-            newLinks[0].type = 'YOU_TUBE'
-            this.setState({mediaUrls: e.target.value})
+            newLinks[0] = e.target.value
+            this.setState({mediaUrls: newLinks})
           }}
-        /> */}
+        />
+        <TextField
+          floatingLabelText={'SoundCloud URL'}
+          value={mediaUrls[1] || ''}
+          onChange={(e)=>{
+            let newLinks = [...mediaUrls]
+            console.log({newLinks});
+            newLinks[1] = e.target.value
+            this.setState({mediaUrls: newLinks})
+          }}
+        />
+        <TextField
+          floatingLabelText={'BeatPort URL'}
+          value={mediaUrls[2] || ''}
+          onChange={(e)=>{
+            let newLinks = [...mediaUrls]
+            newLinks[2] = e.target.value
+            this.setState({mediaUrls: newLinks})
+          }}
+        />
         <TextField
           floatingLabelText={'Video URL'}
           value={videoUrl || ''}
@@ -235,6 +253,7 @@ export default Relay.createContainer( EditMentorProfile, {
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
+            handle
             id
             mentorAccount {
               id
@@ -255,8 +274,6 @@ export default Relay.createContainer( EditMentorProfile, {
                 edges { node { id, text, rating } }
               }
             }
-            # experience
-            handle
           }
         }
       `,

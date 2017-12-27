@@ -1,23 +1,27 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Location, MentorView, LeftWrapper, UpperMain, Rating, RatingVal, NumberRatings, InfoFeed, Text, MediaLinks, MediaItem,
-RightPanel, Label, MissingMentorData, Summary, Reviews, ReviewLabel, CenteredRow, MentorHandle} from 'styled/MentorProfile'
+RightPanel, Label, MissingMentorData, Summary, Reviews, ReviewLabel, CenteredRow, MentorHandle, ReserveUpper, ReserveLower} from 'styled/MentorProfile'
 import PinIcon from 'icons/Location'
-import {BtAvatar, BtTagList} from 'styled'
+import {BtAvatar, BtTagList, BtFlatButton} from 'styled'
 import {ProjectListSm} from 'components/ProjectListSm'
 import Edit from 'icons/Edit'
-import {purple} from 'theme'
+import {purple, white} from 'theme'
 import {mapUserInfo} from 'utils/mapUserInfo'
 import Rater from 'react-rater'
 import 'react-rater/lib/react-rater.css'
 import {url} from 'config'
-import Temp from 'icons/MentorTemp.png'
+// import Temp from 'icons/MentorTemp.png'
+import AddToReservations from 'mutations/AddToReservations'
+import RemoveFromReservations from 'mutations/RemoveFromReservations'
+// import UpdateUser from 'mutations'
 import ReactPlayer from 'react-player'
+import {mapNodes} from 'utils/mapNodes'
 class MentorProfile extends Component {
 
   constructor(props) {
     super(props)
-    let {Mentor} = this.props.viewer
+    let {Mentor, user} = this.props.viewer
     let mappedInfo = mapUserInfo(Mentor.userAccount, Mentor)
     console.log('profile user', Mentor);
     console.log('mentor props', props);
@@ -42,14 +46,45 @@ class MentorProfile extends Component {
       // notification: false,
       editProfile: false,
       editMusicianInfo: false,
+      newReservation: false,
+      isReserved: mapNodes(user.mentorReservations, '.id').includes(Mentor.id)
     }
   }
 
   rateMentor = (rating) => {
-    console.log({rating});
+    console.log({rating})
   }
 
+  handleReservation = () => {
+    let mentorId = this.props.viewer.Mentor.id
+    let menteeId = this.props.viewer.user.id
+    if (this.state.isReserved) {
+      this.props.relay.commitUpdate(
+        new RemoveFromReservations({ mentorId, menteeId }), {
+          onSuccess: res => {
+            console.log('reservation removed', res);
+            this.setState({isReserved: false, newReservation: false})
+          },
+          onFailure: res => {console.log('REMOVE Reservation FAILURE', res)}
+        }
+      )
+    } else {
+      this.props.relay.commitUpdate(
+        new AddToReservations({ mentorId, menteeId }), {
+          onSuccess: res => {
+            console.log('reservation added', res);
+            this.setState({isReserved: true, newReservation: true})
+          },
+          onFailure: res => {console.log('ADD Reservation FAILURE', res)}
+        }
+      )
+    }
+  }
+
+
+
   render(){
+    // console.log('mentor state', this.state);
     let {Mentor, user} = this.props.viewer
     let ownProfile = Mentor.userAccount.id===user.id
     let { handle,
@@ -62,6 +97,8 @@ class MentorProfile extends Component {
           reviews,
           mediaUrls,
           videoUrl,
+          newReservation,
+          isReserved,
           placename } = this.state
     return (
       <MentorView>
@@ -92,7 +129,7 @@ class MentorProfile extends Component {
                 </MissingMentorData>
               </Location>
               <Rating>
-                <Rater total={5} rating={3.5} onRate={()=>this.rateMentor()} interactive/>
+                <Rater total={5} rating={4.5} onRate={()=>this.rateMentor()} interactive/>
                 <RatingVal> 4.5 </RatingVal>
                 <NumberRatings> ({reviews.count})</NumberRatings>
               </Rating>
@@ -101,7 +138,7 @@ class MentorProfile extends Component {
           </UpperMain>
           <InfoFeed>
 
-            {videoUrl && <ReactPlayer url={videoUrl} />}
+            {videoUrl && <ReactPlayer width={'100%'} url={videoUrl} />}
             <Label hide={(!ownProfile && !specialties.length)} >
               SPECIALTIES
             </Label>
@@ -130,10 +167,8 @@ class MentorProfile extends Component {
               <ProjectListSm {...this.props} mentor/>
             </div>
 
-            <MediaLinks urls={mediaUrls}>
-              {/* {mediaUrls.map(edge => <MediaItem {...edge.node} />)} */}
-              {/* <MediaItem type={'SOUND_CLOUD'} url={'soundcloud.com/holes-in-a-barrel'} />
-              <MediaItem type={'YOU_TUBE'} url={'soundcloud.com/holes-in-a-barrel'}/> */}
+            <MediaLinks>
+              {(mediaUrls || []).map((url, i) => <MediaItem key={i} url={url} />)}
             </MediaLinks>
             <Reviews>
               <ReviewLabel>User Reviews ({reviews.count})</ReviewLabel>
@@ -141,8 +176,33 @@ class MentorProfile extends Component {
             </Reviews>
           </InfoFeed>
         </LeftWrapper>
-        <RightPanel>
-          <img src={Temp} width={325} height={354} alt='temp'/>
+        <RightPanel hide={newReservation || ownProfile}>
+          <ReserveUpper>
+            {isReserved ? 'Your Spot Has Been Reserved' : 'Interested In This Mentor?'}
+          </ReserveUpper>
+          <BtFlatButton
+            label={isReserved ? 'Cancel Reservation' : 'Reserve Your Spot'}
+            onClick={()=>this.handleReservation()}
+            labelStyle={{
+              color: white,
+              fontSize: '15px',
+              fontWeight: '400'
+            }}
+            style={{width: '250px', height: '45px'}}
+            backgroundColor={purple}
+          />
+          <ReserveLower>
+            {isReserved ? 'You currently have a spot reserved'
+            : 'Reserve your spot for free to get early access'}
+          </ReserveLower>
+
+          {/* <img src={Temp} width={325} height={354} alt='temp'/> */}
+        </RightPanel>
+        <RightPanel hide={!newReservation || ownProfile}>
+          <ReserveUpper>Spot Reserved!</ReserveUpper>
+          <ReserveLower>
+            You will be notified when this mentor is available
+          </ReserveLower>
         </RightPanel>
       </MentorView>
     )
@@ -172,6 +232,7 @@ export default Relay.createContainer(MentorProfile, {
          website
          placename
          score
+         mentorReservations(first: 999) { edges { node { id } } }
          portrait {
            id
            url
