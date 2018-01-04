@@ -208,4 +208,5 @@ export const InfoFeed = styled(Col)`
     font-size: 20px;
     color: #555555;
     letter-spacing: 0;
+    margin-bottom: 20px;
   `

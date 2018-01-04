@@ -183,7 +183,7 @@ class EditMentorProfile extends Component {
           topBar={top}
           tabChange={(tab)=>this.setTab(tab, this.props.userHandle)}
           labels={['bio', 'work', 'services']}
-          names={['my bio', 'my work', 'services']}
+          names={['mentor bio', 'my work', 'services']}
           content={this.getContent(tab)}
         />
       </EditView>

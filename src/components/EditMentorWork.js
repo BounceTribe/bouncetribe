@@ -11,7 +11,8 @@ export default class EditMentorWork extends Component {
         key={index}
         label={project.title}
         checked={this.props.projectsIds.includes(project.id)}
-        style={{padding: '10px 0'}}
+        style={{padding: '5px 0', fontWeight: '300'}}
+        labelStyle={{color:'#777777', fontSize: '17px'}}
         onCheck={ (e, isChecked) => {
           let projectsIds = isChecked ?
           this.props.projectsIds.concat(project.id)
