@@ -7,8 +7,6 @@ const Header = ({style, width, height, viewBox, fill}) => {
       style={style}
       width={width || '150px'} height={height || '19px'} viewBox={viewBox || "0 0 150 19"} version="1.1" xmlns="http://www.w3.org/2000/svg"
     >
-
-      <defs></defs>
       <g id="Symbols" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" fontWeight="normal" fontFamily=".SFNSDisplay, .SF NS Display" letterSpacing="-0.899999976" fontSize="24">
           <g id="Web-Top-Nav" transform="translate(-136.000000, -16.000000)" fill={white || fill}>
               <g id="Top-Nav">

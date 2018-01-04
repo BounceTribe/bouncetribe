@@ -21,7 +21,7 @@ const edgeFilter = (project, type) => (
 const makeList = (props) => {
   let bounceTab = props.location.pathname.includes('/bounces/')
   console.log('projsm ', props);
-  let User = props.mentor ? props.viewer.Mentor.userAccount : props.viewer.User
+  let User = props.mentor ? props.viewer.Mentor : props.viewer.User
   let edges = bounceTab ? User.bounces.edges : User.projects.edges
   return edges.map((edge, index) => {
     let project = edge.node.project || edge.node

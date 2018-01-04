@@ -147,19 +147,20 @@ export const InfoFeed = styled(Col)`
     padding: 18px 0;
   `
 
-  export const MediaItem = ({url}) =>{
+  export const MediaItem = ({url}) => {
     console.log('mediaitem', url)
+    let urlLow = url.toLowerCase()
     let icon, text
     switch (true) {
-      case url.toLowerCase().includes('youtube.com'):
+      case (urlLow.includes('youtube.com') || urlLow.includes('youtu.be')):
         icon = <MediaIcon src={YOU_TUBE} />
         text = 'YouTube'
         break;
-      case url.toLowerCase().includes('soundcloud.com'):
+      case urlLow.includes('soundcloud.com'):
         icon = <MediaIcon src={SOUND_CLOUD} />
         text = 'SoundCloud'
         break;
-      case url.toLowerCase().includes('beatport.com'):
+      case urlLow.includes('beatport.com'):
         icon = <MediaIcon src={BEAT_PORT} />
         text = 'BeatPort'
         break;
@@ -201,4 +202,10 @@ export const InfoFeed = styled(Col)`
     ${'' /* margin: 5% 10%; */}
     width: 80%;
     margin-top: 120px;
+  `
+
+  export const EditWorkText = styled.span`
+    font-size: 20px;
+    color: #555555;
+    letter-spacing: 0;
   `

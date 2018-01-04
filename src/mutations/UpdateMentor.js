@@ -31,6 +31,7 @@ export default class UpdateMentor extends Relay.Mutation {
       summary: this.props.summary,
       videoUrl: this.props.videoUrl,
       specialtiesIds: this.props.specialtiesIds,
+      projectsIds: this.props.projectsIds,
       mediaUrls: this.props.mediaUrls,
       occupation: this.props.occupation,
       mentees: this.props.mentees,

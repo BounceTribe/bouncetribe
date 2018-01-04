@@ -11,12 +11,12 @@ import {mapUserInfo, mapMentorInfo} from 'utils/mapUserInfo'
 import Rater from 'react-rater'
 import 'react-rater/lib/react-rater.css'
 import {url} from 'config'
-// import Temp from 'icons/MentorTemp.png'
 import AddToReservations from 'mutations/AddToReservations'
 import RemoveFromReservations from 'mutations/RemoveFromReservations'
 // import UpdateUser from 'mutations'
 import ReactPlayer from 'react-player'
 import {mapNodes} from 'utils/mapNodes'
+
 class MentorProfile extends Component {
 
   constructor(props) {
@@ -100,7 +100,7 @@ class MentorProfile extends Component {
           newReservation,
           isReserved,
           placename } = this.state
-          console.log('mp', this.state);
+    console.log('mp', this.state);
     return (
       <MentorView>
         <LeftWrapper>
@@ -171,7 +171,7 @@ class MentorProfile extends Component {
               {(mediaUrls || []).map((url, i) => <MediaItem key={i} url={url} />)}
             </MediaLinks>
             <Reviews>
-              <ReviewLabel>User Reviews ({reviews.count})</ReviewLabel>
+              {/* <ReviewLabel>User Reviews ({reviews.count})</ReviewLabel> */}
               {/* <ReviewList reviews={reviews} /> */}
             </Reviews>
           </InfoFeed>
@@ -196,8 +196,6 @@ class MentorProfile extends Component {
             {isReserved ? 'You currently have a spot reserved'
               : 'Reserve your spot for free to get early access'}
           </ReserveLower>
-
-          {/* <img src={Temp} width={325} height={354} alt='temp'/> */}
         </RightPanel>
         <RightPanel hide={!newReservation || ownProfile}>
           <ReserveUpper>Spot Reserved!</ReserveUpper>
@@ -277,6 +275,32 @@ export default Relay.createContainer(MentorProfile, {
          videoUrl
          occupation
          qualifications
+         projects (
+           first: 5
+           orderBy: createdAt_ASC
+           filter: $projectsFilter
+         ){
+           count
+           edges {
+             node {
+               id
+               title
+               createdAt
+               bounces (first:999) {
+                 edges { node {id} }
+               }
+               artwork { url }
+               artworkSmall { url }
+               privacy
+               creator {handle}
+               comments ( first: 999 ) {
+                 edges {
+                   node { type }
+                 }
+               }
+             }
+           }
+         }
          specialties ( first: 20 ) {
            edges { node { id, name } }
          }
@@ -287,6 +311,19 @@ export default Relay.createContainer(MentorProfile, {
            edges { node { id, handle } }
          }
          mediaUrls
+         packages (first: 10) {
+           edges {
+             node {
+               responseHours
+               reviewsPerMonth
+               videoChatsPerMonth
+               careerStrategizing
+               mixingMasteringHelp
+               introductionsToNetwork
+               monthlyRate
+             }
+           }
+         }
          userAccount {
            id
            handle
@@ -308,32 +345,6 @@ export default Relay.createContainer(MentorProfile, {
                  name
                  spotifyId
                  imageUrl
-               }
-             }
-           }
-           projects (
-             first: 5
-             orderBy: createdAt_ASC
-             filter: $projectsFilter
-           ){
-             count
-             edges {
-               node {
-                 id
-                 title
-                 createdAt
-                 bounces (first:999) {
-                   edges { node {id} }
-                 }
-                 artwork { url }
-                 artworkSmall { url }
-                 privacy
-                 creator {handle}
-                 comments ( first: 999 ) {
-                   edges {
-                     node { type }
-                   }
-                 }
                }
              }
            }

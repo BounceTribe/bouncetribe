@@ -20,6 +20,9 @@ export const Header = styled.div`
 
 export const HeaderOptions = styled.span`
   display: flex;
+  align-items: center;
+  align-self: center;
+
 `
 
 export const List = styled.div`

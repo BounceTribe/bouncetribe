@@ -1,28 +1,12 @@
 import React, {Component} from 'react'
 import {TextField} from 'material-ui/'
-import ReactPlayer from 'react-player'
-import {mapNodes} from 'utils/mapNodes'
-import {Col, Row} from 'styled'
+import {Row} from 'styled'
 import {EditCol} from 'styled/MentorProfile'
 import {getAllSpecialties} from 'utils/graphql'
 import {Async} from 'react-select'
-
+// import 'react-select/dist/react-select.css'
 
 export default class EditMentorBio extends Component {
-// TODO: look up cascading qualificaitons BtTagList
-// TODO: embed preview
-  constructor(props) {
-    super(props)
-    // this.state = {
-    //   summaryError: '',
-    //   summary: this.props.summary,
-    //   videoUrl: this.props.videoUrl,
-    //   occupation: this.props.occupation,
-    //   qualifications: this.props.qualifications,
-    //   firstName: this.props.firstName,
-    //   lastName: this.props.lastName,
-    // }
-  }
 
   loadSpecialties = () => new Promise((resolve, reject) =>
     getAllSpecialties().then( allSpecialties => {
@@ -41,51 +25,6 @@ export default class EditMentorBio extends Component {
     this.props.setState({summary: val, summaryError: error})
   }
 
-  textFields = () => {
-    return (
-      <Col>
-        {/* <TextField
-          floatingLabelText={'Website'}
-          value={website || ''}
-          onChange={(e)=>this.props.setState({website: e.target.value})}
-        />
-        <TextField
-          floatingLabelText={'YouTube URL'}
-          value={mediaUrls[0] || ''}
-          onChange={(e)=>{
-            let newLinks = [...mediaUrls]
-            newLinks[0] = e.target.value
-            this.props.setState({mediaUrls: newLinks})
-          }}
-        />
-        <TextField
-          floatingLabelText={'SoundCloud URL'}
-          value={mediaUrls[1] || ''}
-          onChange={(e)=>{
-            let newLinks = [...mediaUrls]
-            console.log({newLinks});
-            newLinks[1] = e.target.value
-            this.props.setState({mediaUrls: newLinks})
-          }}
-        />
-        <TextField
-          floatingLabelText={'BeatPort URL'}
-          value={mediaUrls[2] || ''}
-          onChange={(e)=>{
-            let newLinks = [...mediaUrls]
-            newLinks[2] = e.target.value
-            this.props.setState({mediaUrls: newLinks})
-          }}
-        /> */}
-
-      </Col>
-    )
-  }
-
-  update = () => {
-    this.props.summaryError && this.props.update(this.state)
-  }
-
   render() {
     console.log('rendering bio', this);
     return (
@@ -96,7 +35,7 @@ export default class EditMentorBio extends Component {
             value={this.props.firstName || ''}
             onChange={(e)=>this.props.setState({firstName: e.target.value})}
             fullWidth
-          /><br />
+          />
           <TextField
             floatingLabelText={'Last Name (optional)'}
             value={this.props.lastName || ''}
@@ -110,9 +49,15 @@ export default class EditMentorBio extends Component {
             fullWidth
           />
           <TextField
-            floatingLabelText={'Education/Qualifications'}
+            floatingLabelText={'Education / Qualifications'}
             value={this.props.qualifications || ''}
             onChange={(e)=>this.props.setState({qualifications: e.target.value})}
+            fullWidth
+          />
+          <TextField
+            floatingLabelText={'Video URL'}
+            value={this.props.videoUrl || ''}
+            onChange={(e)=>this.props.setState({videoUrl: e.target.value})}
             fullWidth
           />
           <TextField
@@ -124,12 +69,6 @@ export default class EditMentorBio extends Component {
             rowsMax={5}
             fullWidth
           /><br />
-          <TextField
-            floatingLabelText={'Video URL'}
-            value={this.props.videoUrl || ''}
-            onChange={(e)=>this.props.setState({videoUrl: e.target.value})}
-            fullWidth
-          />
           {/* {this.props.videoUrl && <ReactPlayer url={this.props.videoUrl} />} */}
         </EditCol>
         <EditCol>

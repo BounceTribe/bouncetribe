@@ -3,7 +3,7 @@ import Relay from 'react-relay'
 import Music from 'icons/Music'
 import {EmptyPanel} from 'components/EmptyPanel'
 import {ActivityList} from 'components/ActivityList'
-import {mapNodes, mapIds} from 'utils/mapNodes'
+import {mapNodes} from 'utils/mapNodes'
 import {SeeMore} from 'styled'
 
 
@@ -16,7 +16,7 @@ class ActiviesPanel extends Component {
     this.state = Object.assign(
       this.mapActivity(this.props), {
         loading: false,
-        friendIds: mapIds(user.friends).concat(user.id),
+        friendIds: mapNodes(user.friends, '.id').concat(user.id),
         listLength: 0
       }
     )

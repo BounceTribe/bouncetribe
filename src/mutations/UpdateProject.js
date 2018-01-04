@@ -36,8 +36,4 @@ export default class UpdateProject extends Mutation {
     }]
   }
 
-
-
-
-
 }
