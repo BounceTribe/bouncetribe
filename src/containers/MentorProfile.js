@@ -13,7 +13,6 @@ import 'react-rater/lib/react-rater.css'
 import {url} from 'config'
 import AddToReservations from 'mutations/AddToReservations'
 import RemoveFromReservations from 'mutations/RemoveFromReservations'
-// import UpdateUser from 'mutations'
 import ReactPlayer from 'react-player'
 import {mapNodes} from 'utils/mapNodes'
 
@@ -23,7 +22,6 @@ class MentorProfile extends Component {
     super(props)
     let {Mentor, user} = this.props.viewer
     let mappedUserInfo = mapUserInfo(Mentor.userAccount)
-    console.log('profile user', Mentor);
     console.log('mentor props', props);
     this.state = {
       handle: Mentor.handle || '',
@@ -41,9 +39,6 @@ class MentorProfile extends Component {
       influences: mappedUserInfo.influences,
       genres: mappedUserInfo.genres,
       mediaUrls: Mentor.mediaUrls,
-      // projects: Mentor.projects.count,
-      // friends: Mentor.friends.count,
-      // notification: false,
       editProfile: false,
       editMusicianInfo: false,
       newReservation: false,
@@ -130,9 +125,9 @@ class MentorProfile extends Component {
                 </MissingMentorData>
               </Location>
               <Rating>
-                <Rater total={5} rating={4.5} onRate={()=>this.rateMentor()} interactive/>
+                {/* <Rater total={5} rating={4.5} onRate={()=>this.rateMentor()} interactive/>
                 <RatingVal> 4.5 </RatingVal>
-                <NumberRatings> ({reviews.count})</NumberRatings>
+                <NumberRatings> ({reviews.count})</NumberRatings> */}
               </Rating>
             </CenteredRow>
             <Summary>{summary}</Summary>
@@ -154,7 +149,6 @@ class MentorProfile extends Component {
             <Label hide={(!ownProfile && !genres.length)} >
               GENRES
             </Label>
-            {console.log('genres')}
             <BtTagList items={genres} />
             <Label hide={(!ownProfile && !influences.length)} >
               INFLUENCES
@@ -163,6 +157,7 @@ class MentorProfile extends Component {
             <Label hide={(!ownProfile)} >
               MY WORK
             </Label>
+
             <div style={{margin: '0 -50px'}}>
               <ProjectListSm {...this.props} mentor/>
             </div>

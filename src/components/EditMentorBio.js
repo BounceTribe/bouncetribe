@@ -81,6 +81,8 @@ export default class EditMentorBio extends Component {
             placeholder={'Specialties'}
             style={{margin: '4px 0 8px 0'}}
           />
+          {/* <BtTagList items={specialties} grayTag /> */}
+
         </EditCol>
       </Row>
     )
