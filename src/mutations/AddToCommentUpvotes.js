@@ -9,6 +9,7 @@ export default class AddToCommentUpvotes extends Mutation {
     }
   }
 
+
   getMutation () {
     return Relay.QL`mutation{addToCommentUpvotes}`
   }

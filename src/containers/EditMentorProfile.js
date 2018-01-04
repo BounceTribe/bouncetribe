@@ -1,12 +1,17 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {handleValidator, isUniqueField} from 'utils/handles'
 import UpdateMentor from 'mutations/UpdateMentor'
 import CreateMentor from 'mutations/CreateMentor'
-import {Dialog, TextField, FlatButton} from 'material-ui/'
-import ReactPlayer from 'react-player'
-import {mapNodes} from 'utils/mapNodes'
-import {Col} from 'styled'
+import {View, Button, IconTextContainer, IconText} from 'styled'
+import EditMentorBio from 'components/EditMentorBio'
+// import EditMentorWork from 'containers/EditMentorWork'
+// import EditMentorServices from 'containers/EditMentorServices'
+import {Panel} from 'components/Panel'
+import {Header, HeaderOptions} from 'styled/list'
+import {EditView} from 'styled/MentorProfile'
+import {mapUserInfo} from 'utils/mapUserInfo'
+
+
 
 class EditMentorProfile extends Component {
 // TODO: look up cascading qualificaitons BtTagList
@@ -15,42 +20,31 @@ class EditMentorProfile extends Component {
     super(props)
     this.user = this.props.viewer.user
     let mentorAccount = this.user.mentorAccount || {}
+    // this.state = {
+    //   handleError: '',
+    //   summaryError: '',
+    //   mediaUrls: mentorAccount.mediaUrls || ['','',''],
+    //   summary: mentorAccount.summary,
+    //   videoUrl: mentorAccount.videoUrl,
+    //   occupation: mentorAccount.occupation,
+    //   qualifications: mentorAccount.qualifications,
+    //   website: mentorAccount.website,
+    //   id: mentorAccount.id,
+    //   handle: mentorAccount.handle || this.user.handle,
+    // }
     this.state = {
-      handleError: '',
       summaryError: '',
-      mediaUrls: mentorAccount.mediaUrls || ['','',''],
       summary: mentorAccount.summary,
       videoUrl: mentorAccount.videoUrl,
       occupation: mentorAccount.occupation,
       qualifications: mentorAccount.qualifications,
-      website: mentorAccount.website,
-      id: mentorAccount.id,
-      handle: mentorAccount.handle || this.user.handle,
+      firstName: mentorAccount.firstName,
+      lastName: mentorAccount.lastName,
+      specialties: mapUserInfo(mentorAccount).specialties
     }
     if (!this.user.mentorAccount) {
       this.becomeMentor()
     }
-  }
-
-  handleSet = (val) => {
-    let {handle: newHandle, error } = handleValidator(val)
-    this.setState({ handle: newHandle, handleError: error })
-    if (val!==(this.user.mentorAccount || {}).handle) {
-      isUniqueField(val, 'handle', 'Mentor').then( res =>
-        isUniqueField(val, 'handle', 'User').then( res2 => {
-          let notUnique = !res || !res2
-          notUnique && this.setState({handleError: 'handle already in use!'})
-        }
-      ))
-    }
-  }
-
-  summarySet = (val) => {
-    console.log('summary', val, val.length);
-    let error = ''
-    if (val.split(/\r\n|\r|\n/).length > 15) error='Too many lines'
-    if (val.length > 400) error='500 character limit exceeded'
-    this.setState({summary: val, summaryError: error})
   }
 
   becomeMentor = () => {
@@ -69,13 +63,15 @@ class EditMentorProfile extends Component {
   }
 
   sendUpdate = () => {
-    let mentorId = (this.user.mentorAccount || {}).id
-    let updateObj = Object.assign({...this.state}, {mentorId})
+    let updateObj = Object.assign(this.state, {
+      mentorId: (this.user.mentorAccount || {}).id,
+      specialtiesIds: this.state.specialties.map(s=>s.value || s)
+    })
     console.log('updating', updateObj);
     Relay.Store.commitUpdate(
       new UpdateMentor(updateObj), {
         onSuccess: (success) =>
-          this.props.router.push(`/mentor/${this.state.handle}`),
+          this.props.router.push(`/mentor/${this.props.params.userHandle}`),
         onFailure: (failure) => console.log('updatementor fail', failure)
       }
     )
@@ -85,156 +81,78 @@ class EditMentorProfile extends Component {
     // }
   }
 
-  textFields = () => {
-    let { handle,
-          summary,
-          videoUrl,
-          occupation,
-          qualifications,
-          // specialties,
-          website,
-          // deactivated,
-          mediaUrls,
-          handleError,
-          summaryError } = this.state
+  getContent = (tab) => {
+    const tabs = {
+      bio: () => <EditMentorBio
+        update={this.sendUpdate}
+        setState={(obj)=>this.setState(obj)}
+        firstName={this.state.firstName}
+        lastName={this.state.lastName}
+        occupation={this.state.occupation}
+        qualifications={this.state.qualifications}
+        videoUrl={this.state.videoUrl}
+        summary={this.state.summary}
+        specialties={this.state.specialties}
+      />
+    }
 
-          console.log('state', this.state);
-          qualifications = qualifications || []
-    return (
-      <Col>
-        <TextField
-          floatingLabelText={'Handle'}
-          errorText={handleError}
-          value={handle || ''}
-          onChange={(e)=>this.handleSet(e.target.value)}
-        /><br />
-        <TextField
-          floatingLabelText={'Summary'}
-          errorText={summaryError}
-          value={summary || ''}
-          onChange={(e)=>this.summarySet(e.target.value)}
-          multiLine
-          rowsMax={5}
-          fullWidth
-        /><br />
-        <TextField
-          floatingLabelText={'Website'}
-          value={website || ''}
-          onChange={(e)=>this.setState({website: e.target.value})}
-        />
-        <TextField
-          floatingLabelText={'Current Occupation'}
-          value={occupation || ''}
-          onChange={(e)=>this.setState({occupation: e.target.value})}
-        />
-        <TextField
-          floatingLabelText={'Qualification 1'}
-          value={qualifications[0] || ''}
-          onChange={(e)=>{
-            let quals = this.state.qualifications.slice()
-            quals[0] = e.target.value
-            this.setState({qualifications: quals})
-          }}
-        />
-        <TextField
-          floatingLabelText={'YouTube URL'}
-          value={mediaUrls[0] || ''}
-          onChange={(e)=>{
-            let newLinks = [...mediaUrls]
-            newLinks[0] = e.target.value
-            this.setState({mediaUrls: newLinks})
-          }}
-        />
-        <TextField
-          floatingLabelText={'SoundCloud URL'}
-          value={mediaUrls[1] || ''}
-          onChange={(e)=>{
-            let newLinks = [...mediaUrls]
-            console.log({newLinks});
-            newLinks[1] = e.target.value
-            this.setState({mediaUrls: newLinks})
-          }}
-        />
-        <TextField
-          floatingLabelText={'BeatPort URL'}
-          value={mediaUrls[2] || ''}
-          onChange={(e)=>{
-            let newLinks = [...mediaUrls]
-            newLinks[2] = e.target.value
-            this.setState({mediaUrls: newLinks})
-          }}
-        />
-        <TextField
-          floatingLabelText={'Video URL'}
-          value={videoUrl || ''}
-          onChange={(e)=>this.setState({videoUrl: e.target.value})}
-        />
-        {videoUrl && <ReactPlayer url={videoUrl} />}
-        {/* <TextField
-          floatingLabelText={'Qualification 2'}
-          value={qualifications[1] || ''}
-          onChange={(e)=>{
-            let quals = this.state.qualifications.slice()
-            quals[1] = e.target.value
-            this.setState({qualifications: quals})
-          }}
-        />
-        <TextField
-          floatingLabelText={'Qualification 3'}
-          value={qualifications[2] || ''}
-          onChange={(e)=>{
-            let quals = this.state.qualifications.slice()
-            quals[2] = e.target.value
-            this.setState({qualifications: quals})
-          }}
-        />
-        <TextField
-          floatingLabelText={'Qualification 4'}
-          value={qualifications[3] || ''}
-          onChange={(e)=>{
-            let quals = this.state.qualifications.slice()
-            quals[3] = e.target.value
-            this.setState({qualifications: quals})
-          }}
-        />
-        <TextField
-          floatingLabelText={'Qualification 5'}
-          value={qualifications[4] || ''}
-          onChange={(e)=>{
-            let quals = this.state.qualifications.slice()
-            quals[4] = e.target.value
-            this.setState({qualifications: quals})
-          }}
-        /> */}
-      </Col>
-    )
+    return tabs[tab]()
+  }
+
+  setTab = (tab, handle) => {
+    this.props.router.push(`/mentor/editprofile/${handle}/${tab}`)
+    this.setState({ tab })
   }
 
   render() {
-    let {handleError, summaryError, id} = this.state
-    console.log({...this.state});
-    return (
-      <Dialog
-        title={"Mentor Profile"}
-        modal
-        autoScrollBodyContent
-        open
-        bodyStyle={{minHeight: '60vh'}}
-        titleStyle={{ fontSize: '28px' }}
-        actions={[
-          <FlatButton label="Cancel" onClick={()=>          this.props.router.push(`/mentor/${this.state.handle}`)
-          } />,
-          <FlatButton
-            label="Save Mentor Info"
+    // let {handleError, summaryError, id} = this.state
+    console.log('em render', this)
+    let tab = this.props.params.tab || 'bio'
+    let top = (
+      <Header>
+        <IconTextContainer to={`/mentor/${this.props.params.userHandle}`} >
+          {/* <TribeIcon fill={purple} /> */}
+          <IconText>{'My Mentor Profile'}</IconText>
+        </IconTextContainer>
+        <HeaderOptions>
+          <Button
+            style={{marginRight: '20px'}}
+            onClick={this.sendUpdate}
+            label={'Save'}
             primary
-            disabled={!!handleError || !!summaryError || !id}
-            onClick={()=>this.sendUpdate()}
           />
-        ]}>
-        {id ? this.textFields() :
-          <FlatButton label="Become A Mentor" onClick={this.becomeMentor} />
+          <Button
+            to={`/mentor/${this.props.params.userHandle}`}
+            label={'View My Profile'}
+            primary
+          />
+        </HeaderOptions>
+      </Header>
+    )
+    return (
+      <EditView>
+        <Panel
+          hideBorder
+          tab={tab}
+          topBar={top}
+          tabChange={(tab)=>this.setTab(tab, this.props.userHandle)}
+          labels={['mentor bio', 'my work', 'services']}
+          values={[null, null, null]}
+          locks={[false, false, false]}
+          content={this.getContent(tab)}
+        />
+        {/* {id ? this.textFields() :
+          <FlatButton label="View My Profile" onClick={this.becomeMentor} />
         }
-      </Dialog>
+        <FlatButton label="Cancel" onClick={()=>          this.props.router.push(`/mentor/${this.state.handle}`)
+        } />
+        <FlatButton
+          label="Save Mentor Info"
+          primary
+          disabled={!!handleError || !!summaryError || !id}
+          onClick={()=>this.sendUpdate()}
+        /> */}
+      </EditView>
     )
   }
 }
@@ -257,12 +175,15 @@ export default Relay.createContainer( EditMentorProfile, {
             id
             mentorAccount {
               id
-              handle
+              firstName
+              lastName
               summary
               videoUrl
               occupation
               qualifications
-              specialties
+              specialties ( first: 20 ) {
+                edges { node { id, name } }
+              }
               website
               deactivated
               mentees (first: 100) {

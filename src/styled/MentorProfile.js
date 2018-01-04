@@ -115,8 +115,8 @@ export const InfoFeed = styled(Col)`
   border-radius: 10px;
   border: 1px solid #E3E3E3;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-
 `
+
   export const Text = styled.span`
     font-size: 14px;
     color: #555555;
@@ -141,10 +141,12 @@ export const InfoFeed = styled(Col)`
     text-decoration: none;
     padding-left: 15px;
   `
+
   const MediaRow = styled(Row)`
     align-items: center;
     padding: 18px 0;
   `
+
   export const MediaItem = ({url}) =>{
     console.log('mediaitem', url)
     let icon, text
@@ -188,4 +190,15 @@ export const InfoFeed = styled(Col)`
   `
   export const ReviewLabel = styled(Label)`
     font-size: 18px;
+  `
+
+  export const EditCol = styled(Col)`
+    flex: 1;
+    padding: 80px;
+  `
+
+  export const EditView = styled(View)`
+    ${'' /* margin: 5% 10%; */}
+    width: 80%;
+    margin-top: 120px;
   `

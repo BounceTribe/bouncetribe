@@ -173,7 +173,6 @@ class UserSettings extends Component {
             this.setState({show: false, pass1: '', pass2: ''})
           }}
         />}
-
       </Dialog>
     )
   }

@@ -171,7 +171,7 @@ const createRoutes = () => (
         ignoreScrollBehavior />
     </Route>
     <Route
-      path={'/mentor/editProfile/:userHandle'}
+      path={'/mentor/editProfile/:userHandle(/:tab)'}
       onEnter={userOnly}
       component={EditMentorProfile}
       queries={ViewerQuery}>

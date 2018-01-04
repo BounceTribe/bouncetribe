@@ -25,16 +25,17 @@ export default class UpdateMentor extends Relay.Mutation {
   getVariables () {
     return {
       id: this.props.mentorId,
+      firstName: this.props.firstName,
+      lastName: this.props.lastName,
       handle: this.props.handle,
-      createdAt: this.props.createdAt,
       summary: this.props.summary,
       videoUrl: this.props.videoUrl,
+      specialtiesIds: this.props.specialtiesIds,
       mediaUrls: this.props.mediaUrls,
       occupation: this.props.occupation,
       mentees: this.props.mentees,
       menteeReservations: this.props.menteeReservations,
       qualifications: this.props.qualifications,
-      specialties: this.props.specialties,
       website: this.props.website,
       deactivated: this.props.deactivated,
     }

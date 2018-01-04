@@ -17,3 +17,11 @@ export const mapUserInfo = (user) => {
   })
   return {genres, skills, influences}
 }
+
+export const mapMentorInfo = (mentor) => {
+  let specialties = ((mentor.specialties || {}).edges || []).map(edge=>{
+    let {node: specialty} = edge
+    return { value: specialty.id, label: specialty.name }
+  })
+  return {specialties}
+}

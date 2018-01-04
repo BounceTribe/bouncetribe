@@ -194,6 +194,26 @@ export const getAllSkills = () => {
   })
 }
 
+export const getAllSpecialties = () => {
+  return fetch(graphCool.simple, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: /* GraphQL */`{
+        allSpecialties (first: 300) {
+          id
+          name
+        }
+      }`
+    }),
+  })
+  .then(result=>result.json()).then(json => {
+    return json.data.allSpecialties
+  })
+}
+
 export const ensureBtArtistExists = (artist) => {
   let {label: name} = artist
   let {spotifyId, imageUrl} = artist.value

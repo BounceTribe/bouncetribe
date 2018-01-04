@@ -7,7 +7,7 @@ import {BtAvatar, BtTagList, BtFlatButton} from 'styled'
 import {ProjectListSm} from 'components/ProjectListSm'
 import Edit from 'icons/Edit'
 import {purple, white} from 'theme'
-import {mapUserInfo} from 'utils/mapUserInfo'
+import {mapUserInfo, mapMentorInfo} from 'utils/mapUserInfo'
 import Rater from 'react-rater'
 import 'react-rater/lib/react-rater.css'
 import {url} from 'config'
@@ -22,7 +22,7 @@ class MentorProfile extends Component {
   constructor(props) {
     super(props)
     let {Mentor, user} = this.props.viewer
-    let mappedInfo = mapUserInfo(Mentor.userAccount, Mentor)
+    let mappedUserInfo = mapUserInfo(Mentor.userAccount)
     console.log('profile user', Mentor);
     console.log('mentor props', props);
     this.state = {
@@ -32,14 +32,14 @@ class MentorProfile extends Component {
       portraitUrl: (Mentor.userAccount.portrait || {}).url || `${url}/logo.png`,
       portraitSmallUrl: (Mentor.userAccount.portraitSmall || {}).url || `${url}/logo.png`,
       website: Mentor.website || '',
-      specialties: Mentor.specialties || [],
+      specialties: mapMentorInfo(Mentor).specialties || [],
       qualifications: Mentor.qualifications || [],
       reviews: Mentor.reviews || [],
       videoUrl: Mentor.videoUrl || '',
       occupation: Mentor.occupation || '',
-      skills: mappedInfo.skills,
-      influences: mappedInfo.influences,
-      genres: mappedInfo.genres,
+      skills: mappedUserInfo.skills,
+      influences: mappedUserInfo.influences,
+      genres: mappedUserInfo.genres,
       mediaUrls: Mentor.mediaUrls,
       // projects: Mentor.projects.count,
       // friends: Mentor.friends.count,
@@ -100,6 +100,7 @@ class MentorProfile extends Component {
           newReservation,
           isReserved,
           placename } = this.state
+          console.log('mp', this.state);
     return (
       <MentorView>
         <LeftWrapper>
@@ -137,12 +138,11 @@ class MentorProfile extends Component {
             <Summary>{summary}</Summary>
           </UpperMain>
           <InfoFeed>
-
             {videoUrl && <ReactPlayer width={'100%'} url={videoUrl} />}
             <Label hide={(!ownProfile && !specialties.length)} >
               SPECIALTIES
             </Label>
-            <Text>{specialties.join(', ')}</Text>
+            <Text>{specialties.map(s => s.label).join(', ')}</Text>
             <Label hide={(!ownProfile && !occupation)} >
               CURRENT OCCUPATION
             </Label>
@@ -178,7 +178,8 @@ class MentorProfile extends Component {
         </LeftWrapper>
         <RightPanel hide={newReservation || ownProfile}>
           <ReserveUpper>
-            {isReserved ? 'Your Spot Has Been Reserved' : 'Interested In This Mentor?'}
+            {isReserved ? 'Your Spot Has Been Reserved'
+              : 'Interested In This Mentor?'}
           </ReserveUpper>
           <BtFlatButton
             label={isReserved ? 'Cancel Reservation' : 'Reserve Your Spot'}
@@ -193,7 +194,7 @@ class MentorProfile extends Component {
           />
           <ReserveLower>
             {isReserved ? 'You currently have a spot reserved'
-            : 'Reserve your spot for free to get early access'}
+              : 'Reserve your spot for free to get early access'}
           </ReserveLower>
 
           {/* <img src={Temp} width={325} height={354} alt='temp'/> */}
@@ -211,7 +212,7 @@ class MentorProfile extends Component {
 
 
 export default Relay.createContainer(MentorProfile, {
-  initialVariables: {mentorHandle: '', projectsFilter: {}},
+  initialVariables: { mentorHandle: '', projectsFilter: {} },
   prepareVariables: (urlParams) => {
     return {
       ...urlParams,
@@ -270,11 +271,15 @@ export default Relay.createContainer(MentorProfile, {
        Mentor (handle: $mentorHandle) {
          id
          handle
+         firstName
+         lastName
          summary
          videoUrl
          occupation
          qualifications
-         specialties
+         specialties ( first: 20 ) {
+           edges { node { id, name } }
+         }
          website
          deactivated
          mentees (first: 100) {
@@ -318,9 +323,7 @@ export default Relay.createContainer(MentorProfile, {
                  title
                  createdAt
                  bounces (first:999) {
-                   edges {
-                     node {id}
-                   }
+                   edges { node {id} }
                  }
                  artwork { url }
                  artworkSmall { url }
