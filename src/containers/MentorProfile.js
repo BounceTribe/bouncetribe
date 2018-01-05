@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
 import {Location, MentorView, LeftWrapper, UpperMain, Rating, RatingVal, NumberRatings, InfoFeed, Text, MediaLinks, MediaItem,
-RightPanel, Label, MissingMentorData, Summary, Reviews, ReviewLabel, CenteredRow, MentorHandle, ReserveUpper, ReserveLower} from 'styled/MentorProfile'
+RightPanel, Label, MissingMentorData, Summary, Reviews, ReviewLabel, CenteredRow, MentorHandle, ReserveUpper, ReserveLower, PlayerContainer} from 'styled/MentorProfile'
 import PinIcon from 'icons/Location'
 import {BtAvatar, BtTagList, BtFlatButton} from 'styled'
 import {ProjectListSm} from 'components/ProjectListSm'
@@ -42,8 +42,23 @@ class MentorProfile extends Component {
       editProfile: false,
       editMusicianInfo: false,
       newReservation: false,
-      isReserved: mapNodes(user.mentorReservations, '.id').includes(Mentor.id)
+      isReserved: mapNodes(user.mentorReservations, '.id').includes(Mentor.id),
+      playerHeight: 0
     }
+  }
+
+  componentDidMount() {
+    this.updateDimensions()
+     window.addEventListener("resize", this.updateDimensions);
+  }
+  componentWinnUnmount() {
+     window.removeEventListener("resize", this.updateDimensions);
+  }
+
+  updateDimensions = () => {
+    this.setState({
+      playerHeight: this.feedEl && (this.feedEl.wrapper.offsetWidth*9/16)
+    })
   }
 
   rateMentor = (rating) => {
@@ -133,7 +148,12 @@ class MentorProfile extends Component {
             <Summary>{summary}</Summary>
           </UpperMain>
           <InfoFeed>
-            {videoUrl && <ReactPlayer width={'100%'} url={videoUrl} />}
+
+            {videoUrl &&
+              // <PlayerContainer>
+                <ReactPlayer ref={feed => {this.feedEl = feed}} width={'100%'} height={this.state.playerHeight} url={videoUrl} />
+            // {/* </PlayerContainer> */}
+          }
             <Label hide={(!ownProfile && !specialties.length)} >
               SPECIALTIES
             </Label>

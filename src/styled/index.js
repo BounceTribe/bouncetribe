@@ -251,23 +251,24 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `
 export const SeeMore = (props) =>
-  <SeeMoreContainer className='SEEMORECONTAINER'>
+  <SeeMoreContainer>
     {props.children}
     <ButtonContainer>
-      {props.loading ?
-        <Spinner style={{padding:'15px'}}/>
-        :
-        <FlatButton
-          onClick={props.onClick}
-          style={{
-            backgroundColor: `${white}`,
-            border: `1px solid #4A4A4A`,
-            borderRadius: '5px',
-            margin: '5px',
-            width: `150px`,
-          }}
-        ><Label>See {props.seeLess ? 'Less' : 'More'}</Label>
-        </FlatButton>}
+      {props.loading
+        ? <Spinner style={{padding:'15px'}}/>
+        : <FlatButton
+            onClick={props.onClick}
+            style={{
+              backgroundColor: `${white}`,
+              border: `1px solid #D9D9D9`,
+              borderRadius: '5px',
+              margin: '20px',
+              width: `150px`,
+            }}
+          >
+            <Label>See {props.seeLess ? 'Less' : 'More'}</Label>
+          </FlatButton>
+      }
     </ButtonContainer>
   </SeeMoreContainer>
 

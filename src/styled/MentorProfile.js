@@ -115,7 +115,9 @@ export const InfoFeed = styled(Col)`
   border: 1px solid #E3E3E3;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
 `
-
+  export const PlayerContainer = styled.div`
+    object-fit: cover;
+  `
   export const Text = styled.span`
     font-size: 14px;
     color: #555555;
