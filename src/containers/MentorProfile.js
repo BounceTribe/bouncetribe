@@ -42,8 +42,23 @@ class MentorProfile extends Component {
       editProfile: false,
       editMusicianInfo: false,
       newReservation: false,
-      isReserved: mapNodes(user.mentorReservations, '.id').includes(Mentor.id)
+      isReserved: mapNodes(user.mentorReservations, '.id').includes(Mentor.id),
+      playerHeight: 0
     }
+  }
+
+  componentDidMount() {
+    this.updateDims()
+    window.addEventListener("resize", this.updateDims);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDims);
+  }
+
+  updateDims = () => {
+    this.setState({
+      playerHeight: this.playerEl && (this.playerEl.wrapper.offsetWidth*9/16)
+    })
   }
 
   rateMentor = (rating) => {
@@ -133,7 +148,13 @@ class MentorProfile extends Component {
             <Summary>{summary}</Summary>
           </UpperMain>
           <InfoFeed>
-            {videoUrl && <ReactPlayer width={'100%'} url={videoUrl} />}
+            {videoUrl &&
+              <ReactPlayer
+                ref={ref => {this.playerEl = ref}}
+                width={'100%'}
+                height={this.state.playerHeight}
+                url={videoUrl} />
+          }
             <Label hide={(!ownProfile && !specialties.length)} >
               SPECIALTIES
             </Label>
