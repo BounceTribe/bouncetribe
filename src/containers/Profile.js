@@ -1,155 +1,86 @@
-import React, {Component} from 'react'
+     import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ProfileView, Top, Row, Left, Right, TopCol, Handle, Location, ScoreRow, Score, Divider, Summary, BotRow, BotRight, Label,  SubRow, Experience, ExperienceRow, EmailWebsite, MissingUserData} from 'styled/Profile'
+import {ProfileView, Top, Row, Left, Right, TopCol, Handle, Location, ScoreRow, Score, Divider, Summary, BotRow, BotRight, Label,  SubRow, Experience, ExperienceRow, EmailWebsite, MissingUserData, SiteLink} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
 import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
-import Email from 'icons/Email'
-import Link from 'icons/Link'
+import LinkIcon from 'icons/Link'
+import Edit from 'icons/Edit'
+import Online from 'icons/Online'
 import ExperienceIcon from 'icons/Experience'
 import ImageEditor from 'components/ImageEditor'
+import EditMusicianInfo from 'components/EditMusicianInfo'
+import EditProfile from 'components/EditProfile'
 import UpdateUser from 'mutations/UpdateUser'
-import {Async} from 'react-select'
 import 'react-select/dist/react-select.css'
 import 'theme/newSelect.css'
-import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'
-import searchArtists from 'utils/searchArtists'
-import {handleValidator, isUniqueField} from 'utils/handles'
 import {purple} from 'theme'
-import SelectField from 'material-ui/SelectField'
-import MenuItem from 'material-ui/MenuItem'
 import RemoveFromFriends from 'mutations/RemoveFromFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {formatEnum} from 'utils/strings'
 import Snackbar from 'material-ui/Snackbar'
-import {Dialog, TextField, FlatButton} from 'material-ui/'
-import {BtAvatar} from 'styled'
-import Edit from 'icons/Edit'
+import {BtAvatar, BtTagList} from 'styled'
 import {Panel} from 'components/Panel'
 import {url} from 'config'
 import {TribeButton} from 'components/TribeButton'
 import {acceptFriendRequest} from 'utils/updateCommits'
+import {isOnline} from 'utils/isOnline'
+import {mapUserInfo} from 'utils/mapUserInfo'
 
 
 
 class Profile extends Component {
 
-  state = {
-    imageEditorOpen: false,
-    genres: [],
-    skills: [],
-    influences: [],
-    experience: '',
-    tab: 'activity',
-    experiences: [
-      { value: 'NOVICE', text: 'Novice (Just Started)' },
-      { value: 'BEGINNER', text: 'Beginner (0-2 Years)' },
-      { value: 'SKILLED', text: 'Skilled (3-9 Years)' },
-      { value: 'ACCOMPLISHED', text: 'Accomplished (10-24 Years)' },
-      { value: 'VETERAN', text: 'Veteran (25+ Years)' },
-    ],
-    notification: false,
-    btnStatus: '',
-    editProfile: false,
-    userhandleError: '',
-    emailError: '',
-    summaryError: ''
-  }
-  componentDidMount = () => {
-    //TODO-J this is a redirect: maybe there's better way to handle w/ router
-    // let location = this.props.router.location;
+  constructor(props) {
+    super(props)
+    let {User} = this.props.viewer
+    console.log('profile user', User);
+    let mappedInfo = mapUserInfo(props.viewer.User)
 
-    this.props.router.push(`/${this.props.router.params.userHandle}/activity`)
+    this.state = {
+      handle: User.handle || '',
+      placename: User.placename || '',
+      summary: User.summary || '',
+      portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
+      portraitSmallUrl: (User.portraitSmall || {}).url || `${url}/logo.png`,
+      website: User.website || '',
+      email: User.email || '',
+      experience: User.experience || '',
+      score: User.score || 0,
+      genres: mappedInfo.genres,
+      skills: mappedInfo.skills,
+      influences: mappedInfo.influences,
+      projects: User.projects.count,
+      friends: User.friends.count,
+      imageEditorOpen: false,
+      tab: 'activity',
+      notification: false,
+      btnStatus: '',
+      editProfile: false,
+      editMusicianInfo: false,
+    }
+  }
+  componentWillMount = () => {
+    let {theirHandle} = this.props.router.params
+    if (location.pathname!==(
+      `/${theirHandle}/activity/1/` ||
+      `/${theirHandle}/projects/1/` ||
+      `/${theirHandle}/bounces/1/` )) {
+      this.props.router.replace(`/${theirHandle}/activity/1/`)
+    }
     console.log('profile mount props', this.props);
   }
 
-  componentWillMount = () => {
-    this.setState( (prevState, props) => {
-
-      let experiences = prevState.experiences.map(experience=>(
-        <MenuItem
-          primaryText={experience.text}
-          key={experience.value}
-          value={experience.value}
-        />
-      ))
-      let {User} = this.props.viewer
-      let genres = User.genres.edges.map(edge=>{
-        let {node: genre} = edge
-        return { value: genre.id, label: genre.name }
-      })
-      let skills = User.skills.edges.map(edge=>{
-        let {node: skill} = edge
-        return { value: skill.id, label: skill.name }
-      })
-      let influences = User.artistInfluences.edges.map(edge=>{
-        let {node: influence} = edge
-        return {
-          value: {
-            imageUrl: influence.imageUrl,
-            spotifyId: influence.spotifyId,
-            id: influence.id
-          },
-          label: influence.name
-        }
-      })
-      return {
-        handle: User.handle,
-        placename: User.placename || '',
-        summary: User.summary || '',
-        portraitUrl: (User.portrait || {}).url || `${url}/logo.png`,
-        website: User.website || '',
-        email: User.email || '',
-        experience: User.experience || '',
-        genres,
-        skills,
-        influences,
-        experiences,
-      }
-    })
-  }
-
   componentWillReceiveProps (newProps) {
-    let {handle, placename, summary, portrait, score, projects, friends, website, email, genres, skills, artistInfluences, experience} = newProps.viewer.User
-    this.setState( (prevState, props) => {
-      let newGenres = genres.edges.map(edge=>{
-        let {node: genre} = edge
-        return { value: genre.id, label: genre.name }
-      })
-      let newSkills = skills.edges.map(edge=>{
-        let {node: skill} = edge
-        return { value: skill.id, label: skill.name }
-      })
-      let newInfluences = artistInfluences.edges.map(edge=>{
-        let {node: influence} = edge
-        let {imageUrl, spotifyId, id} = influence
-        return {
-          value: { imageUrl, spotifyId, id },
-          label: influence.name
-        }
-      })
-      return {
-        handle: handle || '',
-        placename: placename || '',
-        summary: summary || '',
-        score: score || 0,
-        website: website || '',
-        email: email || '',
+    let {portrait, projects, friends} = newProps.viewer.User
+    let mappedInfo = mapUserInfo(newProps.viewer.User)
+    this.setState(
+      Object.assign(this.state, mappedInfo, {
         portraitUrl: (portrait || {}).url || `${url}/logo.png`,
         projects: projects.count,
         friends: friends.count,
-        genres: newGenres,
-        skills: newSkills,
-        influences: newInfluences,
-        experience: experience || '',
-      }
-    })
-    // let oldHandle = this.props.viewer.User.handle
-    // console.log(oldHandle, handle);
-    // if (oldHandle !== handle) {
-    //   this.props.router.push(`/${handle}`)
-    // }
+    }))
   }
 
   accept = (requestId) => acceptFriendRequest({
@@ -161,7 +92,7 @@ class Profile extends Component {
   })
 
   addToTribe = () => {
-    console.log('CFQ Profile');
+    console.log('CFQ Profile')
     let {id: actorId} = this.props.viewer.user
     let {id: recipientId} = this.props.viewer.User
     this.props.relay.commitUpdate(
@@ -187,254 +118,95 @@ class Profile extends Component {
     )
   }
 
-  handleSet = (val) =>{
-    let {handle: newHandle, error} = handleValidator(val)
-    if (val!==this.props.viewer.User.handle) {
-      isUniqueField(val, 'email').then( result =>
-        !result && this.setState({emailError: 'Email already in use!'})
-      )
-    }
-    this.setState({ handle: newHandle, userhandleError: error })
-  }
-
-  emailSet = (val) => {
-    let error = ''
-    if (val!==this.props.viewer.User.email) {
-      isUniqueField(val, 'email').then( result => {
-        if (!result) error='Email already in use!'
-      })
-    }
-    this.setState({ email: val,  emailError: error })
-  }
-
-  summarySet = (val) => {
-    console.log('summary', val, val.length);
-    let error = ''
-    if (val.split(/\r\n|\r|\n/).length > 15) error='Too many lines'
-    if (val.length > 400) error='500 character limit exceeded'
-    this.setState({summary: val, summaryError: error})
-  }
-
-  genreChange = (val) => {
-    let genresIds = val.map(genre=>genre.value)
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId: this.props.viewer.user.id, genresIds }), {
-        onSuccess: res => this.setState({ notification: `GENRE UPDATED` })
-      }
-    )
-  }
-
-  experienceChange = (experience) => {
-    let userId = this.props.viewer.user.id
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId, experience: experience.toUpperCase() }), {
-        onSuccess: res => this.setState({ notification: `EXPERIENCE UPDATED`})
-      }
-    )
-  }
-
-  skillChange = (val) => {
-    let skillsIds = val.map(skill => skill.value)
-    let userId = this.props.viewer.user.id
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId, skillsIds }), {
-        onSuccess: res => this.setState({ notification: `SKILLS UPDATED` })
-      }
-    )
-  }
-
-  influenceChange = (options) => {
-    if (options.length < this.state.influences.length) {
-      let artistInfluencesIds = options.map((option) => option.value.id)
-      let userId = this.props.viewer.user.id
-      this.props.relay.commitUpdate(
-        new UpdateUser({userId,artistInfluencesIds}), {
-          onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
-        }
-      )
-    } else {
-      let newInfluence = options.find((option) => !option.value.id)
-      ensureBtArtistExists(newInfluence).then(artistId => {
-        let artistInfluencesIds = options.map(option=>option.value.id || artistId)
-        let userId = this.props.viewer.user.id
-        this.props.relay.commitUpdate(
-          new UpdateUser({userId,artistInfluencesIds}),{
-            onSuccess: res => this.setState({notification: `INFLUENCES UPDATED`})
-          }
-        )
-      })
-    }
-  }
-
-  portraitSuccess = (file) => {
+  portraitSuccess = (files) => {
     this.setState({imageEditorOpen: false})
-    this.props.relay.commitUpdate(
-      new UpdateUser({
-        userId: this.props.viewer.User.id,
-        portraitId: file.id,
-      }), {
-        onSuccess: success => console.log(success),
-        failure: failure => console.log('fail', failure)
-      }
-    )
-  }
 
-  loadGenres = () => {
-    return new Promise( (resolve, reject)=> {
-      getAllGenres().then(allGenres=>{
-        let options = allGenres.map(genre=>{
-          return { value: genre.id, label: genre.name }
-        })
-        resolve({options})
-      })
-    })
-  }
-  loadSkills = () => {
-    return new Promise( (resolve, reject)=> {
-      getAllSkills().then(allSkills=>{
-        let options = allSkills.map(skill=>{
-          return { value: skill.id, label: skill.name }
-        })
-        resolve({options})
-      })
-    })
-  }
-  influenceOptions = (query) => {
-    return new Promise( (resolve, reject) =>
-      query ? searchArtists(query).then(options => resolve(options)) : resolve({options: []})
+    console.log('files', files);
+    let updateObj = {
+      userId: this.props.viewer.user.id,
+      portraitId: files[0].id,
+      portraitSmallId: files[1].id,
+      portraitMiniId: files[2].id
+    }
+    console.log('portrait updating', this.state);
+    this.props.relay.commitUpdate(
+      new UpdateUser(updateObj), {
+        onSuccess: success => console.log('portrait success', success),
+        failure: failure => console.log('portrait fail', failure)
+      }
     )
   }
 
   setTab = (tab) => {
-    this.props.router.push(`/${this.props.router.params.userHandle}/${tab}`)
+    this.props.router.replace(`/${this.props.router.params.theirHandle}/${tab}/1/`)
     this.setState({ tab })
-    // window.scrollTo(0, document.body.scrollHeight)
   }
 
-  setProfile = () => {
-    let {handle, placename, summary, email, website} = this.state
-    let userId = this.props.viewer.user.id
-    this.props.relay.commitUpdate(
-      new UpdateUser({ userId, handle, placename, summary, email, website }), {
-        onSuccess: (success) =>
-          this.setState({ notification: `PROFILE UPDATED`, editProfile: false })
-      }
-    )
+  musicianInfoSave = () => {
+    this.setState({ notification: 'INFO UPDATED', editMusicianInfo: false })
+  }
+
+  profileSave = () => {
+    this.setState({ notification: 'PROFILE UPDATED', editProfile: false })
   }
 
   topRow = () => {
-    let { handle,
-          imageEditorOpen,
-          placename,
-          summary,
-          website,
-          email,
-          userhandleError,
-          emailError,
-          summaryError} = this.state
+    let { imageEditorOpen, projects, friends, score } = this.state
     let {User, user} = this.props.viewer
-    let {score} = User
-    let projects = User.projects.count
-    let friends = User.friends.count
     let ownProfile = (User.id === user.id)
     return (
     <Top>
+      {this.state.editProfile && <EditProfile
+        open={true}
+        user={this.state}
+        userId={User.id}
+        onSave={()=>this.profileSave()}
+        onClose={()=>this.setState({editProfile: false})}
+      />}
       <Edit
-        onClick={()=>{this.setState({editProfile: true})}}
+        onClick={()=>this.setState({editProfile: true})}
         fill={purple}
         style={{
           alignSelf: 'flex-end',
-          margin: '20px 20px 0 0',
+          padding: '20px 20px 0 0',
           display: (ownProfile) ? '' : 'none',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          position: 'absolute'
         }}
       />
-      <Dialog
-        title={"Edit Profile"}
-        modal
-        autoScrollBodyContent
-        open={this.state.editProfile}
-        onRequestClose={()=>{ this.setState({editProfile: false}) }}
-        titleStyle={{ fontSize: '28px' }}
-        actions={[
-          <FlatButton
-            label="Cancel"
-            onClick={()=>this.setState({editProfile: false})}
-          />,
-          <FlatButton
-            label="Submit"
-            primary={true}
-            disabled={!!userhandleError || !!emailError || !!summaryError}
-            onClick={this.setProfile}
-          />
-        ]}>
-        <TextField
-          floatingLabelText={'Handle'}
-          errorText={userhandleError}
-          value={handle}
-          onChange={(e)=>this.handleSet(e.target.value)}
-        /><br />
-        <TextField
-          floatingLabelText={'Location'}
-          value={placename}
-          onChange={(e)=>this.setState({placename: e.target.value})}
-        /><br />
-        <TextField
-          floatingLabelText={'Summary'}
-          errorText={summaryError}
-          value={summary}
-          onChange={(e)=>this.summarySet(e.target.value)}
-          multiLine
-          rowsMax={5}
-          fullWidth
-        /><br />
-        <TextField
-          floatingLabelText={'Email'}
-          errorText={emailError}
-          value={email}
-          onChange={(e)=>this.emailSet(e.target.value)}
-        /><br />
-        <TextField
-          floatingLabelText={'Website'}
-          value={website}
-          onChange={(e)=>this.setState({website: e.target.value})}
-        />
-      </Dialog>
       <Row>
         <SubRow>
-          <BtAvatar user={this.props.viewer.User}
-            size={150}
-            hideStatus={ownProfile}
-            pointer={ownProfile}
+          <BtAvatar size={150} hideStatus user={User} pointer={ownProfile}
             onClick={()=>ownProfile && this.setState({imageEditorOpen: true})}
           />
-          <ImageEditor
-            open={imageEditorOpen}
+          {imageEditorOpen && <ImageEditor
+            altSizes={[300, 120]}
+            open
             onRequestClose={()=>this.setState({imageEditorOpen:false})}
             user={user}
             portraitSuccess={this.portraitSuccess}
-          />
+          />}
           <TopCol>
-            <Handle>{User.handle}</Handle>
-            <span>
-              {(User.placename || ownProfile) && <PinIcon/>}
-              <Location>{User.placename}</Location>
+            <Handle>
+              {User.handle}
+              {!ownProfile && isOnline(User) && <Online size={20} online />}
+            </Handle>
+            <Location>
+              {(User.placename || ownProfile) &&
+                <PinIcon style={{marginRight: '8px'}} />}
+              {User.placename}
               <MissingUserData hide={User.placename || !ownProfile}
                 onClick={()=>{this.setState({editProfile: true})}}>
                 Add your location
               </MissingUserData>
-            </span>
+            </Location>
             <ScoreRow>
-              <Bolt/>
-              <Score>{score}</Score>
-              <Music height={20} />
-              <Score>{projects}</Score>
-              <Tribe height={20} />
-              <Score>{friends}</Score>
+              <Bolt/> <Score>{score}</Score>
+              <Music height={20}/> <Score>{projects}</Score>
+              <Tribe height={20}/> <Score>{friends}</Score>
             </ScoreRow>
           </TopCol>
         </SubRow>
-
         <TribeButton
           viewer={this.props.viewer}
           accept={(id)=>this.accept(id)}
@@ -446,6 +218,15 @@ class Profile extends Component {
       {(User.summary || User.email || User.website || ownProfile) && <Divider/>}
       <Row>
         <Left>
+          <EmailWebsite>
+            {(User.website || ownProfile) &&
+              <LinkIcon style={{marginRight: '10px'}}/>}
+            <SiteLink href={((User.website || '').substr(0,4)==='http') ? User.website : 'http://' + User.website} target="_blank">{User.website}</SiteLink>
+            <MissingUserData hide={User.website || !ownProfile}
+              onClick={()=>{this.setState({editProfile: true})}}>
+              Add your website
+            </MissingUserData>
+          </EmailWebsite>
           <Summary>
             {User.summary}
             <MissingUserData hide={User.summary || !ownProfile}
@@ -455,35 +236,27 @@ class Profile extends Component {
           </Summary>
         </Left>
         <Right>
-          <EmailWebsite>
+          {/* <EmailWebsite>
             <Email style={{marginRight: '10px'}} />
             {User.email}
             <MissingUserData hide={User.email || !ownProfile}
               onClick={()=>{this.setState({editProfile: true})}}>
               Add your email
             </MissingUserData>
-          </EmailWebsite>
-          <EmailWebsite>
-            <Link style={{marginRight: '10px'}} />
-            {User.website}
-            <MissingUserData hide={User.website || !ownProfile}
-              onClick={()=>{this.setState({editProfile: true})}}>
-              Add your website
-            </MissingUserData>
-          </EmailWebsite>
+          </EmailWebsite> */}
         </Right>
       </Row>
     </Top>)
   }
 
   render () {
-    let {genres, skills, influences, experience, experiences, notification} = this.state
+    let {genres, skills, influences, experience, notification} = this.state
     let {User, user} = this.props.viewer
     let ownProfile = (User.id === user.id)
     return (
       <ProfileView>
         <Snackbar
-          open={notification ? true : false} //requires boolean input
+          open={!!notification} //requires boolean input
           message={notification}
           autoHideDuration={2000}
           onRequestClose={()=>this.setState({notification: false})}
@@ -495,85 +268,56 @@ class Profile extends Component {
           <Panel
             tab={this.state.tab}
             topBar={null}
-            tabChange={(tab)=>this.setTab(tab)}
+            tabChange={tab=>this.setTab(tab)}
             labels={['activity', 'projects', 'bounces']}
             locks={[false, false, false]}
             values={[0,0,0]}
             content={this.props.children}
           />
           <BotRight>
+            {this.state.editMusicianInfo && <EditMusicianInfo
+              experience={experience}
+              genres={genres}
+              skills={skills}
+              influences={influences}
+              open={true}
+              user={User}
+              onSave={()=>this.musicianInfoSave()}
+              onClose={()=>this.setState({editMusicianInfo: false})}
+            />}
+            {ownProfile && <Edit
+              onClick={()=>{this.setState({editMusicianInfo: true})}}
+              fill={purple}
+              style={{
+                alignSelf: 'flex-end',
+                padding: '8px 0 0 0',
+                cursor: 'pointer',
+                position: 'absolute'
+              }}
+            />}
             <Label hide={(!ownProfile && !experience.length)} >
               Experience
             </Label>
-            {(ownProfile) ? (
-              <ExperienceRow>
-                <ExperienceIcon
-                  style={{ marginRight: '5px' }} />
-                <SelectField
-                  value={experience}
-                  fullWidth={true}
-                  onChange={(e, index, value)=>{ this.experienceChange(value) }}
-                  disabled={(!ownProfile)}
-                  hintText={'add your experience'}
-                  selectedMenuItemStyle={{ color: purple }}
-                >
-                  {experiences}
-                </SelectField>
-              </ExperienceRow>
-            ) : (
-              <ExperienceRow hide={(!ownProfile && !experience.length)} >
-                <ExperienceIcon style={{ marginRight: '5px' }} />
-                <Experience
-                  value={formatEnum(experience)}
-                  disabled={true}
-                  placeholder={'experience'}
-                />
-              </ExperienceRow>
-            )}
-
+            <ExperienceRow hide={(!ownProfile && !experience.length)} >
+              <ExperienceIcon style={{paddingRight: '5px'}} />
+              <Experience
+                value={formatEnum(experience)}
+                disabled
+                placeholder={'experience'}
+              />
+            </ExperienceRow>
             <Label hide={(!ownProfile && !genres.length)} >
               Genres
             </Label>
-            <Async
-              loadOptions={this.loadGenres}
-              value={genres}
-              onChange={this.genreChange}
-              multi
-              className={(ownProfile) ? 'async' : 'async others'}
-              disabled={!ownProfile}
-              placeholder={'add your genres'}
-              style={{ display:(!ownProfile && !genres.length) ? 'none':'',  margin: '4px 0 8px 0'}}
-            />
+            <BtTagList items={genres} />
             <Label hide={(!ownProfile && !skills.length)} >
               Skills
             </Label>
-            <Async
-              loadOptions={this.loadSkills}
-              value={skills}
-              onChange={this.skillChange}
-              multi
-              className={(ownProfile) ? 'async' : 'async others'}
-              disabled={!ownProfile}
-              placeholder={'add your skills'}
-              style={{
-                display: (!ownProfile && !skills.length) ? 'none' : '',  margin: '4px 0 8px 0'
-              }}
-            />
+            <BtTagList items={skills}/>
             <Label hide={(!ownProfile && !influences.length)} >
               Influences
             </Label>
-            <Async
-              value={influences}
-              loadOptions={this.influenceOptions}
-              multi
-              onChange={this.influenceChange}
-              className={(ownProfile) ? 'async influences' : 'async influences others'}
-              disabled={!ownProfile}
-              placeholder={'add your influences'}
-              style={{
-                display: (!ownProfile && !influences.length) ? 'none' : '', margin: '4px 0 8px 0'
-              }}
-            />
+            <BtTagList items={influences} grayTag />
           </BotRight>
         </BotRow>
       </ProfileView>
@@ -584,7 +328,7 @@ class Profile extends Component {
 export default Relay.createContainer(
   Profile, {
     initialVariables: {
-      userHandle: ''
+      theirHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -612,11 +356,11 @@ export default Relay.createContainer(
               edges {
                 node {
                   id
-                  actor { id }
+                  createdAt
+                  actor { id, handle }
                 }
               }
             }
-            doNotEmail
             sentRequests (
               filter: {
                 accepted: false
@@ -632,30 +376,31 @@ export default Relay.createContainer(
               }
             }
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             experience
+            lastPing
             email
             handle
             summary
+            website
+            placename
+            score
+            mentorAccount {id}
             portrait {
               id
               url
             }
-            website
-            placename
-            score
+            portraitSmall {
+              id
+              url
+            }
             projects { count }
             friends (
               filter: {deactivated: false}
             ) { count }
             genres ( first: 20 ) {
-              edges {
-                node {
-                  id
-                  name
-                }
-              }
+              edges { node { id, name } }
             }
             skills ( first: 20 ) {
               edges {

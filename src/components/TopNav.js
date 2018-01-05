@@ -5,6 +5,7 @@ import {BtFlatButton} from 'styled'
 import {white, purple} from 'theme'
 import Plus from 'icons/Plus'
 import Music from 'icons/Music'
+import Headphones from 'icons/Headphones'
 import Alerts from 'icons/Alerts'
 import {DropdownMenuItem, DropHr} from 'components/Dropdown'
 import auth from 'utils/auth'
@@ -31,25 +32,23 @@ class TopNav extends Component {
   render() {
     let {portraitUrl, user} = this.props
     let {handle} = user
-    let friendHandle = user.friends.edges.length ? user.friends.edges[0].node.handle : null
-
     return (
       <Bar>
         {/* <div onClick={()=>this.props.redirect()}> */}
-          <Logo to={`/dash/${friendHandle ? friendHandle + '/projects' : '' }`} />
+          <Logo to={`/dash/feed/${user.handle}/1`} />
         {/* </div> */}
         <NavList>
-          {/* <NavLink to={`/tribe/${handle}/find`} >
+          {user.mentorAccount && <NavLink to={`/mentor/${handle}/`} >
             <Headphones height={18} />
-            <NavText>Find Your Mentor</NavText>
-          </NavLink> */}
+            <NavText>Mentor Marketplace</NavText>
+          </NavLink>}
           {/* <NavLink
             to={((((user || {}).project || {}).edges || []).length > 0) ? `/sessions/${handle}/${user.projects.edges[0].node.title}` : `/sessions/${handle}`}
           >
             <Headphones />
             <NavText>Sessions</NavText>
           </NavLink> */}
-          <NavLink to={`/projects/${handle}`}>
+          <NavLink to={`/projects/${handle}/`}>
             <Music height={18} />
             <NavText>Projects</NavText>
           </NavLink>
@@ -66,7 +65,8 @@ class TopNav extends Component {
               onRequestChange={(open)=>{
                 this.setState((prevState) =>
                   ({notificationMenu: !prevState.notificationMenu}))
-                if (!open) {
+                if (open) {
+                  console.log('notif', user.notifications);
                   user.notifications.edges.forEach( (edge) => {
                     if (!edge.node.checked) {
                       Relay.Store.commitUpdate(
@@ -91,7 +91,7 @@ class TopNav extends Component {
                   <NotifyMessage>No new notifications</NotifyMessage>
                 </NotifyContainer>
               }
-              <ViewAll onClick={this.closeMenu} to={`/notifications`}>View All</ViewAll>
+              <ViewAll onClick={this.closeMenu} to={`/notifications/`}>View All</ViewAll>
             </IconMenu>
           </NavLink>
           <IconMenu
@@ -109,8 +109,8 @@ class TopNav extends Component {
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
           >
             <DropdownMenuItem onClick={this.closeMenu} text="Dashboard"  to={`/`} />
-            <DropdownMenuItem onClick={this.closeMenu} text="View Profile" to={`/${handle}`} />
-            <DropdownMenuItem onClick={this.closeMenu} text="Tribe Members" to={`/tribe/${handle}`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="View Profile" to={`/${handle}/`} />
+            <DropdownMenuItem onClick={this.closeMenu} text="Tribe Members" to={`/tribe/${handle}/`} />
             <DropHr/>
             <DropdownMenuItem onClick={() => {
               this.props.openSettings()
@@ -156,11 +156,11 @@ class TopNav extends Component {
           >
             <DropdownMenuItem
               text="View Profile"
-              to={`/${handle}`}
+              to={`/${handle}/`}
             />
             <DropdownMenuItem
               text="My Tribe"
-              to={`/tribe/${handle}`}
+              to={`/tribe/${handle}/`}
             />
             <DropHr/>
             <DropdownMenuItem
@@ -184,9 +184,8 @@ class TopNav extends Component {
               fontWeight: '400'
             }}
             backgroundColor={purple}
-            to={`projects/${handle}/new`}
+            to={`projects/${handle}/new/`}
             icon={<Plus/>}
-            style={{borderRadius: '8px'}}
           />
         </NavList>
       </Bar>

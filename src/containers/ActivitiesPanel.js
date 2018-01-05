@@ -1,96 +1,164 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Activity, ScrollBox} from 'styled/ActivitiesList'
-import Tribe from 'icons/Tribe'
 import Music from 'icons/Music'
-import Bounce from 'icons/Bounce'
-import {purple} from 'theme'
 import {EmptyPanel} from 'components/EmptyPanel'
+import {ActivityList} from 'components/ActivityList'
+import {mapNodes} from 'utils/mapNodes'
+import {SeeMore} from 'styled'
 
 
 class ActiviesPanel extends Component {
 
-  generateLink = (project) => (
-    project.privacy==='PUBLIC' &&
-    !project.creator.deactivated &&
-    `/${project.creator.handle}/${project.title}`
-   )
-
-
-  get activities () {
-    let {comments, bounces, projects} = this.props.viewer.User
-    let commentProjects = []
-    let list = comments.edges.map((edge, index) => {
-      let project = edge.node.project || {}
-      if (commentProjects.includes(project.id)) {
-        console.log('dupe');
-        return <div key={index}/>
-      } else {
-        commentProjects.push(project.id)
-        return project.id && <Activity
-          key={edge.node.id}
-          date={edge.node.createdAt}
-          icon={<Tribe height={13}/>}
-          text={`Gave Feedback to ${project.title}`}
-          link={this.generateLink(project)}/>}
-    })
-    list = list.concat(bounces.edges.map(edge =>
-      <Activity
-        key={edge.node.id}
-        date={edge.node.createdAt}
-        icon={<Bounce width={19} fill={purple}/>}
-        text={`Bounced ${edge.node.project.title}`}
-        link={this.generateLink(edge.node.project)}/>
-    ))
-    list = list.concat(projects.edges.map(edge =>
-      <Activity
-        key={edge.node.id}
-        date={edge.node.createdAt}
-        icon={<Music height={13}/>}
-        text={`Added a new Project - ${edge.node.title}`}
-        link={this.generateLink(edge.node)}/>
-    ))
-    return list.sort( (a,b) => (new Date(b.props.date) - new Date(a.props.date)) )
+  constructor(props) {
+    super(props)
+    console.log('const props actpan', props);
+    let {user} = this.props.viewer
+    this.state = Object.assign(
+      this.mapActivity(this.props), {
+        loading: false,
+        friendIds: mapNodes(user.friends, '.id').concat(user.id),
+        listLength: 0
+      }
+    )
   }
 
+  componentWillMount() {
+    console.log('ACTPanel', this.props)
+    if (this.props.params.page > 1) {
+      this.setPage(this.props, 1)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState(
+      Object.assign( this.mapActivity(nextProps), {loading: false} )
+    )
+    console.log('feed state', this.state);
+    // debugger
+  }
+
+  mapActivity = (props) => {
+    let {User} = props.viewer
+    let comments = mapNodes(User.comments)
+    let bounces  = mapNodes(User.bounces)
+    let projects = mapNodes(User.projects)
+    let numActivities = comments.length + bounces.length + projects.length
+    let totalActivities = User.comments.count + User.bounces.count + User.projects.count
+    return {
+      comments,
+      bounces,
+      projects,
+      numActivities,
+      totalActivities,
+      hasMore: totalActivities > numActivities
+    }
+  }
+
+  setPage = (props, newPage) => {
+    let {page, theirHandle} = props.params
+    if (!newPage) newPage = parseInt((page || 1), 10) + 1
+    let newPath = `/${theirHandle}/activity/${newPage}/`
+    this.props.router.replace(newPath)
+  }
+
+   seeMore = () => {
+     !this.state.loading && this.setState({loading: true})
+     this.setPage(this.props)
+   }
   render () {
     let {user, User} = this.props.viewer
     let isSelf = user.id===User.id
-    let hasActivities = !!this.activities.length
+    // let totalActivities = mapNodes(comments).filter(comment=>comment.project).length + bounces.count + projects.count
     return (
-      hasActivities ? <ScrollBox> {this.activities} </ScrollBox>
+      this.state.numActivities ?
+        <ActivityList
+          {...this.state}
+          router={this.props.router}
+          getMore={this.seeMore}
+          // listLength={(newLength)=>this.state.hasMore && this.compareListLength(newLength)}
+          nextPage={this.state.hasMore &&
+            <SeeMore onClick={this.seeMore} loading={this.state.loading}/>}
+        />
       :
       <EmptyPanel
         icon={<Music height={113} fill={"#D3D3D3"} />}
         headline={isSelf ? `Everyone wants to hear it` : `No Activity Yet`}
         note={isSelf ? `Upload your first project!` : ``}
         btnLabel={isSelf ? `New Project` : ``}
-        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new`)}
+        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new/`)}
       />
     )
   }
 }
 
+
 export default Relay.createContainer( ActiviesPanel, {
-  initialVariables: { userHandle: '' },
+  initialVariables: {
+    theirHandle: '',
+    userHandle: '',
+    page: 1,
+    num: 3,
+    bouncesFilter: {},
+    commentsFilter: {},
+    projectsFilter: {}
+  },
+  prepareVariables: (urlParams) => {
+    return {
+      ...urlParams,
+      page: parseInt((urlParams.page || 1), 10),
+      num: 3 * parseInt((urlParams.page || 1), 10),
+      //ensures non-deleted projects as well
+      commentsFilter: {
+        project: {
+          privacy_not: 'PRIVATE',
+          creator: { deactivated: false }
+        },
+      },
+      bouncesFilter: {
+        project: {
+          privacy_not: 'PRIVATE',
+          creator: { deactivated: false }
+        },
+      },
+      projectsFilter: {
+        privacy_not: 'PRIVATE',
+        creator: { deactivated: false }
+      }
+      // use similiar filters for comments, bounces (if project changes privacy)
+      // projectsFilter: { OR:
+      //   [ {
+      //     privacy_not: 'PRIVATE',
+      //   }, {
+      //     privacy: 'TRIBE',
+      //     creator: {
+      //       friends_some: { handle: urlParams.userHandle }
+      //     },
+      //   }
+      // ] }
+    }
+  },
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
         user {
           id
           handle
+          friends(first: 999) { edges { node { id } } }
         }
-        User (handle: $userHandle) {
+        User (handle: $theirHandle) {
           id
           handle
           deactivated
           comments (
-            first: 999
+            first: $num
             orderBy: createdAt_ASC
+            filter: $commentsFilter
           ){
+            count
             edges {
               node {
                 id
+                author {id}
                 createdAt
                 project {
                   id
@@ -105,29 +173,33 @@ export default Relay.createContainer( ActiviesPanel, {
             }
           }
           bounces (
-            first:999
+            first: $num
             orderBy: createdAt_ASC
+            filter: $bouncesFilter
            ) {
-            edges {
-              node {
-                id
-                createdAt
-                project {
+              count
+              edges {
+                node {
                   id
-                  title
-                  privacy
-                  creator {
-                    deactivated
-                    handle
+                  createdAt
+                  project {
+                    id
+                    title
+                    privacy
+                    creator {
+                      deactivated
+                      handle
+                    }
                   }
                 }
               }
-            }
           }
           projects (
-            first: 999
+            first: $num
             orderBy: createdAt_ASC
+            filter: $projectsFilter
           ){
+            count
             edges {
               node {
                 id

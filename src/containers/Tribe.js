@@ -10,9 +10,9 @@ import {Panel} from 'components/Panel'
 class Tribe extends Component {
 
   componentWillMount() {
-    let {location, userHandle} = this.props
+    let {location, theirHandle} = this.props
 
-    if (location.pathname === `/tribe/${userHandle}/requests`) {
+    if (location.pathname === `/tribe/${theirHandle}/requests`) {
       this.setState({ tab: 'requests' })
     } else (
       this.setState({ tab: 'members' })
@@ -32,7 +32,7 @@ class Tribe extends Component {
     let tab = this.state.tab
     let top = (
       <Header>
-        <IconTextContainer to={`/tribe/${handle}`} >
+        <IconTextContainer to={`/tribe/${handle}/`} >
           <TribeIcon fill={purple} />
           <IconText>
             {(user.id === User.id) ? 'My Tribe' : `${User.name}'s Tribe'`}
@@ -57,7 +57,7 @@ class Tribe extends Component {
           hideBorder
           tab={tab}
           topBar={top}
-          tabChange={(tab)=>this.setTab(tab, this.props.userHandle)}
+          tabChange={(tab)=>this.setTab(tab, this.props.theirHandle)}
           labels={['members', 'requests']}
           values={[User.friends.count, user.invitations.count]}
           locks={[false, User.id!==user.id]}
@@ -70,7 +70,7 @@ class Tribe extends Component {
 
 export default Relay.createContainer(
   Tribe, {
-    initialVariables: { userHandle: '' },
+    initialVariables: { theirHandle: '' },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -84,7 +84,7 @@ export default Relay.createContainer(
             ) { count }
             friends { count }
            }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             handle
             id
             email

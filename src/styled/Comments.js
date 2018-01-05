@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React from 'react'
+// import React from 'react'
 import {grey300, grey700, grey900, blue, purple} from 'theme'
 import {BtLink} from 'styled'
 
@@ -7,22 +7,27 @@ export const CommentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  width: 100%;
+  margin-top: 60px;
+  padding-bottom: 80px;
+  width: ${({listenTab}) => (listenTab) ? '85%' : '100%'};
 `
-export const ButtonRow = styled.div`
-  display: ${({hide}) => (hide) ? 'none' : 'flex'};
-  justify-content: center;
-`
-  export const ButtonColumn = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 15px 20px;
+  export const ButtonRow = styled.div`
+    display: ${({hide}) => (hide) ? 'none' : 'flex'};
+    justify-content: center;
+    margin-bottom: 20px;
   `
+    export const ButtonColumn = styled.div`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px 20px;
+    `
     export const ButtonLabel = styled.span`
       display: flex;
       margin-top: 15px;
       font-size: 14px;
+      color: #777777;
+      font-weight: 300;
     `
 
 export const CommentBox = styled.div`
@@ -30,6 +35,7 @@ export const CommentBox = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  padding: 20px;
 `
 export const Single = styled.div`
   display: flex;
@@ -44,9 +50,25 @@ export const Single = styled.div`
 `
   export const MainRow = styled.div`
     display: flex;
-    padding: 20px 30px 10px 20px;
+    flex-direction: column;
+    padding: 30px 30px 30px 30px;
   `
-    export const InfoOptions = styled.div`
+  export const Top = styled.div`
+    display: flex;
+  `
+  export const Content = styled.div`
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    flex-grow: 1;
+  `
+
+  export const Bottom = styled.div`
+    display: flex;
+    font-size: 13px;
+    padding-top: 10px;
+  `
+    export const ButtonCol = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -57,17 +79,11 @@ export const Single = styled.div`
         align-items: center;
       `
         export const Handle = styled(BtLink)`
-          color: ${({comment}) => (comment) ? blue : purple};
-          padding-left: 15px;
+          color: #777777;
           font-weight: 400;
+          font-size: 14px;
+          &:hover {color: ${purple}}
         `
-      export const Bottom = styled.div`
-        display: flex;
-        margin-top: auto;
-        font-size: 13px;
-        padding-top: 5px;
-        ${'' /* justify-content: flex-end; */}
-      `
         export const BotLink = styled.span`
           cursor: pointer;
           color: ${grey700};
@@ -83,23 +99,29 @@ export const Single = styled.div`
           }};
           font-weight: bold;
         `
-    export const Text = styled.div`
+    export const Text = styled.pre`
       display: flex;
-      flex-direction: column;
       color: ${grey900};
       font-size: 16px;
-      align-self: center;
-      flex-grow: 1;
-      word-break: break-all;
-      padding: 0 20px;
+      margin: 10px 0 0 0;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
+      white-space: pre-wrap;
     `
     export const Time = styled.div`
-      font-size: 14px;
+      font-size: 17px;
+      font-weight: 300;
       display: flex;
       flex-direction: column;
-      color: ${grey700};
+      margin-bottom: 0px;
+      margin-right: 10px;
+      color: #999999;
       margin-left: auto;
       align-self: center;
+      cursor: pointer;
+      display: ${({hide}) => hide ? 'none': ''};
+      &:hover {color: ${purple}}
     `
 
 export const CommentScroller = styled.div`
@@ -124,26 +146,31 @@ export const SubComment = styled.div`
 export const SCCol = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 0 10px;
-  justify-content: center;
+  padding: 0 15px;
+  width: 100%;
+  justify-content: flex-start;
 `
 
-export const SCHandleText = styled.pre`
-  display: flex;
+export const SCHandle = styled(BtLink)`
   font-weight: 400;
-  color: ${grey700};
+  color: #777777;
   font-size: 14px;
+  &:hover {color: ${purple}}
 `
-
-export const SCHandle = (props) => (
-  <BtLink to={props.to}>
-    <SCHandleText>{props.children}</SCHandleText>
-  </BtLink>
-)
-
-
-export const SCText = styled.div`
+export const SCBottom = styled.div`
   display: flex;
-  color: ${grey700};
+  margin-top: auto;
   font-size: 13px;
+  padding-top: 5px;
+  ${'' /* justify-content: flex-end; */}
+`
+export const SCText = styled.pre`
+  display: flex;
+  color: #777777;
+  font-size: 14px;
+  padding: 7px;
+  margin: 4px 0 0 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 `

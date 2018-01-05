@@ -4,18 +4,28 @@ import {View, BtAvatar, BtFlatButton} from 'styled'
 import InviteIcon from 'icons/InviteIcon'
 import Send from 'icons/Send'
 import Bolt from 'icons/Bolt'
-import {grey500, grey400, grey119, grey222, purple, white} from 'theme'
+import {grey500, grey400, grey300, grey222, purple, white} from 'theme'
 import {Name} from 'styled/Tribe'
-import {SubRow} from 'styled/Profile'
 import AddFriend from 'icons/AddFriend'
 import FlatButton from 'material-ui/FlatButton'
 import { ProfCol, ProfHandle, Score} from 'styled/Project'
 
-export const DashProfile = ({selectedUser}) => (
-  <div style={{display: 'flex', padding: '21px 31px 15px 31px', minHeight: '60px'}}>
-    <BtAvatar user={selectedUser} size={60} />
+export const DashView = styled(View)`
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+`
+
+export const DashProfile = ({selectedUser, feed}) => (
+  <div style={{
+    display: 'flex',
+    padding: '21px 31px 15px 31px',
+    minHeight: '60px',
+    borderBottom: feed && `1px solid ${grey300}`
+  }}>
+    <BtAvatar user={selectedUser} hideStatus={feed} size={60} />
     <ProfCol>
-      <ProfHandle to={`/${selectedUser.handle}`} >
+      <ProfHandle to={`/${selectedUser.handle}/activity/1/`} >
         {selectedUser.handle}
       </ProfHandle>
       <Score>
@@ -34,7 +44,9 @@ export const DialogRow = styled.div`
   padding: 25px 0;
   border-bottom: 1px solid ${grey400};
 `
-
+const SubRow = styled.div`
+  display: flex;
+`
 export const UpperInvite = styled.div`
   display: flex;
   padding: 27px;
@@ -65,32 +77,29 @@ export const TopCol = styled.div`
   align-items: flex-start;
   margin-left: 30px;
 `
-//min height accomodates 3 project items
+
 export const BotRow = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin-top: 20px;
-  max-height: 60vh;
+  ${'' /* height: 80vh; */}
+  ${'' /* max-height: 80vh; */}
   min-height: 525px;
 `
 
 export const DashLeft = styled.div`
   display: flex;
   border-radius: 5px;
-  background-color: white;
-  min-height: 50vh;
+  background-color: ${white};
+  min-height: 60vh;
+  max-height: 85vh;
   flex: 0 0 285px;
   border: solid ${grey222} 1px;
   border-radius: 5px;
   margin-right: 20px;
   padding: 9px 0px 9px 9px;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-`
-
-export const DashView = styled(View)`
-  background-color: transparent;
-  border: none;
 `
 
 export const DashHeader = styled.div`
@@ -106,35 +115,6 @@ export const DashHeaderRow = styled.div`
   width: 100vw;
   padding: 0 20px;
   box-sizing: border-box;
-`
-
-export const TopPanel = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-  width: 100%;
-  height: 140px;
-  background-color: white;
-  box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-  border-radius: 5px;
-  border: solid ${grey222} 1px;
-  margin-top: 20px;
-`
-
-export const ImgColumn = styled.div`
-  padding: 30px 0 30px 15px;
-  align-self: center;
-`
-
-export const TopColumn = styled.div`
-  justify-content: space-between;
-`
-
-export const FeedbackRating = styled.div`
-  color: ${grey119};
-  font-size: 30px;
-  font-weight: bold;
-  margin: 50px 50px 0 0;
 `
 
 export const UserName = styled(ProfHandle)`
@@ -219,8 +199,10 @@ export class FbList extends Component {
       <FbDialogRow user={friend} >
         <SubRow>
           <BtAvatar user={friend} size={50} fbCircle />
-          <Name style={{lineHeight:'48px', paddingLeft: '7px'}} to={`/${friend.handle}`}>
-            {friend.handle}
+          <Name
+            style={{lineHeight:'48px', paddingLeft: '7px'}}
+            to={`/${friend.handle}/1//activity/1`}>
+            {friend.handle}/1/
           </Name>
         </SubRow>
         <BtFlatButton
@@ -243,3 +225,42 @@ export class FbList extends Component {
     )
   }
 }
+
+
+// export const TopPanel = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   align-content: center;
+//   width: 100%;
+//   height: 140px;
+//   background-color: white;
+//   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
+//   border-radius: 5px;
+//   border: solid ${grey222} 1px;
+//   margin-top: 20px;
+// `
+// export const ImgColumn = styled.div`
+//   padding: 30px 0 30px 15px;
+//   align-self: center;
+// `
+// export const TopColumn = styled.div`
+//   justify-content: space-between;
+// `
+// export const FeedbackRating = styled.div`
+//   color: ${grey119};
+//   font-size: 30px;
+//   font-weight: bold;
+//   margin: 50px 50px 0 0;
+// `
+//<TopPanel>
+//<TopColumn>
+//<ImgColumn>
+//<BtAvatar user={user} size={80} hideStatus />
+//</ImgColumn>
+//<UserName to={`/${user.handle}/1/`}>{user.handle}/1/</UserName>
+//</TopColumn>
+//<FeedbackRating>
+//<Bolt style={{ marginRight: '15px' }} />
+//{user.score || 0}
+//</FeedbackRating>
+//</TopPanel>

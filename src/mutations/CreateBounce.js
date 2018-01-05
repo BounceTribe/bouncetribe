@@ -30,5 +30,4 @@ export default class CreateBounce extends Relay.Mutation {
     }]
   }
 
-
 }

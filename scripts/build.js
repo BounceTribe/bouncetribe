@@ -118,7 +118,6 @@ function printErrors(summary, errors) {
     console.log();
   });
 }
-
 // Create the production build and print the deployment instructions.
 function build(previousSizeMap) {
   console.log('Creating an optimized production build...');

@@ -11,12 +11,13 @@ class BouncesPanel extends Component {
     let {User, user} = this.props.viewer
     let isSelf = user.id===User.id
     let hasBounces = !!User.bounces.count
+    console.log('bp', this);
     return (
       hasBounces ? <ProjectListSm {...this.props} />
       :
       <EmptyPanel
         icon={<Bounce width={100} fill={"#D3D3D3"} />}
-        headline={isSelf ? `Do you love someone’s project?` : `User has no bounces yet`}
+        headline={isSelf ? `Do you love someone’s project?` : `${User.handle} hasn't bounced any tracks yet`}
         note={isSelf ? `Bounce it to share with your tribe` : ``}
       />
     )
@@ -25,7 +26,16 @@ class BouncesPanel extends Component {
 
 export default Relay.createContainer(
   BouncesPanel, {
-    initialVariables: { userHandle: '' },
+    initialVariables: { theirHandle: '' , bouncesFilter: {}},
+    prepareVariables: (urlParams) => {
+      return {
+        ...urlParams,
+        //ensures non-deleted projects as well
+        bouncesFilter: {
+          project: {privacy_not: 'PRIVATE'},
+        }
+      }
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -33,10 +43,13 @@ export default Relay.createContainer(
             id
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             handle
-            bounces ( first:999 ) {
+            bounces (
+              first:999
+              filter: $bouncesFilter
+             ) {
               count
               edges {
                 node {
@@ -46,12 +59,11 @@ export default Relay.createContainer(
                     title
                     createdAt
                     artwork {url}
+                    artworkSmall {url}
                     privacy
                     creator {handle}
                     bounces (first: 999) {
-                      edges {
-                        node {id}
-                      }
+                      edges { node {id} }
                     }
                     comments (first: 999){
                       edges {

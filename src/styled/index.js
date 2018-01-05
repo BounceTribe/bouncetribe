@@ -7,11 +7,20 @@ import RaisedButton from 'material-ui/RaisedButton'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import FlatButton from 'material-ui/FlatButton'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import IconButton from 'material-ui/IconButton'
+import Tooltip from 'material-ui-next/Tooltip'
 import Avatar from 'material-ui/Avatar'
 import Online from 'icons/Online'
 import {url} from 'config'
-import Moment from 'moment'
+import {isOnline} from 'utils/isOnline'
+import {Spinner} from 'styled/Spinner'
+
+export const Row = styled.div`
+  display: flex;
+`
+export const Col = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 
 export const PanelScrollContainer = styled.div`
   padding: 15px 0;
@@ -27,6 +36,33 @@ const PurpleBox = styled.div`
   color: ${white};
   font-weight: 400;
 `
+
+const BtTag = (props) => {
+  return <PurpleBox
+    style={{
+      height: `20px`,
+      padding: `7px 15px`,
+      margin: '5px 0 0 5px',
+      borderRadius: '24px',
+      fontSize: '14px',
+      color: props.grayTag && 'black',
+      backgroundColor: props.grayTag && '#D8D8D8',
+    }}>{props.text}
+  </PurpleBox>
+}
+
+export const BtTagList = (props) => {
+  return (
+    <div style={{padding: '5px 0 30px 0'}}>
+      {props.items.map(item =>
+        <BtTag
+          key={item.value.spotifyId || item.value}
+          text={item.label}
+          {...props}/>
+        )}
+    </div>
+  )
+}
 
 // Purple box (or circle) with text -
 //visible only if value (or alwaysVis) is truthy
@@ -46,17 +82,22 @@ export const BtTextMarker = (props) => {
   )
 }
 
-
 export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) => {
+  // console.log('url', user.portrait.url);
   size = size || 50
   user = user || {}
+  let imageUrl
+  if (size > 149) {
+    imageUrl = (user.portraitSmall || {}).url
+  } else {
+    imageUrl = (user.portraitMini || user.portraitSmall || {}).url
+  }
+  if (user.disabled || !imageUrl) {
+    imageUrl = `${url}/logo.png`
+  }
+  // console.log({imageUrl});
   //set the ratio of size between the avatar and the online icon
   const iconSize = size * 18/60
-  let online = false
-  if (user.lastPing) {
-    let now = Moment()
-    online = now.diff(user.lastPing, 'seconds') < 315
-  }
   return  (
     <div
       style={{
@@ -65,13 +106,13 @@ export const BtAvatar = ({user, size, hideStatus, onClick, pointer, fbCircle}) =
       }}
       onClick={onClick} >
       <Avatar
-        src={(user.portrait && !user.disabled) ? user.portrait.url : `${url}/logo.png`}
+        src={imageUrl}
         style={{border: 0, objectFit: 'cover'}}
-        to={`/${user.handle}`}
+        to={`/${user.handle}/`}
         size={size}
       />
       {fbCircle ? <FacebookCircle style={{ marginLeft: `-20px` }} />
-        : <Online size={iconSize} online={online}
+        : <Online size={iconSize} online={isOnline(user)}
         style={{
           marginLeft: `-${iconSize}px`,
           display: `${hideStatus ? 'none' : 'inline'}`
@@ -99,6 +140,11 @@ export const Main = styled.main`
   `}
 `
 
+export const ContentPad = styled.div`
+  padding: ${({width}) => (width) ? `0 ${(100-width)/2}%` : '0'};
+  width: ${({width}) => (width) ? `${width}%` : '100%'};
+`
+
 export const View = styled.section`
   background-color: ${white};
   display: flex;
@@ -108,8 +154,9 @@ export const View = styled.section`
   border: solid ${grey230} 1px;
   border-radius: 5px;
   min-height: 80vh;
+  box-sizing: border-box;
   box-shadow: 0 1px 2px 0 rgba(202, 202, 202, 0.5);
-  margin: 100px 0 50px 0;
+  margin: 70px 0 20px 0;
   ${size.m`
     margin-top: 0;
     width: 100%;
@@ -128,6 +175,7 @@ export const IconTextContainer = styled(BtLink)`
   justify-content: flex-start;
   align-items: center;
   font-size: 30px;
+  font-weight: 300;
 `
 export const IconText = styled.span`
   margin-left: 12px;
@@ -168,10 +216,7 @@ export const CroppedImage = styled.img`
 export const Button = (props) => {
   return (
     <ButtonLink to={props.to} >
-      <RaisedButton
-        {...props}
-        labelStyle={{ textTransform: 'none', }}
-      >
+      <RaisedButton {...props} labelStyle={{ textTransform: 'none' }} >
         {props.children}
       </RaisedButton>
     </ButtonLink>
@@ -183,45 +228,72 @@ export const BtFlatButton = (props) => {
     <ButtonLink to={props.to} >
       <FlatButton
         {...props}
-        labelStyle={{ textTransform: 'none', ...props.labelStyle }} >
+        style={{borderRadius: '5px', ...props.style}}
+        labelStyle={{textTransform: 'none', ...props.labelStyle}} >
         {props.children}
       </FlatButton>
     </ButtonLink>
   )
 }
 
-export const RoundButton = (props) => {
-  let tooltipLength = 0
-  if (props.tooltip) {
-    tooltipLength = props.tooltip.length
-  }
-  return (
-    <ButtonLink to={props.to} title={props.title} >
-      <IconButton
-        tooltip={props.tooltip}
-        style={{ height: '60px', width: '60px', padding: '0px' }}
-        tooltipStyles={{
-          marginTop: "18px",
-          left: "0",
-          right: "0",
-          fontSize: (tooltipLength > 10) ? "9px" : "10px",
-          paddingLeft: (tooltipLength > 10) ? "2px" : "8px",
-        }}
-      >
-        <MuiThemeProvider muiTheme={ (props.big) ? bigTheme : btTheme } >
-          <FloatingActionButton
-            style={{ boxShadow: 0, ...props.style }}
-            secondary={props.secondary}
-            backgroundColor={props.backgroundColor}
-            onClick={props.onClick}
-            onTouchTap={props.onTouchTap}
-          >
-            {props.icon}
-          </FloatingActionButton>
-        </MuiThemeProvider>
-      </IconButton>
+const Label = styled.span`
+  color: #4A4A4A;
+  &:hover {color: ${purple}};
+`
+const SeeMoreContainer = styled.div`
+  display: flex;
+  flex-direction:column;
+  width: 100%;
+  justify-content: center;
+`
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`
+export const SeeMore = (props) =>
+  <SeeMoreContainer className='SEEMORECONTAINER'>
+    {props.children}
+    <ButtonContainer>
+      {props.loading ?
+        <Spinner style={{padding:'15px'}}/>
+        :
+        <FlatButton
+          onClick={props.onClick}
+          style={{
+            backgroundColor: `${white}`,
+            border: `1px solid #4A4A4A`,
+            borderRadius: '5px',
+            margin: '5px',
+            width: `150px`,
+          }}
+        ><Label>See {props.seeLess ? 'Less' : 'More'}</Label>
+        </FlatButton>}
+    </ButtonContainer>
+  </SeeMoreContainer>
 
-    </ButtonLink>
+
+export const RoundButton = (props) => {
+  return (
+    <MuiThemeProvider muiTheme={ props.big ? bigTheme : btTheme } >
+      <Tooltip
+        title={props.tooltip}
+        placement="bottom"
+        disableTriggerFocus={!props.tooltip}
+        disableTriggerHover={!props.tooltip}
+        disableTriggerTouch={!props.tooltip}
+      >
+        <FloatingActionButton
+          href={props.to}
+          style={{ boxShadow: 0, ...props.style }}
+          secondary={props.secondary}
+          backgroundColor={props.backgroundColor}
+          onClick={props.onClick}
+          onTouchTap={props.onTouchTap}
+        >
+          {props.icon}
+        </FloatingActionButton>
+      </Tooltip>
+    </MuiThemeProvider>
   )
 }
 
@@ -237,12 +309,11 @@ export const BotNav = styled.div`
     display: flex;
   `}
 `
-
 export const Bubble = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({secondary}) => (secondary) ? blue : purple}
+  background-color: ${({secondary}) => (secondary) ? blue : purple};
   height: 30px;
   width: 30px;
   border-radius: 30px;

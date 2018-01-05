@@ -156,7 +156,6 @@ class UserSettings extends Component {
             Your BounceTribe account is currently deactivated
           </h4>
         : emailPassword}
-
         <Toggle
           label={user.deactivated ? "Activate Account" : "Active Account"}
           toggled={!this.state.deactivated}
@@ -165,6 +164,15 @@ class UserSettings extends Component {
           onToggle={(e, val) => this.setState({deactivated: !val})}
         />
 
+        {!user.mentorAccount && <FlatButton
+          style={{margin: '10px'}}
+          label="Become A Mentor"
+          onClick={()=>{
+            this.props.router.push(`/mentor/editProfile/${user.handle}/`)
+            this.props.onClose()
+            this.setState({show: false, pass1: '', pass2: ''})
+          }}
+        />}
       </Dialog>
     )
   }

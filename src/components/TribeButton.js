@@ -4,6 +4,8 @@ import {white, grey400, purple} from 'theme'
 import Tribe from 'icons/Tribe'
 import AddFriend from 'icons/AddFriend'
 import {BtFlatButton} from 'styled'
+import {mapNodes} from 'utils/mapNodes'
+
 
 const FriendButtonCol = styled.div`
   display: flex;
@@ -98,16 +100,16 @@ const buttonType = (props) => {
   if (btn) return btn
 
   let {user, User} = props.viewer
-  let friends = user.friends.edges.map(edge => edge.node.id)
-  let inviters = user.invitations.edges.map(edge => edge.node.actor.id)
-  let requestees = user.sentRequests.edges.map(edge => edge.node.recipient.id)
+  let friends = mapNodes(user.friends, '.id')
+  let inviters = mapNodes(user.invitations, '.actor.id')
+  let requestees = mapNodes(user.sentRequests, '.recipient.id')
 
   if (friends.includes(User.id)) {
     //User is Tribe member
     return <RemoveFromTribe onClick={()=>props.unfriend()} />
   } else if (inviters.includes(User.id)) {
     //Waiting on self/user to accept
-    let invite = user.invitations.edges.find((edge)=>edge.node.actor.id === User.id)
+    let invite = user.invitations.edges.find(edge=>edge.node.actor.id === User.id)
     return <AcceptTribeRequest onClick={()=>{props.accept(invite.node.id)}} />
   } else if (requestees.includes(User.id)) {
     //Waiting for User to accept

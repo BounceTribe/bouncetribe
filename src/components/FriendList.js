@@ -31,12 +31,18 @@ const Header = styled.span`
   font-size: 14px;
   color: ${purple};
 `
+const Container = styled.div`
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 100%;
+  ${'' /* max-height: 85vh; */}
+`
 
 const makeRows = (users, select, selected) => (
   users.map( user =>
-    <FriendRow key={user.id} onClick={()=>select(user)}>
+    <FriendRow key={user.id} onClick={()=>select(user.handle)}>
       <BtAvatar size={40} user={user} />
-      <Handle selected={user.id===selected.id}>{user.handle}</Handle>
+      <Handle selected={selected && user.id===selected.id}>{user.handle}</Handle>
       <BtTextMarker size={20} fontHeight={14} value={0}/>
     </FriendRow>
   )
@@ -72,7 +78,7 @@ export const FriendList = (props) => {
   )
 
   return (
-    <div style={{overflowY: 'scroll', overflowX: 'hidden', width: '100%'}}>
+    <Container>
       <FriendRow onClick={flipMentors} key={'My Mentors'}>
         <Header>{'My Mentors'}</Header>
         {showMentors ? <Collapse style={{paddingRight: '9px'}} color={grey600}/>
@@ -87,6 +93,6 @@ export const FriendList = (props) => {
       </FriendRow>
       {friendList}
 
-    </div>
+    </Container>
   )
 }

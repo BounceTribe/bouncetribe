@@ -3,34 +3,17 @@ import {purple, grey150} from 'theme'
 
 class AudioVisualization extends Component {
 
-  state = {
-    height: 0,
-    width: 0
-  }
+  state = {height: 0,width: 0}
 
   draw = () => {
-    let {duration, time} = this.props
-    let progress = 0
-    if (duration && time) {
-      progress = time / duration
-    }
-
-    let {visualization} = this.props
-    let {
-      width,
-      height
-    } = this.state
+    let {duration, time, visualization} = this.props
+    let { width, height } = this.state
+    let progress = (duration && time) ? (time / duration) : 0
     let c = this.canvas.getContext('2d')
-
-    let data = visualization.map(val=>{
-
-      return val * 60
-    })
+    let data = visualization.map(val => val * 60)
     for (let i = 0; i < width; i+=3) {
-
       let position = i / width
       let sample = Math.floor(position * data.length)
-
       let top = (height - data[sample]) / 2
       c.beginPath()
       if (position < progress && c.strokeStyle !== purple) {
@@ -45,24 +28,27 @@ class AudioVisualization extends Component {
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.setWidth);
+  }
+
   componentDidMount () {
+    window.addEventListener("resize", this.setWidth);
+    this.setWidth()
+  }
+
+  setWidth = () => {
     let parentWidth = this.canvas.parentElement.clientWidth
-    this.setState((prevState,props)=>{
-      return {
-        width: parentWidth * .9,
-        height: 100
-      }
-    })
+    this.setState({ width: parentWidth * .9, height: 100 })
+    this.draw()
   }
 
   componentDidUpdate (prevProps, prevState) {
-    if (prevState.width === 0 ) {
-      this.draw()
-    }
+    (prevState.width === 0 ) && this.draw()
   }
 
-  componentWillReceiveProps (prevProps) {
-    if (prevProps.time !== this.props.time) {
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.time !== this.props.time) {
       let c = this.canvas.getContext('2d')
       c.clearRect(0, 0, this.state.width, this.state.height)
       this.draw()
@@ -72,9 +58,7 @@ class AudioVisualization extends Component {
   render () {
     return (
       <canvas
-        ref={(canvas) => {
-          this.canvas = canvas
-        }}
+        ref={(canvas) => this.canvas = canvas}
         width={this.state.width}
         height={this.state.height}
         onClick={(e)=>this.props.scrub(e)}

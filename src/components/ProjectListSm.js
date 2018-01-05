@@ -14,50 +14,38 @@ export const ProjectsContainerSm = styled.div`
   overflow-y: scroll;
 `
 
-// const Spacer = styled.div`
-//   ${'' /* overflow-y: scroll; */}
-//   &:after {
-//     content: "";
-//     display: block;
-//     height: 15px;
-//     width: 100%;
-//   }
-// `
 const edgeFilter = (project, type) => (
   project.comments.edges.filter( (edge) => edge.node.type === type)
 )
 
 const makeList = (props) => {
-  let bounceTab = props.location.pathname.match(/\/bounces$/)
-  let User = props.viewer.User
+  let bounceTab = props.location.pathname.includes('/bounces/')
+  console.log('projsm ', props);
+  let User = props.mentor ? props.viewer.Mentor : props.viewer.User
   let edges = bounceTab ? User.bounces.edges : User.projects.edges
   return edges.map((edge, index) => {
     let project = edge.node.project || edge.node
-    if (project.privacy === 'PRIVATE') {
-      return null
-    } else {
-      let comments = edgeFilter(project, 'COMMENT')
-      let likes = edgeFilter(project, 'LIKE')
-      let bounces = project.bounces.edges.map(edge => edge.node)
-      return (
-        <ProjectItemSm
-          key={project.id + index}
-          User={User}
-          project={project}
-          comments={comments}
-          likes={likes}
-          bounces={bounces}
-          bounceTab={bounceTab}
-         />
-      )
-    }
+    let comments = edgeFilter(project, 'COMMENT')
+    let likes = edgeFilter(project, 'LIKE')
+    let bounces = project.bounces.edges.map(edge => edge.node)
+    return (
+      <ProjectItemSm
+        key={project.id + index}
+        User={User}
+        project={project}
+        comments={comments}
+        likes={likes}
+        bounces={bounces}
+        bounceTab={bounceTab}
+       />
+    )
   } )
 }
 
 export const ProjectListSm = (props) => {
   return (
     <PanelScrollContainer>
-      <ProjectsContainerSm >
+      <ProjectsContainerSm>
         {makeList(props)}
       </ProjectsContainerSm>
     </PanelScrollContainer>

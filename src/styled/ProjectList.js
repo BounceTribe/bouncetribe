@@ -20,7 +20,6 @@ export const ProfileProjectItem = styled(ProjectItem)`
   height: 100px;
   padding: 10px 20px;
   border-top: none;
-
 `
 
 export const Left = styled.div`
@@ -61,29 +60,17 @@ export const CreatedAt = styled.div`
   margin-top: 5px;
 `
 
-export const Artwork = (props) => {
-  return (
-    <Link
-      {...props}
-    >
-      <ArtworkImg
-        {...props}
-      />
-    </Link>
-  )
-}
+export const Artwork = (props) => (
+  <Link {...props} >
+    <ArtworkImg {...props} />
+  </Link>
+)
 
-export const ProfileArtwork = (props) => {
-  return (
-    <Link
-      {...props}
-    >
-      <ProfileArtworkImg
-        {...props}
-      />
-    </Link>
-  )
-}
+export const ProfileArtwork = (props) => (
+  <Link {...props} >
+    <ProfileArtworkImg {...props} />
+  </Link>
+)
 
 export const Info = styled.div`
   display: flex;

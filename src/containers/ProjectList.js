@@ -19,17 +19,9 @@ import Tribe from 'icons/Tribe'
 class ProjectList extends Component {
 
   setPrivacy = (currentProject, newPrivacy) => {
-    let project = {
-      ...currentProject,
-      privacy: newPrivacy
-    }
-    this.props.relay.commitUpdate(
-      new UpdateProject({
-        project
-      })
-    )
+    let project = { ...currentProject, privacy: newPrivacy }
+    this.props.relay.commitUpdate( new UpdateProject({ project }) )
   }
-
 
   uniqueCommenters = (comments) => {
     let uniqueAuthors = []
@@ -55,16 +47,17 @@ class ProjectList extends Component {
         let likes = project.comments.edges.filter( (edge) => {
           return edge.node.type === 'LIKE'
         })
+        let artwork = (project.artworkSmall || {}).url || (project.artwork || {}).url
         return (
           <ProjectItem key={project.id} >
             <Left>
               <Artwork
-                src={(project.artwork) ? project.artwork.url : `${url}/artwork.png`}
+                src={artwork ||  `${url}/artwork.png`}
                 alt={'Project Artwork'}
-                to={`/${owner.handle}/${project.title}`}
+                to={`/${owner.handle}/${project.title}/`}
               />
               <Info>
-                <ProjectTitle to={`/${owner.handle}/${project.title}`} >
+                <ProjectTitle to={`/${owner.handle}/${project.title}/`} >
                   {project.title}
                 </ProjectTitle>
                 <Trio>
@@ -152,9 +145,7 @@ class ProjectList extends Component {
     return (
       <View>
         <Header>
-          <IconTextContainer
-            to={`/projects/${this.props.viewer.User.handle}`}
-          >
+          <IconTextContainer to={`/projects/${this.props.viewer.User.handle}/`}>
             <Music
               style={{ display: 'flex', marginBottom: '5px' }}
               fill={purple}
@@ -163,7 +154,7 @@ class ProjectList extends Component {
           </IconTextContainer>
           <HeaderOptions>
             <Button
-              to={`/projects/${this.props.viewer.user.handle}/new`}
+              to={`/projects/${this.props.viewer.user.handle}/new/`}
               icon={<Upload fill={white} />}
               label={'New Project'}
               primary
@@ -179,7 +170,7 @@ class ProjectList extends Component {
 export default Relay.createContainer(
   ProjectList, {
     initialVariables: {
-      userHandle: ''
+      theirHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -188,7 +179,7 @@ export default Relay.createContainer(
             id
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             handle
             id
             email
@@ -198,6 +189,7 @@ export default Relay.createContainer(
                   id
                   title
                   artwork {url}
+                  artworkSmall {url}
                   privacy
                   comments (first: 999){
                     edges {

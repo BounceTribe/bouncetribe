@@ -16,26 +16,35 @@ import {purple} from 'theme'
 import AddToFriends from 'mutations/AddToFriends'
 import CreateFriendRequest from 'mutations/CreateFriendRequest'
 import {acceptFriendRequest} from 'utils/updateCommits'
-
+import {doNotPing} from 'utils/isOnline'
+// import {mapNodes} from 'utils/mapNodes'
 
 injectTapEventPlugin()
 
 class Template extends Component {
 
-  state = {
-    snackbarText: '',
-    settings: false
-  }
-
-  componentDidMount() {
+  constructor(props) {
+    super(props)
+    this.pathCheck(this.props)
     this.ping()
     let intervalId = setInterval(this.ping, 300000)
-    this.setState({
+
+    this.state = {
+      snackbarText: '',
+      settings: false,
       intervalId
-    })
-    console.log('template didmount', this.props)
-    this.pathCheck(this.props)
+    }
+    console.log('template constructor', this.props)
+    // this.fileUtil()
   }
+
+  // fileUtil = () => {
+  //   let files = mapNodes(this.props.viewer.allFiles)
+  //   let filtered = files.filter(f=>{
+  //     return f.portraitOwner && !f.portraitSmallOwner
+  //   })
+  //   console.log({filtered});
+  // }
 
   componentWillReceiveProps(newProps) {
     let oldPath = this.props.location.pathname
@@ -43,9 +52,7 @@ class Template extends Component {
     if (oldPath!==newPath) this.pathCheck(newProps)
   }
 
-  componentWillUnmount() {
-    clearInterval(this.state.intervalId)
-  }
+  componentWillUnmount() { clearInterval(this.state.intervalId) }
 
   pathCheck = (props) => {
     let newPath = props.location.pathname
@@ -53,6 +60,9 @@ class Template extends Component {
     // console.log('pathcheck', props, newPath)
     switch (true) {
       case newPath==='/':
+        this.redirect()
+        break
+      case newPath==='/dash/':
         this.redirect()
         break
       case newPath==='/unsubscribe':
@@ -76,15 +86,13 @@ class Template extends Component {
     props: this.props,
     successCB: (res)=>{
       this.setState({snackbarText: 'FRIEND ADDED'})
-      this.props.router.push(`/tribe/${this.props.viewer.user.handle}`)
+      this.props.router.push(`/tribe/${this.props.viewer.user.handle}/`)
     },
     failureCB: (res)=>{
       console.log('add friend failure', res)
       this.redirect()
     }
   })
-
-  //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
   addInviteFriend = (newFriendId) => {
     let selfId = this.props.viewer.user.id
@@ -100,7 +108,7 @@ class Template extends Component {
                 console.log('friend added res', res);
                 this.setState({snackbarText: 'FRIEND ADDED'})
                 //using location fo force query update
-                location.assign(`${url}/dash/`)
+                location.assign(`${url}/dash/feed/${this.props.viewer.user.handle}/1`)
               },
               onFailure: res => {
                 console.log('ADD FRIEND FAILURE', res)
@@ -120,21 +128,17 @@ class Template extends Component {
   redirect = () => {
     console.log('template redirect', this.props)
     let user = this.props.viewer.user
-    this.props.router.push(`${ user ? '/dash/' : '/login/' }`)
+    this.props.router.push(`${ user ? `/dash/feed/${user.handle}/` : '/login/' }`)
   }
 
   ping = () => {
     let {user} = this.props.viewer
-    if (user) {
-      this.props.relay.commitUpdate( new SendPing({ user })
-      , {
-        onSuccess: success => {
-          console.log('ping res', success )
-        }
-      }
-    )
+    if (user && !doNotPing(user)) {
+      this.props.relay.commitUpdate( new SendPing({ user }), {
+        // onSuccess: success => console.log('ping res', success )
+      } )
+    }
   }
-}
 
 
   get userOnly () {
@@ -145,7 +149,7 @@ class Template extends Component {
           user={user}
           openSettings={()=>this.setState({settings: true})}
           redirect={this.redirect}
-          portraitUrl={(user.portrait) ? user.portrait.url : `${url}/logo.png`}
+          portraitUrl={(user.portraitMini || {}).url || `${url}/logo.png`}
         />
       )
     }
@@ -167,8 +171,8 @@ class Template extends Component {
 
   settingsSave = (passSave) => {
     this.setState( {
-        snackbarText: passSave ? 'PASSWORD CHANGED' : 'SETTINGS CHANGED',
-        settings: passSave ? true : false
+      snackbarText: passSave ? 'PASSWORD CHANGED' : 'SETTINGS CHANGED',
+      settings: passSave ? true : false
     } )
   }
 
@@ -193,6 +197,7 @@ class Template extends Component {
             <UserSettings
               open //open conditions here ^^ to prevent unnecessary rendering
               user={user}
+              router={this.props.router}
               onSave={this.settingsSave}
               onClose={()=>this.settingsClose()}
             />
@@ -207,17 +212,20 @@ class Template extends Component {
   }
 }
 
-export default Relay.createContainer(
-  Template, {
+export default Relay.createContainer( Template, {
+  initialVariables: { userHandle: '' },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
           user {
             id
+            mentorAccount {id}
             auth0UserId
             handle
             deactivated
             portrait { url }
+            portraitSmall { url }
+            portraitMini { url }
             doNotEmail
             doNotEmailTR
             doNotEmailTA
@@ -260,6 +268,31 @@ export default Relay.createContainer(
               }
             }
           }
+          # allFiles (
+          #   orderBy:createdAt_ASC
+          #   first:300
+          # ) {
+          #   edges {
+          #     node {
+          #       artworkProject {id}
+          #       artworkProjectSmall {id}
+          #       contentType
+          #       createdAt
+          #       id
+          #       name
+          #       pictureOwner {id}
+          #       portraitMiniOwner {id}
+          #       portraitOwner {id}
+          #       portraitSmallOwner {id}
+          #       secret
+          #       size
+          #       trackProject {id}
+          #       updatedAt
+          #       uploader {id}
+          #       url
+          #     }
+          #   }
+          # }
         }
       `,
     },

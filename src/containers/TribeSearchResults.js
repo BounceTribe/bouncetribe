@@ -39,7 +39,7 @@ class TribeSearchResults extends Component {
 export default Relay.createContainer(
   TribeSearchResults, {
     initialVariables: {
-      userHandle: '',
+      theirHandle: '',
       tribeFilter: {}
     },
     fragments: {
@@ -48,7 +48,7 @@ export default Relay.createContainer(
           user {
             id
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             email
           }

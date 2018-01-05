@@ -36,9 +36,7 @@ const Ball1 = styled(Ball2)`
 
 export const Spinner = (props) => {
   return (
-    <SpinBox
-      {...props}
-    >
+    <SpinBox {...props} >
       <Ball0/>
       <Ball1/>
       <Ball2/>
@@ -47,21 +45,22 @@ export const Spinner = (props) => {
 }
 
 const Overlay = styled.div`
-  position: ${props => props.nested ? 'relative' : 'fixed'}
+  position: ${props => props.nested ? 'absolute' : 'fixed'};
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
-  background-color: rgba(220,220,220,.2);
+  ${'' /* top: 0; */}
+  ${'' /* left: 0; */}
+  background-color: ${props => props.hideBg ? '' :  'rgba(220,220,220,.2)'};
   display: flex;
   justify-content: center;
   align-items: center;
   align-content: center;
+  align-self: center;
 `
 
-export const Loading = ({nested}) => {
+export const Loading = ({nested, hideBg}) => {
   return (
-    <Overlay nested={nested}>
+    <Overlay nested={nested} hideBg={hideBg}>
       <Spinner/>
     </Overlay>
   )

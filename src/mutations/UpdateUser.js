@@ -25,6 +25,7 @@ export default class UpdateUser extends Relay.Mutation {
   }
 
   getVariables () {
+    console.log('props', this.props);
     return {
       id: this.props.userId,
       name: this.props.name,
@@ -33,6 +34,8 @@ export default class UpdateUser extends Relay.Mutation {
       website: this.props.website,
       lastPing: this.props.lastPing,
       portraitId: this.props.portraitId,
+      portraitSmallId: this.props.portraitSmallId,
+      portraitMiniId: this.props.portraitMiniId,
       facebookId: this.props.facebookId,
       placename: this.props.placename,
       genresIds: this.props.genresIds,

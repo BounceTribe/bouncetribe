@@ -30,7 +30,8 @@ class ProjectNew extends Component {
     genre: '',
     genres: [],
     privacy: 'PUBLIC',
-    artworkUrl: `${url}/uploadartwork.png`
+    artworkUrl: `${url}/uploadartwork.png`,
+    artworkSmallUrl: `${url}/uploadartwork.png`
   }
 
   constructor(props) {
@@ -43,36 +44,26 @@ class ProjectNew extends Component {
           key={genre.id}
         />
       ))
-      this.setState({
-        genres
-      })
+      this.setState({genres})
     })
   }
 
   createProject = () => {
     let project = this.state
     let {user} = this.props.viewer
+    console.log('creating project', project);
     this.props.relay.commitUpdate(
-      new CreateProject({
-        project,
-        user,
-      }), {
+      new CreateProject({project, user}), {
         onSuccess: success => {
-
-          if (project.privacy === 'PUBLIC') {
-            this.props.router.push(`/sessions/${user.handle}/${project.title}/find`)
-          } else  {
-            this.props.router.push(`/${user.handle}/${project.title}`)
-          }
-
-        }
+          console.log('success', success)
+            this.props.router.push(`/${user.handle}/${project.title}/`)
+        },
+        onFailure: failure => console.log('fail', failure)
       }
     )
   }
 
   audioDropped = ({audioProgress, title, size}) => {
-
-
     if (title) {
       this.updateProgress()
       ensureUsersProjectTitleUnique(this.props.viewer.user.id, title)
@@ -116,9 +107,7 @@ class ProjectNew extends Component {
     }, 500)
   }
 
-  clearTimer = () => {
-    clearInterval(this.timer)
-  }
+  clearTimer = () => clearInterval(this.timer)
 
   audioSuccess = (file) => {
     console.log('audioSuccess')
@@ -131,15 +120,10 @@ class ProjectNew extends Component {
     })
   }
 
-
   get uploader () {
     let {track, audioProgress} = this.state
     if (!track && audioProgress && audioProgress !== 'COMPLETE' ) {
-      return (
-        <Spinner
-          style={{height: '200px'}}
-        />
-      )
+      return ( <Spinner style={{height: '200px'}} /> )
     } else if (!this.state.track) {
       return (
         <AudioUploader
@@ -151,20 +135,19 @@ class ProjectNew extends Component {
     } else {
       return (
         <TrackContainer>
-          <AudioPlayer
-            track={this.state.track}
-          />
+          <AudioPlayer track={this.state.track} />
         </TrackContainer>
       )
     }
   }
 
-  artworkSuccess = (file) => {
-    console.log(file)
+  artworkSuccess = (files) => {
     this.setState({
-      imageEditorOpen: false,
-      artworkUrl: file.url,
-      artworkId: file.id
+      artworkSmallId: files[1].id,
+      artworkSmallUrl: files[1].Url,
+      artworkUrl: files[0].url,
+      artworkId: files[0].id,
+      imageEditorOpen: false
     })
   }
 
@@ -175,7 +158,6 @@ class ProjectNew extends Component {
     })
     if (this.debounce) {
       clearTimeout(this.debounce)
-
     }
     this.debounce = setTimeout(()=>{
       ensureUsersProjectTitleUnique(this.props.viewer.user.id, title).then(unique=>{
@@ -186,7 +168,7 @@ class ProjectNew extends Component {
 
   get form () {
     let {title, tracksIds, audioProgress, privacy, titleUnique, genre} = this.state
-    if (audioProgress  && audioProgress !== 'GENERATING') {
+    if (audioProgress && audioProgress !== 'GENERATING') {
       return (
         <Row>
           <Left>
@@ -210,7 +192,7 @@ class ProjectNew extends Component {
             </SelectField>
             <TextField
               name={'description'}
-              floatingLabelText={'Instructions'}
+              floatingLabelText={'Details'}
               multiLine={true}
               rows={3}
               value={this.state.description}
@@ -229,11 +211,12 @@ class ProjectNew extends Component {
           <Right>
             <ArtworkDrop
               onClick={()=>this.setState({imageEditorOpen: true})}
-              src={(this.state.artworkUrl) ? this.state.artworkUrl : `${url}/artwork.png` }
+              src={this.state.artworkSmallUrl || this.state.artworkUrl || `${url}/artwork.png` }
             />
 
 
             <ImageEditor
+              altSizes={[500]}
               open={this.state.imageEditorOpen}
               onRequestClose={()=>this.setState({imageEditorOpen:false})}
               user={this.props.viewer.user}
@@ -283,35 +266,17 @@ class ProjectNew extends Component {
     let {audioProgress, progress} = this.state
     return (
       <ProjectNewView>
-
         <Header>
-
-            <IconTextContainer
-            >
-              <Music
-                style={{
-                  display: 'flex',
-                  marginBottom: '5px'
-                }}
-                fill={purple}
-              />
-              <IconText
-                style={{
-                  cursor: ''
-                }}
-              >
-                New Project
-              </IconText>
-            </IconTextContainer>
+          <IconTextContainer>
+            <Music style={{ display: 'flex', marginBottom: '5px' }} fill={purple} />
+            <IconText style={{ cursor: '' }} > New Project </IconText>
+          </IconTextContainer>
         </Header>
-
         {
           (this.props.viewer.user.projects.edges.length < 9) ?
           (
             <Container>
-
               {this.uploader}
-
               <LinearProgress
                 mode={'determinate'}
                 value={progress}
@@ -319,19 +284,12 @@ class ProjectNew extends Component {
                   display: (!audioProgress || audioProgress === 'COMPLETE') ? 'none' : ''
                 }}
               />
-
               {this.form}
-
             </Container>
           ) : (
-            <h4>
-              Sorry, you've reached your 10 project limit.
-            </h4>
+            <h4>Sorry, you've reached your 10 project limit.</h4>
           )
         }
-
-
-
       </ProjectNewView>
     )
   }
@@ -348,13 +306,9 @@ export default Relay.createContainer(
             handle
             score
             ${AudioUploader.getFragment('self')}
-            projects (
-              first: 999
-            ) {
+            projects (first: 999) {
               edges {
-                node {
-                  id
-                }
+                node {id}
               }
             }
           }

@@ -14,15 +14,16 @@ import TribeFind from 'containers/TribeFind'
 import TribeSearchResults from 'containers/TribeSearchResults'
 import Login from 'containers/Login'
 import Connect from 'containers/Connect'
-// import Session from 'containers/Session'
-// import AllSessions from 'containers/AllSessions'
 import NotificationList from 'containers/NotificationList'
 import Dashboard from 'containers/Dashboard'
 import ProjectsPanel from 'containers/ProjectsPanel'
 import DirectMessages from 'containers/DirectMessages'
+import PagedFeed from 'containers/PagedFeed'
 import BouncesPanel from 'containers/BouncesPanel'
 import ActivitiesPanel from 'containers/ActivitiesPanel'
 import {Loading} from 'styled/Spinner'
+import EditMentorProfile from 'containers/EditMentorProfile'
+import MentorProfile from 'containers/MentorProfile'
 //sublime id: acceptinvite/cj5jwswj4cjyx0161fik5z7pv
 
 const ViewerQuery = {
@@ -32,7 +33,7 @@ const ViewerQuery = {
         ${Component.getFragment('viewer', variables)}
       }
     }
-  `,
+  `
 }
 
 const tribeSearch = (params, {location})=>{
@@ -43,14 +44,10 @@ const tribeSearch = (params, {location})=>{
       id_not: query.ownId,
       deactivated: false,
       invitations_none: {
-        actor: {
-          id: query.ownId
-        },
+        actor: {id: query.ownId},
       },
       sentRequests_none: {
-        recipient: {
-          id: query.ownId
-        },
+        recipient: {id: query.ownId},
       },
       handle_contains: query.handle
     }
@@ -64,9 +61,8 @@ const userOnly = (nextState, replace) => {
   if (!auth.getToken()) {
     console.log('no token (routes)');
     let path = nextState.location.pathname
-    if ((path !== ('/login/' || '/login'))) {
+    if ((path !== ('/login/' || '/login')))
       localStorage.setItem('redirect', path)
-    }
     replace({ pathname: '/login/'})
   }
 }
@@ -76,7 +72,7 @@ const createRoutes = () => (
   <Route path={'/'}
     component={Template}
     queries={ViewerQuery} >
-    <Route path={'/login/'} component={Login} queries={ViewerQuery} auth={auth} />
+    <Route path={'/login'} component={Login} queries={ViewerQuery} auth={auth} />
     <Route path={'/connect'} component={Connect} queries={ViewerQuery} auth={auth} />
     <Route path={'/acceptrequest/:inviteId/:newFriendId'} onEnter={userOnly} auth={auth}/>
     <Route path={'/acceptinvite/:newFriendId'} onEnter={userOnly} auth={auth}/>
@@ -85,7 +81,7 @@ const createRoutes = () => (
       component={NotificationList}
       queries={ViewerQuery}
       render={({props}) => props ? <NotificationList {...props} /> : <Loading />} />
-    <Route path={'/projects/:userHandle'}
+    <Route path={'/projects/:theirHandle'}
       component={ProjectList}
       queries={ViewerQuery}
       onEnter={userOnly}
@@ -96,45 +92,59 @@ const createRoutes = () => (
       onEnter={userOnly}
       render={({props}) => props ? <ProjectNew {...props} /> : <Loading />} />
 
-    <Route path='/dash/'
+    <Route path='/dash'
       component={Dashboard}
       queries={ViewerQuery}
-      render={({props}) => props ? <Dashboard {...props} /> : <Loading />} >
-      <Route path='/dash/:userHandle/projects'
+      render={({props}) => props ? <Dashboard {...props} /> : <Loading />}
+      >
+
+
+      <Route path='/dash/feed/:userHandle(/:page)'
+        // prepareParams={({page}) => {
+        //   console.log('prep', page);
+        //   return {page: parseInt(page, 10)}
+        // }}
+        component={PagedFeed}
+        queries={ViewerQuery}
+        // render={({props}) => props ? <PagedFeed {...props} /> : <Loading nested />} />
+      />
+      <Route path='/dash/:theirHandle/projects/:userHandle(/:page)'
         component={ProjectsPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested />} />
-      <Route path={'/dash/:userHandle/messages'}
+      <Route path={'/dash/:theirHandle/messages/:userHandle(/:page)'}
         component={DirectMessages}
         queries={ViewerQuery}
-        render={({props}) => props ? <DirectMessages {...props} /> : <Loading nested />} />
-      <Route path={'/dash/:userHandle/bounces'}
+        // render={({props}) => props ? <DirectMessages {...props} /> : <Loading nested />} />
+      />
+      <Route path={'/dash/:theirHandle/bounces/:userHandle(/:page)'}
         component={BouncesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
     </Route>
 
-    <Route path={'/:userHandle'}
+    <Route path={'/:theirHandle'}
       onEnter={userOnly}
       component={Profile}
       queries={ViewerQuery}
       render={({props}) => props ? <Profile {...props} /> : <Loading/>} >
-      <Route path={'/:userHandle/projects'}
+      <Route path={'/:theirHandle/projects(/:page)'}
         component={ProjectsPanel}
         onEnter={userOnly}
         queries={ViewerQuery}
         render={({props}) => props ? <ProjectsPanel {...props} /> : <Loading nested/>} />
-       <Route path={'/:userHandle/bounces'}
+       <Route path={'/:theirHandle/bounces(/:page)'}
         onEnter={userOnly}
         component={BouncesPanel}
         queries={ViewerQuery}
         render={({props}) => props ? <BouncesPanel {...props} /> : <Loading nested/>} />
-      <Route path={'/:userHandle/activity'}
+      <Route path={'/:theirHandle/activity(/:page)'}
         component={ActivitiesPanel}
         queries={ViewerQuery}
-        render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>} />
+        // render={({props}) => props ? <ActivitiesPanel {...props} /> : <Loading nested/>}
+      />
     </Route>
-    <Route path={'/tribe/:userHandle(/members)'}
+    <Route path={'/tribe/:theirHandle/(members)'}
       component={Tribe}
       queries={ViewerQuery}
       render={({props}) => props ? <Tribe {...props} /> : <Loading />} >
@@ -142,12 +152,12 @@ const createRoutes = () => (
         component={TribeAll}
         queries={ViewerQuery}
         render={({props}) => props ? <TribeAll {...props} /> : <Loading nested />} />
-      <Route path={'/tribe/:userHandle/requests(/:acceptFriendId)'}
+      <Route path={'/tribe/:theirHandle/requests(/:acceptFriendId)'}
         component={TribeRequests}
         queries={ViewerQuery}
         render={({props}) => props ? <TribeRequests {...props} /> : <Loading nested/>} />
     </Route>
-    <Route path={'/tribe/:userHandle/find/*'}
+    <Route path={'/tribe/:theirHandle/find/*(/)'}
       component={TribeFind}
       queries={ViewerQuery}
       render={({props}) => props ? <TribeFind {...props} /> : <Loading />}
@@ -161,31 +171,43 @@ const createRoutes = () => (
         ignoreScrollBehavior />
     </Route>
     <Route
-      path={'/:userHandle/:projectTitle'}
+      path={'/mentor/editProfile/:userHandle(/:tab)'}
+      onEnter={userOnly}
+      component={EditMentorProfile}
+      queries={ViewerQuery}>
+    </Route>
+    <Route
+      path={'/mentor/:mentorHandle'}
+      onEnter={userOnly}
+      component={MentorProfile}
+      queries={ViewerQuery}>
+    </Route>
+    <Route
+      path={'/:theirHandle/:projectTitle'}
       onEnter={userOnly}
       component={Project}
       queries={ViewerQuery}
       render={({props}) => props ? <Project {...props} /> : <Loading />} >
     </Route>
     {/* <Route
-      path={'/:userHandle/:projectTitle'}
+      path={'/:theirHandle/:projectTitle'}
       onEnter={userOnly}
       component={Project}
       queries={ViewerQuery}
       render={({props}) => props ? <Project {...props} /> : <Loading />} >
       {/* <Route
-        path={'/:userHandle/:projectTitle/view'}
+        path={'/:theirHandle/:projectTitle/view'}
         component={Comments}
         queries={ViewerQuery}
         prepareParams={commentFilter} />
       <Route
-        path={'/:userHandle/:projectTitle/:handle'}
+        path={'/:theirHandle/:projectTitle/:handle'}
         component={Comments}
         queries={ViewerQuery}
         prepareParams={ownCommentsFilter} /> */}
       {/* </Route> */}
       {/* <Route
-        path={'/session/:userHandle/:sessionId/:tab'}
+        path={'/session/:theirHandle/:sessionId/:tab'}
         onEnter={userOnly}
         component={Session}
         queries={ViewerQuery}
@@ -205,18 +227,18 @@ export default Routing
   auth={auth}
   render={({props}) => props ? <Dashboard {...props} /> : <Loading />} /> */
 
-/* <Route path={'/sessions/:userHandle'} onEnter={userOnly}>
+/* <Route path={'/sessions/:theirHandle'} onEnter={userOnly}>
   <IndexRoute
     component={AllSessions}
     queries={ViewerQuery}
     render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
   <Route
-    path={'/sessions/:userHandle/:project'}
+    path={'/sessions/:theirHandle/:project'}
     component={AllSessions}
     queries={ViewerQuery}
     render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
   <Route
-    path={'/sessions/:userHandle/:project/find'}
+    path={'/sessions/:theirHandle/:project/find'}
     component={AllSessions}
     queries={ViewerQuery}
     render={({props}) => props ? <AllSessions {...props} /> : <Loading nested />} />
@@ -233,7 +255,7 @@ export default Routing
 //       project: {
 //         title: params.projectTitle,
 //         creator: {
-//           handle: params.userHandle
+//           handle: params.theirHandle
 //         }
 //       }
 //     }
@@ -252,7 +274,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
@@ -264,7 +286,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
@@ -290,7 +312,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
@@ -305,7 +327,7 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
@@ -317,10 +339,17 @@ export default Routing
 //         project: {
 //           title: params.projectTitle,
 //           creator: {
-//             handle: params.userHandle
+//             handle: params.theirHandle
 //           }
 //         }
 //       }
 //     }
 //   }
 // }
+
+// function createElementFn(parentProps) {
+//   return function(Component, props) {
+//     return <Component {...parentProps} {...props} />
+//   }
+// }
+// createElement={createElementFn(this.props)}

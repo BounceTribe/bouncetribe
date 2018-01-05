@@ -10,16 +10,14 @@ class ProjectsPanel extends Component {
     let isSelf = user.id===User.id
     let hasProjects = !!User.projects.count
 
-    console.log('PP user', User.handle, isSelf)
-
     return (
       hasProjects ? <ProjectListSm {...this.props} /> :
       <EmptyPanel
         icon={<Music height={113} fill={"#D3D3D3"} />}
-        headline={isSelf ? `Everyone wants to hear it...` : `User has no projects`}
+        headline={isSelf ? `Everyone wants to hear it...` : `${User.handle} has no projects`}
         note={isSelf ? `Upload your first project!` : ``}
         btnLabel={isSelf ? `New Project` : ``}
-        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new`)}
+        btnClick={()=>this.props.router.push(`/projects/${user.handle}/new/`)}
       />
     )
   }
@@ -27,7 +25,14 @@ class ProjectsPanel extends Component {
 
 export default Relay.createContainer(
   ProjectsPanel, {
-    initialVariables: { userHandle: '' },
+    initialVariables: { theirHandle: '', projectsFilter: {} },
+    prepareVariables: (urlParams) => {
+      return {
+        ...urlParams,
+        //ensures non-deleted projects as well
+        projectsFilter: {privacy_not: 'PRIVATE'},
+      }
+    },
     fragments: {
       viewer: () => Relay.QL`
         fragment on Viewer {
@@ -35,12 +40,13 @@ export default Relay.createContainer(
             id
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             handle
             projects (
               first: 999
               orderBy: createdAt_ASC
+              filter: $projectsFilter
             ){
               count
               edges {
@@ -54,13 +60,12 @@ export default Relay.createContainer(
                     }
                   }
                   artwork { url }
+                  artworkSmall { url }
                   privacy
                   creator {handle}
                   comments ( first: 999 ) {
                     edges {
-                      node {
-                        type
-                      }
+                      node { type }
                     }
                   }
                 }

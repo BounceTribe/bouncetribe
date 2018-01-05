@@ -5,15 +5,12 @@ const changePassword = (query) => {
   console.log('sending new password')
   let options = {
     method: 'Post',
-    headers: {
-      "Content-Type": 'application/json'
-    },
+    headers: { "Content-Type": 'application/json' },
     body
   }
-  return new Promise( (resolve, reject) => {
-    
+  return new Promise( (resolve, reject) =>
     fetch(url, options).then(result => resolve(result))
-  })
+  )
 }
 
 

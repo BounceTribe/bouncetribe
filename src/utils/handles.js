@@ -2,21 +2,23 @@ import {graphCool} from 'config'
 import {randomString} from 'utils/random'
 const nonAlphanumeric = /[^a-zA-Z\w_:]/gi
 
-const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /login/i, /signup/i, /messages/i, /dash/i, /session/i, /projects/i, /bounces/i, /unsubscribe/i, /notribe/i, /acceptinvite/i, /acceptrequest/i]
+const restricted = [/admin/i, /profile/i, /tribe/i, /options/i, /settings/i, /login/i, /signup/i, /messages/i, /dash/, /feed/i, /session/i, /projects/i, /bounces/i, /unsubscribe/i, /notribe/i, /mentor/i, /editProfile/i, /acceptinvite/i, /acceptrequest/i]
 
 
-export const isUniqueField = (value, type) => {
+export const isUniqueField = (value, type, model) => {
   type = type || 'handle'
-  return fetch(graphCool.simple,{
+  model = model || 'User'
+  return fetch(graphCool.simple, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       query: `{
-        User (${type}: "${value}") { email }
+        ${model} (${type}: "${value}") { id }
       }`
     }),
   }).then(result=>result.json()).then(json=>{
-    return json.data.User ? false : true
+    console.log({json});
+    return json.data[model] ? false : true
   })
 }
 

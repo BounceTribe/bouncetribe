@@ -5,7 +5,6 @@ import {grey600, grey200, grey222, purple, white} from 'theme'
 import Lock from 'icons/Lock'
 import {BtTextMarker} from 'styled'
 
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -28,11 +27,14 @@ const TabLabel = ({text, locked, value}) => (
 
 const buttonStyle = {fontSize: '15px', fontWeight: '500', color: `${grey600}`}
 
-export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, empty, hideBorder}) => {
+export const Panel = ({topBar, content, tab, tabChange, labels, names, locks, values, empty, hideBorder}) => {
+  names = names || []
+  locks = locks || []
+  values = values || []
   return (
     <Container hideBorder={hideBorder}>
       {topBar}
-      {!empty && <Tabs
+      {!empty && !(tab===undefined) && <Tabs
         // style={{ margin: '0 0 10px 0', borderRadius: '5px' }}
         tabItemContainerStyle={{
           borderBottom: `2px solid ${grey200}`,
@@ -44,7 +46,11 @@ export const Panel = ({topBar, content, tab, tabChange, labels, locks, values, e
         {labels.map( (label, index) =>
           <Tab
             key={index}
-            icon={( <TabLabel text={label + ' '} locked={locks[index]} value={values[index]} /> )}
+            icon={(
+              <TabLabel
+                text={(names[index] || label) + ' '}
+                locked={locks[index]}
+                value={values[index]} /> )}
             value={label}
             buttonStyle={buttonStyle}
             style={{ cursor: locks[index] ? 'not-allowed' : 'pointer' }}

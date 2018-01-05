@@ -50,9 +50,11 @@ export const findMatches = async ({user, project}) => {
                 handle
                 score
                 portrait { url }
+                portraitMini { url }
                 placename
               }
               artwork { url }
+              artworkSmall { url }
             }
           }`
         }),
@@ -116,11 +118,19 @@ export const suggestedFriends = (userId) => {
           query: /* GraphQL */`{
             allUsers (
               first: 10
-              filter: { facebookId_in: [${facebookIds.toString()}] }
+              filter: {
+                facebookId_in: [${facebookIds.toString()}]
+                invitations_none: {
+                  accepted: false,
+                  ignored: false,
+                  actor: {id: "${userId}"}
+                }
+             }
             ) {
               id
               handle
               portrait { url }
+              portraitMini { url }
               score
             }
             User (id: "${userId}") {
@@ -129,6 +139,7 @@ export const suggestedFriends = (userId) => {
           }`
         }),
       }).then(result=>result.json()).then(json => {
+        console.log('friends json', {json, userId});
         let fbFriends = (json.data.allUsers || []).map(user=>user)
         let btFriends = json.data.User.friends.map(user => user.id)
         let suggestedFriends = fbFriends.filter((fbFriend)=>{
@@ -180,6 +191,26 @@ export const getAllSkills = () => {
   })
   .then(result=>result.json()).then(json => {
     return json.data.allSkills
+  })
+}
+
+export const getAllSpecialties = () => {
+  return fetch(graphCool.simple, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: /* GraphQL */`{
+        allSpecialties (first: 300) {
+          id
+          name
+        }
+      }`
+    }),
+  })
+  .then(result=>result.json()).then(json => {
+    return json.data.allSpecialties
   })
 }
 
@@ -294,9 +325,11 @@ export const fetchFeed = (handle) => {
               title
               genres ( first: 999 ) { name }
               artwork { url }
+              artworkSmall { url }
               creator {
                 handle
                 portrait { url }
+                portraitMini { url }
               }
               comments (first: 999) { type }
             }

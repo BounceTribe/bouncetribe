@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Relay from 'react-relay'
 import TextField from 'material-ui/TextField'
 import {View, IconText, IconTextContainer, Button} from 'styled'
-import {Container, Header, HeaderOptions, List} from 'styled/list'
+import {Header, HeaderOptions, List} from 'styled/list'
 import Tribe from 'icons/Tribe'
 import {purple, fbBlue, white} from 'theme'
 import {FindH3, SearchUser} from 'styled/Tribe'
@@ -30,10 +30,7 @@ class TribeFind extends Component {
     )
   }
 
-  connect = () => {
-    let {router} = this.props
-    router.push('/connect')
-  }
+  connect = () => this.props.router.push('/connect/')
 
   createFriendRequest = (recipientId) => {
     console.log('TF createfriend request')
@@ -69,12 +66,12 @@ class TribeFind extends Component {
   }
 
   render () {
-    let {router, userHandle, viewer} = this.props
+    let {router, theirHandle, viewer} = this.props
     let {user} = viewer
     return (
       <View>
           <Header>
-            <IconTextContainer to={`/tribe/${user.handle}`} >
+            <IconTextContainer to={`/tribe/${user.handle}/`} >
               <Tribe fill={purple} />
               <IconText>
                 Add to Tribe
@@ -93,9 +90,7 @@ class TribeFind extends Component {
 
           {
             (this.state.suggestions.length > 0) ? (
-              <FindH3>
-                Facebook Friends
-              </FindH3>
+              <FindH3>Facebook Friends</FindH3>
             ) : null
           }
 
@@ -118,7 +113,7 @@ class TribeFind extends Component {
                     handle: newValue,
                     ownId: user.id
                   },
-                  pathname: `/tribe/${userHandle}/find/`
+                  pathname: `/tribe/${theirHandle}/find/`
                 })
                 this.setState({searching: true})
               }}
@@ -135,7 +130,7 @@ class TribeFind extends Component {
 export default Relay.createContainer(
   TribeFind, {
     initialVariables: {
-      userHandle: '',
+      theirHandle: '',
       suggestedFriendsFilter: {}
     },
     fragments: {
@@ -147,7 +142,7 @@ export default Relay.createContainer(
             auth0UserId
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             email
           }

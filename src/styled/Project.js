@@ -1,14 +1,14 @@
 import styled from 'styled-components'
 import React from 'react'
-import {purple, white, blue, grey200, grey300, grey500, grey800} from 'theme'
+import {purple, blue, grey200, grey300, grey500, grey800} from 'theme'
 import {BtLink} from 'styled'
 
 export const Top = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: flex-start;
   margin: 60px;
+  padding-top: ${({isOwner}) => (isOwner) ? '60px' : '0'}
 `
 
 export const Art = styled.img`
@@ -25,50 +25,41 @@ export const Info = styled.div`
   margin-left: 40px;
   width: 400px;
 `
-
-export const TitleGenre = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-top: 30px;
-`
-
-export const Title = styled.div`
-  display: flex;
-  font-size: 25px;
-  color: ${grey800};
-`
-
-export const Genre = styled.span`
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-  line-height: 12px;
-  color: ${white};
-  background-color: ${purple};
-  padding: 4px 10px;
-  border-radius: 4px;
-  vertical-align: middle;
-  margin-left: 15px;
-  flex-wrap: nowrap;
-`
-
-export const Summary = styled.pre`
-  display: flex;
-  font-size: 15px;
-  margin-top: 30px;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-all;
-`
+  export const Privacy = styled.div`
+    font-size: 12px;
+    color: #777777;
+    letter-spacing: 1.3px;
+    margin: 20px 0 5px 0;
+  `
+  export const Title = styled.div`
+    display: flex;
+    font-size: 30px;
+    font-weight: 300;
+    white-space: nowrap;
+    color: #333333;
+  `
+  export const GenreBounce = styled.div`
+    display: flex;
+    margin-top: 20px;
+  `
+  export const Summary = styled.pre`
+    display: flex;
+    font-size: 14px;
+    margin-top: 30px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+    color: #555555;
+  `
 
 export const TrackContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 85%;
-  max-width: 900px;
+  width: 100%;
+  ${'' /* max-width: 900px; */}
   justify-content: center;
-  ${'' /* margin-bottom: 50px; */}
+  margin-bottom: 50px;
 `
 export const MarkerContainer = styled.div`
   position: absolute;
@@ -98,17 +89,15 @@ export const Bot = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  margin-top: 50px;
-  width: 85%;
+  width: 100%;
+  padding: 0 20px;
 `
 
 export const LeftList = styled.div`
   display: ${({hide}) => (hide) ? 'none' : 'flex'};
   width: 30%;
   margin-right: 20px;
-
 `
-
 export const CommentContainer = styled.div`
   display: flex;
   margin-left: 20px;
@@ -120,17 +109,16 @@ export const ProfContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  width: 80%;
+  width: 100%;
   margin-top: 20px;
-
 `
 
 export const ProfTop = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
   width: 100%;
+  margin-top: 10px;
 `
 
 const PortImg = styled.img`
@@ -141,21 +129,14 @@ const PortImg = styled.img`
   object-fit: cover;
 `
 
-export const Portrait = (props) => {
-  return (
-    <BtLink
-      to={props.to}
-    >
-      <PortImg
-        src={props.src}
-      />
-    </BtLink>
-  )
-}
+export const Portrait = (props) => (
+  <BtLink to={props.to} >
+    <PortImg src={props.src} />
+  </BtLink>
+)
 
 export const ProfLeft = styled.div`
   display: flex;
-  flex-direction: row;
 `
 
 export const ProfCol = styled.div`
@@ -174,7 +155,6 @@ export const ProfHandle = styled(BtLink)`
 
 export const Score = styled.div`
   display: flex;
-  flex-direction: row;
   color: ${grey500};
   font-size: 18px;
   font-weight: 400;
@@ -182,11 +162,12 @@ export const Score = styled.div`
 
 export const MoreInfo = styled.div`
   display: flex;
-  flex-direction: row;
   align-self: flex-end;
   align-items: flex-end;
   justify-content: flex-end;
   color: ${grey500};
+  font-weight: 300;
+  margin-bottom: 5px;
 `
 
 export const Divider = styled.hr`
@@ -197,7 +178,6 @@ export const Divider = styled.hr`
 
 export const CommonInfluences = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   width: 50%;
   margin-left: 50%;
@@ -205,12 +185,12 @@ export const CommonInfluences = styled.div`
 
 export const InfluenceChip = styled.div`
   display: flex;
-  color: black;
+  color: ${grey800};
   background-color: ${grey300};
   border-radius: 30px;
   justify-content: center;
   align-items: center;
-  padding: 5px 10px;
-  font-size: 12px;
+  padding: 7px 12px;
+  font-size: 14px;
   margin-left: 5px;
 `

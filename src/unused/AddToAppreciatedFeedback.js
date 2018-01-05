@@ -12,6 +12,7 @@ export default class AddToAppreciatedFeedback extends Mutation {
   getMutation () {
     return Relay.QL`mutation{addToAppreciatedFeedback}`
   }
+  
 
   getFatQuery () {
     return Relay.QL`

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {ImageDropContainer, CroppedImage} from 'styled'
+import {ImageDropContainer} from 'styled'
+// import {ImageDropContainer, CroppedImage} from 'styled'
 import Dropzone from 'react-dropzone'
 import uploadFile from 'utils/uploadFile'
 import UpdateFile from 'mutations/UpdateFile'
@@ -8,96 +9,123 @@ import ReactCrop from 'react-image-crop'
 import {Button} from 'styled'
 import 'react-image-crop/dist/ReactCrop.css'
 import Camera from 'icons/Camera'
+import {Loading} from 'styled/Spinner'
+
+import Pica from 'pica/dist/pica.min.js'
+// const Pica = require('pica')({ features: [ 'js', 'wasm', 'ww', 'cib' ] })
 
 export default class ImageUploader extends Component {
-
-  state = {
-    image: false,
-    croppedImage: false,
-    crop: {
-      aspect: 1/1,
-      x: 0,
-      y: 0,
-      width: 100
+  constructor(props){
+    super()
+    this.state = {
+      image: false,
+      croppedImage: false,
+      imageName: '',
+      pixel: null,
+      waiting: false,
+      files: [],
+      sizesRemaining: props.altSizes,
+      crop: { aspect: 1/1, x: 10, y: 10, width: 80 }
     }
+    // this.pica = pica(pica({ features: [ 'js', 'wasm', 'ww', 'cib' ] }))
+    console.log('pica,', Pica);
   }
 
-  onImageDrop = (files, rejectedFile) => {
-    let file = files[0]
+  onImageDrop = (files, rejectedFile) =>
+    this.setState({ image: files[0].preview, imageName: files[0].name })
 
-    console.log(file)
-    this.setState({
-      image: file.preview,
-      imageName: file.name
+  sendUpload = (canvas, blob, pxSize) => {
+    uploadFile(blob, this.state.imageName).then(fileId => {
+      Relay.Store.commitUpdate(
+        new UpdateFile({self: this.props.self, fileId}), {
+          onSuccess: transaction => {
+            let file = transaction.updateFile.file
+            file.pxSize = pxSize
+            this.setState({
+              croppedImage: this.state.croppedImage || file.url,
+              files: this.state.files.concat(file),
+              sizesRemaining: this.state.sizesRemaining.filter(s=>s!==pxSize)
+            })
+            if (this.state.sizesRemaining.length) {
+              this.picaResize(canvas, this.state.sizesRemaining[0])
+            } else {
+              let sortedFiles = this.state.files.sort((a,b)=>b.pxSize-a.pxSize)
+              this.props.fileSuccess(sortedFiles)
+            }
+          },
+          onFailure: res => console.log('updateFile fail', res)
+        }
+      )
     })
-
   }
 
-  uploadImage = () => {
-    let imageName = this.state.imageName
+  picaResize = (canvas, pxSize) => {
+    let pica = new Pica()
+    let picaCanvas = document.createElement('canvas')
+    picaCanvas.width = Math.min(pxSize, canvas.height)
+    picaCanvas.height = Math.min(pxSize, canvas.height)
+    pica.resize(canvas, picaCanvas)
+      .then(result => pica.toBlob(result, 'image/jpeg'))
+      .then(blob => this.sendUpload(canvas, blob, pxSize))
+  }
+
+  uploadFull = (pxSize) => {
+    this.setState({waiting: true})
     let {image, pixel} = this.state
-    console.log(this.state)
     let htmlImage = new Image()
-
-    htmlImage.onload = ()=>{
-      window.createImageBitmap(htmlImage, 0, 0 ,pixel.width, pixel.height).then(result=>{
-        let canvas = document.createElement('canvas')
-        canvas.width = pixel.width
-        canvas.height = pixel.height
-        let c = canvas.getContext('2d')
-        c.drawImage(htmlImage, pixel.x, pixel.y, pixel.width, pixel.height, 0, 0,pixel.width, pixel.height )
-
-        canvas.toBlob((blob)=>{
-          uploadFile(blob, imageName)
-          .then( fileId => {
-            Relay.Store.commitUpdate(
-              new UpdateFile({
-                self: this.props.self,
-                fileId: fileId,
-              }), {
-                onSuccess: (transaction) => {
-                  let file = transaction.updateFile.file
-                  this.setState({ croppedImage: file.url })
-                  this.props.fileSuccess(file)
-                },
-                onFailure: (response) => {
-                  console.log('updateFile failure', response)
-                }
-              }
-            )
-          })
-        })
-      })
+    htmlImage.onload = () => {
+      console.log({pixel, htmlImage})
+      !pixel && console.log('no pixel!', this.state);
+      let width = (pixel || {}).width || htmlImage.width
+      let height = (pixel || {}).height || htmlImage.height
+      let x = (pixel || {}).x || 0
+      let y = (pixel || {}).y || 0
+      let canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+      let c = canvas.getContext('2d')
+      c.drawImage(htmlImage, x, y, width, height, 0, 0, width, height)
+      canvas.toBlob(blob=>this.sendUpload(canvas, blob, width))
     }
     htmlImage.src = image
   }
 
-
   get dropzoneOrCropper () {
-    console.log('dz or c', this.state);
-    if (this.state.croppedImage) {
+    let style = this.state.waiting ? {zValue: -10, opacity: '0', pointer: 'default'} : {}
+    // if (this.state.croppedImage) {
+      //could createbitmap here to show crop before upload
+      // return null
+      // return <CroppedImage src={this.state.croppedImage} alt={'project art'} />
+    // } else if (this.state.image) {
+    if (this.state.image) {
       return (
-        <CroppedImage
-          src={this.state.croppedImage}
-          alt={'project art'}
-        />
-      )
-    } else if (this.state.image) {
-
-      return (
-        <div>
-          <ReactCrop
-            src={this.state.image}
-            crop={this.state.crop}
-            onImageLoaded={(image)=>console.log('loaded', image)}
-            keepSelection={true}
-            onComplete={(crop, pixel)=>this.setState({ crop, pixel })}
-          />
+        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <div style={style}>
+            <ReactCrop
+              ref={rCrop => this.internal = rCrop }
+              src={this.state.image}
+              crop={this.state.crop}
+              keepSelection={true}
+              onImageLoaded={(image)=>{
+                //incorrect img size sometimes
+                // let pixel = this.internal.getPixelCrop(this.state.crop)
+                // console.log({pixel});
+                // pixel.height = pixel.width
+                // this.setState({pixel})
+              }}
+              onComplete={(crop, pixel)=>{
+                this.setState({ crop, pixel })
+                console.log('complete state', this.state);
+              }}
+            />
+          </div>
+          {this.state.waiting && <Loading hideBg/>}
           <Button
             label="Save"
-            onClick={this.uploadImage}
+            onClick={this.uploadFull}
             primary
-            disabled={!this.state.pixel}
+            disabled={!this.state.pixel || this.state.waiting}
+            style={{alignSelf: 'center', margin: '10px'}}
           />
         </div>
       )
@@ -107,7 +135,7 @@ export default class ImageUploader extends Component {
           style={{
             display: 'flex',
             width: '100%',
-            height: '200px',
+            height: '400px',
             justifyContent: 'center',
             alignItems: 'center'
           }}

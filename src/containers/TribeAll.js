@@ -27,7 +27,7 @@ class TribeAll extends Component {
                 <BtAvatar user={friend} size={50} />
               </TableRowColumn>
               <TableRowColumn>
-                <Name to={`/${friend.handle}`} >
+                <Name to={`/${friend.handle}/`} >
                   {friend.handle}
                 </Name>
               {/* </div> */}
@@ -92,7 +92,7 @@ class TribeAll extends Component {
 export default Relay.createContainer(
   TribeAll, {
     initialVariables: {
-      userHandle: ''
+      theirHandle: ''
     },
     fragments: {
       viewer: () => Relay.QL`
@@ -101,7 +101,7 @@ export default Relay.createContainer(
             id
             handle
           }
-          User (handle: $userHandle) {
+          User (handle: $theirHandle) {
             id
             email
             friends (

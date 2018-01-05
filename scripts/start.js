@@ -5,7 +5,7 @@ process.env.BABEL_ENV = 'development';
 // that have already been set.
 // https://github.com/motdotla/dotenv
 require('dotenv').config({silent: true});
-
+var fs = require('fs-extra');
 var chalk = require('chalk');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
@@ -64,6 +64,14 @@ function setupCompiler(host, port, protocol) {
       //clearConsole();
     }
     console.log('Compiling...');
+    let logPath = 'jake-hourlog.json'
+    fs.stat(logPath, (err, stats) => {
+      if (!err) {
+        var timeLogger = require('../timeLogger.js')
+        timeLogger(logPath)
+      }
+    })
+    //jskes timecard
   });
 
   var isFirstCompile = true;

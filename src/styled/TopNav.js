@@ -64,6 +64,7 @@ export const NavImg = styled.img`
 export const ImgLink = styled(BtLink)`
   color: ${white};
   padding: 0;
+  cursor: pointer;
 `
 
 export const Portrait = (props) => (

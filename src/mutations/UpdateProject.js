@@ -2,17 +2,6 @@ import Relay, {Mutation} from 'react-relay'
 
 export default class UpdateProject extends Mutation {
 
-  getVariables () {
-    return {
-      id: this.props.project.id,
-      privacy: this.props.project.privacy,
-      title: this.props.project.title,
-      description: this.props.project.description,
-      genresIds: this.props.genresIds,
-      artworkId: this.props.artworkId
-    }
-  }
-
   getMutation () {
     return Relay.QL`mutation{updateProject}`
   }
@@ -25,6 +14,19 @@ export default class UpdateProject extends Mutation {
     `
   }
 
+  getVariables () {
+    console.log('proj mutate props', this.props);
+    return {
+      id: this.props.project.id,
+      privacy: this.props.project.privacy,
+      title: this.props.project.title,
+      description: this.props.project.description,
+      genresIds: this.props.genresIds,
+      artworkId: this.props.artworkId,
+      artworkSmallId: this.props.artworkSmallId
+    }
+  }
+
   getConfigs () {
     return [{
       type: 'FIELDS_CHANGE',
@@ -33,9 +35,5 @@ export default class UpdateProject extends Mutation {
       }
     }]
   }
-
-
-
-
 
 }

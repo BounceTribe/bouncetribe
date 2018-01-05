@@ -32,7 +32,7 @@ class Login extends Component {
       this.props.router.push(redirect)
       this.setState({routeSet: true})
     } else {
-      this.props.router.push(`/dash/`)
+      this.props.router.push(`/dash/feed/${(user || {}).handle}/`)
       this.setState({routeSet: true})
     }
   }
