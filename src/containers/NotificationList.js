@@ -53,7 +53,6 @@ export default Relay.createContainer(NotificationList, {
                   handle
                 }
                 project
-                session
                 type
               }
             }

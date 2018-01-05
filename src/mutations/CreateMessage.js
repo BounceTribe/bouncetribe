@@ -7,7 +7,6 @@ export default class CreateMessage extends Mutation {
       text: this.props.text,
       recipientId: this.props.recipientId,
       senderId: this.props.senderId,
-      sessionParentId: this.props.sessionParentId
     }
   }
 

@@ -588,7 +588,6 @@ export default Relay.createContainer(
                 ) {
                   edges {
                     node {
-                      session { id }
                       text
                       createdAt
                       type

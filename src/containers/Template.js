@@ -263,7 +263,6 @@ export default Relay.createContainer( Template, {
                     id
                     title
                   }
-                  session { id }
                 }
               }
             }

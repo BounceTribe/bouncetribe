@@ -48,7 +48,6 @@ export default class CreateComment extends Relay.Mutation {
       projectId: this.props.projectId,
       type: this.props.type,
       parentId: this.props.parentId,
-      sessionId: this.props.sessionId
     }
   }
 
