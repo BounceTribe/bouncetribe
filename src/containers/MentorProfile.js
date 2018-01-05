@@ -89,7 +89,7 @@ class MentorProfile extends Component {
           genres,
           influences,
           summary,
-          reviews,
+          // reviews,
           mediaUrls,
           videoUrl,
           newReservation,

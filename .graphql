@@ -1,12 +1,11 @@
 # projectId: cj18b71wk6i4t0189791n9hn0
-# version: 184
+# version: 224
 
 type Artist @model {
   createdAt: DateTime
   id: ID! @isUnique
   imageUrl: String!
   influencedUsers: [User!]! @relation(name: "UserArtistInfluence")
-  influencedMentors: [Mentor!]! @relation(name: "MentorArtistInfluence")
   name: String!
   spotifyId: String! @isUnique
   updatedAt: DateTime
@@ -27,6 +26,7 @@ type Comment @model {
   updatedAt: DateTime
   upvotes: [User!]! @relation(name: "CommentUpvotes")
   bounce: Bounce @relation(name: "BounceOnComment")
+  activity: Activity @relation(name: "ActivityOnComment")
 }
 
 type File @model {
@@ -37,13 +37,9 @@ type File @model {
   id: ID! @isUnique
   name: String!
   pictureOwner: User @relation(name: "UserPicture")
-  pictureMentor: Mentor @relation(name: "MentorPicture")
   portraitOwner: User @relation(name: "UserPortrait")
   portraitSmallOwner: User @relation(name: "UserPortraitSmall")
   portraitMiniOwner: User @relation(name: "UserPortraitMini")
-  portraitMentor: Mentor @relation(name: "MentorPortrait")
-  portraitSmallMentor: Mentor @relation(name: "MentorPortraitSmall")
-  portraitMiniMentor: Mentor @relation(name: "MentorPortraitMini")
   secret: String! @isUnique
   size: Int!
   trackProject: Project @relation(name: "ProjectTracks")
@@ -72,7 +68,6 @@ type Genre @model {
   subgenres: [Genre!]! @relation(name: "GenreGenre")
   updatedAt: DateTime
   users: [User!]! @relation(name: "UserGenres")
-  mentors: [Mentor!]! @relation(name: "MentorGenres")
 }
 
 type Message @model {
@@ -114,6 +109,8 @@ type Project @model {
   tracks: [File!]! @relation(name: "ProjectTracks")
   updatedAt: DateTime
   bounces: [Bounce!]! @relation(name: "ProjectOnBounce")
+  activity: Activity @relation(name: "ActivityOnProject")
+  mentor: Mentor @relation(name: "MentorOnProject")
 }
 
 type Session @model {
@@ -187,7 +184,9 @@ type User @model {
   doNotEmailTA: Boolean
   mentors: [Mentor!]! @relation(name: "MentorOnUser1")
   reviews: [Review!]! @relation(name: "ReviewOnUser")
-  mentor: Mentor @relation(name: "MentorOnUser")
+  activities: [Activity!]! @relation(name: "ActivityOnUser")
+  mentorAccount: Mentor @relation(name: "MentorOnUser")
+  mentorReservations: [Mentor!]! @relation(name: "MentorOnUser2")
 }
 
 type Bounce @model {
@@ -196,31 +195,48 @@ type Bounce @model {
   id: ID! @isUnique
   createdAt: DateTime!
   project: Project @relation(name: "ProjectOnBounce")
+  activity: Activity @relation(name: "ActivityOnBounce")
 }
 
 type Mentor @model {
   id: ID! @isUnique
   handle: String! @isUnique
   createdAt: DateTime!
-  lastPing: DateTime
-  latitude: Float
-  longitude: Float
-  placename: String
   summary: String
+  firstName: String
+  lastName: String
   videoUrl: String
+  website: String
+  deactivated: Boolean! @defaultValue(value: false)
   occupation: String
-  qualifications: [String!]
-  specialties: [SPECIALTY!]
-  genres: [Genre!]! @relation(name: "MentorGenres")
-  artistInfluences: [Artist!]! @relation(name: "MentorArtistInfluence")
-  portrait: File @relation(name: "MentorPortrait")
-  portraitSmall: File @relation(name: "MentorPortraitSmall")
-  portraitMini: File @relation(name: "MentorPortraitMini")
-  pictures: [File!]! @relation(name: "MentorPicture")
+  qualifications: String
   mentees: [User!]! @relation(name: "MentorOnUser1")
-  mediaUrls: [MediaLink!]! @relation(name: "MediaLinkOnMentor")
+  mediaUrls: [String!]
+  specialties: [Specialty!]! @relation(name: "MentorSpecialties")
   userAccount: User! @relation(name: "MentorOnUser")
   reviews: [Review!]! @relation(name: "ReviewOnMentor")
+  menteeReservations: [User!]! @relation(name: "MentorOnUser2")
+  projects: [Project!]! @relation(name: "MentorOnProject")
+  packages: [Package!]! @relation(name: "MentorOnPackage")
+}
+
+type Package @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  responseHours: Float
+  reviewsPerMonth: Int
+  videoChatsPerMonth: Int
+  careerStrategizing: Boolean
+  mixingMasteringHelp: Boolean
+  introductionsToNetwork: Boolean
+  monthlyRate: Int
+  mentor: Mentor @relation(name: "MentorOnPackage")
+}
+
+type Specialty @model {
+  id: ID! @isUnique
+  name: String
+  mentors: [Mentor!]! @relation(name: "MentorSpecialties")
 }
 
 type Review @model {
@@ -232,9 +248,11 @@ type Review @model {
   mentor: Mentor @relation(name: "ReviewOnMentor")
 }
 
-type MediaLink @model {
+type Activity @model {
+  bounce: Bounce @relation(name: "ActivityOnBounce")
+  comment: Comment @relation(name: "ActivityOnComment")
+  createdAt: DateTime!
   id: ID! @isUnique
-  url: String!
-  type: LINK_TYPE!
-  mentor: Mentor @relation(name: "MediaLinkOnMentor")
+  project: Project @relation(name: "ActivityOnProject")
+  user: User @relation(name: "ActivityOnUser")
 }
