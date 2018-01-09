@@ -9,9 +9,10 @@ var paths = require('./paths');
 var publicPath = '/';
 var publicUrl = '';
 var env = getClientEnvironment(publicUrl);
-
+process.traceDeprecation=true
 module.exports = {
   devtool: 'cheap-module-source-map',
+  // context: paths.appSrc,
   entry: [
     require.resolve('react-dev-utils/webpackHotDevClient'),
     require.resolve('./polyfills'),
@@ -24,22 +25,16 @@ module.exports = {
     publicPath: publicPath
   },
   resolve: {
-    fallback: paths.nodePaths,
-    extensions: ['.js', '.json', '.jsx', ''],
+    // fallback: paths.nodePaths,
+    modules: ["node_modules", paths.nodePaths[0]],
+    extensions: ['.js', '.json', '.jsx'],
     alias: {
-      'react-native': 'react-native-web'
+      // 'react-native': 'react-native-web'
     }
   },
 
   module: {
-    preLoaders: [
-      {
-        test: /\.(js|jsx)$/,
-        loader: 'eslint',
-        include: paths.appSrc,
-      }
-    ],
-    loaders: [
+    rules: [
       {
         exclude: [
           /\.html$/,
@@ -48,42 +43,52 @@ module.exports = {
           /\.json$/,
           /\.svg$/
         ],
-        loader: 'url',
-        query: {
-          limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
+        use: [{
+          loader: 'url-loader',
+          options: {
+            limit: 10000,
+            name: 'static/media/[name].[hash:8].[ext]'
+          }
+        }]
       },{
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
-        loader: 'babel',
-        query: { }
+        use: [{
+          loader: 'babel-loader',
+          options: { }
+        }]
       },{
         test: /\.css$/,
-        loader: 'style!css?importLoaders=1!postcss'
-      },{
-        test: /\.json$/,
-        loader: 'json'
+        use: [{
+          loader: 'style-loader'
+        }, {
+          loader: 'css-loader',
+
+          options: {
+            importLoaders: 1
+          }
+        }, {
+          loader: 'postcss-loader'
+        }]
       },{
         test: /\.svg$/,
-        loader: 'file',
-        query: {
-          name: 'static/media/[name].[hash:8].[ext]'
-        }
-      }
-    ]
-  },
+        use: [{
+          loader: 'file-loader',
+          options: {
+            name: 'static/media/[name].[hash:8].[ext]'
+          }
+        }]
+      },{
+      test: /\.(js|jsx)$/,
 
-  postcss: function() {
-    return [
-      autoprefixer({
-        browsers: [
-          '>1%',
-          'last 4 versions',
-          'Firefox ESR',
-        ]
-      }),
-    ];
+      use: [{
+        loader: 'eslint-loader'
+      }],
+
+      include: paths.appSrc,
+      enforce: 'pre'
+    }
+    ]
   },
   plugins: [
     new InterpolateHtmlPlugin({ PUBLIC_URL: publicUrl }),
@@ -91,7 +96,23 @@ module.exports = {
     new webpack.DefinePlugin(env),
     new webpack.HotModuleReplacementPlugin(),
     new CaseSensitivePathsPlugin(),
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules)
+    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+    new webpack.LoaderOptionsPlugin({
+         // test: /\.xxx$/, // may apply this only for some modules
+         options: {
+           postcss: function() {
+             return [
+               autoprefixer({
+                 browsers: [
+                   '>1%',
+                   'last 4 versions',
+                   'Firefox ESR',
+                 ]
+               }),
+             ];
+           }
+         }
+       })
   ],
   node: {
     fs: 'empty',
