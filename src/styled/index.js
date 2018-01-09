@@ -261,9 +261,9 @@ export const SeeMore = (props) =>
           onClick={props.onClick}
           style={{
             backgroundColor: `${white}`,
-            border: `1px solid #4A4A4A`,
+            border: `1px solid #D9D9D9`,
             borderRadius: '5px',
-            margin: '5px',
+            margin: '20px',
             width: `150px`,
           }}
         ><Label>See {props.seeLess ? 'Less' : 'More'}</Label>

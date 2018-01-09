@@ -1,7 +1,8 @@
-import React, {Component} from 'react'
-import {TextField, Checkbox} from 'material-ui/'
-import {Row} from 'styled'
+import {Checkbox, TextField} from 'material-ui/'
 import {EditCol, EditWorkText} from 'styled/MentorProfile'
+import React, {Component} from 'react'
+
+import {Row} from 'styled'
 
 export default class EditMentorWork extends Component {
 

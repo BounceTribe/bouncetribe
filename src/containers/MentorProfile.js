@@ -1,21 +1,21 @@
-import React, {Component} from 'react'
-import Relay from 'react-relay'
-import {Location, MentorView, LeftWrapper, UpperMain, Rating, InfoFeed, Text, MediaLinks, MediaItem, RightPanel, Label, MissingMentorData, Summary, Reviews, CenteredRow, MentorHandle, ReserveUpper, ReserveLower,
+import {BtAvatar, BtFlatButton, BtTagList} from 'styled'
+import {CenteredRow, InfoFeed, Label, LeftWrapper, Location, MediaItem, MediaLinks, MentorHandle, MentorView, MissingMentorData, Rating, ReserveLower, ReserveUpper, Reviews, RightPanel, Summary, Text, UpperMain,
   // RatingVal, NumberRatings, ReviewLabel,
 } from 'styled/MentorProfile'
-import PinIcon from 'icons/Location'
-import {BtAvatar, BtTagList, BtFlatButton} from 'styled'
-import {ProjectListSm} from 'components/ProjectListSm'
-import Edit from 'icons/Edit'
+import React, {Component} from 'react'
+import {mapMentorInfo, mapUserInfo} from 'utils/mapUserInfo'
 import {purple, white} from 'theme'
-import {mapUserInfo, mapMentorInfo} from 'utils/mapUserInfo'
-// import Rater from 'react-rater'
-import 'react-rater/lib/react-rater.css'
-import {url} from 'config'
 import AddToReservations from 'mutations/AddToReservations'
-import RemoveFromReservations from 'mutations/RemoveFromReservations'
+import Edit from 'icons/Edit'
+import PinIcon from 'icons/Location'
+import {ProjectListSm} from 'components/ProjectListSm'
 import ReactPlayer from 'react-player'
+import Relay from 'react-relay'
+import RemoveFromReservations from 'mutations/RemoveFromReservations'
 import {mapNodes} from 'utils/mapNodes'
+import {url} from 'config'
+// import Rater from 'react-rater'
+// import 'react-rater/lib/react-rater.css'
 
 class MentorProfile extends Component {
 

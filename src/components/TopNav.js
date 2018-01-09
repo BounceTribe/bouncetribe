@@ -111,6 +111,9 @@ class TopNav extends Component {
             <DropdownMenuItem onClick={this.closeMenu} text="Dashboard"  to={`/`} />
             <DropdownMenuItem onClick={this.closeMenu} text="View Profile" to={`/${handle}/`} />
             <DropdownMenuItem onClick={this.closeMenu} text="Tribe Members" to={`/tribe/${handle}/`} />
+            {user.mentorAccount &&
+              <DropdownMenuItem onClick={this.closeMenu} text="Mentor Profile" to={`/mentor/${handle}/`} />
+            }
             <DropHr/>
             <DropdownMenuItem onClick={() => {
               this.props.openSettings()
