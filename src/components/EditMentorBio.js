@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {TextField} from 'material-ui/'
 import {Row} from 'styled'
-import {EditCol} from 'styled/MentorProfile'
+import {EditCol, EditWorkText} from 'styled/MentorProfile'
 import {getAllSpecialties} from 'utils/graphql'
 import {Async} from 'react-select'
 // import 'react-select/dist/react-select.css'
@@ -72,6 +72,8 @@ export default class EditMentorBio extends Component {
           {/* {this.props.videoUrl && <ReactPlayer url={this.props.videoUrl} />} */}
         </EditCol>
         <EditCol>
+          {!!this.props.specialties.length
+              && <EditWorkText>Specialties</EditWorkText>}
           <Async
             loadOptions={this.loadSpecialties}
             value={this.props.specialties}
@@ -79,7 +81,7 @@ export default class EditMentorBio extends Component {
             multi
             className={'async'}
             placeholder={'Specialties'}
-            style={{margin: '4px 0 8px 0'}}
+            style={{margin: '0 0 8px 0'}}
           />
           {/* <BtTagList items={specialties} grayTag /> */}
 

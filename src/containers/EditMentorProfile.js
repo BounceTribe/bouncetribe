@@ -16,7 +16,7 @@ import {mapMentorInfo} from 'utils/mapUserInfo'
 import {mapNodes} from 'utils/mapNodes'
 import {purple} from 'theme'
 import MentorCircle from 'icons/MentorCircle'
-
+import {isEqualShallow} from 'utils/compare'
 // import {isURL} from 'validator'
 
 class EditMentorProfile extends Component {
@@ -102,6 +102,11 @@ class EditMentorProfile extends Component {
 
   updatePackage = (index) => {
     let updateObj = this.state.package1
+    let existingPackage1 = mapNodes(this.props.viewer.user.mentorAccount.packages)[0]
+    if (isEqualShallow(updateObj, existingPackage1)) {
+      console.log('EQUAL');
+      return
+    }
     console.log('updating package', updateObj);
     Relay.Store.commitUpdate(
       new UpdatePackage(updateObj), {

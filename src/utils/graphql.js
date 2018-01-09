@@ -1,88 +1,6 @@
 import { graphCool } from 'config'
 import auth from 'utils/auth'
 
-export const findMatches = async ({user, project}) => {
-  try {
-    let genre = project.genres.edges[0].node.id
-    let projectsToExclude = []
-    let usersToExclude = []
-
-    user.projects.edges.forEach((projectEdge) => {
-      projectEdge.node.sessions.edges.forEach((sessionEdge) => {
-        sessionEdge.node.projects.edges.forEach((edge) => {
-          let {
-            id: projectId,
-            creator: { handle: creatorHandle }
-          } = edge.node
-          if (projectId !== project.id) {
-            projectsToExclude.push(`"${projectId}"`)
-            usersToExclude.push(`"${creatorHandle}"`)
-          }
-        })
-      })
-    })
-
-    usersToExclude.push(`"${user.handle}"`)
-
-    user.friends.edges.forEach((friendEdge) => {
-      usersToExclude.push(`"${friendEdge.node.handle}"`)
-    })
-
-    let response = await fetch(graphCool.simple, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          query: /* GraphQL */`{
-            allProjects (
-              first: 20
-              filter: {
-                privacy: PUBLIC
-                genres_some: { id: "${genre}" }
-                creator: { handle_not_in: [${usersToExclude.toString()}] }
-                id_not_in: [${projectsToExclude.toString()}]
-              }
-            ) {
-              id
-              title
-              createdAt
-              creator {
-                id
-                handle
-                score
-                portrait { url }
-                portraitMini { url }
-                placename
-              }
-              artwork { url }
-              artworkSmall { url }
-            }
-          }`
-        }),
-      })
-      let json = await response.json()
-
-      let {allProjects} = json.data
-
-      let uniqueCreatorIds = []
-      let uniqueProjects = []
-
-      allProjects.forEach( project => {
-        if (!uniqueCreatorIds.includes(project.creator.id)) {
-          uniqueCreatorIds.push(project.creator.id)
-          uniqueProjects.push(project)
-        }
-      })
-
-      uniqueProjects.sort((a, b) => b.creator.score - a.creator.score )
-
-      return uniqueProjects.slice(0,6)
-  } catch (e) {
-    console.log("findMatches error", e)
-  }
-}
-
-
-
 export const findUserIds = (ids) => {
   return fetch(graphCool.simple, {
     method: 'POST',
@@ -154,18 +72,13 @@ export const suggestedFriends = (userId) => {
 export const getAllGenres = () => {
   return fetch(graphCool.simple, {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       query: /* GraphQL */`{
         allGenres (
           first: 300
           orderBy: name_ASC
-        ) {
-          id
-          name
-        }
+        ) { id, name }
       }`
     }),
   })
@@ -177,15 +90,10 @@ export const getAllGenres = () => {
 export const getAllSkills = () => {
   return fetch(graphCool.simple, {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       query: /* GraphQL */`{
-        allSkills (first: 300) {
-          id
-          name
-        }
+        allSkills (first: 300) { id, name }
       }`
     }),
   })
@@ -197,15 +105,10 @@ export const getAllSkills = () => {
 export const getAllSpecialties = () => {
   return fetch(graphCool.simple, {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json'
-    },
+    headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       query: /* GraphQL */`{
-        allSpecialties (first: 300) {
-          id
-          name
-        }
+        allSpecialties (first: 300) { id, name }
       }`
     }),
   })
@@ -368,3 +271,83 @@ export const getProjectId = (handle, title) => {
     return json.data.allProjects[0].id
   })
 }
+
+// export const findMatches = async ({user, project}) => {
+//   try {
+//     let genre = project.genres.edges[0].node.id
+//     let projectsToExclude = []
+//     let usersToExclude = []
+//
+//     user.projects.edges.forEach((projectEdge) => {
+//       projectEdge.node.sessions.edges.forEach((sessionEdge) => {
+//         sessionEdge.node.projects.edges.forEach((edge) => {
+//           let {
+//             id: projectId,
+//             creator: { handle: creatorHandle }
+//           } = edge.node
+//           if (projectId !== project.id) {
+//             projectsToExclude.push(`"${projectId}"`)
+//             usersToExclude.push(`"${creatorHandle}"`)
+//           }
+//         })
+//       })
+//     })
+//
+//     usersToExclude.push(`"${user.handle}"`)
+//
+//     user.friends.edges.forEach((friendEdge) => {
+//       usersToExclude.push(`"${friendEdge.node.handle}"`)
+//     })
+//
+//     let response = await fetch(graphCool.simple, {
+//         method: 'POST',
+//         headers: { 'content-type': 'application/json' },
+//         body: JSON.stringify({
+//           query: /* GraphQL */`{
+//             allProjects (
+//               first: 20
+//               filter: {
+//                 privacy: PUBLIC
+//                 genres_some: { id: "${genre}" }
+//                 creator: { handle_not_in: [${usersToExclude.toString()}] }
+//                 id_not_in: [${projectsToExclude.toString()}]
+//               }
+//             ) {
+//               id
+//               title
+//               createdAt
+//               creator {
+//                 id
+//                 handle
+//                 score
+//                 portrait { url }
+//                 portraitMini { url }
+//                 placename
+//               }
+//               artwork { url }
+//               artworkSmall { url }
+//             }
+//           }`
+//         }),
+//       })
+//       let json = await response.json()
+//
+//       let {allProjects} = json.data
+//
+//       let uniqueCreatorIds = []
+//       let uniqueProjects = []
+//
+//       allProjects.forEach( project => {
+//         if (!uniqueCreatorIds.includes(project.creator.id)) {
+//           uniqueCreatorIds.push(project.creator.id)
+//           uniqueProjects.push(project)
+//         }
+//       })
+//
+//       uniqueProjects.sort((a, b) => b.creator.score - a.creator.score )
+//
+//       return uniqueProjects.slice(0,6)
+//   } catch (e) {
+//     console.log("findMatches error", e)
+//   }
+// }

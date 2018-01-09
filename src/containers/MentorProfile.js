@@ -1,14 +1,15 @@
 import React, {Component} from 'react'
 import Relay from 'react-relay'
-import {Location, MentorView, LeftWrapper, UpperMain, Rating, RatingVal, NumberRatings, InfoFeed, Text, MediaLinks, MediaItem,
-RightPanel, Label, MissingMentorData, Summary, Reviews, ReviewLabel, CenteredRow, MentorHandle, ReserveUpper, ReserveLower} from 'styled/MentorProfile'
+import {Location, MentorView, LeftWrapper, UpperMain, Rating, InfoFeed, Text, MediaLinks, MediaItem, RightPanel, Label, MissingMentorData, Summary, Reviews, CenteredRow, MentorHandle, ReserveUpper, ReserveLower,
+  // RatingVal, NumberRatings, ReviewLabel,
+} from 'styled/MentorProfile'
 import PinIcon from 'icons/Location'
 import {BtAvatar, BtTagList, BtFlatButton} from 'styled'
 import {ProjectListSm} from 'components/ProjectListSm'
 import Edit from 'icons/Edit'
 import {purple, white} from 'theme'
 import {mapUserInfo, mapMentorInfo} from 'utils/mapUserInfo'
-import Rater from 'react-rater'
+// import Rater from 'react-rater'
 import 'react-rater/lib/react-rater.css'
 import {url} from 'config'
 import AddToReservations from 'mutations/AddToReservations'
