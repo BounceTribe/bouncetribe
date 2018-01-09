@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {List} from 'styled/list'
 import {RequestUser} from 'styled/Tribe'
 import UpdateFriendRequest from 'mutations/UpdateFriendRequest'

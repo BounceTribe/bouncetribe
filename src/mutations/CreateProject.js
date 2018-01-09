@@ -1,4 +1,4 @@
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 
 export default class CreateProjectMutation extends Relay.Mutation {
 

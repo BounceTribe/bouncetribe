@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import {Name, Projects, NoTribe, TableScore} from 'styled/Tribe'
 import Bolt from 'icons/Bolt'

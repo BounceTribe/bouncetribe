@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {Background, Container, Lock, Header} from 'styled/Login'
 import Logo from 'icons/Logo'
 import {purple} from 'theme'

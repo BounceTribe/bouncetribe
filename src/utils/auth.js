@@ -1,5 +1,5 @@
 import Auth0Lock from 'auth0-lock'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {url, auth0} from 'config'
 import {purple} from 'theme'
 import CreateUser from 'mutations/CreateUser'

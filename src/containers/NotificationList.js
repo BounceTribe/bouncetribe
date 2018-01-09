@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {View, IconTextContainer, IconText} from 'styled'
 import {Header, NList} from 'styled/list'
 import {Notification} from 'styled/NotificationList'

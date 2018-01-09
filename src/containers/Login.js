@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {Background, Container, Lock, Header, Legal, LegalLink, LogoImg} from 'styled/Login'
 import LoginLogo from 'icons/LoginLogo.png'
 import {url} from 'config'
@@ -13,7 +13,6 @@ class Login extends Component {
     let user = this.props.viewer.user
     console.log('login user', user);
     user ? this.toSite(user) : this.props.route.auth.showLock(false)
-
   }
 
   componentWillReceiveProps (newProps) {

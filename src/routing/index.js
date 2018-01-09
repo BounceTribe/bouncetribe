@@ -1,5 +1,5 @@
 import React from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {Route, IndexRoute} from 'react-router'
 import auth from 'utils/auth'
 import Template from 'containers/Template'

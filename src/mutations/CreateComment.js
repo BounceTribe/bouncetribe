@@ -1,4 +1,4 @@
-// import Relay from 'react-relay'
+// import Relay from 'react-relay/classic'
 //
 // export default class CreateComment extends Relay.Mutation {
 //
@@ -36,7 +36,7 @@
 //
 // }
 
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 
 export default class CreateComment extends Relay.Mutation {
 

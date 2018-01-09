@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import Dialog from 'material-ui/Dialog'
 import {Label, ExperienceRow} from 'styled/Profile'
 import {getAllGenres, getAllSkills, ensureBtArtistExists} from 'utils/graphql'

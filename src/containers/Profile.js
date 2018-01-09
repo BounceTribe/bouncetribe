@@ -1,5 +1,5 @@
      import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {ProfileView, Top, Row, Left, Right, TopCol, Handle, Location, ScoreRow, Score, Divider, Summary, BotRow, BotRight, Label,  SubRow, Experience, ExperienceRow, EmailWebsite, MissingUserData, SiteLink} from 'styled/Profile'
 import PinIcon from 'icons/Location'
 import Bolt from 'icons/Bolt'
@@ -63,7 +63,7 @@ class Profile extends Component {
   }
   componentWillMount = () => {
     let {theirHandle} = this.props.router.params
-    if (location.pathname!==(
+    if (this.props.location.pathname!==(
       `/${theirHandle}/activity/1/` ||
       `/${theirHandle}/projects/1/` ||
       `/${theirHandle}/bounces/1/` )) {

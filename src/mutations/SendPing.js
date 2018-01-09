@@ -1,4 +1,4 @@
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import Moment from 'moment'
 export default class SendPing extends Relay.Mutation {
 

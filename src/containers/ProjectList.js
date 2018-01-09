@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {View, Button, RoundButton} from 'styled'
 import {Header, HeaderOptions, List} from 'styled/list'
 import {ProjectItem, Left, Artwork, Info, ProjectTitle, Trio, TrioItem, BigBubble, ButtonRow} from 'styled/ProjectList'

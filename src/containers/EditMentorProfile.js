@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import UpdateMentor from 'mutations/UpdateMentor'
 import CreateMentor from 'mutations/CreateMentor'
 import CreatePackage from 'mutations/CreatePackage'

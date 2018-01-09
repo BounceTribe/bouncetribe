@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {ProjectListSm} from 'components/ProjectListSm'
 import Music from 'icons/Music'
 import {EmptyPanel} from 'components/EmptyPanel'

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import TextField from 'material-ui/TextField'
 import {View, IconText, IconTextContainer, Button} from 'styled'
 import {Header, HeaderOptions, List} from 'styled/list'

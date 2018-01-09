@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {Dialog, Checkbox, FlatButton, Toggle, TextField} from 'material-ui/'
 import UpdateUser from 'mutations/UpdateUser'
 import {BtFlatButton} from 'styled'

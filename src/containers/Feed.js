@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {ActivityList} from 'components/ActivityList'
 import {mapNodes} from 'utils/mapNodes'
 import {EmptyPanel} from 'components/EmptyPanel'

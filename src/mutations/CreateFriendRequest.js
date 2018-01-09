@@ -1,4 +1,4 @@
-import Relay, {Mutation} from 'react-relay'
+import Relay, {Mutation} from 'react-relay/classic'
 
 export default class CreateFriendRequest extends Mutation {
 

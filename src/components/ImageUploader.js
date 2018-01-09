@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {ImageDropContainer} from 'styled'
 // import {ImageDropContainer, CroppedImage} from 'styled'
 import Dropzone from 'react-dropzone'
@@ -106,6 +106,7 @@ export default class ImageUploader extends Component {
               src={this.state.image}
               crop={this.state.crop}
               keepSelection={true}
+              onChange={ crop => this.setState({ crop })}
               onImageLoaded={(image)=>{
                 //incorrect img size sometimes
                 // let pixel = this.internal.getPixelCrop(this.state.crop)

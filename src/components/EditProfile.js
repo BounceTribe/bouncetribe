@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {handleValidator, isUniqueField} from 'utils/handles'
 import UpdateUser from 'mutations/UpdateUser'
 import {Dialog, TextField, FlatButton} from 'material-ui/'

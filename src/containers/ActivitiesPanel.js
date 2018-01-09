@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import Music from 'icons/Music'
 import {EmptyPanel} from 'components/EmptyPanel'
 import {ActivityList} from 'components/ActivityList'
 import {mapNodes} from 'utils/mapNodes'
 import {SeeMore} from 'styled'
-
 
 class ActiviesPanel extends Component {
 

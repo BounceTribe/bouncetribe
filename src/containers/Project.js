@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import PropTypes from 'prop-types'
 import {View, RoundButton, BtFlatButton, ContentPad} from 'styled'
 import {Top, Art, Info, GenreBounce, Summary, TrackContainer, Title, Privacy, Bot, LeftList, ProfContainer, ProfTop, Portrait, ProfCol, ProfHandle, Score, MoreInfo, ProfLeft, Divider, CommonInfluences, InfluenceChip} from 'styled/Project'

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {ProjectNewView, Button, RoundButton, IconText, IconTextContainer} from 'styled'
 import {Row, Left, Right, Sharing, Choice, ChoiceText, ArtworkDrop, TrackContainer, Container} from 'styled/ProjectNew'
 import {Header} from 'styled/list'

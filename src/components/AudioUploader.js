@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import Relay from 'react-relay'
+import Relay from 'react-relay/classic'
 import {DropContainer} from 'styled'
 import Dropzone from 'react-dropzone'
 import uploadFile from 'utils/uploadFile'

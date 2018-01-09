@@ -1,8 +1,14 @@
 {
-  "extends": "react-app"
-  # "rules": {
-  #   "react/no-unused-state": 1
-  # },
+  "extends": "react-app",
+  "rules": {
+    "no-restricted-globals": ["off", "location"],
+    # 'no-unused-expressions': ['off', {
+    #   allowShortCircuit: false,
+    #   allowTernary: false,
+    #   allowTaggedTemplates: false,
+    # }],
+    # "react/no-unused-state": 0
+  }
   # "settings": {
   #   "react": {
   #     "version": "15.6.2"
