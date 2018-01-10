@@ -31,7 +31,7 @@
     "gzip-size": "3.0.0",
     "html-webpack-plugin": "2.24.0",
     "http-proxy-middleware": "0.17.2",
-    "jest": "17.0.2",
+    "jest": "^18.0.0",
     "json-loader": "0.5.4",
     "object-assign": "4.1.0",
     "path-exists": "2.1.0",
@@ -72,7 +72,7 @@
     "react-router-relay": "^0.14.0",
     "react-select": "^1.0.0-rc.3",
     "react-swipeable-views": "^0.12.12",
-    "react-tap-event-plugin": "3.0.0",
+    "react-tap-event-plugin": "3.0.2",
     "styled-components": "^2.4.0",
     "subscriptions-transport-ws": "^0.6.0",
     "validator": "^9.2.0"
